@@ -1,0 +1,9 @@
+#Mon Feb 18 20:52:17 ART 2013
+eclipse.preferences.version=1
+encoding//core/python_core/mepinta/pipeline_lo_facade.py=utf-8
+encoding//core/python_core/mepinta/plugins_creation/module_to_cpp/eclipse_project/K3dv1EclipseProjectCreator.py=utf-8
+encoding//core/python_core/mepinta/plugins_creation/module_to_cpp/eclipse_project/K3dv1EclipseProjectTemplates.py=utf-8
+encoding//core/python_core/mepinta/plugins_creation/module_to_cpp/eclipse_project/templates/CProjectXML.py=utf-8
+encoding//core/python_core/mepinta/plugins_creation/module_to_cpp/eclipse_project/templates/ProjectXML.py=utf-8
+encoding//core/python_core/mepinta/plugins_creation/templates/base.py=utf-8
+encoding//developer_tools/ide_projects/eclipse/core/EclipseCoreProjectCreator.py=utf-8
