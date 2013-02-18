@@ -1,0 +1,16 @@
+-Dk3d=k3dv1 
+
+-I/usr/local/include/OGRE 
+-I"/home/jduo/Projects/Informatica/Mepinta/EclipseProjects_Basic_Data_Types/Basic/DataTypes/internal_any" 
+-I"/home/jduo/Projects/Informatica/Mepinta/EclipseProjects_Basic_Data_Types/k3dv1/k3dv1_Libs/include" 
+-I/usr/lib/glibmm-2.4/include -I/usr/include/glibmm-2.4 
+-I/usr/lib/x86_64-linux-gnu/glib-2.0/include/ 
+-I/usr/lib/glib-2.0/include 
+-I/usr/include/glib-2.0 
+-I/usr/include/sigc++-2.0 
+-I/usr/lib/sigc++-2.0/include 
+-I/usr/include/SDL 
+-I/usr/include/OIS 
+-I"/home/jduo/Projects/Informatica/Mepinta/EclipseProjects_Basic_Data_Types/k3dv1/k3dv1_Mesh" 
+-I"/home/jduo/Projects/Informatica/Mepinta/EclipseProjects_Basic_Data_Types/Mepinta/Mepinta_SDK/include_new" 
+-O0 -g3 -Wall -c -fmessage-length=0 -fPIC

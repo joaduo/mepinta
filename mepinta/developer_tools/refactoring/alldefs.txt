@@ -1,0 +1,634 @@
+  def get_TopologyManager(self, context_lo):
+  def get_PropertyManager(self, context_lo):
+  def get_ContextLo(self):
+  def get_Pipeline(self):
+#  def get_PropertyValuePointer(self):
+  def get_PluginLoader(self, context_lo):
+#  def get_PipelineEvaluator(self, context_lo):
+  def get_PipelineEvaluatorFunctum(self, context_lo):
+  def get_SimplePropagationManager(self, pline_evaluator):
+#  def get_OneChangeFilterPropagationManager(self, pline_evaluator):
+#  def get_ManyChangesFilterPropagationManager(self, pline_evaluator):
+  def get_FunctionCaller(self):#TODO: review where this is used
+  def get_PropertyValueManager(self, context_lo):
+  def get_ValueManager(self, context_lo):
+  def get_LogOutput(self):
+def shedskin_facade(pline_evaluator_base):
+def shedskin_generation():
+  def __post_init__(self):
+  def generate_index(self):
+  def __post_init__(self, data_types, processors, parent):
+  def __post_init__(self, plugins_type):
+  def build_package_module_name(self, version, short_name): #TODO: remove?
+  def python2x_3x_import(self, short_name):
+  def get_package_and_name(self, plugin):
+  def get_revision_modules(self, plugin_package):
+  def get_revision_module(self,package_name,build_name):
+  def load_processor_library(self,processor):
+  def unload_processor_library(self,processor):
+  def load_processors_data_types(self, processor):
+  def get_processor_proxy(self,processor,build_name):
+  def load_processor(self,processor,version,replace,replace_version,reload_):
+  def set_processor_proxy_dtype_ids(self, processor):
+  def set_containers_dtype_id(self, proxy):
+  def load_data_type(self,data_type,version,reload_):
+  def load_data_type_library(self,data_type):
+  def unload_data_type_library(self,data_type):
+#  def __post_init__(self):
+  def plugins_path(self):
+  def import_packmod(self, packmod_path):
+  def __init__(self):
+  def __str__(self):
+  def __repr__(self):
+  def __init__(self):
+  def __wrapped_lo__(self):
+  def getShortName(self):
+  def get_c_namespace(self):
+  def __init__(self):
+  def getFollowLibraryPath(self):
+  def __post_init__(self):
+  def load_data_type(self,data_type,version=None,reload_=False):
+  def load_processor(self,processor,version=None,replace=False,replace_version=None,reload_=False):
+  def call_func_no_args(self, func_ptr):
+  def call_func(self, func_ptr, func_args):
+  def call_processor_func(self, func_ptr, args):
+  def call_copy_to_func(self, func_ptr, to_ptr, from_ptr):
+def shedskin_type_generation_fc():
+  def __init__(self, context_lo):
+  def create_properties(self, pline, prop_type, prop_names, dtype_ids):
+  def create_func_properties(self, pline, prop_names, func_ptr_ids):
+  def create_functum_properties(self, pline, prop_names, func_ptr_ids, dtype_ids):
+  def delete_properties(self, pline, prop_ids):
+  def add_filters(self, pline, prop_ids):
+  def remove_filters(self, pline, prop_ids):
+  def add_non_cached(self, pline, dent_ids, dency_ids):
+  def remove_non_cached(self, pline, dent_ids):
+def shedskin_PropertyManager(context_lo, pline, prop_id):
+  def __init__(self, context_lo):
+  def new_prop_value(self, prop, value):
+  def init_prop_value(self, prop):
+  def init_set_prop_value(self, prop, value_ptr):
+  def set_prop_value(self, prop, value_ptr):
+  def copy_prop_value(self, prop, value_ptr):
+  def delete_properties(self, props):
+def shedskin_PropertyValueManager(context_lo, prop):
+  def __init__(self, context_lo):
+  def markChangedProps(self, pline, prop_ids):
+  def markChangeSetChangedProps(self, pline, prop_ids):
+  def set_prop_value(self, pline, prop_id, value):
+  def set_std_strings(self,pline, prop_ids, prop_values):
+  def set_charps(self,pline, prop_ids, prop_values):
+  def set_doubles(self,pline, prop_ids, prop_values): #TODO: check if shedskin does any difference
+  def set_ints(self,pline, prop_ids, prop_values):
+  def get_std_strings(self,pline, prop_ids):
+  def get_charps(self,pline, prop_ids):
+  def get_doubles(self,pline, prop_ids):
+  def get_ints(self,pline, prop_ids):
+def shedskin_ValueManager(context_lo,pline, prop_id):
+  def __init__(self):
+#  def get_new_uid(self, id_group): #TODO: delete this??
+def shedskin_ContextLo():
+  def get_TopologyManager(self, context_lo):
+  def get_PropertyManager(self, context_lo):
+  def get_ContextLo(self):
+  def get_Pipeline(self):
+#  def get_PropertyValuePointer(self):
+  def get_PluginLoader(self, context_lo):
+  def get_PipelineEvaluator(self, context_lo):
+  def get_PipelineEvaluatorFunctum(self, context_lo):
+  def get_SimplePropagationManager(self, pline_evaluator):
+#  def get_OneChangeFilterPropagationManager(self, pline_evaluator):
+#  def get_ManyChangesFilterPropagationManager(self, pline_evaluator):
+  def get_FunctionCaller(self):#TODO: review where this is used
+  def get_PropertyValueManager(self, context_lo):
+  def get_ValueManager(self, context_lo):
+  def get_LogOutput(self):
+def shedskin_facade():
+def shedskin_generation():
+def has_flags(prop_type, flags):
+  def __init__(self, context_lo):
+  def add_properties(self, topo, prop_ids):
+  def remove_properties(self, topo, prop_ids):
+  def connect_properties(self, topo, prop_dent_ids, prop_dency_ids):
+  def connect_props_dencies(self, topo, prop_dent_ids, prop_dency_ids):
+  def connect_props_dents(self, topo, prop_dent_ids, prop_dency_ids):
+  def disconnect_properties(self, topo, prop_dent_ids, prop_dency_ids=[]):
+  def add_changed(self, topo, prop_changed_ids):
+  def remove_changed(self, topo, prop_changed_ids):
+  def enable_cached(self, topo, cached_ids):
+  def disable_cached(self, topo, cached_ids):
+def shedskin_TopologyManager(context_lo,topo):
+  def __init__(self, context_lo):
+  def unload_data_type_library(self, path, dtype_id):
+  def load_data_type_library(self, path, data_type_name, dtype_id):
+  def unload_processor_library(self, path, func_ids):
+  def load_processor_library(self, path, func_dict):
+def shedskin_PluginLoader(context_lo):
+def shedskin_test():
+  def __init__(self, context_lo):
+#  def animate(self, pline, prop_id):
+#  def eval(self,pline,prop_id, add_propagation):
+#  def gather_input_value(self, pline, input_id, args_mngr):
+#  def gather_output_value(self, pline, out_id, in_dency_ids, args_mngr):
+#  def steal_input_value(self,pline, out_id, out_prop, input_id, input_prop, 
+#  def eval_function(self, pline, prop_id, prop):
+#  def eval_property(self, pline, prop_id, prop):
+def shedskin_PipelineEvaluatorBase(context_lo, pline, prop):
+  def __init__(self, pline_evaluator):
+  def propagate_changes(self, pline):
+  def __recursivePropagation(self,topo, changed, changed_ppgation):
+  def __allAffectedProps(self,topo, prop_id, affected_props):
+def shedskin_SimplePropagationManager(pline, pline_evaluator):
+  def __init__(self, pline_evaluator):
+  def propagate_changes(self, pline):
+  def __init__(self, pline_evaluator):
+  def propagate_changes(self, pline):
+  def propagate_recursively(self,pline, changed, changed_ppgation, ppgation_filters):
+  def get_all_affected_props(self,pline, prop_id, affected_props, ppgation_filters):
+  def __init__(self, context_lo, func_prop_value, in_size, out_size, thread_id):
+  def set_in_out(self, in_out_id):
+  def create_args(self, func_prop_value, in_size, out_size, thread_id):
+  def get_args(self):
+  def next_prop(self): #useful for skipping a property too
+  def append(self, prop_id, prop, prop_real):
+#  def update(self, in_prop_ids, out_prop_ids):
+  def changed_value(self):
+  def unchanged_value(self):
+  def build_changed_set(self):
+def shedskin_ProcessorArgsManager(context_lo,func_prop_value,prop):
+  def __callProcessor(self,pline,prop_id,prop,func_prop_value,args_mngr):
+  def evaluateProp(self, pline, prop_id, add_propagation):
+  def __evalFunction(self, pline, prop_id, prop):
+  def __inputValue(self, pline, input_id, args_mngr):
+  def __outputValue(self, pline, out_id, args_mngr):
+  def __solveNonCached(self, pline, out_id, out_prop):
+  def __stealInput(self,pline, out_id, out_prop, input_id, input_prop):
+  def __evalFunctum(self, pline, prop_id, prop):
+  def __evalProperty(self, pline, prop_id, prop):         
+def shedskin_PipelineEvaluatorFunctum(context_lo, pline, prop, args_mngr):
+  def critical(self,msg):
+  def error(self,msg):
+  def warning(self,msg):
+  def info(self,msg):
+  def debug(self,msg):
+  def verbose(self, msg):
+  def set_level(self, level):
+#  def trace(self, msg):
+def shedskin_LogOutput():
+  def __init__(self, name, lib_handle):
+  def get_func_ptr(self, name):
+  def update_handle(self, lib_handle): #TODO: should check we never get a null pointer?
+  def solve_symbol(self, name):
+  def __repr__(self):
+  def __str__(self):
+  def __init__(self, name, func_pointer):
+  def get_func_pointer(self):
+  def update_func_pointer(self, func_pointer):
+  def __init__(self, value=None):
+  def replace_value(self, value, func_ptr_del):    
+  def free_value(self,func_ptr_del ):
+  def get_value(self):
+  def increment_reference_count(self):
+  def decrement_reference_count(self,func_ptr_del):
+  def not_referenced(self):
+  def __init__(self, prop_type, name, dtype_id):
+  def get_value(self):
+  def get_value_ptr(self):
+  def set_value_ptr(self, value_ptr, func_ptr_del=None):
+  def __repr__(self):
+  def __str__(self):
+  def __init__(self, copied=None):
+  def __initValues(self):
+  def __copyFrom(self, copied_topo):
+  def connect(self,dent_id, dency_id):
+  def connect_dency(self,dent_id, dency_id):
+  def connect_dent(self,dent_id, dency_id):
+  def disconnect(self,dent_id, dency_id):
+  def disconnect_all(self, prop_id):
+  def disconnect_dpdencies(self,dent_id):
+  def add_property(self,prop_id):
+  def remove_property(self, prop_id):
+  def __removeFromSet(self, prop_id, set_):
+  def __str__(self):
+  def __init__(self, name='default'):
+  def __initTopo(self):
+  def __newTopologyId(self):
+  def __newPropertyId(self): 
+  def endChangeSet(self):
+  def pendingChanges(self):
+  def pop_topology(self,topo_id):
+  def get_topology(self, topo_id=NULL_UID):
+  #  def set_current_topology(self, topo_id): #TODO. provide a list of visited topologies
+  def get_current_topology(self):
+  def add_property(self, prop):
+  def delete_property(self, prop_id):
+def shedskin_pipeline_data_model():
+  def __init__(self,func_id):
+  def __init__(self, func_id, functum_prop):
+  def set_functum_prop(self, functum_prop):
+  def get_functum_prop(self):
+def shedskin_hidden_data_types(prop):
+  def __init__(self, keys, values):
+  def next(self):
+  def __init__(self):
+  def __delitem__(self, item_id):
+  def __delslice__(self,id_1,id_2):
+  def __getitem__(self,item_id): #TODO
+  def get_first(self, item_id): 
+  def __getslice__(self,id_1,id_2): #TODO
+  def __slice__(self, id_1, id_2):
+  def __len__(self):
+  def __setitem__(self, item_id, value):
+  def add(self, item_id, value):
+  def remove(self, item_id, value):
+  def count(self, item_id):
+#  def extend(self, id_indexed_table): #TODO
+#  def __iter__(self):
+  def get_ss_iterator(self):
+  def __contains__(self, item_id):
+  def has(self, item_id, value):
+  def index(self, item_id):
+  def bisect_left_right(self, a, x, lo=0, hi=-1):
+      Replaced def bisect_left(self,a, x, lo=0, hi=None): to hi=-1
+  def bisect_right(self, a, x, lo=0, hi=-1):
+      Replaced def bisect_left(self,a, x, lo=0, hi=None): to hi=-1
+  def bisect_left(self,a, x, lo=0, hi=-1):
+      Replaced def bisect_left(self,a, x, lo=0, hi=None): to hi=-1
+#  def __delete__(self):
+  def __str__(self):
+def shedskin_DirectedGraph():
+def shedskin_test():
+  def __init__(self):
+  def connect_dency(self,dent_id, dency_id):
+  def connect_dent(self,dent_id, dency_id):
+  def connect(self, dent_id, dency_id):
+  def disconnect(self, dent_id, dency_id):
+  def disconnect_all(self, prop_id):
+  def disconnect_dpdencies(self, dent_id):
+  def disconnect_dpdents(self, dency_id):
+  def __str__(self):
+  def __len__(self):
+def shedskin_ConditionalBDGraph():
+Binary file ./pipeline/lo/generic_data/DirectedGraph.pyc matches
+  def __init__(self):
+  def connect(self, dent_id, dency_id):
+  def disconnect(self, dent_id, dency_id):
+  def disconnect_all(self, prop_id):
+  def disconnect_dpdencies(self, dent_id):
+  def disconnect_dpdents(self, dency_id):
+  def __str__(self):
+  def __len__(self):
+def shedskin_BiDirectedGraph():
+  def __post_init__(self, non_cached_enabled=False):
+  def _create_properties_safe(self, pline, prop_type, names, data_types):
+  def create_properties(self, pline, prop_type, names, data_types):
+  def _create_func_properties_safe(self, pline, names, func_ptr_ids):
+  def create_func_properties(self, pline, names, func_ptr_ids):
+  def _create_functum_properties_safe(self, pline, names, func_ptr_ids, data_types):
+  def create_functum_properties(self, pline, names, func_ptr_ids, dtype_ids):
+#  def create_property_set(self,pline, name, prop_ids):
+#  def create_property(self, pline, type, name, dtype_id):
+#  def get_prop_id(self, prop):
+  def __dispatchDict(self, prefix):
+  def __checkProp(self, prop):
+  def getValue(self,pline, prop):
+  def __setGenericEnum(self, pline, prop, value):
+  def setValue(self, pline, prop, value):
+  def markChanged(self, pline, prop):
+  def __set_std_string(self,pline, prop, str_):
+  def __set_charp(self,pline, prop, str_):
+  def __set_str(self,pline, prop, str_):
+  def __set_int(self,pline, prop, int_):
+  def __set_double(self, pline, prop, double_):
+  def __get_std_string(self, pline, prop):
+  def __get_charp(self, pline, prop):
+  def __get_str(self, pline, prop):
+  def __get_int(self, pline, prop):
+  def __get_double(self, pline, prop):
+  def __post_init__(self):
+  def get_lo(self):
+  def hasattr_(self,instance,name):
+  def __getattr__(self,name):
+  def __wrapped_lo__(self):
+def convert_pline_to_topo(method):
+  def method_wrapper(self, *a, **ad):
+  def remove_properties(self, pline, props): #There is no need for safe checking is already made at lower level
+  def _add_properties_safe(self, pline, props):
+  def add_properties(self, pline, props):
+  def _connect_properties_safe(self, pline, dpdents, dpdencies):
+    def filter_valid_connections(dent_id):
+  def connect_properties(self, pline, dpdents, dpdencies):
+  def connect_props_dencies(self, pline, dpdents, dpdencies):
+  def connect_props_dents(self, pline, dpdents, dpdencies):
+  def disconnect_properties(self, pline, dpdents, dpdencies):
+  def enable_cached(self, pline, props):
+  def disable_cached(self, pline, props):
+  def connect(self, pline, dpdent, dency):
+  def disconnect(self, pline, dpdent, dency=None):
+  def remove(self, pline, prop):
+  def add(self, pline, prop):
+  def __init__(self, function, function_safe):
+  def __call__(self, *a, **ad):
+  def safe_check(self, filter_func, list_):
+  def __post_init__(self):
+  def get_wrapped_class(self,class_name=None, *a,**ad):
+  def get_lo(self):
+  def hasattr_(self,instance,name):
+  def __getattribute__(self, name):
+  def __getattr__(self,name):
+  def __wrapped_lo__(self):
+  def __init__(self, wrapped):
+  def __call__(self, *a, **ad):
+  def __getattr__(self, name):
+  def __repr__(self):
+  def __str__(self):
+  def __post_init__(self):
+def unwrap_lo(wrapper):
+def unwrap_decorator(method):
+  def method_wrapper(self, *a, **ad):
+  def __post_init__(self):
+  def get_new_func_id(self):
+  def get_new_dtype_id(self):
+  def unload_data_type_library(self, data_type):
+  def load_data_type_library(self, data_type):
+  def unload_processor_library(self, processor):
+  def load_processor_library(self, processor):
+def test(argv):
+  def __post_init__(self):
+  def evaluateProp(self, pline, prop_id, propagate=True):
+  def __post_init__(self):
+  def __post_init__(self):
+  def __post_init__(self):
+  def __load_libmepintacore(self):
+  def get_wrapped(self):
+  def get(self, class_name):
+Binary file ./pipeline/lo_cpp/load_library_stand_alone.so matches
+  def get_TopologyManager(self, context_lo):
+  def get_PropertyManager(self, context_lo):
+  def get_ContextLo(self):
+  def get_Pipeline(self):
+#  def get_PropertyValuePointer(self):
+  def get_PluginLoader(self, context_lo):
+  def get_PipelineEvaluator(self, context_lo):
+  def get_PipelineEvaluatorFunctum(self, context_lo):
+  def get_SimplePropagationManager(self, pline_evaluator):
+#  def get_OneChangeFilterPropagationManager(self, pline_evaluator):
+#  def get_ManyChangesFilterPropagationManager(self, pline_evaluator):
+  def get_FunctionCaller(self):#TODO: review where this is used
+  def get_PropertyValueManager(self, context_lo):
+  def get_ValueManager(self, context_lo):
+  def get_LogOutput(self):
+def shedskin_facade():
+def shedskin_generation():
+def local_log_info(msg):
+def local_log_error(msg):
+def load_library_stand_alone(path,symbol):
+def shedskin_type_generation():
+Binary file ./pipeline/lo_cpp/pipeline_lo_facade.so matches
+  def copy_pline(self, pline):
+  def __post_init__(self, *a, **ad):
+  def append_node_to_branch(self, pline_2order, processor_name, processor_version=None):
+  def eval_node(self, pline_2order, node):
+  def copy_pline(self, pline_2order):
+#  def undo_redo_action(self, pline_2order, nodes_path):
+  def add_arbitrary_node(self, pline_2order, in_node,out_node):
+  def __init__(self):
+#  def __post_init__(self, *a, **ad):
+  def init_tree(self):
+  def append_node(self,processor):
+  def set_current_node(self,node):
+  def set_property(self):
+  def open_tree(self):
+  def save_tree(self):#force overwrite?
+  def delete_pipeline_property(self):
+  #def list_
+  def __post_init__(self):
+  def new_name(self, processor_name):
+  def new(self, processor):
+  def __post_init__(self):
+  def add_property(self, pline, props_group, type_str):
+  def create_node(self, pline, processor): #TODO: add support for debuggin version
+  def connect(self, pline, dent_prop, dency_prop):
+  def disconnect(self, pline, dent_prop, dency_prop=None):
+  def auto_connect(self, pline, dent_node, dency_node):
+  def __init__(self, name, processor):
+  def __cloneFromManifest(self, processor_proxy):
+  def __str__(self):
+  def __repr__(self):
+  def __init__(self, name, graph_type):
+  def __post_init__(self, *a, **ad):
+  def add_properties(self, pline, prop_ids):
+  def connect(self, pline, dpdent, dency):
+  def disconnect(self, pline, dpdent, dency=None):
+  def connect_internally(self, pline, node):
+  def __get_dpdents_dpdencies(self, node, direction):
+  def __dpdents_dpdencies(self, container, dpdents,dpdencies , direction, type_=BaseInOutPropertyProxy): 
+  def remove_node(self, pline, node):
+  def enable_cached(self, pline, node):
+  def __post_init__(self):
+  def create_properties(self, pline, node_proxy):
+  #TODO: def __create_containers_props(self, pline, containers)
+  def __set_props_ids(self, prop_dict, prop_names, prop_ids):
+  def __create_functions_props(self, pline, container):
+  def __create_inout_props(self, pline, prop_type, container):#TODO: take this out
+  def __create_data_props(self, pline, prop_type, container):#TODO: take this out    
+  def __create_functum_props(self, pline, prop_type, container):#TODO: take this out    
+  def __set_propagation_filter(self, pline, node_proxy):
+  def __set_non_cached(self, pline, node_proxy):
+  def __post_init__(self):
+  def create_properties(self, pline, node_proxy): #TODO: add support for debugging version
+Binary file ./lib/libMepintaArgsApi.so matches
+Binary file ./plugins_manifest/proxy/data_model.pyc matches
+  def __init__(self, wrapped_prop):
+  def __qualified__(self):
+  def hasQualifier(self, name):
+  def _interceptedAttr(self):
+        def _interceptedAttr(self):
+  def __getattr__(self,name):
+  def __eq__(self, other):
+  def __str__(self):
+  def __repr__(self):
+  def __init__(self, wrapped_prop, direction):
+  def _interceptedAttr(self):
+    def __init__(self, expression, default_value=None):
+    def isValidateDefault(self):
+    def isValidateReturn(self):
+  def __init__(self, wrapped_prop, expression, default_value):
+  def _interceptedAttr(self):
+def directedReadable(direction, wrapped_prop):
+  def __init__(self):
+  def __getattr__(self,name):
+  def __add__(self, added_dpdencies):
+  def __iter__(self):
+  def appendDependency(self, dency):
+  def __init__(self):
+  def __qualified__(self):
+  def __wrapped_lo__(self):
+  def variableString(self):
+  def __str__(self):
+  def __repr__(self):
+  def get_dpdencies(self):
+  def set_dpdencies(self, value):
+  def __init__(self, data_type_alias, data_type_version=1):
+  def getDataTypeShortName(self):
+  def getRealDataTypeName(self, data_type_alias):
+  def directed(self, direction):
+  def validateDefault(self, expression, default_value):
+  def validateReturn(self, expression):
+  def getPath(self, pline, context):
+  def __init__(self):
+  def getPath(self, pline, context):
+  def __init__(self, **enum_dict):
+  def invertedDict(self):
+  def __validateEnumDict(self, enum_dict):
+  def setDefault(self, value):
+  def get_enum_id(self):
+  def set_enum_id(self, value):
+  def __init__(self):
+  def __init__(self):
+  def get_properties(self, *types):
+  def __getContainerTypes(self):
+  def __inTypes(self, prop_proxy, types):
+  def __setattr__(self, name, value):
+  def __addProp(self, name, value):
+  def __delattr__(self, name):
+  def __init__(self, name):
+  def __setattr__(self, name, value):
+  def get_required_data_types(self, types_classes=[DataPropertyProxy] ):
+  def get_functions_dict(self):
+  def set_functions_id(self, func_dict_ids):
+  def get_container(self, func_name):
+  def test():
+  def get_processor_proxy(context):
+  def print_processor_definition(context,pp):
+  def test_qualifiers():
+  def __post_init__(self):
+  def getName(self):
+  def __getBasicArguments(self):
+  def _superClassDefine(self, inputs, internals, functions, outputs):
+  def __createDefineArguments(self):
+  def __updateKwArgs(self, kwargs, props):
+  def __collectDefineMethods(self, base_classes):
+  def __getattr__(self, name):
+  def markedOutputs(self, *props):
+  def nonCached(self, *props):
+  def addLibraries(self, external=[], *libs):
+  def addFlags(self, *flags):
+  def define(self, inputs, internals, functions, outputs):
+  def build(self):
+  def createNode(self, plugin_manifest):
+  def __getPluginPackage(self, plugin_manifest):
+  def __validateModuleName(self, manifest_file):
+  def test(self, plugin_manifest, visualize=True):
+  def logPline(self, pline):
+Binary file ./pipeline_lo_facade.so matches
+  def __init__(self, name, lang_group, type_, package, module_name, minor_version, **config_dict ):
+  def __getTypePackage(self):
+  def _setConfig(self, config_dict):
+  def getModuleName(self):
+  def getPath(self, name, split=False):
+  def __toOSPath(self, packmod_path):
+  def implementationLibs(self, split=False):
+  def get_minor_version(self):
+  def set_minor_version(self, value):
+  def get_eclipse_name(self):
+  def set_eclipse_name(self, value):
+#  def __post_init__(self, template_config):
+  def getContent(self):
+  def __str__(self):
+  def __call__(self, *a, **ad):
+  def getOverwritePolicy(self):
+  def __post_init__(self, path):
+  def getContent(self):
+  def __init__(self, method):
+  def __call__(self, *a, **ad):
+      def templateVariable(self):
+  def _getTranslationDict(self):
+  def __post_init__(self, plugin_manifest):
+  def _requiredDataTypes(self):
+  def getTemplateStr(self):
+  def getContent(self):
+  def __call__(self, context, plugin_manifest, path):
+  def __post_init__(self, template, translation_dict, start_mark='##'):
+  def __replace(self, processed_template, name, replacement, start_mark):
+  def getContent(self):
+  def __buildTemplateRoot(self, package, path_list):
+  def _getTemplatesRoot(self):
+  def _getMapDict(self, plugin_name):
+  def getCreatedDirs(self, plugin_manifest, target_root):
+  def getTemplatePerPath(self, plugin_manifest, target_root):
+  def _convertToAbsolutPaths(self, map_dict, plugin_manifest, target_root, templates_root):
+Binary file ./plugins_creation/templates/base.pyc matches
+  def __post_init__(self):
+  def __createSymlink(self, src, dst, force=True):
+  def __eclipseSrcPath(self, plugin_fdirs):
+  def _acceptedExtension(self, file_path, header_only=False):
+  def _ignoredFiles(self, plugin_fdirs):
+  def _linkCPPToPackage(self,src_path, plugin_fdirs):
+  def _linkSharedLibraries(self, plugin_fdirs):
+  def _linkEclipseFiles(self, plugin_fdirs):
+  def _linkIncludeFiles(self, plugin_fdirs):
+  def importPlugin(self, plugin_fdirs):
+  def _pathExists(self, path, package=False):
+  def _saveFile(self, path, content, overwrite):
+  def _getOverwritePolicy(self, template):
+  def create(self, plugin_manifest, projects_root, translation_dict={}, overwrite=False):
+  def __post_init__(self):
+  def createPlugin(self, plugin_fdirs):
+  def define(self, inputs, internals, functions, outputs):
+  def __post_init__(self):
+  def getContents(self, template,tmplt_values):
+  def create(self, os_path, template="empty", tmplt_values={}):
+  def __post_init__(self):
+  def validatePackagePath(self, type_, package_path):
+  def create(self, split_path):
+Binary file ./plugins_creation/ModuleCreator.pyc matches
+  def _getTemplatesRoot(self):
+  def _getMapDict(self, plugin_name):
+#  def getOverwritePolicy(self):
+  def genericEnums(self):
+        cpp_string += 'typedef enum \n{\n'
+  def pluginName(self):
+  def licenseHeader(self):
+  def cppIncludes(self):
+  def processorFunctions(self):
+Binary file ./plugins_creation/module_to_cpp/templates/processor_plugin/ProcessorCPP.pyc matches
+  def __post_init__(self, proxy, plugin_manifest):
+  def __mapGenericEnum(self, input_prop):
+  def __mapDataType(self, prop):
+  def __filterDpdencies(self, dpdencies):
+  def getInputs(self):
+  def __sortDeclaration(self, declare_dict):
+  def getOutputs(self):
+  def __getDpdants(self):
+  def getReplacements(self):
+  def generateHeader(self, plugin_manifest, type_='input', api_type='debug'):
+  def functionsPropertiesDeclaration(self):
+  def __post_init__(self, include_dirs):
+  def setAppendIncludeDirs(self, include_dirs):
+  def __splitLines(self, include_dirs):
+  def appendCommonRootDirs(self, common_root, include_dirs):
+  def _includeStrFromTypes(self, types_list):
+  def _includeStrFromList(self, include_list):
+  def includeDirs(self):
+  def includeTypeDirs(self):
+  def compilerArgs(self):
+  def linkerArgs(self):
+  def _getTargetPath(self, plugin_manifest, eclipse_root, split=False):
+  def _createProjectDir(self, target_root):
+  def _getTemplates(self, plugin_manifest, target_root):
+  def _getTemplatesRoot(self):
+  def _getMapDict(self, plugin_name):
+  def _includeXMLFromList(self, include_list):
+  def includeDirs(self):
+  def compilerArgs(self):
+  def linkerArgs(self):
+  def projectName(self):
+  def _getTargetPath(self, plugin_manifest, eclipse_root, split=False):
+  def _createProjectDir(self, target_root):
+  def _getTemplates(self, plugin_manifest, target_root):
+  def _getTemplatesRoot(self):
+  def _getMapDict(self, plugin_name):
+  def __init__(self, Class):
+  def __call__(self, *a, **ad):
+  def solve(self, context):
