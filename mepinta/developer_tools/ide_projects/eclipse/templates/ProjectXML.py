@@ -18,14 +18,15 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with Mepinta. If not, see <http://www.gnu.org/licenses/>.
 '''
-from mepinta.plugins_creation.base import ProjectCreatorBase
 
-class EclipseCoreProjectCreator(ProjectCreatorBase):
-  '''
-  Input: EclipseProjects path
-  Create project and import it (eventually)
-  '''
-  pass
+from mepinta.plugins_creation.templates.base import on_template
+from ide_projects.base import ConfigDictTemplateProcessorBase
+
+class ProjectXML(ConfigDictTemplateProcessorBase):
+  @on_template
+  def projectName(self):
+    return self.config_dict['projectName']
+
 
 if __name__ == "__main__":
   pass

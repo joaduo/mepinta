@@ -18,22 +18,19 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with Mepinta. If not, see <http://www.gnu.org/licenses/>.
 '''
-from mepinta.plugins_creation.module_to_cpp.eclipse_project.templates.CProjectXML import CProjectXML
-from mepinta.plugins_creation.module_to_cpp.eclipse_project.templates.ProjectXML import ProjectXML
-from mepinta.plugins_creation.templates.base import PluginTemplatesBase
-from mepinta.plugins_creation.module_to_cpp.templates.processor_plugin.ProcessorCPP import ProcessorCPP
+from ide_projects.base import ConfigDictProjectTemplatesBase
+from ide_projects.eclipse.templates.ProjectXML import ProjectXML
 
-class K3dv1EclipseProjectTemplates(PluginTemplatesBase):
+class EclipseCoreProjectTemplates(ConfigDictProjectTemplatesBase):
   '''Maps the templates files and their corresponding translators classes to the
   path for the final translated file.
   '''
   def _getTemplatesRoot(self):
-    import mepinta.plugins_creation.module_to_cpp.eclipse_project as eclipse_project
-    return self._buildTemplateRoot(eclipse_project, ['repository', 'k3dv1'])
-  def _getMapDict(self, plugin_manifest):
+    import ide_projects.eclipse as eclipse_project
+    return self._buildTemplateRoot(eclipse_project, ['repository', 'python_default'])
+  def _getMapDict(self, plugin_name):
     return {
-            (ProcessorCPP, 'src/processor.cpp'):'src/%s.cpp' % plugin_manifest.getName(),
-            (CProjectXML, 'cproject.xml'):'.cproject',
+            (ProjectXML, 'pydevproject.xml'):'.pydevproject',
             (ProjectXML, 'project.xml') :'.project',
            }
 

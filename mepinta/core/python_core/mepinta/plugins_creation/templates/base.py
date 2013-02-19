@@ -23,8 +23,10 @@ import re
 import inspect
 from common.abstract.FrameworkBase import FrameworkBase
 from common.path import joinPath, splitPath
-from mepinta.plugins_manifest.proxy.data_model import DataPropertyProxy,\
+from mepinta.plugins_manifest.proxy.data_model import DataPropertyProxy, \
   FunctumPropertyProxy
+
+# TODO: renaming, moving and documenting. UGLY!
 
 class TemplateTranslatorBase(FrameworkBase):
 #  def __post_init__(self, template_config):
@@ -40,17 +42,17 @@ class TemplateTranslatorBase(FrameworkBase):
     return self
   def getOverwritePolicy(self):
     '''Default overwrite policy.'''
-    return False 
-  
+    return False
+
 class FileBasedTemplate(TemplateTranslatorBase):
   '''
     Template based on file. Will be translated by a dictionary
-      in an Child class or on other translator. 
+      in an Child class or on other translator.
   '''
   def __post_init__(self, path):
     self.path = path
   def getContent(self):
-    template_file = open(self.path,'r')
+    template_file = open(self.path, 'r')
     template = template_file.read()
     template_file.close()
     return template
@@ -63,30 +65,30 @@ class on_template_decorator(object):
   def __call__(self, *a, **ad):
     '''Calls stored method.'''
     return self.method(*a, **ad)
-#Nice Alias
+# Nice Alias
 on_template = on_template_decorator
 
 class MethodPerTemplateVar(FileBasedTemplate):
   '''
     A file based template.
-    Also classes inheriting this class, will implement a method (decorated) 
+    Also classes inheriting this class, will implement a method (decorated)
       for each variable inside the template.
     Then other class can ask for the translation with calling the method
       _getTranslationDict()
-    
+
     Example:
     class Foo(MethodPerTemplateVar):
       @on_template
       def templateVariable(self):
         return 'Bar'
-    
+
     _getTranslationDict() will return {'templateVariable':'Bar'}
   '''
   def _getTranslationDict(self):
     translation_dict = {}
     for name, attr in inspect.getmembers(self):
       if isinstance(attr, on_template_decorator):
-        self.context.log.debug('Calling %r decorated template method.'%name)
+        self.context.log.debug('Calling %r decorated template method.' % name)
         translation_dict[name] = attr(self)
     return translation_dict
 
@@ -98,15 +100,15 @@ class ManifestAndFileTemplateBase(MethodPerTemplateVar):
   def __post_init__(self, plugin_manifest):
     self.plugin_manifest = plugin_manifest
   def _requiredDataTypes(self):
-    required_data_types = self.plugin_manifest.getRequiredDataTypes(types_classes=[DataPropertyProxy,FunctumPropertyProxy])
+    required_data_types = self.plugin_manifest.getRequiredDataTypes(types_classes=[DataPropertyProxy, FunctumPropertyProxy])
     self.context.log('Using data type minor version from eclipse projects.')
-    return required_data_types.keys() 
+    return required_data_types.keys()
   def getTemplateStr(self):
     return FileBasedTemplate.getContent(self)
   def getContent(self):
     template = self.getTemplateStr()
     translation_dict = self._getTranslationDict()
-    content = str(DictionaryBasedTranslator(self.context,template=template, translation_dict=translation_dict))
+    content = str(DictionaryBasedTranslator(self.context, template=template, translation_dict=translation_dict))
     return content
   def __call__(self, context, plugin_manifest, path):
     self.path = path
@@ -117,29 +119,22 @@ class DictionaryBasedTranslator(TemplateTranslatorBase):
   ''''''
   def __post_init__(self, template, translation_dict, start_mark='##'):
     self.template = template
-    self.translation_dict =translation_dict
+    self.translation_dict = translation_dict
     self.start_mark = start_mark
   def __replace(self, processed_template, name, replacement, start_mark):
-    re_replace = re.compile(r'%s%s'%(start_mark,name))
+    re_replace = re.compile(r'%s%s' % (start_mark, name))
     if not isinstance(replacement, str):
-      raise RuntimeError('replacement %r for %r variable should be a string.'%(replacement,name))
-    return re_replace.sub(replacement,processed_template)
+      raise RuntimeError('replacement %r for %r variable should be a string.' % (replacement, name))
+    return re_replace.sub(replacement, processed_template)
   def getContent(self):
     processed_template = str(self.template)
     for name, replacement in self.translation_dict.items():
       processed_template = self.__replace(processed_template, name, replacement, self.start_mark)
     return processed_template
 
-class PluginTemplatesBase(FrameworkBase):
-  '''
-    Base class for Templates per Path classes.
-  '''
-  def _buildTemplateRoot(self, package, path_list):
-    '''
-      Builds the templates root given a package a and a path list relative to that package.
-      (get the full path given a package)
-    '''
-    return joinPath(splitPath(package.__path__[0]) + path_list)
+class ProjectTemplatesBase(FrameworkBase):
+#  def getCreatedDirs(self, plugin_manifest, target_root): #TODO: remove
+#    raise NotImplementedError('Implement in children!')
   def _getTemplatesRoot(self):
     '''
       Implementation Example:
@@ -147,7 +142,7 @@ class PluginTemplatesBase(FrameworkBase):
         return joinPath(processor_plugin.__path__[0],'repository')
     '''
     raise NotImplementedError('Implement in children!')
-  def _getMapDict(self, plugin_name):
+  def _getMapDict(self, **kwargs):
     '''
     Implementation Example:
       return {
@@ -157,17 +152,22 @@ class PluginTemplatesBase(FrameworkBase):
              }
     '''
     raise NotImplementedError('Implement in children!')
-  def getCreatedDirs(self, plugin_manifest, target_root):
-    raise NotImplementedError('Implement in children!')
-  def getTemplatePerPath(self, plugin_manifest, target_root):
+  def _buildTemplateRoot(self, package, path_list):
+    '''
+      Builds the templates root given a package a and a path list relative to that package.
+      (get the full path given a package)
+    '''
+    return joinPath(splitPath(package.__path__[0]) + path_list)
+
+  def getTemplatePerPath(self, target_root, **kwargs):
     '''
       Given a plugin manifest and a target root path for a Eclipse project
       returns the map of the Template translator and their target files.
     '''
     templates_root = self._getTemplatesRoot()
-    map_dict = self._getMapDict(plugin_manifest.getName())
-    return self._convertToAbsolutPaths(map_dict, plugin_manifest, target_root, templates_root)
-  def _convertToAbsolutPaths(self, map_dict, plugin_manifest, target_root, templates_root):
+    map_dict = self._getMapDict(**kwargs)
+    return self._convertToAbsolutPaths(map_dict, target_root, templates_root, **kwargs)
+  def _convertToAbsolutPaths(self, map_dict, target_root, templates_root, **kwargs):
     '''
       Convert given relative paths and roots to their absolut path.
       Also it creates the Template classes to be used on the translation.
@@ -175,17 +175,27 @@ class PluginTemplatesBase(FrameworkBase):
     templates_root = self._getTemplatesRoot()
     map_dict_absolut = {}
     for template_config, target_subpath in map_dict.items():
-      template_processor, path= template_config
+      template_processor, path = template_config
       if target_subpath == None:
         target_subpath = path
-      template = template_processor(context=self.context, plugin_manifest=plugin_manifest, path=joinPath(templates_root, path))
+      template = self._initTemplateProcessor(template_processor, templates_root, path, **kwargs)
       map_dict_absolut[template] = joinPath(target_root, target_subpath)
-    return map_dict_absolut  
+    return map_dict_absolut
+  def _initTemplateProcessor(self, template_processor, templates_root, path, **kwargs):
+    return template_processor(context=self.context, path=joinPath(templates_root, path))
+
+
+class PluginTemplatesBase(ProjectTemplatesBase):  # TODO: rename to ProjectTemplatesBase
+  '''
+    Base class for Templates per Path classes.
+  '''
+  def _initTemplateProcessor(self, template_processor, templates_root, path, plugin_manifest):
+    return template_processor(context=self.context, plugin_manifest=plugin_manifest, path=joinPath(templates_root, path))
 
 if __name__ == "__main__":
   from mepinta.context.MepintaContext import MepintaContext
-  context = MepintaContext('python')    
+  context = MepintaContext('python')
   template = '< ##FOO > < ##BAR>'
-  translation_dict = {'FOO':'value=10','BAR':'other="some"'}
-  print(DictionaryBasedTranslator(context,template=template, translation_dict=translation_dict))
+  translation_dict = {'FOO':'value=10', 'BAR':'other="some"'}
+  print(DictionaryBasedTranslator(context, template=template, translation_dict=translation_dict))
 
