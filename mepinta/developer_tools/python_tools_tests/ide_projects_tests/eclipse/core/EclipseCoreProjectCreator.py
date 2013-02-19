@@ -18,22 +18,10 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with Mepinta. If not, see <http://www.gnu.org/licenses/>.
 '''
-from mepinta.context.MepintaContext import MepintaContext
-from pipeline_backend.logging.logging import LOG_INFO, LOG_DEBUG
-from common.config.ContextWrapper import ContextWrapper
+from mepinta.plugins_creation.base import ProjectCreatorBase
 
-called_once = False
-def getDefaultContext(log_level=LOG_DEBUG):
-  '''Creates a default context to reduce verbosity on start.'''
-  global called_once
-  if called_once:
-    raise RuntimeError('You should call the default context only once. (in the main script)')
-  else:
-    called_once = True
-  context = MepintaContext('python')
-  context = ContextWrapper(context)
-  context.log.set_level(log_level)
-  return context
+class EclipseCoreProjectCreator_test(ProjectCreatorBase):
+  pass
 
 if __name__ == "__main__":
   pass

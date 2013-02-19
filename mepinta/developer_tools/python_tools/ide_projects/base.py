@@ -19,7 +19,7 @@ You should have received a copy of the GNU General Public License
 along with Mepinta. If not, see <http://www.gnu.org/licenses/>.
 '''
 from mepinta.plugins_creation.templates.base import MethodPerTemplateVar, \
-  PluginTemplatesBase
+  ProjectTemplatesBase
 from common.path import joinPath
 from mepinta.plugins_creation.base import GenericProjectCreatorBase
 
@@ -32,11 +32,11 @@ class ConfigDictTemplateProcessorBase(MethodPerTemplateVar):
   def __post_init__(self, config_dict):
     self.config_dict = config_dict
 
-class ConfigDictProjectTemplatesBase(PluginTemplatesBase):
+class ConfigDictProjectTemplatesBase(ProjectTemplatesBase):
   def __post_init__(self, config_dict):
     self.config_dict = config_dict
-  def _initTemplateProcessor(self, template_processor, plugin_manifest, templates_root, path):
-    return template_processor(context=self.context, plugin_manifest=plugin_manifest, path=joinPath(templates_root, path), config_dict=self.config_dict)
+  def _initTemplateProcessor(self, template_processor, templates_root, path):
+    return template_processor(context=self.context, path=joinPath(templates_root, path), config_dict=self.config_dict)
 
 if __name__ == "__main__":
   pass

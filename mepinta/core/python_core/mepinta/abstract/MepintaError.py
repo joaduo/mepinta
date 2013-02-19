@@ -18,11 +18,6 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with Mepinta. If not, see <http://www.gnu.org/licenses/>.
 '''
-'''
-Created on Mar 21, 2012
-
-@author: jduo
-'''
 
 class MepintaError(RuntimeError):
   pass

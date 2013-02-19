@@ -28,7 +28,7 @@ class EclipseCoreProjectTemplates(ConfigDictProjectTemplatesBase):
   def _getTemplatesRoot(self):
     import ide_projects.eclipse as eclipse_project
     return self._buildTemplateRoot(eclipse_project, ['repository', 'python_default'])
-  def _getMapDict(self, plugin_name):
+  def _getMapDict(self, **kwargs):
     return {
             (ProjectXML, 'pydevproject.xml'):'.pydevproject',
             (ProjectXML, 'project.xml') :'.project',

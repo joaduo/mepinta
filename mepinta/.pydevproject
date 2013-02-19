@@ -5,9 +5,12 @@
 <pydev_property name="org.python.pydev.PYTHON_PROJECT_INTERPRETER">Default</pydev_property>
 <pydev_property name="org.python.pydev.PYTHON_PROJECT_VERSION">python 2.7</pydev_property>
 <pydev_pathproperty name="org.python.pydev.PROJECT_SOURCE_PATH">
-<path>/mepinta/developer_tools</path>
 <path>/mepinta/core/python_core</path>
 <path>/mepinta/common_libs/python/common</path>
 <path>/mepinta/core/python_core_tests</path>
+<path>/mepinta/plugins/c_and_cpp/k3dv1/modules</path>
+<path>/mepinta/core/backend_connection/pipeline_backend_python</path>
+<path>/mepinta/developer_tools/python_tools</path>
+<path>/mepinta/developer_tools/python_tools_tests</path>
 </pydev_pathproperty>
 </pydev_project>
