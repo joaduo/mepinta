@@ -8,5 +8,6 @@
 <path>/mepinta/developer_tools</path>
 <path>/mepinta/core/python_core</path>
 <path>/mepinta/common_libs/python/common</path>
+<path>/mepinta/core/python_core_tests</path>
 </pydev_pathproperty>
 </pydev_project>
