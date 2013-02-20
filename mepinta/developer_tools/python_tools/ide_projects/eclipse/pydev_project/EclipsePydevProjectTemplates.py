@@ -21,7 +21,7 @@ along with Mepinta. If not, see <http://www.gnu.org/licenses/>.
 from ide_projects.base import ConfigDictProjectTemplatesBase
 from ide_projects.eclipse.templates.ProjectXML import ProjectXML
 
-class EclipseCoreProjectTemplates(ConfigDictProjectTemplatesBase):
+class EclipsePydevProjectTemplates(ConfigDictProjectTemplatesBase):
   '''Maps the templates files and their corresponding translators classes to the
   path for the final translated file.
   '''

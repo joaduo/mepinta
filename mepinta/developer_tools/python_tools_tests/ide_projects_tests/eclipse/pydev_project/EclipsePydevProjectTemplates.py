@@ -19,26 +19,30 @@ You should have received a copy of the GNU General Public License
 along with Mepinta. If not, see <http://www.gnu.org/licenses/>.
 '''
 from mepinta_tests.base import MepintaTestBase
-from ide_projects.eclipse.core.EclipseCoreProjectTemplates import EclipseCoreProjectTemplates
+from ide_projects.eclipse.pydev_project.EclipsePydevProjectTemplates import EclipsePydevProjectTemplates
 
-class EclipseCoreProjectTemplates_test(MepintaTestBase):
+class EclipsePydevProjectTemplates_test(MepintaTestBase):
   def run(self):
-    tested_instance = EclipseCoreProjectTemplates(context=self.context, config_dict={})
+    projectName = 'MepintaCore'
+    tested_instance = EclipsePydevProjectTemplates(context=self.context, config_dict=dict(projectName=projectName))
     target_root = "../.."
     templates = tested_instance.getTemplatePerPath(target_root)
 
-    return self.validateOutputTemplates(templates)
-  def validateOutputTemplates(self, templates):
+    return self.validateOutputTemplates(templates, projectName)
+  def validateOutputTemplates(self, templates, projectName):
     self.log(templates)
+    valid_test = True
     for templ, dir_ in templates.items():
       self.log("%r:%r" % (templ, dir_))
-    return True
+      if projectName not in str(templ):
+        valid_test = False
+    return valid_test
 
 def test_module():
   from default_context import getDefaultContext
   context = getDefaultContext()
-  test = EclipseCoreProjectTemplates_test(context=context)
+  test = EclipsePydevProjectTemplates_test(context=context)
   return test.run()
 
 if __name__ == "__main__":
-  test_module()
+  print(test_module())

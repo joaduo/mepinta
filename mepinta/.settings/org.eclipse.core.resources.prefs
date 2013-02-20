@@ -1,5 +1,6 @@
-#Tue Feb 19 06:59:41 ART 2013
+#Wed Feb 20 02:26:11 ART 2013
 eclipse.preferences.version=1
+encoding//common_libs/python/common/common/abstract/FrameworkBase.py=utf-8
 encoding//common_libs/python/common/default_context.py=utf-8
 encoding//core/python_core/default_context.py=utf-8
 encoding//core/python_core/mepinta/abstract/MepintaError.py=utf-8
@@ -17,12 +18,14 @@ encoding//core/python_core_tests/mepinta_tests/base.py=utf-8
 encoding//core/python_core_tests/mepinta_tests/dummy_classes/PluginManifestDummy.py=utf-8
 encoding//core/python_core_tests/mepinta_tests/plugins_creation/module_to_cpp/eclipse_project/K3dv1EclipseProjectCreator.py=utf-8
 encoding//core/python_core_tests/mepinta_tests/plugins_creation/module_to_cpp/eclipse_project/K3dv1EclipseProjectTemplates.py=utf-8
+encoding//developer_tools/python_tools/ide_projects/EclipseProjectCreator.py=utf-8
 encoding//developer_tools/python_tools/ide_projects/base.py=utf-8
 encoding//developer_tools/python_tools/ide_projects/eclipse/core/EclipseCoreProjectCreator.py=utf-8
-encoding//developer_tools/python_tools/ide_projects/eclipse/core/EclipseCoreProjectTemplates.py=utf-8
+encoding//developer_tools/python_tools/ide_projects/eclipse/pydev_project/EclipsePydevProjectCreator.py=utf-8
+encoding//developer_tools/python_tools/ide_projects/eclipse/pydev_project/EclipsePydevProjectTemplates.py=utf-8
 encoding//developer_tools/python_tools/ide_projects/eclipse/templates/ProjectXML.py=utf-8
-encoding//developer_tools/python_tools_tests/ide_projects_tests/eclipse/core/EclipseCoreProjectCreator.py=utf-8
-encoding//developer_tools/python_tools_tests/ide_projects_tests/eclipse/core/EclipseCoreProjectTemplates.py=utf-8
+encoding//developer_tools/python_tools_tests/ide_projects_tests/eclipse/pydev_project/EclipsePydevProjectCreator.py=utf-8
+encoding//developer_tools/python_tools_tests/ide_projects_tests/eclipse/pydev_project/EclipsePydevProjectTemplates.py=utf-8
 encoding//plugins/c_and_cpp/k3dv1/modules/creating_plugins/createPlugin.py=utf-8
 encoding//plugins/c_and_cpp/k3dv1/modules/creating_plugins/k3dv1_Port.py=utf-8
 encoding//plugins/c_and_cpp/k3dv1/modules/default_context.py=utf-8

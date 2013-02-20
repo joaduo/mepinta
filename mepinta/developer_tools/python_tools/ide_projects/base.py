@@ -24,9 +24,11 @@ from common.path import joinPath
 from mepinta.plugins_creation.base import GenericProjectCreatorBase
 
 class ConfigDictProjectCreatorBase(GenericProjectCreatorBase):
+  def __post_init__(self, config_dict):
+    self.config_dict = config_dict
   def _getTargetPath(self, eclipse_root):
     '''Get the path of the created project.'''
-    raise NotImplementedError('Implement')
+    return joinPath(eclipse_root, self.config_dict['projectName'])
 
 class ConfigDictTemplateProcessorBase(MethodPerTemplateVar):
   def __post_init__(self, config_dict):

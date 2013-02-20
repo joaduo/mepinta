@@ -37,7 +37,7 @@ class PluginCreatorBase(FrameworkBase):
       Once the content is generated, save the file.
       overwrite=True, will overwrite the file if exists.
     '''
-    self.context.log('Writing %r with overwrite:%s' % (path, overwrite))
+    self.log('Writing %r with overwrite:%s' % (path, overwrite))
     if not self._pathExists(path) or overwrite:
       target_file = open(path, 'w')
       target_file.write(content)

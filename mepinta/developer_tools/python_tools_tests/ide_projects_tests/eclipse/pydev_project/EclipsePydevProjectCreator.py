@@ -19,9 +19,23 @@ You should have received a copy of the GNU General Public License
 along with Mepinta. If not, see <http://www.gnu.org/licenses/>.
 '''
 from mepinta.plugins_creation.base import ProjectCreatorBase
+from ide_projects.eclipse.pydev_project.EclipsePydevProjectCreator import EclipsePydevProjectCreator
 
-class EclipseCoreProjectCreator_test(ProjectCreatorBase):
-  pass
+class EclipsePydevProjectCreator_test(ProjectCreatorBase):
+  def run(self):
+    config_dict = dict(projectName='MepintaCore')
+    test_instace = EclipsePydevProjectCreator(self.context, config_dict=config_dict)
+    projects_root = '/home/jduo/001-Mepinta/EclipseProjects_GitRepo/mepinta_test_folders/EclipseProjects'
+    translation_dict = {}
+    overwrite = True
+    test_instace.create(projects_root, translation_dict, overwrite)
+    return True
+
+def test_module():
+  from default_context import getDefaultContext
+  context = getDefaultContext()
+  test = EclipsePydevProjectCreator_test(context=context)
+  return test.run()
 
 if __name__ == "__main__":
-  pass
+  print(test_module())

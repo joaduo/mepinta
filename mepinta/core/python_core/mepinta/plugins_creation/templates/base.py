@@ -38,7 +38,7 @@ class TemplateTranslatorBase(FrameworkBase):
     '''Use the str operator to mimic a string.'''
     return self.getContent()
   def __call__(self, *a, **ad):
-    self.context.log.debug('If you are calling this methos, probably you may want to reimplement it on the children class.')
+    self.context.log.error('If you are calling this method, probably you may want to reimplement it on the children class.')
     return self
   def getOverwritePolicy(self):
     '''Default overwrite policy.'''
@@ -91,6 +91,13 @@ class MethodPerTemplateVar(FileBasedTemplate):
         self.context.log.debug('Calling %r decorated template method.' % name)
         translation_dict[name] = attr(self)
     return translation_dict
+  def getTemplateStr(self):
+    return FileBasedTemplate.getContent(self)
+  def getContent(self):
+    template = self.getTemplateStr()
+    translation_dict = self._getTranslationDict()
+    content = str(DictionaryBasedTranslator(self.context, template=template, translation_dict=translation_dict))
+    return content
 
 class ManifestAndFileTemplateBase(MethodPerTemplateVar):
   '''
@@ -103,13 +110,6 @@ class ManifestAndFileTemplateBase(MethodPerTemplateVar):
     required_data_types = self.plugin_manifest.getRequiredDataTypes(types_classes=[DataPropertyProxy, FunctumPropertyProxy])
     self.context.log('Using data type minor version from eclipse projects.')
     return required_data_types.keys()
-  def getTemplateStr(self):
-    return FileBasedTemplate.getContent(self)
-  def getContent(self):
-    template = self.getTemplateStr()
-    translation_dict = self._getTranslationDict()
-    content = str(DictionaryBasedTranslator(self.context, template=template, translation_dict=translation_dict))
-    return content
   def __call__(self, context, plugin_manifest, path):
     self.path = path
     self.plugin_manifest = plugin_manifest
@@ -152,13 +152,13 @@ class ProjectTemplatesBase(FrameworkBase):
              }
     '''
     raise NotImplementedError('Implement in children!')
+
   def _buildTemplateRoot(self, package, path_list):
     '''
       Builds the templates root given a package a and a path list relative to that package.
       (get the full path given a package)
     '''
     return joinPath(splitPath(package.__path__[0]) + path_list)
-
   def getTemplatePerPath(self, target_root, **kwargs):
     '''
       Given a plugin manifest and a target root path for a Eclipse project

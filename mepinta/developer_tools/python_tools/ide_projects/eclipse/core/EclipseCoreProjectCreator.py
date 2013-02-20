@@ -18,14 +18,29 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with Mepinta. If not, see <http://www.gnu.org/licenses/>.
 '''
-from mepinta.plugins_creation.base import ProjectCreatorBase
+import os
+from common.path import joinPath
+from ide_projects.eclipse.pydev_project.EclipsePydevProjectCreator import EclipsePydevProjectCreator
 
-class EclipseCoreProjectCreator(ProjectCreatorBase):
+class EclipseCoreProjectCreator(EclipsePydevProjectCreator):
   '''
-  Input: EclipseProjects path
-  Create project and import it (eventually)
+    Create a Eclipse Project for the Mepinta Python Core code given the path to place
+    the project (could be the Eclipse workspace).
+    Uses a template based creation.
   '''
-  pass
+  def _getMepintaCorePythonDir(self):
+    return '/home/jduo/001-Mepinta/git/mepinta/mepinta/core/python_core'
+  def _linkCodeDir(self, target_root):
+    dst = joinPath(target_root, 'src')
+    # if directory exists throughs an error
+    if not self._pathExists(dst):
+      os.symlink(self._getMepintaCorePythonDir(), dst)
+    else:
+      self.log.error("Directory %s already exists." % dst)
+  def _createProjectDir(self, target_root):
+    '''Create the project's new directory (and link src).'''
+    if not self._pathExists(target_root):
+      os.mkdir(target_root)
 
 if __name__ == "__main__":
   pass
