@@ -18,21 +18,26 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with Mepinta. If not, see <http://www.gnu.org/licenses/>.
 '''
-from ide_projects.base import ConfigDictProjectTemplatesBase
-from ide_projects.eclipse.templates.ProjectXML import ProjectXML
+from common.abstract.FrameworkBase import FrameworkBase
 
-class EclipsePydevProjectTemplates(ConfigDictProjectTemplatesBase):
-  '''Maps the templates files and their corresponding translators classes to the
-  path for the final translated file.
+class FileBasedTemplate(FrameworkBase):
   '''
-  def _getTemplatesRoot(self):
-    import ide_projects.eclipse as eclipse_project
-    return self._buildTemplateRoot(eclipse_project, ['repository', 'python_default'])
-  def _getMapDict(self, **kwargs):
-    return {
-            (ProjectXML, 'pydevproject.xml'):'.pydevproject',
-            (ProjectXML, 'project.xml') :'.project',
-           }
+    Template based on file. Acts as a str.
+  '''
+  def __post_init__(self, path):
+    self.path = path
+  def getContent(self):
+    template_file = open(self.path, 'r')
+    template = template_file.read()
+    template_file.close()
+    return template
+  def __str__(self):
+    '''Use the str operator to mimic a string.'''
+    return self.getContent()
+
+def test_module():
+  from default_context import getDefaultContext
+  context = getDefaultContext()
 
 if __name__ == "__main__":
-  pass
+  test_module()
