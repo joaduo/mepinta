@@ -52,5 +52,6 @@ class EclipseProjectCreator(FrameworkBase):
       self.project_creator.createProjectDirs(projects_dir, project_name)
     self.project_creator.create(projects_dir, project_name, templates_config, config_dict, translation_dict, overwrite)
 
+
 if __name__ == "__main__":
   pass
