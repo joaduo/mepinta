@@ -21,6 +21,19 @@ along with Mepinta. If not, see <http://www.gnu.org/licenses/>.
 import os
 import time
 
+def getPackagePath(package):
+  if isinstance(package, str):
+    package = __import__(package, fromlist="dummy")
+  return package.__path__[0]
+
+def getObjectModulePath(instace):
+  if instace.__class__.__module__ == '__main__':
+    import __main__
+    module = __main__
+  else:
+    module = __import__(instace.__class__.__module__, fromlist="dummy")
+  return module.__file__
+
 def realPath(path, retry=True):
   try:
     return os.path.realpath(path)
@@ -39,12 +52,12 @@ def pathHead(path):
 
 def pathExists(path, write=False):
   if write and os.access(path, os.W_OK):
-    #self.context.log.debug("Exists: %r (writable)"%path)
+    # self.context.log.debug("Exists: %r (writable)"%path)
     return True
   elif os.access(path, os.R_OK):
-    #self.context.log.debug("Exists: %r  (readable)"%path)
+    # self.context.log.debug("Exists: %r  (readable)"%path)
     return True
-  #self.context.log.debug("Doesn't exist: %r"%path)
+  # self.context.log.debug("Doesn't exist: %r"%path)
   return False
 
 def splitPath(path):
@@ -55,10 +68,10 @@ def joinPath(path, *path_list):
     path = os.sep.join(path)
   if len(path_list) != 0:
     for path_chunk in path_list:
-      if isinstance(path,list):
-        path = os.sep.join((path,joinPath(path_chunk)))
+      if isinstance(path, list):
+        path = os.sep.join((path, joinPath(path_chunk)))
       else:
-        path = os.sep.join((path,path_chunk))
+        path = os.sep.join((path, path_chunk))
   return path
 
 #  new_path_list = []
@@ -68,14 +81,14 @@ def joinPath(path, *path_list):
 #    new_path_list.append(path)
 #  return os.sep.join(new_path_list)
 
-def conditionalPathJoin( str_list, split=False):
+def conditionalPathJoin(str_list, split=False):
   if split:
     return str_list
   else:
     return os.sep.join(str_list)
-  
 
-        
+
+
 if __name__ == "__main__":
   print pathHead('/path/to/file')
   print pathIsDir('/home/jduo')

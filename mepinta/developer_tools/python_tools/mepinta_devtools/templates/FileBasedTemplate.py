@@ -18,19 +18,21 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with Mepinta. If not, see <http://www.gnu.org/licenses/>.
 '''
-from common.abstract.FrameworkBase import FrameworkBase
+from common.abstract.FrameworkObject import FrameworkObject
 
-class FileBasedTemplate(FrameworkBase):
+class FileBasedTemplate(FrameworkObject):
   '''
     Template based on file. Acts as a str.
   '''
-  def __post_init__(self, path):
+  def __init__(self, path):
     self.path = path
+
   def getContent(self):
     template_file = open(self.path, 'r')
     template = template_file.read()
     template_file.close()
     return template
+
   def __str__(self):
     '''Use the str operator to mimic a string.'''
     return self.getContent()

@@ -18,24 +18,9 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with Mepinta. If not, see <http://www.gnu.org/licenses/>.
 '''
-from common.abstract.FrameworkObject import FrameworkObject
+from mepinta_devtools.templates.mappers.base import MapperBase
 
-class FileToFileMap(FrameworkObject):
-  def __init__(self, template_logic, template_path, dst_path, overwrite=False, repo_package=None, template_set=None):
-    self.template_logic = template_logic
-    self.template_path = template_path
-    self.dst_path = dst_path
-    self.overwrite = overwrite
-    self.repo_package = repo_package
-    self.template_set = template_set
-  def setRepoPackageAndTemplateSet(self, repo_package, template_set):
-    if self.repo_package == None:
-      self.repo_package = repo_package
-    if self.template_set == None:
-      self.template_set = template_set
-
-
-class StrToFileMap(FrameworkObject):
+class StrToFileMap(MapperBase):
   def __init__(self, template_logic, template, dst_path, overwrite=False):
     self.template_logic = template_logic
     self.template = template

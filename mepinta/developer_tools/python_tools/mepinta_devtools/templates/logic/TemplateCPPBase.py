@@ -18,21 +18,16 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with Mepinta. If not, see <http://www.gnu.org/licenses/>.
 '''
-import re
-from common.abstract.FrameworkObject import FrameworkObject
+from mepinta_devtools.templates.logic.base import TemplateLogicBase
+from mepinta.plugins_manifest.proxy.data_model import DataPropertyProxy, \
+  FunctumPropertyProxy
 
-class DictionaryBasedTranslator(FrameworkObject):
-  ''''''
-  def __replace(self, processed_template, name, replacement, start_mark):
-    re_replace = re.compile(r'%s%s' % (start_mark, name))
-    if not isinstance(replacement, str):
-      raise RuntimeError('replacement %r for %r variable should be a string.' % (replacement, name))
-    return re_replace.sub(replacement, processed_template)
-
-  def getContent(self, template, translation_dict, start_mark='##'):
-    for name, replacement in translation_dict.items():
-      processed_template = self.__replace(template, name, replacement, start_mark)
-    return processed_template
+class TemplateCPPBase(TemplateLogicBase):
+  _file_ext = 'cpp'
+  def _requiredDataTypes(self, plugin_manifest):
+    required_data_types = plugin_manifest.getRequiredDataTypes(types_classes=[DataPropertyProxy, FunctumPropertyProxy])
+    # self.context.log('Using data type minor version from eclipse projects.') #TODO
+    return required_data_types.keys()
 
 def test_module():
   from default_context import getDefaultContext

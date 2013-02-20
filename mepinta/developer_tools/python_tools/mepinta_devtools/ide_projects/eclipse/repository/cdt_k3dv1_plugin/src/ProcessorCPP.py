@@ -18,11 +18,13 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with Mepinta. If not, see <http://www.gnu.org/licenses/>.
 '''
-from mepinta.plugins_creation.templates.base import ManifestAndFileTemplateBase, \
-  on_template, DictionaryBasedTranslator
-from mepinta.plugins_creation.module_to_cpp.templates.processor_plugin.properties.FunctionPropertiesDeclaration import FunctionPropertiesDeclaration
+
 from common.path import joinPath
 from mepinta.plugins_manifest.proxy.data_model import GenericEnumProxy
+from mepinta_devtools.templates.logic.TemplateCPPBase import TemplateCPPBase
+from mepinta_devtools.templates.logic.base import on_template
+from mepinta_devtools.templates.DictionaryBasedTranslator import DictionaryBasedTranslator
+from mepinta_devtools.ide_projects.generic.cpp.plugins.FunctionPropertiesDeclaration import FunctionPropertiesDeclaration
 
 gpl_header = '''//Mepinta
 //Copyright (c) 2011-2012, Joaquin G. Duo, mepinta@joaquinduo.com.ar
@@ -55,7 +57,7 @@ int ##functionName(MP_args* args){
 }
 '''
 
-class ProcessorCPP(ManifestAndFileTemplateBase):
+class ProcessorCPP(TemplateCPPBase):
 #  def getOverwritePolicy(self):
 #    '''Default overwrite policy.'''
 #    return False
@@ -81,10 +83,10 @@ class ProcessorCPP(ManifestAndFileTemplateBase):
   def licenseHeader(self):
     return gpl_header
   @on_template
-  def cppIncludes(self):
+  def cppIncludes(self, config_dict):
     include_template = '#include <data_types/%s.h>\n'
     includes_str = '\n//Included Data Types\n'
-    for data_type in self._requiredDataTypes():
+    for data_type in self._requiredDataTypes(config_dict['plugin_manifest']):
       split_path = data_type.split('.')
       includes_str += include_template % joinPath(split_path, split_path[-1])
     return includes_str
@@ -93,7 +95,7 @@ class ProcessorCPP(ManifestAndFileTemplateBase):
     content = ''
     for name, proxy in self.plugin_manifest.get_functions_dict().items():
       self.context.log.debug('Processing function %s template' % name)
-      props_declaration = FunctionPropertiesDeclaration(self.context, proxy=proxy, plugin_manifest=self.plugin_manifest)
+      props_declaration = FunctionPropertiesDeclaration(proxy=proxy, plugin_manifest=self.plugin_manifest)
       # translation_dict = {'functionName':name,
       #                    'inputsDeclaration':'//Declare Inputs\n  %s_INPUTS_DECLARATION();'%name,
       #                    'outputsDeclaration':'//Declare Outputs\n  %s_OUTPUTS_DECLARATION();'%name,
@@ -103,7 +105,7 @@ class ProcessorCPP(ManifestAndFileTemplateBase):
                           'outputsDeclaration':props_declaration.getOutputs(),
                           # 'outputsReplacement':props_declaration.getReplacements(),
                           }
-      content += str(DictionaryBasedTranslator(self.context, template=function_template, translation_dict=translation_dict))
+      content += str(DictionaryBasedTranslator().getContent(template=function_template, translation_dict=translation_dict))
     return content
 
 if __name__ == "__main__":
