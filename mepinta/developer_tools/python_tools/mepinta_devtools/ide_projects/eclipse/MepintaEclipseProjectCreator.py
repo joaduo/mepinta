@@ -48,6 +48,12 @@ class MepintaEclipseProjectCreator(FrameworkBase):
   def createMepintaCommonProject(self, projects_dir):
     self._createPydevLinked(projects_dir, 'MepintaCommon', 'common_libs/python/common')
 
+  def _createCDTLinked(self, projects_dir, project_name, mepinta_src_dir):
+    templates_config = [FileToFileMap('cproject.xml', '.cproject')]
+    self.ep_creator.createCDT(projects_dir, project_name, templates_config=templates_config, create_src=False)
+    dst = joinPath(projects_dir, project_name, 'src')
+    self.file_manager.symlink(self._getAbsoluteSrcPath(mepinta_src_dir), dst)
+
   def createMepintaArgsApiProject(self):
     pass
 
@@ -74,7 +80,8 @@ def test_module():
   print mepc._getMepintaRoot()
   print mepc._getAbsoluteSrcPath('core/python_core')
 #  mepc.createMepintaCoreProject('/home/jduo/001-Mepinta/EclipseProjects_GitRepo/mepinta_test_folders/EclipseProjects')
-  mepc.createMepintaCommonProject('/home/jduo/001-Mepinta/EclipseProjects_GitRepo/mepinta_test_folders/EclipseProjects')
+#  mepc.createMepintaCommonProject('/home/jduo/001-Mepinta/EclipseProjects_GitRepo/mepinta_test_folders/EclipseProjects')
+  mepc._createCDTLinked('/home/jduo/001-Mepinta/EclipseProjects_GitRepo/mepinta_test_folders/EclipseProjects', 'MepintaBackendApiC', 'backend/c_and_cpp/backend_api_c')
 
 if __name__ == "__main__":
   test_module()

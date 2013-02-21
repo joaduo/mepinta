@@ -62,7 +62,7 @@ class EclipseProjectCreator(FrameworkBase):
 
   def createCDT(self, projects_dir, project_name, config_dict={}, translation_dict={}, templates_config=[], overwrite=False, create_src=True, template_set='cdt_default'):
     templates_config = self._appendTemplatesConfig(templates_config,
-      FileToFileMap('project.xml', '.project',),
+      FileToFileMap('project.xml', '.project'),
     )
     self.createProject(projects_dir, project_name, config_dict, translation_dict, templates_config, overwrite, create_src, template_set)
 
