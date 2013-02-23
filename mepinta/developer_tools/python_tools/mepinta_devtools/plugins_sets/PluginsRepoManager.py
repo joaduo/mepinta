@@ -20,7 +20,7 @@ along with Mepinta. If not, see <http://www.gnu.org/licenses/>.
 '''
 from common.abstract.FrameworkBase import FrameworkBase
 
-class PluginsRepoCreator(FrameworkBase):
+class PluginsRepoManager(FrameworkBase):
   def addPluginSet(self, repo_dir, plugin_set_path):
     pass  # TODO:
 
