@@ -23,8 +23,6 @@ from mepinta_devtools.ide_projects.eclipse.EclipseProjectCreator import EclipseP
 from mepinta_devtools.ide_projects.FileManager import FileManager
 from common.path import joinPath, splitPath, getObjectModulePath
 from mepinta_devtools.templates.mappers.FileToFileMap import FileToFileMap
-from mepinta_devtools.ide_projects.eclipse.repository.cdt_k3dv1_plugin.CProjectXML import CProjectXML
-from mepinta_devtools.ide_projects.eclipse.repository.cdt_k3dv1_plugin.src.ProcessorCPP import ProcessorCPP
 
 class MepintaEclipseProjectCreator(FrameworkBase):
   def __post_init__(self):
@@ -43,7 +41,11 @@ class MepintaEclipseProjectCreator(FrameworkBase):
     self.file_manager.symlink(self._getAbsoluteSrcPath(mepinta_src_dir), dst)
 
   def createMepintaCoreProject(self, projects_dir):
-    self._createPydevLinked(projects_dir, 'MepintaCore', 'core/python_core')
+    mepinta_core_path = 'core/python_core'
+    self._createPydevLinked(projects_dir, 'MepintaCorePythonBackend', mepinta_core_path)
+    # self._createPydevLinked(projects_dir, 'MepintaCoreCPPBackend', mepinta_core_path)
+    # TODO: _mepintaShedskinReal (link dirs, link files
+    # TODO: _mepintaShedskinDummy
 
   def createMepintaCommonProject(self, projects_dir):
     self._createPydevLinked(projects_dir, 'MepintaCommon', 'common_libs/python/common')
@@ -54,34 +56,32 @@ class MepintaEclipseProjectCreator(FrameworkBase):
     dst = joinPath(projects_dir, project_name, 'src')
     self.file_manager.symlink(self._getAbsoluteSrcPath(mepinta_src_dir), dst)
 
-  def createMepintaArgsApiProject(self):
-    pass
+  def createMepintaArgsApiCProject(self, projects_dir):
+    self._createCDTLinked(projects_dir, 'MepintaBackendApiC', 'backend/c_and_cpp/backend_api_c')
 
-  def createMepintaArgsApiCPPProject(self):
-    pass
+  def createMepintaArgsApiCPPProject(self, projects_dir):
+    self._createCDTLinked(projects_dir, 'MepintaBackendApiCPP', 'backend/c_and_cpp/backend_api_cpp')
 
-#  def createK3dv1PluginProject(self, projects_dir, plugin_manifest):
-#    templates_config = [
-#      FileToFileMap(CProjectXML(), '.cproject',),
-#      FileToFileMap(ProcessorCPP(), 'src/%s.cpp' % plugin_manifest.getName())
-#      # TODO: Plugin.cpp
-#    ]
-#    config_dict = dict(plugin_manifest=plugin_manifest)
-#    project_name = plugin_manifest.getName()
-#    self.ep_creator.createCDT(projects_dir, project_name, config_dict=config_dict, templates_config=templates_config, template_set='cdt_k3dv1_plugin')
+  def createPluginsRepoProject(self, projects_dir):
+    pass  # TODO: #return repo dir
+
+  def createPluginDataTypeIncludesProject(self, projects_dir):
+    pass  # TOOD:
 
 def test_module():
   from default_context import getDefaultContext
   context = getDefaultContext()
   mepc = MepintaEclipseProjectCreator(context)
-  print mepc.__class__.__module__
-  print "%r" % mepc.file_manager.__class__.__module__
-  print type(mepc.file_manager.__class__.__module__)
-  print mepc._getMepintaRoot()
-  print mepc._getAbsoluteSrcPath('core/python_core')
-#  mepc.createMepintaCoreProject('/home/jduo/001-Mepinta/EclipseProjects_GitRepo/mepinta_test_folders/EclipseProjects')
-#  mepc.createMepintaCommonProject('/home/jduo/001-Mepinta/EclipseProjects_GitRepo/mepinta_test_folders/EclipseProjects')
-  mepc._createCDTLinked('/home/jduo/001-Mepinta/EclipseProjects_GitRepo/mepinta_test_folders/EclipseProjects', 'MepintaBackendApiC', 'backend/c_and_cpp/backend_api_c')
+  #  print mepc.__class__.__module__
+  #  print "%r" % mepc.file_manager.__class__.__module__
+  #  print type(mepc.file_manager.__class__.__module__)
+  #  print mepc._getMepintaRoot()
+  #  print mepc._getAbsoluteSrcPath('core/python_core')
+  projects_dir = '/home/jduo/001-Mepinta/EclipseProjects_GitRepo/mepinta_test_folders/EclipseProjects'
+  mepc.createMepintaCoreProject(projects_dir)
+  mepc.createMepintaCommonProject(projects_dir)
+  mepc.createMepintaArgsApiCProject(projects_dir)
+  mepc.createMepintaArgsApiCPPProject(projects_dir)
 
 if __name__ == "__main__":
   test_module()
