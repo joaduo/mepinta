@@ -23,20 +23,22 @@ from mepinta.pipeline.hi.plugin_loader.PluginLoader import PluginLoader
 from mepinta.plugins_manager.plugins_manager_detail.PluginPackageManager import PluginPackageManager
 from common.abstract.FrameworkBase import FrameworkBase
 
-#TODO: review error reporting
+# TODO: review error reporting
 class DataTypeUnavaliable(RuntimeError):
   pass
 
+# TODO: review Design, it's a control class with attr/properties (although its "singleton")
+# this attrs/props should be stored in the real singleton PluginsManager
 class PluginsManagerBase(FrameworkBase):
   def __post_init__(self, data_types, processors, parent):
     self.parent = parent
     self.data_types = data_types
     self.processors = processors
-    self.plugin_loader = PluginLoader(context=self.context)  
-    #self.library_link_mgr = LibraryLinkManager(context=self.context)
-    #TODO: rename this, it is confusing      
+    self.plugin_loader = PluginLoader(context=self.context)
+    # self.library_link_mgr = LibraryLinkManager(context=self.context)
+    # TODO: rename this, it is confusing
     self.dtype_pkg_mngr = PluginPackageManager(plugins_type='data_types', context=self.context)
     self.processor_pkg_mngr = PluginPackageManager(plugins_type='processors', context=self.context)
-    self.latest_data_type = False #TODO: this should come from config
-    self.latest_processor = False #TODO: this should come from config
+    self.latest_data_type = False  # TODO: this should come from config
+    self.latest_processor = False  # TODO: this should come from config
 

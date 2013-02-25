@@ -27,6 +27,8 @@ class FileManager(FrameworkBase):
       os.remove(dst)
     self.log('linking %r to %r' % (dst, src))
     os.symlink(src, dst)
+  def mkdir(self, path):
+    os.mkdir(path)
   def makedirs(self, path):
     os.makedirs(path)
   def pathExists(self, path, package=False):

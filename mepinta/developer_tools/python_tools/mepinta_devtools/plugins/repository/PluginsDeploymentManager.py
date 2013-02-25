@@ -19,13 +19,27 @@ You should have received a copy of the GNU General Public License
 along with Mepinta. If not, see <http://www.gnu.org/licenses/>.
 '''
 from common.abstract.FrameworkBase import FrameworkBase
+from mepinta_devtools.ide_projects.FileManager import FileManager
+from common.path import joinPath
 
-class PluginsRepoManager(FrameworkBase):
-  def addPluginSet(self, repo_dir, plugin_set_path):
+class PluginsDeploymentManager(FrameworkBase):
+  def __post_init__(self):
+    self.file_manager = FileManager(self.context)
+
+  def createDeployment(self, repo_path, deploy_name):
+    # create deployment directory
+    deploy_path = joinPath(repo_path, deploy_name)
+    directories = ['python_path']
+    packages = []
+    if not self.file_manager.pathExists(deploy_path):
+      self.file_manager.makedirs(deploy_path)
+
+  def addPluginsSet(self, repo_path, deploy_name, plugins_set_name):
     pass  # TODO:
 
-  def updateIncludesDir(self, repo_dir, includes_dir):
+  def updateDataTypesIncludeDir(self, repo_path, deploy_name, submodule=None):
     pass  # TODO:
+
 
 def test_module():
   from default_context import getDefaultContext
