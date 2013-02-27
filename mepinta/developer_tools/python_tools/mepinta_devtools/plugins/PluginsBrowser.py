@@ -22,7 +22,7 @@ from common.abstract.FrameworkBase import FrameworkBase
 import pkgutil
 from mepinta.plugins_manifest import PluginManifestBase
 
-class PluginsRepoBrowser(FrameworkBase):
+class PluginsBrowser(FrameworkBase):
   def getAllManifests(self, plugins_package):
     manifests = []  # Collected manifests
     for _, modname, ispkg in pkgutil.iter_modules(plugins_package.__path__, "%s." % plugins_package.__name__):
@@ -39,6 +39,8 @@ class PluginsRepoBrowser(FrameworkBase):
                 manifests.append(manifest)
               else:  # Inheriting from incorrect class.
                 self.log.warning('Manifest %r does not inherit from %r. Ignoring it.' % (manifest, PluginManifestBase))
+            elif hasattr(plugin_module, 'data_type_description'):
+              self.log.warning('Should migrate %s to correct manifest.' % modname)
             else:  # There is no manifest in the module.
               self.log.warning('Module %r has no manifest' % modname)
           else:  # The module hasn't the '__' separator.
@@ -48,7 +50,7 @@ class PluginsRepoBrowser(FrameworkBase):
 def test_module():
   from default_context import getDefaultContext
   context = getDefaultContext()
-  psb = PluginsRepoBrowser(context)
+  psb = PluginsBrowser(context)
 #  import plugins.c_and_cpp.processors.k3dv1 as k3dv1
   import plugins.c_and_cpp.processors as k3dv1
   for manifest in psb.getAllManifests(k3dv1):

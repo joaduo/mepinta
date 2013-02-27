@@ -22,10 +22,12 @@ from common.abstract.FrameworkBase import FrameworkBase
 import os
 
 class FileManager(FrameworkBase):
+  def listDir(self, path):
+    return os.listdir(path)
   def symlink(self, src, dst, force=False):
     if self.pathExists(dst) and force:
       os.remove(dst)
-    self.log('linking %r to %r' % (dst, src))
+    self.log.debug('linking %r to %r' % (dst, src))
     os.symlink(src, dst)
   def mkdir(self, path):
     os.mkdir(path)
@@ -34,16 +36,14 @@ class FileManager(FrameworkBase):
   def pathExists(self, path, package=False):
     if os.access(path, os.W_OK):
       if package and not os.access("%s/__init__.py" % path, os.W_OK):
-        self.context.log.warning("The package path %r exist but there is no %r file." % (path, "%s/__init__.py" % path))
+        self.context.log.debug("The package path %r exist but there is no %r file." % (path, "%s/__init__.py" % path))
+        return False
       self.context.log.debug("Exists: %r" % path)
       return True
     self.context.log.debug("Doesn't exist: %r" % path)
     return False
   def saveTextFile(self, path, content, overwrite):
-    '''
-      Once the content is generated, save the file.
-      overwrite=True, will overwrite the file if exists.
-    '''
+    ''' '''
     self.log('Writing %r with overwrite:%s' % (path, overwrite))
     if not self.pathExists(path) or overwrite:
       target_file = open(path, 'w')

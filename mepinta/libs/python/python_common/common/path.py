@@ -60,26 +60,27 @@ def pathExists(path, write=False):
   # self.context.log.debug("Doesn't exist: %r"%path)
   return False
 
-def splitPath(path):
-  return str(path).split(os.sep)
+def splitPath(path, *path_list):
+  split_path = []
+  if isinstance(path, list) or isinstance(path, tuple):
+    for p in path:
+      split_path += splitPath(p)
+  else:
+    split_path += str(path).split(os.sep)
+  if len(path_list) > 0:
+    split_path += splitPath(path_list)
+  return split_path
 
 def joinPath(path, *path_list):
-  if isinstance(path, list):
-    path = os.sep.join(path)
-  if len(path_list) != 0:
-    for path_chunk in path_list:
-      if isinstance(path, list):
-        path = os.sep.join((path, joinPath(path_chunk)))
-      else:
-        path = os.sep.join((path, path_chunk))
-  return path
-
-#  new_path_list = []
-#  for path in path_list:
-#    if isinstance(path,list):
-#      path = joinPath(path)
-#    new_path_list.append(path)
-#  return os.sep.join(new_path_list)
+  if isinstance(path, list) or isinstance(path, tuple):
+    joint_path = os.sep.join(map(joinPath, path))
+  else:
+    joint_path = path
+  if len(path_list) > 1:
+    joint_path = joinPath(joint_path, joinPath(path_list))
+  elif len(path_list) == 1:
+    joint_path = os.sep.join((joint_path, joinPath(path_list[0])))
+  return joint_path
 
 def conditionalPathJoin(str_list, split=False):
   if split:
