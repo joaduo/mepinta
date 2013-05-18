@@ -18,6 +18,7 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with Mepinta. If not, see <http://www.gnu.org/licenses/>.
 '''
+
 from common.abstract.FrameworkBase import FrameworkBase
 from mepinta_devtools.ide_projects.FileManager import FileManager
 from common.path import joinPath
@@ -25,6 +26,26 @@ from mepinta_devtools.python_project.ModuleCreator import ModuleCreator
 from mepinta_devtools.python_project.PackageCreator import PackageCreator
 
 class PluginsDeploymentManager(FrameworkBase):
+  '''
+  Responsibilities:
+  Creates a Plugin Deployment Directory.
+  This class lets the developer add plugins' sets to the deployment.
+    (A set of sets should make a Application program. I.e.: Photo Editor, Video
+    Editor, Sound Editor, so on...)
+  Creates a header repository (linking to real headers)
+  Creates a library repository (linking to real .so)
+  TODO: set building script to build all plugins automatically
+  TODO: create QT or Eclipse projects for developing
+    (another class should do for one plugin)
+    Specify Projects Folder
+    Specify Plugin
+    Specify Program Path (to start it for code editing)
+
+  Goal:
+  This deployment is used by Mepinta to find available plugins to load.
+  Also lets the developer have in one place all the required files for
+  development. (headers and libraries (.so))
+  '''
   def __post_init__(self):
     self.file_manager = FileManager(self.context)
     self.module_creator = ModuleCreator(self.context)
@@ -69,7 +90,8 @@ class PluginsDeploymentManager(FrameworkBase):
     for p_manifest in plugins_manifests:
       path = joinPath(deploy_path, 'python_modules', p_manifest.__module__.split('.'))
       path = '%s_compiled' % path
-      self.file_manager.mkdir(path)
+      if not self.file_manager.pathExists(path):
+        self.file_manager.mkdir(path)
 
   def updateDataTypesIncludeDir(self, deploy_path, submodule=None):
     pass  # TODO: need to have better data_types manifest

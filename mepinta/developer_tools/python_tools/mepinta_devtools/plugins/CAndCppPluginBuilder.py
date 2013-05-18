@@ -20,9 +20,19 @@ along with Mepinta. If not, see <http://www.gnu.org/licenses/>.
 '''
 from common.abstract.FrameworkBase import FrameworkBase
 
-class PluginsDirectoriesManager(FrameworkBase):
-  def createCPPPluginsDirectories(self, plugins_set_name):
+class CAndCppPluginBuilder(FrameworkBase):
+  '''
+  Responsibilities:
+    - Configure, build (and deploy) a c_and_cpp plugin.
+    - Will make use of the waf framework to do the task. (or Cmake or any other system in the future)
+  '''
+  def createBuildScript(self, plugin_manifest):
     pass
+  def buildPlugin(self, plugin_manifest, target=None):
+    pass
+  def cleanPlugin(self, plugin_manifest):
+    pass
+#  def
 
 def test_module():
   from default_context import getDefaultContext

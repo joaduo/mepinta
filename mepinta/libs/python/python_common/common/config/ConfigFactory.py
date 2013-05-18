@@ -22,24 +22,26 @@ along with Mepinta. If not, see <http://www.gnu.org/licenses/>.
 class ModuleDummy:
   class config_base(dict):
     def __init__(self):
-      self[("global",'backend_name')] = str(self.__class__.__name__)[len('config_'):]
-      self[("global",'minor_version_separator')] = '__'
+      self[("global", 'backend_name')] = str(self.__class__.__name__)[len('config_'):]
+      self[("global", 'minor_version_separator')] = '__'
+      self[("global", 'plugin_build_targets')] = ['Debug', 'Release', 'ReleasePointerSafe', 'ReleaseTypeSafe', 'ReleaseArgumentsSafe', ]
+
   class config_python(config_base):
     pass
   class config_c_and_cpp(config_base):
     pass
 
 class ConfigLoader(object):
-  #TODO copy and deepcopy
+  # TODO copy and deepcopy
   __configs = {}
-  #__default_config = 'python'
+  # __default_config = 'python'
   def load(self, config_name):
     if config_name in  self.__configs:
       return self.__configs[config_name]
     else:
-      if hasattr(ModuleDummy,'config_%s'%config_name ):
-        self.__configs[config_name] = getattr(ModuleDummy,'config_%s'%config_name)()
+      if hasattr(ModuleDummy, 'config_%s' % config_name):
+        self.__configs[config_name] = getattr(ModuleDummy, 'config_%s' % config_name)()
         return self.__configs[config_name]
       else:
-        raise RuntimeError('Non existing config %r'%config_name)
-        #return self.load(self.__default_config)
+        raise RuntimeError('Non existing config %r' % config_name)
+        # return self.load(self.__default_config)

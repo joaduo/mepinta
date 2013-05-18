@@ -1,0 +1,26 @@
+Mepinta is a Python, C and C++ project.
+
+Right now I am developing the script for an easy deployment.
+So there is no easy installation.
+
+Right now this software works only on Linux. (multiplatform is planned in the future)
+
+Requirements: (for you to get an idea)
+  Add python path for needed projects
+
+  Some shared libraries that need to be compiled
+  backend/c_and_cpp/backend_api_c
+  backend/c_and_cpp/backend_api_cpp
+  
+  Compile k3d from source to get the k3dsdk.so (or alternatively getting it from the binary installer)
+  
+  Compile each c_and_cpp plugin (without specifying its shared libraries dependencies)
+  
+  Create shedkin python module: 
+  core/python_core/mepinta/pipeline/lo_cpp/load_library_stand_alone.so
+  from the python module:
+  ./core/python_core/mepinta/pipeline/lo_cpp/load_library_stand_alone.py
+  
+If you are really interested in deploying mepinta contact me directly 
+  joaduo at g mail 
+Or you can wait until the deployment script is ready.
