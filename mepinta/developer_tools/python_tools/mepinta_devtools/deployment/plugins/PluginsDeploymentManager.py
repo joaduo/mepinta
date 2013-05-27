@@ -25,6 +25,7 @@ from common.path import joinPath
 from mepinta_devtools.python_project.ModuleCreator import ModuleCreator
 from mepinta_devtools.python_project.PackageCreator import PackageCreator
 
+#TODO: rename to PluginsDeploymentManager
 class PluginsDeploymentManager(FrameworkBase):
   '''
   Responsibilities:
@@ -34,6 +35,8 @@ class PluginsDeploymentManager(FrameworkBase):
     Editor, Sound Editor, so on...)
   Creates a header repository (linking to real headers)
   Creates a library repository (linking to real .so)
+  Prepare to compile any needed plugin extension lib
+    libk3dv1MPExtension
   TODO: set building script to build all plugins automatically
   TODO: create QT or Eclipse projects for developing
     (another class should do for one plugin)
