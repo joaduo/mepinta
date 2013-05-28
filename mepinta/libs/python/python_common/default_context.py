@@ -21,18 +21,18 @@ along with Mepinta. If not, see <http://www.gnu.org/licenses/>.
 from common.context.Context import Context
 from common.config.ContextWrapper import ContextWrapper
 
-LOG_INFO, LOG_DEBUG = 1,2
+LOG_INFO, LOG_DEBUG = 1, 2
 
-called_once =False
-def getDefaultContext(log_level=LOG_DEBUG):
+called_once = False
+def getDefaultContext(log_level=LOG_DEBUG, name='python'):
   '''Creates a default context to reduce verbosity on start.'''
   global called_once
   if called_once:
     raise RuntimeError('You should call the default context only once. (in the main script)')
   else:
-    called_once= True
-  context = ContextWrapper(Context('python'))
+    called_once = True
+  context = ContextWrapper(Context(name))
   return context
-        
+
 if __name__ == "__main__":
   pass

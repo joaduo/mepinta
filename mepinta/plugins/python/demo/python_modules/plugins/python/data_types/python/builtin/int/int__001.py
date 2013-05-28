@@ -1,8 +1,7 @@
-
 # -*- coding: utf-8 -*-
 '''
 Mepinta
-Copyright (c) 2011-2012, Joaquin G. Duo
+Copyright (c) 2011-2012, Joaquin G. Duo, mepinta@joaquinduo.com.ar
 
 This file is part of Mepinta.
 
@@ -21,12 +20,21 @@ along with Mepinta. If not, see <http://www.gnu.org/licenses/>.
 '''
 
 data_type_description = {
- 'plugin_url':'http://',
- 'future_plugin_url':'http://',
- 'additional_urls':{},
- 'authors':'',
- 'description':'''.''',
- 'changes':'',
- 'api':'##api', #What kind of api is available for accessing this data
+# 'plugin_url':'http://mepinta.joaquinduo.com.ar/plugins/',
+# 'future_plugin_url':'http://mepinta.joaquinduo.com.ar/plugins/',
+# 'additional_urls':{},
+# 'authors':'Joaquín Duo',
+# 'description':'''Simple python Integer data type. In fact there is no real API for this, since it handles consistency easily''',
+# 'changes':'First writing',
+# 'api':'python', #What kind of api is available for accessing this data
+# 'python_module':None,
 }
 
+def new():
+  return int()
+
+def copy(int_):
+  return int_
+
+def delete(int_):
+  pass

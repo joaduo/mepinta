@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 '''
 Mepinta
-Copyright (c) 2011-2012, Joaquin G. Duo
+Copyright (c) 2011-2012, Joaquin G. Duo, mepinta@joaquinduo.com.ar
 
 This file is part of Mepinta.
 
@@ -18,22 +18,16 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with Mepinta. If not, see <http://www.gnu.org/licenses/>.
 '''
-from mepinta.context.MepintaContext import MepintaContext
-from pipeline_backend.logging.logging import LOG_INFO, LOG_DEBUG
-from common.config.ContextWrapper import ContextWrapper
 
-called_once = False
-def getDefaultContext(log_level=LOG_INFO):
-  '''Creates a default context to reduce verbosity on start.'''
-  global called_once
-  if called_once:
-    raise RuntimeError('You should call the default context only once. (in the main script)')
-  else:
-    called_once = True
-  context = MepintaContext('python')
-  context = ContextWrapper(context)
-  context.log.set_level(log_level)
-  return context
+from Geometry2D__001_implementation.Geometry2D import Geometry2D
+from copy import deepcopy
 
-if __name__ == "__main__":
+def new():
+  return Geometry2D()
+
+def copy(geom2d):
+  return deepcopy(geom2d)
+
+def delete(geom2d):
   pass
+

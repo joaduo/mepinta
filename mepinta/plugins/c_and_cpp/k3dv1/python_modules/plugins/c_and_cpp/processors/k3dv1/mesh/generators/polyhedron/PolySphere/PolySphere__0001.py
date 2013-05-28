@@ -30,23 +30,22 @@ class PolySphere(MeshSourceManifestBase):
     inputs.u_power = DataProperty('k3d::double_t')
     inputs.v_power = DataProperty('k3d::double_t')
     inputs.primitive = GenericEnum(SPHERE=0, QUAD_ONLY_SPHERE=1, SPHEREIZED_CYLINDER=2).setDefault('SPHERE')
-    
+
     updateMeshTopology.dpdencies += [inputs.u_segments,
                                      inputs.v_segments,
-                                     inputs.primitive,]
+                                     inputs.primitive, ]
     updateMeshGeometry.dpdencies += [inputs.u_segments,
                                      inputs.v_segments,
                                      inputs.radius,
                                      inputs.u_power,
                                      inputs.v_power,
-                                     inputs.primitive,]
+                                     inputs.primitive, ]
 
 manifest = PolySphere
 
 if __name__ == "__main__":
   from mepinta.context.MepintaContext import MepintaContext
-  from mepinta.plugins_manifest.PluginManifestTester import PluginManifestAutoTester
+  from mepinta.testing.plugins_testing.PluginManifestAutoTester import PluginManifestAutoTester
   context = MepintaContext('c_and_cpp')
-  plugin_instance = manifest(context=context)
   context.log(manifest)
-  PluginManifestAutoTester(context=context).test(plugin_instance)
+  PluginManifestAutoTester(context=context).test(manifest)

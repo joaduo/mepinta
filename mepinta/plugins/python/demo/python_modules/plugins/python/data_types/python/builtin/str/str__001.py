@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 '''
 Mepinta
-Copyright (c) 2011-2012, Joaquin G. Duo
+Copyright (c) 2011-2012, Joaquin G. Duo, mepinta@joaquinduo.com.ar
 
 This file is part of Mepinta.
 
@@ -18,22 +18,24 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with Mepinta. If not, see <http://www.gnu.org/licenses/>.
 '''
-from mepinta.context.MepintaContext import MepintaContext
-from pipeline_backend.logging.logging import LOG_INFO, LOG_DEBUG
-from common.config.ContextWrapper import ContextWrapper
 
-called_once = False
-def getDefaultContext(log_level=LOG_INFO):
-  '''Creates a default context to reduce verbosity on start.'''
-  global called_once
-  if called_once:
-    raise RuntimeError('You should call the default context only once. (in the main script)')
-  else:
-    called_once = True
-  context = MepintaContext('python')
-  context = ContextWrapper(context)
-  context.log.set_level(log_level)
-  return context
+data_type_description = {
+# 'plugin_url':'http://mepinta.joaquinduo.com.ar/plugins/',
+# 'future_plugin_url':'http://mepinta.joaquinduo.com.ar/plugins/',
+# 'additional_urls':{},
+# 'authors':'Joaquín Duo',
+# 'description':'''Simple python string data type. In fact there is no real API for this, since it handles consistency easily''',
+# 'changes':'First writing',
+# 'api':'python', #What kind of api is available for accessing this data
+# 'python_module':None,
+}
 
-if __name__ == "__main__":
+
+def new():
+  return ''
+
+def copy(str_, deep=False):
+  return str_
+
+def delete(str_):
   pass

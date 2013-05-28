@@ -60,7 +60,7 @@ from mepinta.testing.plugins_testing.test_pipeline.SimpleTestPipeline import Sim
 class ConsoleDemo(FrameworkBase):
   def run(self):
     test_pline = SimpleTestPipeline(self.context)
-    test_pline.
+#    test_pline.
 
 def test_module():
   from default_context import getDefaultContext

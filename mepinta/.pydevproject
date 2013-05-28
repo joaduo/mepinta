@@ -9,7 +9,7 @@
 <path>/mepinta/developer_tools/python_tools</path>
 <path>/mepinta/developer_tools/python_tools_tests</path>
 <path>/mepinta/core/python_core</path>
-<path>/mepinta/plugins/c_and_cpp/k3dv1/python_modules</path>
 <path>/mepinta/libs/python/python_common</path>
+<path>/mepinta/plugins/python/demo/python_modules</path>
 </pydev_pathproperty>
 </pydev_project>

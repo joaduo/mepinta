@@ -59,7 +59,7 @@ class PluginPackageManager(FrameworkBase):
       except Exception as e:
         self.context.log.last_exception()  # TODO: add an config for this printing
         self.context.log.debug('Couldnt import %s. Exception: %s' % (name, e))
-    raise RuntimeError('Couldn\'t load %s plugin.' % name)
+    raise RuntimeError('Couldn\'t load (%s).%s.%s plugin.' % ('|'.join(prefixes), self.plugins_type, short_name))
   def get_package_and_name(self, plugin):
     '''
       PluginsManager can receive a package/module or a string.
