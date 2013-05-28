@@ -18,9 +18,7 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with Mepinta. If not, see <http://www.gnu.org/licenses/>.
 '''
-from pipeline_backend.logging.logging import LOG_INFO
 from plugins_tests.base.K3dMeshPluginTest import K3dMeshPluginTest
-from mepinta.testing.plugins_testing.PluginTestAutoTester import PluginTestAutoTester
 
 class QSlim(K3dMeshPluginTest):
   def __post_init__(self):
@@ -44,10 +42,12 @@ class QSlim(K3dMeshPluginTest):
   def stressPipeline(self, test_pline, time):
     K3dMeshPluginTest.stressPipeline(self, test_pline, time)
     qslim_node = test_pline.getNodesDict()['QSlim 1']
-    test_pline.setValue(qslim_node.inputs.face_count, 10*time)
+    test_pline.setValue(qslim_node.inputs.face_count, 10 * time)
 
 test = QSlim
-        
+
 if __name__ == "__main__":
+  from mepinta.testing.plugins_testing.PluginTestAutoTester import PluginTestAutoTester
   from default_context import getDefaultContext
-  PluginTestAutoTester(getDefaultContext(LOG_INFO)).test(test,gui=False)
+  from pipeline_backend.logging.logging import LOG_INFO
+  PluginTestAutoTester(getDefaultContext(LOG_INFO)).test(test, gui=False)

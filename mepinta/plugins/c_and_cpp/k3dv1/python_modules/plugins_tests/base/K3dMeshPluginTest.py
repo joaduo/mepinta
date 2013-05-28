@@ -32,38 +32,38 @@ class K3dMeshPluginTest(ProcessorPluginTestBase):
     test_pline.setValue(sphere_node.inputs.primitive, 'QUAD_ONLY_SPHERE')
     test_pline.setValue(sphere_node.inputs.radius, 5.0)
     return sphere_node
-      
+
   def _selectAllInputVertexs(self, test_pline):
     import plugins.c_and_cpp.processors.k3dv1.mesh.selection.points.SelectPointsExpression as select
     select_node = test_pline.append(select)
     test_pline.setValue(select_node.inputs.weight_expression, '1')
-    return select_node    
-  
+    return select_node
+
   def _createOutputMesh(self, test_pline):
     import plugins.c_and_cpp.processors.k3dv1.mesh.output.file.K3DMeshWriter as k3d_wtr
     write_node = test_pline.append(k3d_wtr)
-    test_pline.setValue(write_node.inputs.file,self.output_file)
+    test_pline.setValue(write_node.inputs.file, self.output_file)
     return write_node
 
   def validateOutputMesh(self):
     raise NotImplementedError("Implement!")
-  
+
   def definePluginPipeline(self):
     raise NotImplementedError("Implement on children classes!")
-  
+
   def definePipeline(self, test_pline):
     self._createInputMesh(test_pline)
     self.definePluginPipeline(test_pline)
     write_node = self._createOutputMesh(test_pline)
     test_pline.default_evaluated.append(write_node.functions.writeMesh)
-    
+
   def stressPipeline(self, test_pline, time):
     import math
     sphere_node = test_pline.getNodesDict()['PolySphere 1']
-    test_pline.setValue(sphere_node.inputs.radius, math.cos(time)*0.5+1)
-    test_pline.setValue(sphere_node.inputs.u_segments, time*2)
+    test_pline.setValue(sphere_node.inputs.radius, math.cos(time) * 0.5 + 1)
+    test_pline.setValue(sphere_node.inputs.u_segments, time * 2)
     test_pline.setValue(sphere_node.inputs.v_segments, time)
 
-        
+
 if __name__ == "__main__":
   pass

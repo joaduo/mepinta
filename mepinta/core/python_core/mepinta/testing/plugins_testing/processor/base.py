@@ -24,15 +24,15 @@ from mepinta.testing.plugins_testing.time.TestTime import TestTime
 
 class ProcessorPluginTestBase(FrameworkBase):
   '''Base class for plugins' test modules.
-  
+
   Tests inheriting this class should re-implement the defilePipeline and
   stressPipeline method.
   Optionally they also can reimplement getTimeParameters method.
-  
+
   In general concrete class test won't inherit from this class, but will inherit
-  from an intermediate abstract class that prepares the input and output 
+  from an intermediate abstract class that prepares the input and output
   automatically
-  
+
   For an intermediate class example, check:
    mepinta.testing.plugins_testing.processor.K3dMeshPluginTest.K3dMeshPluginTest
   '''
@@ -42,7 +42,7 @@ class ProcessorPluginTestBase(FrameworkBase):
     self.__time = TestTime()
 
   @property
-  def time(self):
+  def time(self): #TODO: rename it to test_time or time_specifier
     '''Time helper instance.'''
     return self.__time
 
@@ -50,11 +50,11 @@ class ProcessorPluginTestBase(FrameworkBase):
   def tested_processors(self):
     '''List of processors (modules) target of this test case.'''
     return self.__tested_processors
-  
+
   def getWatchedProcessors(self):
     '''Returns a list of the processors (modules) to be watched in the interac-
     tive tests. (i.e. when running this test in interactive mode)
-    In general the watched processors will be the tested processors, but may or 
+    In general the watched processors will be the tested processors, but may or
     may include other processors.
     You probably will not reimplement this method.
     '''
@@ -62,14 +62,14 @@ class ProcessorPluginTestBase(FrameworkBase):
       raise MepintaError('You should set self.tested_processor on test __post_init__ method.')
     return self.tested_processors
 
-  define_once= True  
+  define_once = True
   def definePipeline(self, test_pline):
-    '''Defines the pipeline for testing a processor. 
-    In other words, it the defines the inputs for the tested processor.
-    Also may define a 'tail' pipeline to process the output to check its 
-    validity. (visually, in the case of an interative test)
+    '''Defines the pipeline for testing a processor.
+    In other words, it defines the inputs for the tested processor.
+    Also may define a 'tail' pipeline to process the output to check its
+    validity. (visually, in the case of an interactive test)
     '''
-    raise NotImplementedError('You should implement %s on children classes'%self.createPipeline)
+    raise NotImplementedError('You should implement %s on children classes' % self.createPipeline)
 
   def getTimeParameters(self):
     '''
@@ -82,20 +82,20 @@ class ProcessorPluginTestBase(FrameworkBase):
           return 0,100,1,0.05
     '''
     return None
-  
+
   def stressStart(self, test_pline, time):
     '''Called just before the first frame of the stress test.(time=start time)'''
     pass
-  
+
   def stressEnd(self, test_pline, time):
     '''Called just after the last frame of the stress test. (time= end time)'''
     pass
-  
+
   def stressPipeline(self, test_pline, time):
     '''This function receives the pipeline previously defined in 'definePipeline'
     method and a time value. With that, the end user can define a pertinent test
     to the target processor/s.
-    
+
     The time can be manipulated reimplementing the 'getTimeParameters' method.
     '''
     pass

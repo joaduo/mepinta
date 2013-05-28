@@ -236,7 +236,7 @@ class InotifySimpleTestPipeline(ForkInotifyUtilsBase):
         step = time_parameters_dict['step']
         sleep = time_parameters_dict['sleep']
       else:
-        self.ltog.warning('Unsupported time parameters %r. Using defaults' % time_parameters)
+        self.log.warning('Unsupported time parameters %r. Using defaults' % time_parameters)
     return start, end, step, sleep
 
   def replaceEvalOnTest(self, test_function):
