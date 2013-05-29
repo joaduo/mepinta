@@ -19,33 +19,19 @@ You should have received a copy of the GNU General Public License
 along with Mepinta. If not, see <http://www.gnu.org/licenses/>.
 '''
 from common.abstract.FrameworkBase import FrameworkBase
-from mepinta_devtools.ide_projects.FileManager import FileManager
+import shlex
+import subprocess
 
-default_template = '''
-class deployment_config(object):
-  mepinta_source_path = '##MEPINTA_SOURCE_PATH'
-  eclipse_projects_path = '##ECLIPSE_PROJECTS_PATH'
-  qt_projects_path = '##QT_PROJECTS_PATH'
-
-def configurePythonPaths():
-  import sys
-  config = deployment_config()
-  sys.path.append(config.mepinta_source_path + '/developer_tools/python_tools')
-  from mepinta_devtools.deployment.PythonPathManager import PythonPathManager
-  PythonPathManager().appendAll(config.mepinta_source_path)
-
-'''
-
-class DeploymentConfigCreator(FrameworkBase):
-  def __post_init__(self):
-    self.file_manager = FileManager(self.context)
-  def createDeploymentConfig(self, path, template=default_template, overwrite=False):
-    content = ''
-    self.file_manager.saveTextFile(path, content, overwrite)
+class CommandRunner(FrameworkBase):
+  def run(self, cmd):
+    process_open = subprocess.Popen(shlex.split(cmd), stderr=subprocess.PIPE, stdout=subprocess.PIPE)
+    stdout, stdin = process_open.stdout.read(), process_open.stderr.read()
+    return stdout, stdin
 
 def test_module():
   from default_context import getDefaultContext
   context = getDefaultContext()
+  print CommandRunner(context).run('ls -alh')
 
 if __name__ == "__main__":
   test_module()

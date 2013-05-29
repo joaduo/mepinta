@@ -19,49 +19,34 @@ You should have received a copy of the GNU General Public License
 along with Mepinta. If not, see <http://www.gnu.org/licenses/>.
 '''
 from mepinta.plugins_manifest import PluginManifestBase, FunctionProperty
+from pipeline_backend.logging.logging import log_info
 
-class Circle(PluginManifestBase):
+class StdoutPrint(PluginManifestBase):
   def define(self, inputs, internals, functions, outputs):
     #Inputs
-    inputs.geometry = 'demov1.Geometry2D' #TODO: review if necessary for nonCached
-    inputs.radius = 'float'
-    inputs.segments = 'int'
+    inputs.geometry = 'demov1.Geometry2D'
     #Outputs
-    outputs.geometry = 'demov1.Geometry2D'
-    functions.create_geometry = FunctionProperty()
+    functions.printToStdout = FunctionProperty()
 
     #Set sinks & dpdencies
-    outputs.geometry.dpdencies += [functions.create_geometry]
-    functions.create_geometry.dpdencies += [ inputs.geometry,
-                                             inputs.radius,
-                                             inputs.segments, ]
+    functions.printToStdout.dpdencies += [ inputs.geometry ]
 
-    #We can work directly on the output
-    self.nonCached(outputs.geometry)
+manifest = StdoutPrint
 
-manifest = Circle
-
-import math
 from mepinta_python_sdk.props import get_prop_value
-
-def create_geometry(args):
+def printToStdout(args):
   #Inputs
-  radius = get_prop_value(args, 'inputs', 'radius')
-  segments = get_prop_value(args, 'inputs', 'segments')
-  #Outputs
-  geometry = get_prop_value(args, 'outputs', 'geometry')
-  #Big deal!!
-  segments = int(segments)
-  if segments < 2:
-    segments = 2
-  points = segments * 3
-  delta = math.pi * 2 / points
-  for point_i in range(points):
-    #TODO: use the correct approximation of a circle's arc with a cubic function
-    p = [ math.cos(point_i * delta) * radius
-         , math.sin(point_i * delta) * radius]
-    geometry.points.append(p)
-  geometry.bezier_paths.append(range(points) + [0])
+  geometry = get_prop_value(args, 'inputs', 'geometry')
+#  log_info(str(geometry))
+  from plugins.python.data_types.demov1.Geometry2D.Geometry2D__001_implementation.Geometry2D import Geometry2D
+#  geometry = Geometry2D()
+  stdout_str = ''
+  stdout_str += 'points:%s ' % geometry.points
+  stdout_str += 'bezier_paths:%s' % geometry.bezier_paths
+  stdout_str += '\nSummary points:%s paths:%s ' % (len(geometry.points), len(geometry.bezier_paths))
+  if len(geometry.bezier_paths):
+    stdout_str += '\nFirst bezier path length:%s ' % len(geometry.bezier_paths[0])
+  log_info(stdout_str)
 
 if __name__ == "__main__":
   from default_context import getDefaultContext

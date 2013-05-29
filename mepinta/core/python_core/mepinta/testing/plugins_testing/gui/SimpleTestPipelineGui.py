@@ -26,9 +26,9 @@ class SimpleTestPipelineGui(FrameworkBase):
     -Creates GUI Panel
     -Evaluates Pipeline's values on GUI events
     -Able to coexist with a InotifyActionManager
-  
-  This class is used by GUIInotifyTestPipeline, in general  you should directly 
-  use GUIInotifyTestPipeline. 
+
+  This class is used by GUIInotifyTestPipeline, in general  you should directly
+  use GUIInotifyTestPipeline.
   '''
   def __post_init__(self, test_pline):
     self.test_pline = test_pline
@@ -38,18 +38,18 @@ class SimpleTestPipelineGui(FrameworkBase):
     self.__update_functions = []
 
   def __createWidgetId(self, node, prop):
-    return "%s_%s"%(node.name.replace(" ","_"), prop.name)
+    return "%s_%s" % (node.name.replace(" ", "_"), prop.name)
 
   def __createWidget(self, node, prop):
-    from nodebox.gui import Field,Slider,Flag#,Label,Row,Knob,Action
-    widget_name = "%s:%s"%(node.name, prop.name)
-    bool_alias = ['k3d::bool_t']
+    from nodebox.gui import Field, Slider, Flag#,Label,Row,Knob,Action
+    widget_name = "%s:%s" % (node.name, prop.name)
+    bool_alias = ['k3d::bool_t', 'python.builtin.bool']
     if prop.data_type_alias in bool_alias:
-      return (widget_name,Flag(default=bool(self.__getPropValue(prop)), id=self.__createWidgetId(node, prop)))
-    text_types = ['c.builtin.charp','cpp.std.string']
+      return (widget_name, Flag(default=bool(self.__getPropValue(prop)), id=self.__createWidgetId(node, prop)))
+    text_types = ['c.builtin.charp', 'cpp.std.string', 'python.builtin.str']
     if prop.data_type_name in text_types:
       return (widget_name, Field(value=self.__getPropValue(prop), hint="", id=self.__createWidgetId(node, prop)))
-    number_types = ['c.builtin.int','c.builtin.double']
+    number_types = ['c.builtin.int', 'c.builtin.double', 'python.builtin.int', 'python.builtin.float']
     if prop.data_type_name in number_types:
       return (widget_name, Slider(default=self.__getPropValue(prop), min=0.0, max=50.0, steps=100, id=self.__createWidgetId(node, prop)))
 
@@ -57,9 +57,9 @@ class SimpleTestPipelineGui(FrameworkBase):
     return self.test_pline.getValue(prop)
 
   def __createPanel(self):
-    from nodebox.gui import Panel,Rows
+    from nodebox.gui import Panel, Rows
     panel = Panel("Properties", width=200, height=200, fixed=False, modal=False)
-    widget_list =[]
+    widget_list = []
 
     for node in self.test_pline.getNodesDict().values():
       for prop in node.inputs.get_properties().values():
@@ -71,11 +71,11 @@ class SimpleTestPipelineGui(FrameworkBase):
     panel.append(Rows(widget_list))
     panel.pack()
     return panel
-  
+
   def __createControls(self):
     self.panel = self.__createPanel()
     self.canvas.append(self.panel)
-  
+
   def __setPropsOnChange(self):
     evaluate = False
     for widget_id, value in self.__widgetid_value.items():
@@ -86,7 +86,7 @@ class SimpleTestPipelineGui(FrameworkBase):
         prop = self.__widgetid_prop[widget_id]
         self.test_pline.setValue(prop, widget.value)
     return evaluate
-  
+
   def __updateFunction(self):
     for function in self.__update_functions:
       function()
@@ -97,7 +97,7 @@ class SimpleTestPipelineGui(FrameworkBase):
   def appendUpdateFunction(self, function):
     if function not in self.__update_functions:
       self.__update_functions.append(function)
-    
+
   def removeUpdateFunction(self, function):
     if function in self.__update_functions:
       self.__update_functions.remove(function)
@@ -106,10 +106,10 @@ class SimpleTestPipelineGui(FrameworkBase):
     from mepinta.testing.plugins_testing.nodebox.NodeBoxSimplePipelineOutput import NodeBoxSimplePipelineOutput
     from mepinta.testing.plugins_testing.nodebox.NodeboxUiRunner import NodeboxUiRunner
     from nodebox.graphics import canvas
-    self.canvas = canvas    
+    self.canvas = canvas
     self.__createControls()
     self.nodebox_pline = NodeBoxSimplePipelineOutput(self.test_pline.getPipeline(), canvas_x, canvas_y)
-    return NodeboxUiRunner(canvas_x,canvas_y)
+    return NodeboxUiRunner(canvas_x, canvas_y)
 
   def run(self, canvas_x=700, canvas_y=600):
     ui_runner = self.__setupNodebox(canvas_x, canvas_y)

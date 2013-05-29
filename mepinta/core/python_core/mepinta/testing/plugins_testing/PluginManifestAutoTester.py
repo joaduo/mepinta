@@ -25,7 +25,7 @@ from mepinta.pipelineview.graph.GraphTopologyManager import GraphTopologyManager
 from mepinta.testing.plugins_testing.base import ModuleAutoTesterBase
 
 class PluginManifestAutoTester(ModuleAutoTesterBase):
-  def createNode(self, plugin_manifest):
+  def __createNode(self, plugin_manifest):
     pline = Pipeline(context=self.context)
     #pline.grow()
     pline.endChangeSet()
@@ -44,7 +44,7 @@ class PluginManifestAutoTester(ModuleAutoTesterBase):
   def test(self, plugin_manifest_class, gui=True):
     plugin_manifest = plugin_manifest_class(self.context)
     self.context.set_config('non_cached', False, GraphTopologyManager)
-    pline, _ = self.createNode(plugin_manifest)
+    pline, _ = self.__createNode(plugin_manifest)
     if gui:
       #import here to avoid unnecessary memory use and delays
       from mepinta.testing.plugins_testing.nodebox.NodeBoxSimplePipelineOutput import NodeBoxSimplePipelineOutput

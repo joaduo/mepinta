@@ -1,5 +1,10 @@
 Mepinta is a Python, C and C++ project.
 
+For running the Python plugins you need installed:
+  nodebox library
+  xdot command
+  graph-easy command
+
 Right now I am developing the script for an easy deployment.
 So there is no easy installation.
 

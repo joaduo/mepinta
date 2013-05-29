@@ -22,7 +22,6 @@ from mepinta.pipelineview.graph.GraphPropertyManager import GraphPropertyManager
 from common.abstract.FrameworkBase import FrameworkBase
 from mepinta.pipelineview.graph.NodeManager import NodeManager
 from mepinta.pipelineview.graph.GraphTopologyManager import GraphTopologyManager
-from mepinta.abstract.MepintaError import MepintaError
 from mepinta.plugins_manager.PluginsManager import PluginsManager
 
 class GraphManager(FrameworkBase):
@@ -31,6 +30,7 @@ class GraphManager(FrameworkBase):
     self.topo_mngr = GraphTopologyManager(self.context)
     self.node_mngr = NodeManager(self.context)
     self.plugins_mngr = PluginsManager(self.context)
+
   def create_node(self, pline, processor): #TODO: add support for debugging version
     #create the node proxy
     node = self.node_mngr.new(processor)
@@ -60,15 +60,16 @@ class GraphManager(FrameworkBase):
     return node
   def connect(self, pline, dent_prop, dency_prop):
     return self.topo_mngr.connect(pline, dent_prop, dency_prop)
+
   def disconnect(self, pline, dent_prop, dency_prop=None):
     return self.topo_mngr.disconnect(pline, dent_prop, dency_prop)
+
   def auto_connect(self, pline, dent_node, dency_node):
     inputs_names = dent_node.inputs.get_properties().keys()
     outputs_names = dency_node.outputs.get_properties().keys()
-    self.context.log.debug('Autoconnecting in:%s out:%s'%(inputs_names, outputs_names))
+    self.context.log.debug('Autoconnecting in:%s out:%s' % (inputs_names, outputs_names))
     for name in outputs_names:
       if name in inputs_names:
         self.topo_mngr.connect(pline
                                   , getattr(dent_node.inputs, name)
                                   , getattr(dency_node.outputs, name))
-

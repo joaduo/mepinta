@@ -19,8 +19,6 @@ You should have received a copy of the GNU General Public License
 along with Mepinta. If not, see <http://www.gnu.org/licenses/>.
 '''
 from plugins_tests.python.processors.demov1.Geometry2D.modifier.base.Geometry2DPluginTest import Geometry2DPluginTest
-from mepinta.testing.plugins_testing.test_pipeline.SimpleTestPipeline import SimpleTestPipeline
-from mepinta.testing.plugins_testing.gui.SimpleTestPipelineGui import SimpleTestPipelineGui
 
 class DeformationExpression(Geometry2DPluginTest):
   def __post_init__(self):
@@ -50,8 +48,13 @@ if __name__ == "__main__":
   from pipeline_backend.logging.logging import LOG_INFO
   #PluginTestAutoTester(getDefaultContext(LOG_INFO)).test(test, gui=False)
   #PluginTestAutoTester(getDefaultContext(LOG_INFO)).test(test)
+
+#  from mepinta.testing.plugins_testing.test_pipeline.SimpleTestPipeline import SimpleTestPipeline
+  from mepinta.testing.plugins_testing.gui.SimpleTestPipelineGui import SimpleTestPipelineGui
+  from mepinta.testing.plugins_testing.test_pipeline.InotifySimpleTestPipeline import InotifySimpleTestPipeline
+
   context = getDefaultContext(LOG_INFO)
-  test_pline = SimpleTestPipeline(context)
+  test_pline = InotifySimpleTestPipeline(context)
   DeformationExpression(context).definePipeline(test_pline)
   SimpleTestPipelineGui(context, test_pline=test_pline).run()
 

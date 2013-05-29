@@ -28,7 +28,11 @@ class UntypedValueManager(FrameworkBase):
 
   @unwrap_decorator
   def getValue(self, pline, prop):
-    return self._value_manager_lo.getUntypedPropsValues(pline, [prop])
+    values = self._value_manager_lo.getUntypedPropsValues(pline, [prop])
+    if len(values) > 0:
+      return values[0]
+    else:
+      return None
 
   @unwrap_decorator
   def setValue(self, pline, prop, value):

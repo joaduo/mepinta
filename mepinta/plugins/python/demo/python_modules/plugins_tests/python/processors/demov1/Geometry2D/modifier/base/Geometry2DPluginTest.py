@@ -32,18 +32,15 @@ class Geometry2DPluginTest(ProcessorPluginTestBase):
     return circle_node
 
   def _createOutputGeometry(self, test_pline):
-    pass
-    #    import plugins.python.processors.demov1.Geometry2D.output.StdPrint as std_print
-    #    #c_and_cpp.processors.k3dv1.mesh.output.file.K3DMeshWriter as k3d_wtr
-    #    write_node = test_pline.append(std_print)
-    #    test_pline.setValue(write_node.inputs.file, self.output_file)
-    #    return write_node
+    import plugins.python.processors.demov1.Geometry2D.output.StdoutPrint as stdout_print
+    write_node = test_pline.append(stdout_print)
+    return write_node
 
   def definePipeline(self, test_pline):
     self._createInputGeometry(test_pline)
     self.definePluginPipeline(test_pline)
-#    output_node = self._createOutputGeometry(test_pline)
-#    test_pline.default_evaluated.append(output_node.functions.writeMesh)
+    output_node = self._createOutputGeometry(test_pline)
+    test_pline.default_evaluated.append(output_node.functions.printToStdout)
 
   def stressPipeline(self, test_pline, time):
     import math
