@@ -22,7 +22,7 @@ from mepinta.pipeline.hi.base import  HiAutoBase, unwrap_decorator
 
 class PipelineEvaluatorFunctum(HiAutoBase):
   def __post_init__(self):
-    self.ppgation_mngr = self.get_wrapped_class("SimplePropagationManager")(self.wrapped)
+    self.ppgation_mngr = self._getWrappedClass("SimplePropagationManager")(self.wrapped)
   @unwrap_decorator
   def evaluateProp(self, pline, prop_id):
     if prop_id in pline.get_topology().properties:

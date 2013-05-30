@@ -22,7 +22,7 @@ from mepinta.pipeline.hi.base import HiBase
 
 class Pipeline(HiBase):
   def __post_init__(self):
-    self.wrapped = self.get_wrapped_class()()
+    self.wrapped = self._getWrappedClass()()
 
 if __name__ == '__main__':
   from mepinta.context.MepintaContext import MepintaContext

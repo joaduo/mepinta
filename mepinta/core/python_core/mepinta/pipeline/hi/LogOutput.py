@@ -18,15 +18,9 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with Mepinta. If not, see <http://www.gnu.org/licenses/>.
 '''
-'''
-Created on Mar 22, 2012
-
-@author: jduo
-'''
 from mepinta.pipeline.hi.base import HiBase
-
 
 class LogOutput(HiBase):
   def __post_init__(self):
-    self.wrapped = self.get_wrapped_class()()
+    self.wrapped = self._getWrappedClass()()
 

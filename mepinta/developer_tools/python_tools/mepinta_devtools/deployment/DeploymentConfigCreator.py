@@ -23,7 +23,7 @@ from mepinta_devtools.ide_projects.FileManager import FileManager
 from common.path import joinPath
 from mepinta_devtools.templates.DictionaryBasedTranslator import DictionaryBasedTranslator
 
-default_template = '''
+default_template = '''# -*- coding: utf-8 -*-
 class deployment_config(object):
   mepinta_source_path = '##mepinta_source_path'
   eclipse_projects_path = '##eclipse_projects_path'
@@ -38,6 +38,8 @@ def configurePythonPaths():
   sys.path.append(config.mepinta_source_path + '/developer_tools/python_tools')
   from mepinta_devtools.deployment.PythonPathManager import PythonPathManager
   PythonPathManager().appendAll(config.mepinta_source_path)
+  from default_context import getDefaultContext
+  return getDefaultContext()
 
 '''
 

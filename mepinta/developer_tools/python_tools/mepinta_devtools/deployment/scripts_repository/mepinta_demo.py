@@ -4,7 +4,6 @@
 from deployment_config import configurePythonPaths
 
 if __name__ == "__main__":
-  configurePythonPaths()
-  from default_context import getDefaultContext
+  context = configurePythonPaths()
   from plugins_tests.demo.MepintaDemo import MepintaDemo
-  MepintaDemo(getDefaultContext()).run()
+  MepintaDemo(context).run()

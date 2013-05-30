@@ -17,23 +17,20 @@ GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
 along with Mepinta. If not, see <http://www.gnu.org/licenses/>.
-
-Created on Mar 22, 2012
 '''
-
-from pipeline_backend.logging.logging import log_critical, log_debug, log_error,\
+from pipeline_backend.logging.logging import log_critical, log_debug, log_error, \
   log_info, log_warning, log_verbose, set_log_level
 
 class LogOutput(object):
-  def critical(self,msg):
+  def critical(self, msg):
     log_critical(msg)
-  def error(self,msg):
+  def error(self, msg):
     log_error(msg)
-  def warning(self,msg):
+  def warning(self, msg):
     log_warning(msg)
-  def info(self,msg):
+  def info(self, msg):
     log_info(msg)
-  def debug(self,msg):
+  def debug(self, msg):
     log_debug(msg)
   def verbose(self, msg):
     log_verbose(msg)
@@ -53,4 +50,4 @@ def shedskin_LogOutput():
   lo.warning(msg)
   lo.verbose(msg)
   lo.set_level(1)
-  
+

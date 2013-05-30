@@ -82,13 +82,11 @@ def joinPath(path, *path_list):
     joint_path = os.sep.join((joint_path, joinPath(path_list[0])))
   return joint_path
 
-def conditionalPathJoin(str_list, split=False):
+def conditionalPathJoin(str_list, split=False): #TODO: remove this?
   if split:
     return str_list
   else:
     return os.sep.join(str_list)
-
-
 
 if __name__ == "__main__":
   print pathHead('/path/to/file')

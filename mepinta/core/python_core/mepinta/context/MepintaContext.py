@@ -24,19 +24,22 @@ from mepinta.pipeline.hi.LogOutput import LogOutput
 
 class chicken_egg_solver(object):
   '''
-    Context needs to have prior any instancing: 
+    Context needs to have prior any instancing:
       context_lo: For having a context to create classes on the lo layer.
       the logger output: For proper output of the logging.
-    Since the ContextLo** 
-    
-    **ContextLo in the hi layer, twin fo the ContextLo in lo layer.
+    This decorator ensures that when instanced, the Context already has this two
+    attributes.
+    Also, ContextLo and LogOutput (in the hi package) need a MepintaContext to
+      be instanced.
+   (ContextLo and LogOutput need the MepintaContext, but don't use log or
+     context_lo attributes)
   '''
   def __init__(self, Class):
     self.Class = Class
   def __call__(self, *a, **ad):
     instance = self.Class(*a, **ad)
-    return self.solve(instance)
-  def solve(self, context):
+    return self.__solve(instance)
+  def __solve(self, context):
     context_lo = ContextLo(context=context)
     context.set_config('context_lo', context_lo)
     logger = context.get_config('log')
@@ -56,4 +59,3 @@ if __name__ == '__main__':
   log.set_level(60)
   log.info('Hello')
   log.trace('Hello')
-  

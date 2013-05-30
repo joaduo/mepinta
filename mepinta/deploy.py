@@ -1,3 +1,4 @@
+#!/usr/bin/python
 # -*- coding: utf-8 -*-
 '''
 Mepinta
@@ -28,17 +29,22 @@ class Deployment(object):
   This way code and installation are split to simplify maintenance.
   '''
   def __fake_post_init__(self, debug):
+    from mepinta_devtools.deployment.DeploymentScriptsCopier import DeploymentScriptsCopier
     from mepinta_devtools.deployment.DeploymentConfigCreator import DeploymentConfigCreator
     from mepinta_devtools.ide_projects.FileManager import FileManager
+    from pipeline_backend.logging.logging import LOG_INFO, LOG_DEBUG
     from default_context import getDefaultContext
-    self.context = getDefaultContext()
+    if debug:
+      self.context = getDefaultContext(LOG_DEBUG)
+    else:
+      self.context = getDefaultContext(LOG_INFO)
     self.log = self.context.log
     self.file_mananger = FileManager(self.context)
     self.deployment_config_creator = DeploymentConfigCreator(self.context)
+    self.deployment_scripts_copier = DeploymentScriptsCopier(self.context)
 
   def run(self):
     parser = self._getArgsParser()
-    #args = parser.parse_args(['../../../EclipseProjects_GitRepo/mepinta_test_folders/deployment/example'])
     args = parser.parse_args()
 
     self._configurePythonPaths(self._getMepintaSrcPath())
@@ -49,8 +55,8 @@ class Deployment(object):
 
   def _getArgsParser(self):
     parser = argparse.ArgumentParser(description='Mepinta deployment script.')
-    parser.add_argument('deployment_path', action='store', help='Specify the path for a new Mepinta deployment.')
-    parser.add_argument('--force', action='store_true', help='Force the deployment to the existing path.')
+    parser.add_argument('deployment_path', action='store', help='Specify the path for a new Mepinta deployment. (will be created if not existent)')
+    parser.add_argument('--force', action='store_true', help='Force the deployment to an existing non-empty path.')
     parser.add_argument('--debug', action='store_true', help='Enable debug output.')
     return parser
 
@@ -79,6 +85,7 @@ class Deployment(object):
         os.makedirs(deployment_path)
       self.log('Deploying mepinta to %r.' % deployment_path)
       self.deployment_config_creator.createDeploymentConfig(deployment_path, self._getTranslationDict(), overwrite=force)
+      self.deployment_scripts_copier.copyScriptsTo(deployment_path)
     else:
       self.log.warning('Deployment is not empty use the --force flag to overwrite it.')
       self._getArgsParser().print_help()
@@ -93,7 +100,7 @@ class Deployment(object):
     return common_prefix != self._getMepintaSrcPath()
 
   def _emptyDeploy(self, deployment_path):
-    return not self.file_mananger.pathExists(deployment_path) or os.listdir(deployment_path) == []
+    return not self.file_mananger.pathExists(deployment_path) or self.file_mananger.listDir(deployment_path) == []
 
 if __name__ == '__main__':
   Deployment().run()

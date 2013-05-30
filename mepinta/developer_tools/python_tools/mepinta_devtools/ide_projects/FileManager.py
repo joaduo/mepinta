@@ -44,7 +44,7 @@ class FileManager(FrameworkBase):
     return False
   def saveTextFile(self, path, content, overwrite):
     ''' '''
-    self.log('Writing %r with overwrite %s' % (path, overwrite))
+    self.log.debug('Writing %r with overwrite %s' % (path, overwrite))
     if not self.pathExists(path) or overwrite:
       target_file = open(path, 'w')
       target_file.write(content)
