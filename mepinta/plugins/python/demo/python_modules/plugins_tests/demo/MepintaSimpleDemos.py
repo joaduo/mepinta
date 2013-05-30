@@ -18,9 +18,7 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with Mepinta. If not, see <http://www.gnu.org/licenses/>.
 '''
-#from mepinta.testing.plugins_testing.processor.base import ProcessorPluginTestBase
 from common.abstract.FrameworkBase import FrameworkBase
-from mepinta.testing.plugins_testing.test_pipeline.SimpleTestPipeline import SimpleTestPipeline
 from plugins_tests.python.processors.demov1.Geometry2D.modifier.DeformationExpression.DeformationExpression__0001 import DeformationExpression
 from mepinta.testing.plugins_testing.test_pipeline.InotifySimpleTestPipeline import InotifySimpleTestPipeline
 from mepinta.testing.plugins_testing.graphviz.PipelineGraphvizTranslator import PipelineGraphvizTranslator
@@ -29,7 +27,12 @@ from common.shellcmds.CommandRunner import CommandRunner
 import os
 
 class MepintaSimpleDemos(FrameworkBase):
+  '''
+  This class gathers simple demos for the demo.py command of a Mepinta deployment.
+  Each public method represents a available demo.
+  '''
   def visualizeGraphXdot(self):
+    ''' Mepinta GUI demo. Shows Pipeline in as a dot graph. '''
     test_pline = self.__getTestPipeline()
     graphviz_translator = PipelineGraphvizTranslator(self.context)
     graphviz_str = graphviz_translator.translate(test_pline.getPipeline())
@@ -39,33 +42,26 @@ class MepintaSimpleDemos(FrameworkBase):
     os.remove(path)
 
   def evaluatePipelineAndPrint(self):
+    ''' Mepinta Pipeline demo. Output only to console.'''
     test_pline = self.__getTestPipeline()
     test_pline.evaluateProp()
 
   def nodeboxInteractivePipeline(self):
-    self.log('Demo not yet implemented')
+    ''' Mepinta interactive GUI demo. Shows Pipeline and lets the user change properties values.'''
+    from mepinta.testing.plugins_testing.gui.SimpleTestPipelineGui import SimpleTestPipelineGui
+    gui = SimpleTestPipelineGui(self.context, test_pline=self.__getTestPipeline())
+    gui.run()
 
   def __getTestPipeline(self):
-    #test_pline = SimpleTestPipeline(self.context)
     test_pline = InotifySimpleTestPipeline(self.context)
     deformation_expression_test = DeformationExpression(self.context)
     deformation_expression_test.definePipeline(test_pline)
-    #test_pline.evaluateProp()
     return test_pline
-
-
-
-#    from mepinta.testing.plugins_testing.gui.SimpleTestPipelineGui import SimpleTestPipelineGui
-#    from mepinta.testing.plugins_testing.nodebox.NodeBoxSimplePipelineOutput import NodeBoxSimplePipelineOutput
-#    gui = SimpleTestPipelineGui(self.context, test_pline=test_pline)
-#    gui.run()
-#    NodeBoxSimplePipelineOutput(test_pline.getPipeline(), 600, 600).run()
-
 
 def test_module():
   from default_context import getDefaultContext
   context = getDefaultContext()
-  MepintaSimpleDemos(context).run()
+  MepintaSimpleDemos(context).evaluatePipelineAndPrint()
 
 if __name__ == "__main__":
   test_module()
