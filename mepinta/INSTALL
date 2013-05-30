@@ -1,18 +1,18 @@
 Installing
 ==========
+Works on linux only by now.
 
-Running the console demo
+Running the console demo.
   git clone https://code.google.com/p/mepinta/
-  cd mepinta
-  deploy.py ../mepinta_deployment
-  cd ../mepinta_deployment
+  cd mepinta/mepinta
+  deploy.py ../../mepinta_deployment
+  cd ../../mepinta_deployment
   mepinta_demo.py     #lists the demos
   mepinta_demo.py 0   #run the first one
 
 For running the some of the Python demos you need installed:
   nodebox opengl library http://www.cityinabottle.org/nodebox/
   xdot command ("apt-get install xdot" in ubuntu or debian)
-
 
 About
 =====
