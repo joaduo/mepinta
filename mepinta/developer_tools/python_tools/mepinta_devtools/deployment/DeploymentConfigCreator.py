@@ -20,12 +20,17 @@ along with Mepinta. If not, see <http://www.gnu.org/licenses/>.
 '''
 from common.abstract.FrameworkBase import FrameworkBase
 from mepinta_devtools.ide_projects.FileManager import FileManager
+from common.path import joinPath
+from mepinta_devtools.templates.DictionaryBasedTranslator import DictionaryBasedTranslator
 
 default_template = '''
 class deployment_config(object):
-  mepinta_source_path = '##MEPINTA_SOURCE_PATH'
-  eclipse_projects_path = '##ECLIPSE_PROJECTS_PATH'
-  qt_projects_path = '##QT_PROJECTS_PATH'
+  mepinta_source_path = '##mepinta_source_path'
+  eclipse_projects_path = '##eclipse_projects_path'
+  qt_projects_path = '##qt_projects_path'
+  libk3dsdk_path = '##libk3dsdk_path'
+  libgsigc2_path = '##libgsigc2_path'
+  libboost_unit_test_framework_path = '##libboost_unit_test_framework_path'
 
 def configurePythonPaths():
   import sys
@@ -39,9 +44,11 @@ def configurePythonPaths():
 class DeploymentConfigCreator(FrameworkBase):
   def __post_init__(self):
     self.file_manager = FileManager(self.context)
-  def createDeploymentConfig(self, path, template=default_template, overwrite=False):
-    content = ''
-    self.file_manager.saveTextFile(path, content, overwrite)
+
+  def createDeploymentConfig(self, deployment_path, translation_dict, template=default_template, overwrite=False):
+    file_path = joinPath(deployment_path, 'deployment_config.py')
+    content = DictionaryBasedTranslator().getContent(template, translation_dict)
+    self.file_manager.saveTextFile(file_path, content, overwrite)
 
 def test_module():
   from default_context import getDefaultContext

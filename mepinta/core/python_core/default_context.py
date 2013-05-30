@@ -23,7 +23,7 @@ from pipeline_backend.logging.logging import LOG_INFO, LOG_DEBUG
 from common.config.ContextWrapper import ContextWrapper
 
 called_once = False
-def getDefaultContext(log_level=LOG_INFO):
+def getDefaultContext(log_level=LOG_DEBUG):
   '''Creates a default context to reduce verbosity on start.'''
   global called_once
   if called_once:

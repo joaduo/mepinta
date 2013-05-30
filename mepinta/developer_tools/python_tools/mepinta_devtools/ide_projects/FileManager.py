@@ -38,13 +38,13 @@ class FileManager(FrameworkBase):
       if package and not os.access("%s/__init__.py" % path, os.W_OK):
         self.context.log.debug("The package path %r exist but there is no %r file." % (path, "%s/__init__.py" % path))
         return False
-      self.context.log.debug("Exists: %r" % path)
+      self.context.log.debug("Exists %r" % path)
       return True
-    self.context.log.debug("Doesn't exist: %r" % path)
+    self.context.log.debug("Doesn't exist %r" % path)
     return False
   def saveTextFile(self, path, content, overwrite):
     ''' '''
-    self.log('Writing %r with overwrite:%s' % (path, overwrite))
+    self.log('Writing %r with overwrite %s' % (path, overwrite))
     if not self.pathExists(path) or overwrite:
       target_file = open(path, 'w')
       target_file.write(content)

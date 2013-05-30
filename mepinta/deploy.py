@@ -23,60 +23,77 @@ import os
 import argparse
 
 class Deployment(object):
+  '''
+  This class creates a new deployment of a Mepinta software.
+  This way code and installation are split to simplify maintenance.
+  '''
+  def __fake_post_init__(self, debug):
+    from mepinta_devtools.deployment.DeploymentConfigCreator import DeploymentConfigCreator
+    from mepinta_devtools.ide_projects.FileManager import FileManager
+    from default_context import getDefaultContext
+    self.context = getDefaultContext()
+    self.log = self.context.log
+    self.file_mananger = FileManager(self.context)
+    self.deployment_config_creator = DeploymentConfigCreator(self.context)
+
   def run(self):
-    self._configurePythonPaths(self._getMepintaSrcPath())
     parser = self._getArgsParser()
+    #args = parser.parse_args(['../../../EclipseProjects_GitRepo/mepinta_test_folders/deployment/example'])
     args = parser.parse_args()
+
+    self._configurePythonPaths(self._getMepintaSrcPath())
+    self.__fake_post_init__(args.debug)
+    self.log.debug('Successfully configured python paths.')
+
     self._deployTo(args.deployment_path, args.force)
 
   def _getArgsParser(self):
     parser = argparse.ArgumentParser(description='Mepinta deployment script.')
-    parser.add_argument('deployment_path', type=str, nargs=1, help='Specify the path for a new Mepinta deployment.')
+    parser.add_argument('deployment_path', action='store', help='Specify the path for a new Mepinta deployment.')
     parser.add_argument('--force', action='store_true', help='Force the deployment to the existing path.')
+    parser.add_argument('--debug', action='store_true', help='Enable debug output.')
     return parser
 
   def _configurePythonPaths(self, mepinta_source_path):
+    '''
+    Configures sys.path to include all Mepinta's python code necessary for the deployment.
+    :param mepinta_source_path: Path where Mepinta code's was downloaded/extracted
+    '''
     sys.path.append(mepinta_source_path + '/developer_tools/python_tools')
     from mepinta_devtools.deployment.PythonPathManager import PythonPathManager
     PythonPathManager().appendAll(mepinta_source_path)
 
   def _getMepintaSrcPath(self):
-    f = os.path.realpath(__file__)
-    mepinta_source_path = f[:f.rindex(os.sep)]
+    mepinta_source_path = os.path.dirname(os.path.realpath(__file__))
     return mepinta_source_path
 
   def _deployTo(self, deployment_path, force=False):
-    if self._emptyDeploy(deployment_path) or \
-       self._existingDeploy(deployment_path) and force:
-      pass
+    #Check if the path specified is outside mepinta source path
+    if not self._outOfSourcePath(deployment_path):
+      self.log.warning('Deployment path %r is inside Mepinta source path %r. (deployment path must reside outside Mepinta source path)' % (deployment_path, self._getMepintaSrcPath()))
+      return
+    #Check if the deployment already exists
+    if self._emptyDeploy(deployment_path) or force:
+      if not self.file_mananger.pathExists(deployment_path):
+        self.log.debug('Creating deployment path %r' % deployment_path)
+        os.makedirs(deployment_path)
+      self.log('Deploying mepinta to %r.' % deployment_path)
+      self.deployment_config_creator.createDeploymentConfig(deployment_path, self._getTranslationDict(), overwrite=force)
+    else:
+      self.log.warning('Deployment is not empty use the --force flag to overwrite it.')
+      self._getArgsParser().print_help()
+
+  def _getTranslationDict(self):
+    translation_dict = {'mepinta_source_path':self._getMepintaSrcPath(),
+                        }
+    return translation_dict
+
+  def _outOfSourcePath(self, deployment_path):
+    common_prefix = os.path.commonprefix([self._getMepintaSrcPath(), os.path.realpath(deployment_path)])
+    return common_prefix != self._getMepintaSrcPath()
 
   def _emptyDeploy(self, deployment_path):
-    pass
-
-  def _existingDeploy(self, deployment_path):
-    pass
-
-  def printHelp(self):
-    pass
+    return not self.file_mananger.pathExists(deployment_path) or os.listdir(deployment_path) == []
 
 if __name__ == '__main__':
   Deployment().run()
-#  deployment_path = '/home/jduo/001-Mepinta/EclipseProjects_GitRepo/mepinta_test_folders'
-#  force = False
-#  d = Deployment()
-#  d.run()
-  #d._deployTo(deployment_path, force)
-
-      # poder correr demo de python por lo menos
-      # crear proyecto de python y proyecto plugins de python
-        # crear plugin set y su proyecto correspondiente
-        # agregarlo a un plugins deployment
-      # crear directorio
-      # crear configuración
-      # crear scripts de demo y tests
-        # en python y en cpp
-          # requirements for demos pyglet + nodebox
-          # que cree un nuevo pipeline
-          # que lo visualice y sea animable
-      # crear scripts para crear un nuevo plugin set
-        # que especifique librerías en c o cpp
