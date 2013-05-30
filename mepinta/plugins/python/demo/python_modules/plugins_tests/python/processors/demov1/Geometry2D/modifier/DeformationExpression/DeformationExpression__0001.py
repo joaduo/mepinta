@@ -31,31 +31,23 @@ class DeformationExpression(Geometry2DPluginTest):
     test_pline.setValue(deformation_node.inputs.x_expression, 'x*t')
     test_pline.setValue(deformation_node.inputs.y_expression, 'y*t')
     test_pline.setValue(deformation_node.inputs.time, 1.0)
+    test_pline.setValue(deformation_node.inputs.v, 1.0)
 
   def getTimeParameters(self):
     return self.time.startEndStepSleep(start=0., end=3., step=0.5, sleep=0.05)
 
   def stressPipeline(self, test_pline, time):
     Geometry2DPluginTest.stressPipeline(self, test_pline, time)
-    qslim_node = test_pline.getNodesDict()['DeformationExpression 1']
-    test_pline.setValue(qslim_node.inputs.face_count, 10 * time)
+    deformation_node = test_pline.getNodesDict()['DeformationExpression 1']
+    test_pline.setValue(deformation_node.inputs.time, 10 * time)
 
 test = DeformationExpression
 
 if __name__ == "__main__":
-#  from mepinta.testing.plugins_testing.PluginTestAutoTester import PluginTestAutoTester
+  from mepinta.testing.plugins_testing.PluginTestAutoTester import PluginTestAutoTester
   from default_context import getDefaultContext
   from pipeline_backend.logging.logging import LOG_INFO
-  #PluginTestAutoTester(getDefaultContext(LOG_INFO)).test(test, gui=False)
-  #PluginTestAutoTester(getDefaultContext(LOG_INFO)).test(test)
+  PluginTestAutoTester(getDefaultContext(LOG_INFO)).test(test)
 
-#  from mepinta.testing.plugins_testing.test_pipeline.SimpleTestPipeline import SimpleTestPipeline
-  from mepinta.testing.plugins_testing.gui.SimpleTestPipelineGui import SimpleTestPipelineGui
-  from mepinta.testing.plugins_testing.test_pipeline.InotifySimpleTestPipeline import InotifySimpleTestPipeline
-
-  context = getDefaultContext(LOG_INFO)
-  test_pline = InotifySimpleTestPipeline(context)
-  DeformationExpression(context).definePipeline(test_pline)
-  SimpleTestPipelineGui(context, test_pline=test_pline).run()
 
 

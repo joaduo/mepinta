@@ -24,10 +24,9 @@ from mepinta.testing.plugins_testing.ProcessorPluginTestRunner import ProcessorP
 #TODO: launch another python with the test
 class PluginTestAutoTester(ModuleAutoTesterBase):
   def test(self, test_class, gui=True):
-    #self.log.debug(test_class.__module__)
     test_module = self._getClassModule(test_class)
-    self.log.debug('Autotested module module %s'%test_module)
+    self.log.debug('Autotested module module %s' % test_module)
     ProcessorPluginTestRunner(self.context).blockListeningEvents(test_module, gui=gui)
-        
+
 if __name__ == "__main__":
   pass

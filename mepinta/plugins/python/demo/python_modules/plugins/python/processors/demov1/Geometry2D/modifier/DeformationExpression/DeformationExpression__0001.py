@@ -33,7 +33,7 @@ class DeformationExpression(PluginManifestBase):
 
     #Set sinks & dpdencies
     outputs.geometry.dpdencies += [functions.modify_geometry]
-    functions.modify_geometry.dpdencies += [inputs.geometry
+    functions.modify_geometry.dpdencies += [   inputs.geometry
                                              , inputs.x_expression
                                              , inputs.y_expression
                                              , inputs.time]
@@ -87,7 +87,4 @@ if __name__ == "__main__":
   from default_context import getDefaultContext
   from mepinta.testing.plugins_testing.PluginManifestAutoTester import PluginManifestAutoTester
   context = getDefaultContext()
-  PluginManifestAutoTester(context=context).test(manifest, gui=False)
-#  PluginManifestAutoTester(context=context).test(manifest)
-
-
+  PluginManifestAutoTester(context=context).test(manifest)

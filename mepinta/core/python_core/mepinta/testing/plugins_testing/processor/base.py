@@ -56,7 +56,9 @@ class ProcessorPluginTestBase(FrameworkBase):
     tive tests. (i.e. when running this test in interactive mode)
     In general the watched processors will be the tested processors, but may or
     may include other processors.
-    You probably will not reimplement this method.
+    You probably will not re-implement this method.
+    When a processors is being watched means that it's implementation is being
+    watched for changes (through Inotify in Linux)
     '''
     if not len(self.tested_processors):
       raise MepintaError('You should set self.tested_processor on test __post_init__ method.')

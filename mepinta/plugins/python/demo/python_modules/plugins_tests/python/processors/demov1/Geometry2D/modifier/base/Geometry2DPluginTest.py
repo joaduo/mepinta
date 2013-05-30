@@ -44,7 +44,7 @@ class Geometry2DPluginTest(ProcessorPluginTestBase):
 
   def stressPipeline(self, test_pline, time):
     import math
-    sphere_node = test_pline.getNodesDict()['PolySphere 1']
+    sphere_node = test_pline.getNodesDict()['Circle 1']
     test_pline.setValue(sphere_node.inputs.radius, math.cos(time) * 0.5 + 1)
     test_pline.setValue(sphere_node.inputs.segments, time * 2)
 

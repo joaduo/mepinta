@@ -35,9 +35,9 @@ class ProcessorPluginTestRunner(ForkInotifyUtilsBase):
   The main job of this class is to:
     -start a fork and run the provided test in a forked process
     -watch the plugin's manifest for changes, if it changes, kills the child
-     process and relaunchs a new child with the new manifest. 
-  
-  This class processes modules with a class inheriting from:  
+     process and re-launches a new child with the new manifest.
+
+  This class processes modules with a class inheriting from:
     mepinta.testing.plugins_testing.processor.base.ProcessorPluginTestBase
   And adding an alias 'test' to the implemented class.
   For example:
@@ -60,14 +60,14 @@ class ProcessorPluginTestRunner(ForkInotifyUtilsBase):
     #define the function to be run in the fork process
     def manifestInotifyFunction():
       #create and setup pipeline
-      test_pline.registerTestModules(test_modules) 
+      test_pline.registerTestModules(test_modules)
       #evaluate the first time
       test_pline.evalOnTest()
       #listen input events (gui, input files, test module, and processor library)
       test_pline.blockListeningEvents([])
-    #return the just created function  
+    #return the just created function
     return manifestInotifyFunction
-      
+
   def blockListeningEvents(self, test_modules, test_pline=None, timeout=None, gui=True):
     if not test_pline: #If no pipeline  is provided, create one
       if gui:
@@ -77,20 +77,20 @@ class ProcessorPluginTestRunner(ForkInotifyUtilsBase):
     #Create the first fork (that will be killed when a processor manifest changes)
     manifestInotifyFunction = self.__getManifestInotifyFunction(test_modules, test_pline)
     self._child_pid = self._callFunctionOnFork(manifestInotifyFunction, wait_child=False)
-    
+
     #register provided module/s
     self.registerTestModules(test_modules, test_pline)
-    
+
     #set signals handlers before blocking
     self._setSignals()
     #Listen for processors' manifests changes
     self._inotify_mngr.blockListeningEvents(timeout)
-  
+
   def _setSignals(self):
     #define signal handler
     def exitSignalHandler(received_signal, frame):
       self.log.info("Killing child process.")
-      self.log.debug("Killing child process %s with signal %s."%(self._child_pid, signal.SIGTERM))
+      self.log.debug("Killing child process %s with signal %s." % (self._child_pid, signal.SIGTERM))
       #if the child is not killed will remain running after father's dead
       os.kill(self._child_pid, signal.SIGTERM)
       #ok, now we can exit
@@ -98,7 +98,7 @@ class ProcessorPluginTestRunner(ForkInotifyUtilsBase):
     #link handler to the interrupt signal
     signal.signal(signal.SIGINT, exitSignalHandler)
     signal.signal(signal.SIGTERM, exitSignalHandler)
-  
+
   def registerTestModules(self, test_modules, test_pline):
     #is it one module or a list of modules?
     if not isiterable(test_modules):
@@ -106,14 +106,14 @@ class ProcessorPluginTestRunner(ForkInotifyUtilsBase):
     #regiter each provided module
     for test_module in test_modules:
       self._registerTestModule(test_module, test_pline)
-      
+
   def _registerTestModule(self, test_module, test_pline):
     #Get the plugin test instance
     plugin_test = self._getTestInstance(test_module)
     #Creates processors manifest files watchers
     for processor in plugin_test.getWatchedProcessors():
       #watch it's processor manifest for changes
-      self.__watchProcessorManifest(processor, test_module, test_pline)    
+      self.__watchProcessorManifest(processor, test_module, test_pline)
 
   def __watchProcessorManifest(self, processor, test_module, test_pline):
     '''Defines the function to be call when the plugin's manifest changes.'''
@@ -123,13 +123,13 @@ class ProcessorPluginTestRunner(ForkInotifyUtilsBase):
         the whole pipeline.
       '''
       if self._child_pid:#if there were a prior proces, then kill it
-        self.log.debug("Killing child process %s with signal %s."%(self._child_pid, signal.SIGTERM))
+        self.log.debug("Killing child process %s with signal %s." % (self._child_pid, signal.SIGTERM))
         #if the child is not killed will remain running after father's dead
         #send the TERM signal 15
         os.kill(self._child_pid, signal.SIGTERM)
         #wait for the children death
         child_pid, status = os.waitpid(self._child_pid, 0)
-        self.log.debug("Child process %s ended with status %s."%(child_pid,status))
+        self.log.debug("Child process %s ended with status %s." % (child_pid, status))
       #Get the function to call when the manifest changed (means need to reload the whole pipeline)
       manifestInotifyFunction = self.__getManifestInotifyFunction(test_module, test_pline)
       self._child_pid = self._callFunctionOnFork(manifestInotifyFunction, wait_child=False)

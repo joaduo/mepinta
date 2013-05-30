@@ -117,8 +117,11 @@ class InotifySimpleTestPipeline(ForkInotifyUtilsBase):
     plugin_test = self._getTestInstance(test_module)
     #Creates pipeline and creates input file watches
     plugin_test.definePipeline(self)
-    for processor in plugin_test.getWatchedProcessors():
-      self.watchProcessorLibrary(processor)
+    #Only c and cpp plugins .so.implentation libraries will be watched
+    if self.context.backend_name == 'c_and_cpp':
+      #TODO: later this should be improved (watching python implementations)
+      for processor in plugin_test.getWatchedProcessors():
+        self.watchProcessorLibrary(processor)
     self.__watchTestModule(test_module)
 
   def evaluateProp(self, prop=None):
