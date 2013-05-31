@@ -37,14 +37,15 @@ class Geometry2DPluginTest(ProcessorPluginTestBase):
     else:
       import plugins.python.processors.demov1.Geometry2D.output.StdoutPrint as renderer
     output_node = test_pline.append(renderer)
+    if gui:
+      test_pline.ui_default_evaluated.append(output_node.functions.render)
+    test_pline.default_evaluated.append(output_node.functions.render)
     return output_node
 
   def definePipeline(self, test_pline, gui=False):
     self._createInputGeometry(test_pline)
     self.definePluginPipeline(test_pline)
-    output_node = self._createOutputGeometry(test_pline, gui)
-    test_pline.default_evaluated.append(output_node.functions.render)
-    test_pline.ui_default_evaluated.append(output_node.functions.render)
+    self._createOutputGeometry(test_pline, gui)
 
   def stressPipeline(self, test_pline, time):
     import math

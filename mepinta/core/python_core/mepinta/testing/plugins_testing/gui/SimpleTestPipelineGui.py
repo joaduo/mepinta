@@ -22,10 +22,10 @@ from common.abstract.FrameworkBase import FrameworkBase
 from mepinta.pipeline.hi.value_manager.ValueManager import ValueManager
 
 class SimpleTestPipelineGui(FrameworkBase):
-  '''Creates a Gui from a given TestPipeline (Simple or Inotify).
-    -Creates GUI Panel
-    -Evaluates Pipeline's values on GUI events
-    -Able to coexist with a InotifyActionManager
+  '''Creates a Gui from a given GUIInotifySimpleTestPipeline or InotifySimpleTestPipeline.
+      -Creates GUI Panel
+      -Evaluates Pipeline's values on GUI events
+      -Able to coexist with a InotifyActionManager (for watching files)
 
   This class is used by GUIInotifyTestPipeline, in general  you should directly
   use GUIInotifyTestPipeline.

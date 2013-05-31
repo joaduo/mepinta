@@ -32,6 +32,15 @@ from mepinta.pipeline.lo.pipeline_data.data_model import PropertyValuePointer
 #from mepinta.pipeline.lo.reentrant.data_model import ProcessorContext
 
 class PipelineEvaluatorFunctum(PipelineEvaluatorBase):
+  '''
+  Evaluates a Pipeline (from lo package) given a property.
+  This means it visits all dependencies in the graph recursively until evaluated
+   the desired property.
+  It stops evaluating a recursion branch when there are no more changed
+    dependencies or it founds a cyclic connection.
+  If the Property is not marked as changed, it won't be evaluated. (also its
+    dependencies)
+  '''
   def __callProcessor(self, pline, prop_id, prop, func_prop_value, args_mngr):
     func_ptr = self.context_lo.functions[func_prop_value.func_id].get_func_pointer()
     #TODO: if using long on shedkin, then casting should be applied

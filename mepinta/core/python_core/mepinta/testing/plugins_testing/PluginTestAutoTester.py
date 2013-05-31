@@ -21,7 +21,6 @@ along with Mepinta. If not, see <http://www.gnu.org/licenses/>.
 from mepinta.testing.plugins_testing.base import ModuleAutoTesterBase
 from mepinta.testing.plugins_testing.ProcessorPluginTestRunner import ProcessorPluginTestRunner
 
-#TODO: launch another python with the test
 class PluginTestAutoTester(ModuleAutoTesterBase):
   def test(self, test_class, gui=True):
     test_module = self._getClassModule(test_class)
