@@ -26,15 +26,15 @@ class StdoutPrint(PluginManifestBase):
     #Inputs
     inputs.geometry = 'demov1.Geometry2D'
     #Outputs
-    functions.printToStdout = FunctionProperty()
+    functions.render = FunctionProperty()
 
     #Set sinks & dpdencies
-    functions.printToStdout.dpdencies += [ inputs.geometry ]
+    functions.render.dpdencies += [ inputs.geometry ]
 
 manifest = StdoutPrint
 
 from mepinta_python_sdk.props import get_prop_value
-def printToStdout(args):
+def render(args):
   #Inputs
   geometry = get_prop_value(args, 'inputs', 'geometry')
 #  log_info(str(geometry))

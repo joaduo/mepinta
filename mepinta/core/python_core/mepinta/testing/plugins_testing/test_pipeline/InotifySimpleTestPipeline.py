@@ -30,6 +30,7 @@ from mepinta.abstract.MepintaError import MepintaError
 from common.type_checking.isiterable import isiterable
 from mepinta.testing.plugins_testing.test_pipeline.SimpleTestPipeline import SimpleTestPipeline
 import time
+from mepinta.pipeline.hi.FactoryLo import unwrap_lo
 
 #TODO: Split into implementation classes
 #(A main wrapper that uses watcher creator)
@@ -52,6 +53,10 @@ class InotifySimpleTestPipeline(ForkInotifyUtilsBase):
   'ProcessorPluginTestRunner.blockListeningEvents' method as a first argument.)
   '''
   @property
+  def ui_default_evaluated(self):
+    return self.__ui_default_evaluated
+
+  @property
   def default_evaluated(self):
     return self.__default_evaluated
 
@@ -70,6 +75,7 @@ class InotifySimpleTestPipeline(ForkInotifyUtilsBase):
     self._watched_processors = []
     self.__default_evaluated = []
     self.__default_marked = []
+    self.__ui_default_evaluated = []
     #self.__mark_default_prop = False #TODO: delete
     #Callable called each time a file/input happens
     self._eval_on_test = self.__evalOnTestDefault
@@ -132,6 +138,11 @@ class InotifySimpleTestPipeline(ForkInotifyUtilsBase):
         raise RuntimeError('You should be set a default property prior calling this method.')
       for prop in self.default_evaluated:
         return self._test_pline.evaluateProp(prop)
+
+  def evaluatePropForced(self, prop):
+    prop_id = unwrap_lo(prop)
+    self._test_pline.getPipeline().changed_track.add(prop_id)
+    self._test_pline.evaluateProp(prop)
 
   def setValue(self, prop, value):
     self._test_pline.setValue(prop, value)

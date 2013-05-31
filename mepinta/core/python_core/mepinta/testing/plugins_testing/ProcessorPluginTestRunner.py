@@ -39,7 +39,7 @@ class ProcessorPluginTestRunner(ForkInotifyUtilsBase):
 
   This class processes modules with a class inheriting from:
     mepinta.testing.plugins_testing.processor.base.ProcessorPluginTestBase
-  And adding an alias 'test' to the implemented class.
+  Declaring a variable 'test' pointing to the class in the module is necessary.
   For example:
   class MyProcessorName(ProcessorPluginTestBase):
     def definePipeline(self, test_pipeline):

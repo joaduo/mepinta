@@ -109,18 +109,24 @@ class SimpleTestPipelineGui(FrameworkBase):
     self.canvas = canvas
     self.__createControls()
     self.nodebox_pline = NodeBoxSimplePipelineOutput(self.test_pline.getPipeline(), canvas_x, canvas_y)
-    return NodeboxUiRunner(canvas_x, canvas_y)
+    ui_runner = NodeboxUiRunner(canvas_x, canvas_y)
+    ui_runner.appendDrawFunction(self.__updateFunction)
+    self.__registerPipelineUIFunctions(ui_runner)
+    return ui_runner
 
   def run(self, canvas_x=700, canvas_y=600):
     ui_runner = self.__setupNodebox(canvas_x, canvas_y)
-    ui_runner.run(self.__updateFunction)
+    ui_runner.run()
+
+  def __registerPipelineUIFunctions(self, ui_runner):
+    for prop in self.test_pline.ui_default_evaluated:
+      ui_runner.appendDrawFunction(self.test_pline.evaluatePropForced, prop)
 
   def runWithInotify(self, inotify_mngr, canvas_x=700, canvas_y=600):
     from nodebox.graphics import canvas
     from mepinta.testing.plugins_testing.gui.PygletXlibEventLoop import PygletXlibEventLoop
     ui_runner = self.__setupNodebox(canvas_x, canvas_y)
-    draw = ui_runner.getDrawMethod(self.__updateFunction)
-    canvas.set_method(draw, name='draw')
+    canvas.set_method(ui_runner.getDrawMethod(), name='draw')
     canvas._setup()
     canvas.fps = canvas._fps
     PygletXlibEventLoop(inotify_mngr).run()

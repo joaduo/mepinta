@@ -31,7 +31,6 @@ class DeformationExpression(Geometry2DPluginTest):
     test_pline.setValue(deformation_node.inputs.x_expression, 'x*t')
     test_pline.setValue(deformation_node.inputs.y_expression, 'y*t')
     test_pline.setValue(deformation_node.inputs.time, 1.0)
-    test_pline.setValue(deformation_node.inputs.v, 1.0)
 
   def getTimeParameters(self):
     return self.time.startEndStepSleep(start=0., end=3., step=0.5, sleep=0.05)
@@ -48,6 +47,3 @@ if __name__ == "__main__":
   from default_context import getDefaultContext
   from pipeline_backend.logging.logging import LOG_INFO
   PluginTestAutoTester(getDefaultContext(LOG_INFO)).test(test)
-
-
-
