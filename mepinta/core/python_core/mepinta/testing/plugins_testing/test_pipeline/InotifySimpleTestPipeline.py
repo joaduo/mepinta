@@ -36,7 +36,8 @@ from mepinta.pipeline.hi.FactoryLo import unwrap_lo
 #(A main wrapper that uses watcher creator)
 
 class InotifySimpleTestPipeline(ForkInotifyUtilsBase):
-  '''Wraps and Mimics a SimpleTestPipeline adding capabilities of watching:
+  '''
+  Wraps and Mimics a SimpleTestPipeline adding capabilities of watching:
     -Input Files properties.
     -Processor library files (.so.implementation).
     -Test modules.

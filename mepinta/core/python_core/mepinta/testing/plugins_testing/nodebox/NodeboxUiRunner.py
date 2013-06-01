@@ -57,6 +57,12 @@ def draw(canvas): #This is necessary, the function called must be a global funct
   wrapped_method(canvas)
 
 class NodeboxUiRunner(NodeboxBase):
+  '''
+  Simple helper class to register functions while doing the Nodebox frame update.
+  Since the draw function should be a global function (not a method) this class
+    makes it easy to register it.
+  Also let the programmer register functions for the frame update time.
+  '''
   def __init__(self, canvas_x, canvas_y):
     self.size = canvas_x, canvas_y
     self.canvas = canvas
@@ -96,6 +102,3 @@ if __name__ == '__main__':
   nuir = NodeboxUiRunner(400, 400)
   nuir.appendDrawFunction(func)
   nuir.run()
-
-
-

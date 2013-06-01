@@ -22,10 +22,12 @@ from common.abstract.FrameworkBase import FrameworkBase
 from mepinta.pipeline.hi.value_manager.ValueManager import ValueManager
 
 class SimpleTestPipelineGui(FrameworkBase):
-  '''Creates a Gui from a given GUIInotifySimpleTestPipeline or InotifySimpleTestPipeline.
-      -Creates GUI Panel
-      -Evaluates Pipeline's values on GUI events
-      -Able to coexist with a InotifyActionManager (for watching files)
+  '''Creates a Gui from a given InotifySimpleTestPipeline.
+      -Creates GUI Panel.
+      -Evaluates Pipeline's values on GUI events.
+      -Able to coexist with a InotifyActionManager in the events loop.
+        (the one inside InotifySimpleTestPipeline)
+       This way it can react for watched processors and test modules.
 
   This class is used by GUIInotifyTestPipeline, in general  you should directly
   use GUIInotifyTestPipeline.
@@ -129,7 +131,8 @@ class SimpleTestPipelineGui(FrameworkBase):
     canvas.set_method(ui_runner.getDrawMethod(), name='draw')
     canvas._setup()
     canvas.fps = canvas._fps
-    PygletXlibEventLoop(inotify_mngr).run()
+    #Create the events loop object that also supports events coming from inotify
+    PygletXlibEventLoop(inotify_mngr).run() #TODO: linux only
 
 if __name__ == "__main__":
   pass
