@@ -20,11 +20,12 @@ along with Mepinta. If not, see <http://www.gnu.org/licenses/>.
 '''
 
 from common.abstract.FrameworkBase import FrameworkBase
-from mepinta.plugins_manifest.proxy.data_model import ProcessorProxy, PropertyProxy, DataPropertyProxy, \
+from mepinta.plugins_manifest.proxy.data_model import PropertyProxy, DataPropertyProxy, \
   FunctionPropertyProxy, directedReadable, FunctumPropertyProxy, GenericEnumProxy, \
   PropertyProxyQualifier, InotifyPropertyProxy
 from mepinta.abstract.MepintaError import MepintaError
 from common.type_checking.isiterable import isiterable
+from mepinta.plugins_manifest.proxy.ProcessorProxy import ProcessorProxy
 
 __all__ = [
            'DataProperty',
@@ -61,7 +62,8 @@ class PluginManifestBase(FrameworkBase):
       where the plugin developer should define the plugin's input and output
       data types and its topology.
     '''
-    self.processor_proxy = ProcessorProxy(name=self.getName(), backend_name=self.context.backend_name)
+    #self.processor_proxy = ProcessorProxy(name=self.getName(), backend_name=self.context.backend_name)
+    self.processor_proxy = ProcessorProxy(self.context, name=self.getName())
     args, kwargs = self.__createDefineArguments()
     self.define(*args, **kwargs)
   def getName(self):

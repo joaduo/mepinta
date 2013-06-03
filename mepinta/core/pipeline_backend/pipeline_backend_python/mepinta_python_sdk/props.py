@@ -18,17 +18,12 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with Mepinta. If not, see <http://www.gnu.org/licenses/>.
 '''
-'''
-Created on Oct 12, 2011
-
-@author: jduo
-'''
 from pipeline_backend.logging.logging import log_debug
 
-def get_prop_value(args,in_out,name):
-  return getattr(args,in_out).values[getattr(args,in_out).names.index(name)].get_value()
+def get_prop_value(args, in_out, name):
+  return getattr(args, in_out).values[getattr(args, in_out).names.index(name)].get_value()
 
-def has_changed_by_name(args,name):
+def has_changed_by_name(args, name): #rename to isChangedByName?
   if name in args.inputs.names:
     index = args.inputs.names.index(name)
     prop_id = args.inputs.prop_ids[index]
@@ -36,12 +31,12 @@ def has_changed_by_name(args,name):
   else:
     log_debug("Name not in args")
 
-def add_changed_by_index(args,index):
-  log_debug('index=%r'%index)
+def add_changed_by_index(args, index):
+  log_debug('index=%r' % index)
   if index < len(args.outputs.values):
     args.outputs.changed[index] = True
 
-def add_changed_by_name(args,name):
+def add_changed_by_name(args, name):
   if name in args.outputs.names:
     index = args.outputs.names.index(name)
     prop_id = args.outputs.prop_ids[index]
@@ -49,7 +44,7 @@ def add_changed_by_name(args,name):
   else:
     log_debug("Name not in args")
 
-def replace_out_prop_value(args,name,value,del_func_ptr):
-  args.outputs.values[args.outputs.names.index(name)].replace_value(value,del_func_ptr)
+def replace_out_prop_value(args, name, value, del_func_ptr):
+  args.outputs.values[args.outputs.names.index(name)].replace_value(value, del_func_ptr)
 
 

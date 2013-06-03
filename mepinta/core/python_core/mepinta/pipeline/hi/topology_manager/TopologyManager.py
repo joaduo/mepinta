@@ -19,12 +19,6 @@ You should have received a copy of the GNU General Public License
 along with Mepinta. If not, see <http://www.gnu.org/licenses/>.
 '''
 from mepinta.pipeline.lo.constants import INPUT_PROPERTY_FLAG
-'''
-Created on Sep 9, 2011
-
-@author: jduo
-'''
-
 from mepinta.pipeline.hi.base import HiAutoBase, unwrap_decorator
 from mepinta.abstract.MepintaError import MepintaError
 
@@ -36,18 +30,18 @@ def convert_pline_to_topo(method):
       if not ('topo' in ad and hasattr(ad['topo'], 'get_topology') \
       or len(a) > 0 and hasattr(a[0], 'get_topology')):
         raise MepintaError("You should provide a Pipeline instead of a Topology to safe checking functions")
-      return method(self, *a,**ad)
+      return method(self, *a, **ad)
     else:
       if 'topo' in ad and hasattr(ad['topo'], 'get_topology'):
         ad['topo'] = ad['topo'].get_topology()
       elif len(a) > 0 and hasattr(a[0], 'get_topology'):
         a = list(a)
         a[0] = a[0].get_topology()
-      return method(self, *a,**ad)
+      return method(self, *a, **ad)
   return method_wrapper
 
 class TopologyManager(HiAutoBase):
-  #Multiple Properties Functions, needs convert_pline_to_topo, to convert pline into topo 
+  #Multiple Properties Functions, needs convert_pline_to_topo, to convert pline into topo
   @convert_pline_to_topo
   def remove_properties(self, pline, props): #There is no need for safe checking is already made at lower level
     return self.wrapped.remove_properties(pline, props)
@@ -57,7 +51,7 @@ class TopologyManager(HiAutoBase):
     return {filter_func:props}
   @convert_pline_to_topo
   def add_properties(self, pline, props):
-    self.wrapped.add_properties(pline,props)
+    self.wrapped.add_properties(pline, props)
   @convert_pline_to_topo
   def _connect_properties_safe(self, pline, dpdents, dpdencies):
     def filter_valid_connections(dent_id):
@@ -66,7 +60,7 @@ class TopologyManager(HiAutoBase):
         if dent_prop.type == INPUT_PROPERTY_FLAG:
           raise RuntimeError("You shouldn't connect one input property to more than one output.")
     filter_func = lambda prop: prop not in pline.get_topology().properties
-    return {filter_func:dpdents+dpdencies,filter_valid_connections:dpdents}
+    return {filter_func:dpdents + dpdencies, filter_valid_connections:dpdents}
   @convert_pline_to_topo
   def connect_properties(self, pline, dpdents, dpdencies):
     return self.wrapped.connect_properties(pline, dpdents, dpdencies)
@@ -80,15 +74,14 @@ class TopologyManager(HiAutoBase):
     return self.wrapped.connect_props_dents(pline, dpdents, dpdencies)
   @convert_pline_to_topo
   def disconnect_properties(self, pline, dpdents, dpdencies):
-    print(pline, dpdents, dpdencies)
     return self.wrapped.disconnect_properties(pline, dpdents, dpdencies)
   @convert_pline_to_topo
   def enable_cached(self, pline, props):
     self.wrapped.enable_cached(pline, props)
   @convert_pline_to_topo
   def disable_cached(self, pline, props):
-    self.wrapped.disable_cached(pline, props)    
-    
+    self.wrapped.disable_cached(pline, props)
+
   #Single Property Functions, No need to unwrap HiAutoBase does the job
   def connect(self, pline, dpdent, dency):
     return self.connect_properties(pline, [dpdent], [dency])
@@ -115,7 +108,7 @@ if __name__ == '__main__':
   print(propm.context.context_lo.data_types)
 #  propm._create_properties_safe(pline, 'input', ['hello'], [1])
   print(pline.all_properties)
-  prop_ids = propm.create_properties(pline, 'input', ['hello','bye'], [0,0])
+  prop_ids = propm.create_properties(pline, 'input', ['hello', 'bye'], [0, 0])
   print(pline.all_properties)
   topom = TopologyManager(context=context)
   print(topom)

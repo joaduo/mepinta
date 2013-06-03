@@ -113,7 +113,7 @@ class SimpleTestPipeline(FrameworkBase):
       ui_props = []
       ui_nodes_props.append((node, ui_props))
       properties = node.inputs.get_properties()
-      for name in node.inputs._declaration_order:
+      for name in node.inputs.declaration_order:
         prop = properties[name]
         if prop.getDataTypeShortName() in interative_types:
           ui_props.append(prop)

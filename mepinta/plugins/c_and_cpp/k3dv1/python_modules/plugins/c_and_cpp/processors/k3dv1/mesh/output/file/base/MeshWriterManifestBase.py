@@ -25,15 +25,13 @@ from plugins.c_and_cpp.processors.k3dv1.base.properties.K3dOutputFile import K3d
 class MeshWriterManifestBase(PluginManifestBase):
   def _superClassDefine(self, inputs, internals, functions, outputs):
     '''Creates the common topology for MeshSources.'''
-    #inputs.file = DataProperty('k3dv1_Mesh')
-    #virtual void on_load_mesh(const filesystem::path& Path, file& Output)
     inputs.file = K3dOutputFile()
     inputs.mesh = 'k3d::mesh'
     functions.writeMesh = FunctionProperty()
-    
-    functions.writeMesh.dpdencies +=[inputs.file,
-                                    inputs.mesh,]
-    
+
+    functions.writeMesh.dpdencies += [inputs.file,
+                                    inputs.mesh, ]
+
     return functions.writeMesh
   def define(self, inputs, internals, functions, outputs, writeMesh):
     '''

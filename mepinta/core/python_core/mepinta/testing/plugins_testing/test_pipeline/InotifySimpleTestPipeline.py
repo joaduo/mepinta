@@ -148,14 +148,15 @@ class InotifySimpleTestPipeline(ForkInotifyUtilsBase):
   def setValue(self, prop, value):
     self._test_pline.setValue(prop, value)
     if isinstance(prop, InotifyPropertyBase):
-      self.__createPropAction(prop)
+      self.__createInotifyAction(prop)
 
-  def __createPropAction(self, prop):
+  def __createInotifyAction(self, prop):
     '''Creates a PathAction action for InotifyActionManager
     If the path is the same of the previous action, then nothing is done.
     If not, the previous action is removed and a new action is set.
     '''
-    path = prop.getPath(self.getPipeline(), self.context)
+    #path = prop.getPath(self.getPipeline(), self.context) #TODO: remove
+    path = self.evaluateProp(prop)
     if prop in self._prop_action:
       path_action = self._prop_action[prop]
       if path_action.getRealPath() == path:

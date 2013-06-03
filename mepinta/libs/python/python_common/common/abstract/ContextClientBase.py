@@ -26,7 +26,7 @@ from common.context.Context import ContextBase
 class ContextClientBase(object):
   '''
     Classes inheriting from 'ContextClientBase' will have easier access to the
-    global config embedded in the context object. 
+    global config embedded in the context object.
     They will do to save some config:
       self.context.some_parameter = <value>
     And to retrieve it:
@@ -36,18 +36,19 @@ class ContextClientBase(object):
       <variable> = self.context.get_config(self.__class__,'some_parameter')
     or
       <variable> = context.get_config(self.__class__,'some_parameter')
-    This way, accessing to the config is straightforward. 
+    This way, accessing to the config is straightforward.
   '''
-  def __init__(self,context=None):
+  def __init__(self, context=None):
     self.context = self.__setContext(context)
-  def __healthContext(self, context):
-    return isinstance(context, ContextWrapper) or isinstance(context, ContextBase)
+#  def __healthContext(self, context):
+#    return isinstance(context, ContextWrapper) or isinstance(context, ContextBase)
   def __setContext(self, context):
     if context == None:
       raise RuntimeError("You should provide a Context for this object since it " \
-                         "inherits from %r"%self.__class__)
-    elif not self.__healthContext(context):
-      raise RuntimeError('Provided context %r is of incorrect type'%context)
+                         "inherits from %r" % self.__class__)
+#    elif not self.__healthContext(context):
+    elif not (isinstance(context, ContextWrapper) or isinstance(context, ContextBase)): #health
+      raise RuntimeError('Provided context %r is of incorrect type' % context)
     else:
       #The context need to be wrapped in order to have easier access to the global config
       if not isinstance(context, ContextWrapper):

@@ -38,7 +38,7 @@ class Node(FrameworkObject):
       Given a processor proxy the node clones the processor's topology
       and options.
     '''
-    #TODO: automate this in order to maintain it from the ProcessorProxy perspective
+    #TODO: automate this in order to maintain it from the ProcessorProxy perspective ?
     processor_proxy = deepcopy(processor_proxy)
     self.containers = processor_proxy.containers
     self.inputs = processor_proxy.inputs
@@ -46,11 +46,13 @@ class Node(FrameworkObject):
     self.outputs = processor_proxy.outputs
     self.functions = processor_proxy.functions
     self.non_cached_capable = processor_proxy.non_cached_capable
+    self.marked_outputs = processor_proxy.marked_outputs
     self.getRequiredDataTypes = processor_proxy.getRequiredDataTypes
+
   def __str__(self):
-    return 'Node(%r,%r)'%(self.name,self.processor)
+    return 'Node(%r,%r)' % (self.name, self.processor)
   def __repr__(self):
-    return '<%r %s>'%(self.name,object.__repr__(self))
+    return '<%r %s>' % (self.name, object.__repr__(self))
 
 class Graph(FrameworkObject):
   def __init__(self, name, graph_type):

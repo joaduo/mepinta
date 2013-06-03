@@ -39,7 +39,7 @@ ContextClientBase
     object.__setattr__(self, 'context', context)
     object.__setattr__(self, 'name', context.name)
   def __getattr__(self, name):
-    if name in ['context', 'name']:
+    if name in ['context', 'name', '__deepcopy__']:
       object.__getattribute__(self, name)
     elif name in ['has_config', 'get_config', 'set_config']:
       return getattr(self.context, name)
@@ -49,4 +49,5 @@ ContextClientBase
       raise RuntimeError('There is no global config for %r ' % (name))
   def __setattr__(self, name, value):
     self.context.set_config(name, value)
-
+  def __deepcopy__(self, memo):
+    return self

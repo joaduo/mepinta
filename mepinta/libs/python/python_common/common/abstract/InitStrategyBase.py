@@ -23,7 +23,7 @@ from common.python3 import portableGetArgspec
 class InitStrategyBase(object):
   def __init__(self, context):
     pass  # TODO: select init strategy
-  def init_children(self, args, kwargs):
+  def _initChildren(self, args, kwargs):
     if len(args) > 0:
       raise TypeError('You should provide all arguments as keywords')
     pres = []
@@ -80,6 +80,6 @@ if __name__ == '__main__':
   from common.context.Context import Context
   ctx = Context('python')
   cc = ConcreteClass(context=ctx)
-  cc.init_children([], dict(context=ctx, something=2312, value1=231, other_value=20, value=100, test=2))
+  cc._initChildren([], dict(context=ctx, something=2312, value1=231, other_value=20, value=100, test=2))
   print(cc.post_init_var, cc.pre_init_var, cc.post_init_var1)
 

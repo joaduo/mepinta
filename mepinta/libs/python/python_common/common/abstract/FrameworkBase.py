@@ -26,7 +26,7 @@ class FrameworkBase(InitStrategyBase, SelfConfigBase):
   def __init__(self, context, *a, **ad):
     SelfConfigBase.__init__(self, context=context)
     InitStrategyBase.__init__(self, context=context)
-    InitStrategyBase.init_children(self, a, ad)
+    InitStrategyBase._initChildren(self, a, ad)
 
 if __name__ == '__main__':
   class ExtendedBase(FrameworkBase):
