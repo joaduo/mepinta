@@ -19,10 +19,6 @@ You should have received a copy of the GNU General Public License
 along with Mepinta. If not, see <http://www.gnu.org/licenses/>.
 '''
 '''
-Created on Nov 13, 2011
-
-@author: jduo
-
 This Module purpose is to load the libmepintacore.so library.
   (since mepinta_shedskin.so depends on this library, and then we have a chicken-egg
   problem if we would like to load the from pipeline_lo_facade.so)
@@ -44,15 +40,15 @@ def local_log_info(msg):
   print msg
 
 def local_log_error(msg):
-  sys.stderr.write(msg+'\n')
+  sys.stderr.write(msg + '\n')
 
-def load_library_stand_alone(path,symbol):
+def load_library_stand_alone(path, symbol):
   handle = load_library(path, symbol)
   if handle == None:
-    local_log_error("ERROR: Couldn't load the library at %r with symbol %r"%(path,symbol))
+    local_log_error("ERROR: Couldn't load the library at %r with symbol %r" % (path, symbol))
     return False
-  loaded_libraries[path]=handle
-  local_log_info("Successfully loaded the library at %r with symbol %r"%(path,symbol))
+  loaded_libraries[path] = handle
+  local_log_info("Successfully loaded the library at %r with symbol %r" % (path, symbol))
   return True
 
 def shedskin_type_generation():

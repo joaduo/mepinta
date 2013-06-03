@@ -5,12 +5,12 @@ REFACTORING_DIR=""
 function replace_in_text(){
   for f in $FILES ; do 
     if [ $(echo "$f" | grep -v "developer_tools/refactoring") ] ; then
+      echo "Replacing on $f"
       echo "$RENAMING_DICT" | while read LINE ; do
         FROMTX=$( echo "$LINE" | cut -d" " -f1)
         TOTX=$( echo "$LINE" | cut -d" " -f2)
         
         if [ "$1" = "-y" ] ; then
-          echo "Replacing on $f"
           cmd="sed 's/$FROMTX/$TOTX/g' -i $f"
         else
           #cmd="sed 's/$FROMTX/$TOTX/g' $f | sed '/$TOTX/ p' -n"
