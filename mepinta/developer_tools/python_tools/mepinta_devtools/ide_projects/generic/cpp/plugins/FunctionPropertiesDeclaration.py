@@ -19,7 +19,7 @@ You should have received a copy of the GNU General Public License
 along with Mepinta. If not, see <http://www.gnu.org/licenses/>.
 '''
 from mepinta.plugins_manifest import DataProperty, GenericEnum
-from mepinta.plugins_manifest.proxy.data_model import BaseInOutPropertyProxy
+from mepinta.plugins_manifest.proxy.data_model import InOutPropertyProxyBase
 from common.abstract.FrameworkObject import FrameworkObject
 
 class FunctionPropertiesDeclaration(FrameworkObject):
@@ -49,7 +49,7 @@ class FunctionPropertiesDeclaration(FrameworkObject):
     '''Only get DataProperty and Functums.'''
     new_dpdencies = []
     for dency in dpdencies:
-      if isinstance(dency, BaseInOutPropertyProxy):
+      if isinstance(dency, InOutPropertyProxyBase):
         new_dpdencies.append(dency)
     return new_dpdencies
   def getInputs(self):

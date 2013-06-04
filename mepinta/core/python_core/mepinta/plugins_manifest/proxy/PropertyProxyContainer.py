@@ -20,14 +20,14 @@ along with Mepinta. If not, see <http://www.gnu.org/licenses/>.
 '''
 from common.abstract.FrameworkBase import FrameworkBase
 from mepinta.plugins_manifest.proxy.data_model import FunctionPropertyProxy, \
-  BaseInOutPropertyProxy, DataPropertyProxy, PropertyProxy, \
-  PropertyProxyQualifier
+  InOutPropertyProxyBase, DataPropertyProxy, PropertyProxy, \
+  PropertyAndQualifierBase
 from mepinta.plugins_manager.data_types.DataTypeAliasManager import DataTypeAliasManager
 
 class PropertyProxyContainer(FrameworkBase):
   '''
     Beware: every public attribute set that is of type 'str' will become a
-      DataPropertyProxy tacking the type from the string passed.
+      DataPropertyProxy taking the type from the string passed.
     All private attributes are not converted.
   '''
   def __post_init__(self):
@@ -41,6 +41,11 @@ class PropertyProxyContainer(FrameworkBase):
     return self.__container_type
 
   def setContainerType(self, container_type):
+    '''
+    Since the container_type property is read-only, this method is used to set
+      the container type. (done in the ProcessorProxy class)
+    :param container_type:
+    '''
     self.__container_type = container_type
 
   @property
@@ -53,7 +58,7 @@ class PropertyProxyContainer(FrameworkBase):
       Possible types: (with hierarchy)
         PropertyProxy
           FunctionPropertyProxy    (functions declaration_order)
-          BaseInOutPropertyProxy   (declaration_order carrying information)
+          InOutPropertyProxyBase   (declaration_order carrying information)
             FunctumPropertyProxy   (property carrying information and other declaration_order: functum = function + datum)
             DataPropertyProxy      (pure data property)
               InotifyPropertyProxy (The property receives signals from inotify, probably related to a File or Folder)
@@ -75,7 +80,7 @@ class PropertyProxyContainer(FrameworkBase):
     if self.container_type == 'function':
       return [FunctionPropertyProxy]
     else:
-      return [BaseInOutPropertyProxy]
+      return [InOutPropertyProxyBase]
 
   def __inTypes(self, prop_proxy, types):
     '''Checks if a PropertyProxy is in a list of types.'''
@@ -96,10 +101,10 @@ class PropertyProxyContainer(FrameworkBase):
       if isinstance(value, tuple) and len(value) == 2  and \
          isinstance(value[0], str): #Passing a tuple like 'int',1 (data type, minor version)
         value = DataPropertyProxy(value[0], value[1])
-      if isinstance(value, (PropertyProxy, PropertyProxyQualifier)): #TODO: validate according to the container type. #TODO: here validate when its a function or a In/Out/Internal?
+      if isinstance(value, PropertyAndQualifierBase): #TODO: validate according to the container type. #TODO: here validate when its a function or a In/Out/Internal?
         self.__addProp(name, value)
         #value.parent = self #TODO: remove?
-        if isinstance(value.__qualified__(), BaseInOutPropertyProxy):
+        if isinstance(value.__qualified__(), InOutPropertyProxyBase):
           value.data_type_name = self.__data_type_alias_manager.getRealDataTypeName(value.data_type_alias)
     FrameworkBase.__setattr__(self, name, value)
 
@@ -121,7 +126,7 @@ class PropertyProxyContainer(FrameworkBase):
         declaration_order list.
     '''
     prop = getattr(self, name)
-    if isinstance(prop.__qualified__(), PropertyProxy):
+    if isinstance(prop, PropertyAndQualifierBase):
       self.declaration_order.remove(prop.name)
     return FrameworkBase.__delattr__(self, name)
 

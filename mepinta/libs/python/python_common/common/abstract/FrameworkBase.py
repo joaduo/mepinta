@@ -25,26 +25,26 @@ from common.abstract.InitStrategyBase import InitStrategyBase
 class FrameworkBase(InitStrategyBase, SelfConfigBase):
   def __init__(self, context, *a, **ad):
     SelfConfigBase.__init__(self, context=context)
-    InitStrategyBase.__init__(self, context=context)
+    InitStrategyBase.__init__(self)
     InitStrategyBase._initChildren(self, a, ad)
 
 if __name__ == '__main__':
   class ExtendedBase(FrameworkBase):
     def __pre_init__(self, *a, **ad):
-      print( 'Pre init Extended Base')
+      print('Pre init Extended Base')
       pass
-    
+
   class Foo(object):
     pass
 
   #class ConcreteClass(Foo, ExtendedBase):
   class ConcreteClass(ExtendedBase, Foo):
     def __pre_init__(self):
-      print( 'Pre init Concrete')
+      print('Pre init Concrete')
       self.pre_init_var = 10
-    def __post_init__(self,value):
+    def __post_init__(self, value):
       print('Post init concrete')
-      self.post_init_var=value
+      self.post_init_var = value
 
   from common.context.Context import Context
   ctx = Context('python')

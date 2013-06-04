@@ -17,29 +17,31 @@ GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
 along with Mepinta. If not, see <http://www.gnu.org/licenses/>.
-'''
-'''
+
+
+
 This data model represents the configuration of a plugin manifest (a processors
 manifest by now)
 
 The biggest container is the ProcessorProxy class.
-The containment hierarchy (but not class hierarchy) is as follow:
+The composition hierarchy (but not class hierarchy) is as follow:
 ProcessorProxy (has 4)
   PropertyProxyContainer (has 0 or more)
     PropertyProxy
-    PropertyProxyQualifier (has one)
-        ... (many Qualifiers can wrap other qualifiers until you get to the property)
-        PropertyProxy
+    QualifierBase (has one or
+        ... many Qualifiers can wrap other qualifiers until you get to the property)
+          PropertyProxy
 
-PropertyProxyContainer objects intercept PropertyProxy attributes in the __setattr__
-  This way a container sets the name of a PropertyProxy, for example:
-  container.expression = DataPropertyProxy('charp')
-  Then container.expression.name will be 'expression' since the container object
-  intercepted PropertyProxy' instance in __setattr__  and set its name.
+PropertyProxyContainer objects intercept attributes in the __setattr__
+  This way a container sets a PropertyProxy, for example:
+    container.expression = 'charp'
+  Its the same as
+    container.expression = DataPropertyProxy('charp')
+  Then container.expression.name will be 'expression'.
 
-As illustrated above, PropertyProxyQualifier children classes can wrap a
-property and other qualifiers. The qualifiers mask a property (an thus quality)
-of a PropertyProxy.
+As illustrated above, QualifierBase children classes can wrap a
+property and other qualifiers. The qualifiers mask one or more property from a
+PropertyProxy.
 
 Examples of qualifiers usage:
   """
@@ -50,7 +52,7 @@ Examples of qualifiers usage:
   #add validation qualifier (always)
   inputs.expression = DataPropertyProxy('charp',1).validateReturn('strlen(%s) > 1')
   #is the same as
-  inputs.expression = PPValidationQualifier( DataPropertyProxy('charp',1), '#prop > 1',2)
+  inputs.expression = ValidationQualifier( DataPropertyProxy('charp',1), '#prop > 1',2)
 
   #When connecting to functions the 'directedReadable' function makes it more readable
   functions.eval_expression.dpdencies +=  [ directedReadable('<',inputs.expression) ]
@@ -59,40 +61,41 @@ Examples of qualifiers usage:
   #is the same as
   functions.eval_expression.dpdencies +=  [ inputs.expression.directed('<') ]
   #or as
-  functions.eval_expression.dpdencies +=  [ PPDirectionQualifier(inputs.expression, '<') ]
+  functions.eval_expression.dpdencies +=  [ DirectionQualifier(inputs.expression, '<') ]
   #With the alias you can clearly understand the direction of the connection
 
   #Validation only for the connection
   functions.eval_expression.dpdencies +=  [ inputs.scalar_number.validateDefault('%s > 1',2) ]
 
 Note that when you qualify in the connection, the qualification won't last in the property.
-But when you qualify in initialization (in fact after it), you qualify the property
-for any future connection. (you may get the inner property with the __qualified__()
-method.
+But when you qualify in initialization, you qualify the property for any future
+ connection. (you may get the inner property with the __qualified__() method.
 
 This is the class Hierarchy for Qualifiers:
-  PropertyProxyQualifier
-    PPDirectionQualifier
-    PPValidationQualifier
+  PropertyAndQualifierBase
+    QualifierBase
+      DirectionQualifier
+      ValidationQualifier
 
 The hierarchy of Properties Proxies:
-  PropertyProxy
-    FunctionPropertyProxy    (functions declaration_order)
-    BaseInOutPropertyProxy   (declaration_order carrying information)
-      FunctumPropertyProxy   (property carrying information and other declaration_order: functum = function + datum)
-      DataPropertyProxy      (pure data property)
-        InotifyPropertyProxy (The property receives signals from inotify, probably related to a File or Folder)
-        GenericEnumProxy     (data property implementing a generic enum data type)
+  PropertyAndQualifierBase
+    PropertyProxy
+      FunctionPropertyProxy    (functions declaration_order)
+      InOutPropertyProxyBase   (declaration_order carrying information)
+        FunctumPropertyProxy   (property carrying information and other declaration_order: functum = function + datum)
+        DataPropertyProxy      (pure data property)
+          InotifyPropertyProxy (The property receives signals from inotify, probably related to a File or Folder)
+          GenericEnumProxy     (data property implementing a generic enum data type)
 
-
-Note: In BaseInOutPropertyProxy.getRealDataTypeName method maps data types to
-its real python package path. This is work in progress, since this shold be
-done automatically gathering information from the data types manifests.
 '''
+
 from common.abstract.FrameworkObject import FrameworkObject
 from common.type_checking.isiterable import isiterable
 
-class PropertyProxyQualifier(FrameworkObject):
+class PropertyAndQualifierBase(FrameworkObject):
+  pass
+
+class QualifierBase(PropertyAndQualifierBase):
   def __init__(self, wrapped_prop):
     self.wrapped_prop = wrapped_prop
   def __qualified__(self):
@@ -105,7 +108,7 @@ class PropertyProxyQualifier(FrameworkObject):
         Remember adding the _interceptedAttr() result from the parent class.
       Example on children: (suppose adding 'direction' attribute to the children class).
         def _interceptedAttr(self):
-          return ['direction'] + PropertyProxyQualifier._interceptedAttr(self)
+          return ['direction'] + QualifierBase._interceptedAttr(self)
     '''
     return ['wrapped_prop']
   def __getattr__(self, name):
@@ -127,16 +130,16 @@ class PropertyProxyQualifier(FrameworkObject):
   def __repr__(self):
     return '<%s wrapping %r>' % (self.__class__.__name__, self.wrapped_prop)
 
-class PPDirectionQualifier(PropertyProxyQualifier):
+class DirectionQualifier(QualifierBase):
   def __init__(self, wrapped_prop, direction):
-    PropertyProxyQualifier.__init__(self, wrapped_prop)
+    QualifierBase.__init__(self, wrapped_prop)
     if direction not in ['<', '>']:
       raise RuntimeError("Direction parameter should be '<' or '>'. %r is not supported." % direction)
     self.direction = direction
   def _interceptedAttr(self):
-    return ['direction'] + PropertyProxyQualifier._interceptedAttr(self)
+    return ['direction'] + QualifierBase._interceptedAttr(self)
 
-class PPValidationQualifier(PropertyProxyQualifier):
+class ValidationQualifier(QualifierBase):
   class Validation(FrameworkObject):
     def __init__(self, expression, default_value=None):
       self.expression = expression
@@ -146,10 +149,10 @@ class PPValidationQualifier(PropertyProxyQualifier):
     def isValidateReturn(self):
       return self.defaul_value == None
   def __init__(self, wrapped_prop, expression, default_value):
-    PropertyProxyQualifier.__init__(self, wrapped_prop)
+    QualifierBase.__init__(self, wrapped_prop)
     self.validation = self.Validation(expression, default_value)
   def _interceptedAttr(self):
-    return ['validation'] + PropertyProxyQualifier._interceptedAttr(self)
+    return ['validation'] + QualifierBase._interceptedAttr(self)
 
 def directedReadable(direction, wrapped_prop):
   '''
@@ -171,7 +174,7 @@ def directedReadable(direction, wrapped_prop):
     Use the 'directed' function of the plugins_manifest package to set the
     direction.
   '''
-  return PPDirectionQualifier(wrapped_prop, direction)
+  return DirectionQualifier(wrapped_prop, direction)
 
 class PropertyDepedencies(object):
   '''
@@ -194,12 +197,12 @@ class PropertyDepedencies(object):
   def appendDependency(self, dency):
     if dency in self.__props:
       raise RuntimeError('Dependency %r already in this Property\'s dependencies.' % dency)
-    elif isinstance(dency, (PropertyProxy, PropertyProxyQualifier)):
+    elif isinstance(dency, (PropertyProxy, QualifierBase)):
       self.__props.append(dency)
     else:
       raise RuntimeError('Unsupported dependency type for %r. Dependencies should be a list of PropertyProxy or a PropertyProxy.' % dency)
 
-class PropertyProxy(FrameworkObject):
+class PropertyProxy(PropertyAndQualifierBase):
   '''
     Property proxy is a generic proxy used to define a plugin's manifest.
     But you should use concrete classes 'DataProperty','FunctionProperty'
@@ -238,7 +241,7 @@ class PropertyProxy(FrameworkObject):
       raise RuntimeError('Trying to change %r property\'s dpdencies object. You should use the += operator instead.' % str(self))
   dpdencies = property(get_dpdencies, set_dpdencies, None, None)
 
-class BaseInOutPropertyProxy(PropertyProxy):
+class InOutPropertyProxyBase(PropertyProxy):
   def __init__(self, data_type_alias, data_type_version=1):
     PropertyProxy.__init__(self)
     self.data_type_name = None
@@ -255,33 +258,33 @@ class BaseInOutPropertyProxy(PropertyProxy):
       if direction='>' means other property depends on this property in the relation.(but is not notified)
       if direction='<' means this property notifies changes to the other property in the relation.(but won't be in it's args)
     '''
-    return PPDirectionQualifier(self, direction)
+    return DirectionQualifier(self, direction)
 
-class DataPropertyProxy(BaseInOutPropertyProxy):
+class DataPropertyProxy(InOutPropertyProxyBase):
   '''
     Class used by a plugin's manifest
       You should use alias 'DataProperty'
       from mepinta.plugins_manifest package
   '''
   def validateDefault(self, expression, default_value):
-    return PPValidationQualifier(self, expression, default_value)
+    return ValidationQualifier(self, expression, default_value)
   def validateReturn(self, expression):
-    return PPValidationQualifier(self, expression, None)
+    return ValidationQualifier(self, expression, None)
 
 class InotifyPropertyProxy(DataPropertyProxy):
   '''
   This class is just used to clasify those properties that represent a path in
   the system. So they can be watched by Inotify.
   '''
-  def getPath(self, pline, context): #TODO: remove
-    '''
-    getPath makes room for any InotifyPropertyProxy to solve the path to be
-      watched by inotify. The property may have more than just the string of the
-      path. getPath can filter just the path.
-    :param pline:
-    :param context:
-    '''
-    raise RuntimeError('Implement on child class. (could be on concrete class %s)' % self.__class__)
+#  def getPath(self, pline, context): #TODO: remove
+#    '''
+#    getPath makes room for any InotifyPropertyProxy to solve the path to be
+#      watched by inotify. The property may have more than just the string of the
+#      path. getPath can filter just the path.
+#    :param pline:
+#    :param context:
+#    '''
+#    raise RuntimeError('Implement on child class. (could be on concrete class %s)' % self.__class__)
 
 class InputFilePropertyProxy(InotifyPropertyProxy):
   '''
@@ -289,10 +292,10 @@ class InputFilePropertyProxy(InotifyPropertyProxy):
   '''
   def __init__(self):
     InotifyPropertyProxy.__init__(self, 'c.builtin.charp')
-  def getPath(self, pline, context):
-    from mepinta.pipeline.hi.value_manager.ValueManager import ValueManager
-    value_mngr = ValueManager(context)
-    return value_mngr.getValue(pline, self)
+#  def getPath(self, pline, context):
+#    from mepinta.pipeline.hi.value_manager.ValueManager import ValueManager
+#    value_mngr = ValueManager(context)
+#    return value_mngr.getValue(pline, self)
 
 class GenericEnumProxy(DataPropertyProxy):
   '''
@@ -341,14 +344,14 @@ class GenericEnumProxy(DataPropertyProxy):
     self.__enum_id = value
   enum_id = property(get_enum_id, set_enum_id, None, None)
 
-class FunctumPropertyProxy(BaseInOutPropertyProxy):
+class FunctumPropertyProxy(InOutPropertyProxyBase):
   '''
     Class used by a plugin's manifest
       You should use alias 'FunctumProperty'
       from mepinta.plugins_manifest package
   '''
   def __init__(self):
-    BaseInOutPropertyProxy.__init__(self, "MP_functum", data_type_version=1)
+    InOutPropertyProxyBase.__init__(self, "MP_functum", data_type_version=1)
 
 class FunctionPropertyProxy(PropertyProxy):
   '''
@@ -419,7 +422,7 @@ if __name__ == '__main__':
   #      for name in props.declaration_order:
   #        if name in props_dict:
   #          prop = props_dict[name]
-  #          if isinstance(prop, BaseInOutPropertyProxy):
+  #          if isinstance(prop, InOutPropertyProxyBase):
   #            context.log.info('  %r type:%r data_type_name:%r' % (name, prop.type, prop.data_type_name))
   #          else:
   #            context.log.info('  %r type:%r ' % (name, prop.type))
@@ -427,7 +430,7 @@ if __name__ == '__main__':
   #  print_processor_definition(context, pp)
   #
   #  def test_qualifiers():
-  #    qualified = PPDirectionQualifier(pp.inputs.expression, '<')
+  #    qualified = DirectionQualifier(pp.inputs.expression, '<')
   #    qualified1 = qualified
   #    print qualified
   #    #qualified = DataPropertyProxy('name')
@@ -435,12 +438,12 @@ if __name__ == '__main__':
   #    print qualified.name
   #    print qualified.data_type_name
   #    print qualified.hasQualifier('direction')
-  #    qualified = PPValidationQualifier(qualified, '#prop > 1', 2)
+  #    qualified = ValidationQualifier(qualified, '#prop > 1', 2)
   #    print qualified.hasQualifier('Validation')
   #    print qualified == pp.inputs.expression
   #    print qualified == qualified1
   #    print qualified == pp.inputs.scalar_number
-  #    qualified2 = PPDirectionQualifier(pp.inputs.scalar_number, '<')
+  #    qualified2 = DirectionQualifier(pp.inputs.scalar_number, '<')
   #    print qualified == qualified2
   #    print qualified2 == pp.inputs.scalar_number
   #    print pp.inputs.expression.directed('<')

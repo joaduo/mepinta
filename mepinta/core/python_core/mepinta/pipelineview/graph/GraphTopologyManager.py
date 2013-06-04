@@ -23,7 +23,7 @@ from mepinta.pipeline.hi.base import unwrap_lo
 from mepinta.pipeline.hi.topology_manager.TopologyManager import TopologyManager
 from common.abstract.FrameworkBase import FrameworkBase
 from mepinta.plugins_manifest.proxy.data_model import FunctionPropertyProxy,\
-  BaseInOutPropertyProxy
+  InOutPropertyProxyBase
 
 class GraphTopologyManager(FrameworkBase):
   def __post_init__(self, *a, **ad):
@@ -48,7 +48,7 @@ class GraphTopologyManager(FrameworkBase):
     self.__dpdents_dpdencies(node.outputs,   dpdents,dpdencies, direction)
     self.__dpdents_dpdencies(node.functions, dpdents,dpdencies, direction, type_=FunctionPropertyProxy)
     return dpdents,dpdencies
-  def __dpdents_dpdencies(self, container, dpdents,dpdencies , direction, type_=BaseInOutPropertyProxy): 
+  def __dpdents_dpdencies(self, container, dpdents,dpdencies , direction, type_=InOutPropertyProxyBase): 
     for prop in container.get_properties(type_).values():
       for dency in prop.dpdencies:
         if dency.direction == direction:

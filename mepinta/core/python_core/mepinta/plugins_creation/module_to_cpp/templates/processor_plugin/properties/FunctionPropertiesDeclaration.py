@@ -21,7 +21,7 @@ along with Mepinta. If not, see <http://www.gnu.org/licenses/>.
 from mepinta.plugins_creation.templates.base import TemplateTranslatorBase
 from mepinta.plugins_manifest import DataProperty, FunctionProperty, Functum,\
   GenericEnum
-from mepinta.plugins_manifest.proxy.data_model import BaseInOutPropertyProxy
+from mepinta.plugins_manifest.proxy.data_model import InOutPropertyProxyBase
 
 class FunctionPropertiesDeclaration(TemplateTranslatorBase):
   def __post_init__(self, proxy, plugin_manifest):
@@ -50,7 +50,7 @@ class FunctionPropertiesDeclaration(TemplateTranslatorBase):
     '''Only get DataProperty and Functums.'''
     new_dpdencies = []
     for dency in dpdencies:
-      if isinstance(dency, BaseInOutPropertyProxy):
+      if isinstance(dency, InOutPropertyProxyBase):
         new_dpdencies.append(dency)
     return new_dpdencies
   def getInputs(self):

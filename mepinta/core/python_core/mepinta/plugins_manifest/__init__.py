@@ -22,7 +22,7 @@ along with Mepinta. If not, see <http://www.gnu.org/licenses/>.
 from common.abstract.FrameworkBase import FrameworkBase
 from mepinta.plugins_manifest.proxy.data_model import PropertyProxy, DataPropertyProxy, \
   FunctionPropertyProxy, directedReadable, FunctumPropertyProxy, GenericEnumProxy, \
-  PropertyProxyQualifier, InotifyPropertyProxy
+  QualifierBase, InotifyPropertyProxy
 from mepinta.abstract.MepintaError import MepintaError
 from common.type_checking.isiterable import isiterable
 from mepinta.plugins_manifest.proxy.ProcessorProxy import ProcessorProxy
@@ -33,7 +33,7 @@ __all__ = [
            'Functum',
            'GenericEnum',
            'directed',
-           'PropertyQualifierBase',
+           'QualifierBase',
            'InotifyPropertyBase',
            'PluginManifestBase',
            ]
@@ -46,7 +46,7 @@ GenericEnum = GenericEnumProxy
 directed = directedReadable
 
 #aliases for Base classes
-PropertyQualifierBase = PropertyProxyQualifier
+QualifierBase = QualifierBase
 InotifyPropertyBase = InotifyPropertyProxy
 
 class PluginManifestBase(FrameworkBase):

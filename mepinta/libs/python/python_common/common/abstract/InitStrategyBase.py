@@ -20,11 +20,11 @@ along with Mepinta. If not, see <http://www.gnu.org/licenses/>.
 '''
 from common.python3 import portableGetArgspec
 
-class InitStrategyBase(object):
-  def __init__(self, context):
-    pass  # TODO: select init strategy
+class InitStrategyBase(object): #TODO: only use PostInitStrategyBase
+#  def __init__(self):
+#    pass  # TODO: select init strategy
   def _initChildren(self, args, kwargs):
-    if len(args) > 0:
+    if len(args):
       raise TypeError('You should provide all arguments as keywords')
     pres = []
     posts = []
@@ -79,7 +79,7 @@ if __name__ == '__main__':
 
   from common.context.Context import Context
   ctx = Context('python')
-  cc = ConcreteClass(context=ctx)
+  cc = ConcreteClass()
   cc._initChildren([], dict(context=ctx, something=2312, value1=231, other_value=20, value=100, test=2))
   print(cc.post_init_var, cc.pre_init_var, cc.post_init_var1)
 

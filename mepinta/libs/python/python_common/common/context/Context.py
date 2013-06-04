@@ -32,7 +32,7 @@ class args_singleton(object):
   '''
   __instances = {}
   def __init__(self, Class):
-    self.Class = Class  
+    self.Class = Class
   def __call__(self, name):
     if name not in self.__instances:
       self.__instances[name] = self.Class(name)
@@ -49,35 +49,36 @@ class ContextBase(object):
     #or PersistPolicy(self, 'value')
     self.__config = ConfigLoader().load(name)
     self.set_config('log', Logger())
-  def get_log(self):
+
+  @property
+  def log(self):
     return self.get_config('log')
   def get_config_store(self):
     return self.__config
-  def has_config(self,name,owner="global"):
-    return self.__get_config_key(name,owner) in self.__config 
-  def get_config(self,name,owner="global"):
-    if self.has_config(name,owner):
-      return self.__config[self.__get_config_key(name,owner)]
+  def has_config(self, name, owner="global"):
+    return self.__get_config_key(name, owner) in self.__config
+  def get_config(self, name, owner="global"):
+    if self.has_config(name, owner):
+      return self.__config[self.__get_config_key(name, owner)]
     else:
-      raise RuntimeWarning("No config '%s'."%self.__config_key_str(name,owner))
-  def set_config(self,name,value,owner="global"):
-    self.__config[self.__get_config_key(name,owner)] = value
-  def __get_config_key(self,name,owner="global"):
-    return (owner,name)
-  def __config_key_str(self,name,owner="global"):
+      raise RuntimeWarning("No config '%s'." % self.__config_key_str(name, owner))
+  def set_config(self, name, value, owner="global"):
+    self.__config[self.__get_config_key(name, owner)] = value
+  def __get_config_key(self, name, owner="global"):
+    return (owner, name)
+  def __config_key_str(self, name, owner="global"):
     #TODO: Use this for persistence purposes
     if inspect.isclass(owner):
-      string = "%s.%s"%(owner.__module__.__str__(),
+      string = "%s.%s" % (owner.__module__.__str__(),
                     owner.__name__)
     elif isinstance(owner, str):
-      string = "%s"%owner
+      string = "%s" % owner
     else:#TODO: print warning!!
-      string = "%s"%owner
-    string +='.%s'%name
+      string = "%s" % owner
+    string += '.%s' % name
     return string
   def __repr__(self):
-    return 'Context:%r with Config: %r'%(self.name,str(self.__config))
-  log = property(get_log, None, None, None)
+    return 'Context:%r with Config: %r' % (self.name, str(self.__config))
 
 
 @args_singleton
@@ -97,7 +98,7 @@ if __name__ == '__main__':
     pass
   a = Pototo()
   from common.config.ConfigWrapper import ConfigWrapper
-  cwrapper = ConfigWrapper(OwnerClass=a.__class__,context=ctxp)
+  cwrapper = ConfigWrapper(OwnerClass=a.__class__, context=ctxp)
   cwrapper.hola = 1
   print(cwrapper.hola)
   try:

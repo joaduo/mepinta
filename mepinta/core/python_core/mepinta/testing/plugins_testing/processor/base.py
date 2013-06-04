@@ -36,6 +36,11 @@ class ProcessorPluginTestBase(FrameworkBase):
   For an intermediate class example, check:
    mepinta.testing.plugins_testing.processor.K3dMeshPluginTest.K3dMeshPluginTest
   '''
+  def __init__(self, context=None):
+    if context == None: #To enable context free initialization supporting unittest.TestCase
+      from default_context import getDefaultContext
+      context = getDefaultContext()
+    FrameworkBase.__init__(self, context)
   def __post_init__(self):
     #list of tested processors (target of the test class)
     self.__tested_processors = []
