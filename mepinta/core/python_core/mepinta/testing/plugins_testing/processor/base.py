@@ -21,7 +21,9 @@ along with Mepinta. If not, see <http://www.gnu.org/licenses/>.
 from common.abstract.FrameworkBase import FrameworkBase
 from mepinta.abstract.MepintaError import MepintaError
 from mepinta.testing.plugins_testing.time.TestTime import TestTime
+from unittest import TestCase
 
+cached_context = None
 class ProcessorPluginTestBase(FrameworkBase):
   '''Base class for plugins' test modules.
 
@@ -37,10 +39,23 @@ class ProcessorPluginTestBase(FrameworkBase):
    mepinta.testing.plugins_testing.processor.K3dMeshPluginTest.K3dMeshPluginTest
   '''
   def __init__(self, context=None):
-    if context == None: #To enable context free initialization supporting unittest.TestCase
-      from default_context import getDefaultContext
-      context = getDefaultContext()
+    if isinstance(self, TestCase): #If using unittest, then initialize the class
+      #Keep signature
+      if isinstance(context, str):
+        methodName = context
+        context = None
+        TestCase.__init__(self, methodName)
+      else:
+        TestCase.__init__(self)
+
+    global cached_context
+    if context == None:
+      if cached_context == None: #To enable context free initialization supporting unittest.TestCase
+        from default_context import getDefaultContext
+        cached_context = getDefaultContext()
+      context = cached_context
     FrameworkBase.__init__(self, context)
+
   def __post_init__(self):
     #list of tested processors (target of the test class)
     self.__tested_processors = []
@@ -103,9 +118,19 @@ class ProcessorPluginTestBase(FrameworkBase):
     method and a time value. With that, the end user can define a pertinent test
     to the target processor/s.
 
-    The time can be manipulated reimplementing the 'getTimeParameters' method.
+    The time can be manipulated re-implementing the 'getTimeParameters' method.
     '''
     pass
+
+  def runTest(self, gui=False):
+    from mepinta.testing.plugins_testing.test_pipeline.GUIInotifyTestPipeline import GUIInotifyTestPipeline
+    from mepinta.testing.plugins_testing.test_pipeline.InotifySimpleTestPipeline import InotifySimpleTestPipeline
+    if gui:
+      test_pline = GUIInotifyTestPipeline(self.context)
+    else:
+      test_pline = InotifySimpleTestPipeline(self.context)
+    self.definePipeline(test_pline)
+    test_pline.evaluateProp()
 
 if __name__ == "__main__":
   pass

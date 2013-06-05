@@ -21,7 +21,7 @@ along with Mepinta. If not, see <http://www.gnu.org/licenses/>.
 from mepinta.testing.plugins_testing.processor.base import ProcessorPluginTestBase
 
 class Geometry2DPluginTest(ProcessorPluginTestBase):
-  def definePluginPipeline(self):
+  def definePluginPipeline(self, test_pline):
     raise NotImplementedError("Implement on children classes!")
 
   def _createInputGeometry(self, test_pline):

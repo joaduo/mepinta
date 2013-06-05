@@ -25,6 +25,7 @@ class ModuleDummy:
       self[("global", 'backend_name')] = str(self.__class__.__name__)[len('config_'):]
       self[("global", 'minor_version_separator')] = '__'
       self[("global", 'plugin_build_targets')] = ['Debug', 'Release', 'ReleasePointerSafe', 'ReleaseTypeSafe', 'ReleaseArgumentsSafe', ]
+      self[("global", 'nodebox_gui')] = True
 
   class config_python(config_base):
     pass

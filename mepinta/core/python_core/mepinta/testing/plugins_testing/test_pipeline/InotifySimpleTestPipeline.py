@@ -128,7 +128,7 @@ class InotifySimpleTestPipeline(ForkInotifyUtilsBase):
     if self.context.backend_name == 'c_and_cpp':
       #TODO: later this should be improved (watching python implementations)
       for processor in plugin_test.getWatchedProcessors():
-        self.watchProcessorLibrary(processor)
+        self.__watchProcessorLibrary(processor)
     self.__watchTestModule(test_module)
 
   def evaluateProp(self, prop=None):
@@ -187,7 +187,7 @@ class InotifySimpleTestPipeline(ForkInotifyUtilsBase):
       self.evaluateProp()
     self._callFunctionOnFork(evaluateProp)
 
-  def watchProcessorLibrary(self, processor):
+  def __watchProcessorLibrary(self, processor):
     if processor in self._watched_processors:
       self.log.warning('Processor module already watched: %r' % processor)
       return
@@ -220,7 +220,7 @@ class InotifySimpleTestPipeline(ForkInotifyUtilsBase):
     self._watched_test_modules.append(test_module)
     def testModuleInotifyFunction():
       module_reloaded = self._reloadModule(test_module)
-      plugin_test = module_reloaded.test(self.context)
+      plugin_test = self._getTestInstance(module_reloaded) #module_reloaded.test(self.context)
       #timing values
       start, end, step, sleep = self.__getTimeParameters(plugin_test.getTimeParameters())
       if end - start >= 0.: #ascending time

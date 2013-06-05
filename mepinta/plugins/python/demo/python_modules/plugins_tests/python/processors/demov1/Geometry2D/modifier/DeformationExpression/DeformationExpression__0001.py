@@ -19,8 +19,9 @@ You should have received a copy of the GNU General Public License
 along with Mepinta. If not, see <http://www.gnu.org/licenses/>.
 '''
 from plugins_tests.python.processors.demov1.Geometry2D.modifier.base.Geometry2DPluginTest import Geometry2DPluginTest
+from unittest import TestCase
 
-class DeformationExpression(Geometry2DPluginTest):
+class DeformationExpression(Geometry2DPluginTest, TestCase):
   def __post_init__(self):
     import plugins.python.processors.demov1.Geometry2D.modifier.DeformationExpression as deformation_expression
     self.tested_processors.append(deformation_expression)
@@ -40,10 +41,11 @@ class DeformationExpression(Geometry2DPluginTest):
     deformation_node = test_pline.getNodesDict()['DeformationExpression 1']
     test_pline.setValue(deformation_node.inputs.time, 10 * time)
 
-test = DeformationExpression
-
 if __name__ == "__main__":
+#  import unittest
+#  unittest.main()
+
   from mepinta.testing.plugins_testing.PluginTestAutoTester import PluginTestAutoTester
   from default_context import getDefaultContext
   from pipeline_backend.logging.logging import LOG_INFO
-  PluginTestAutoTester(getDefaultContext(LOG_INFO)).test(test)
+  PluginTestAutoTester(getDefaultContext(LOG_INFO)).test()#(gui=False)

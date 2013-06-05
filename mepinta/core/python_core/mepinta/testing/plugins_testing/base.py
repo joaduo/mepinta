@@ -25,7 +25,7 @@ import imp
 from mepinta.testing.plugins_testing.processor.base import ProcessorPluginTestBase
 from mepinta.abstract.MepintaError import MepintaError
 
-class ForkInotifyUtilsBase(FrameworkBase):
+class ForkInotifyUtilsBase(FrameworkBase): #TODO: use composition
   def _reloadModule(self, module):
     #if it's the main module, do a hack. (reload it as a different module from the filename)
     if module.__name__ == '__main__':
@@ -38,11 +38,15 @@ class ForkInotifyUtilsBase(FrameworkBase):
     return module
 
   def _getTestInstance(self, test_module):
-    if hasattr(test_module, 'test') and issubclass(test_module.test, ProcessorPluginTestBase):
-      test_module = self._reloadModule(test_module)
-      return test_module.test(self.context)
-    else:
-      raise RuntimeError('There is no a test class in module: %s' % test_module)
+    for class_ in test_module.__dict__.values():
+      if issubclass(class_, ProcessorPluginTestBase):
+        return class_(self.context)
+    raise RuntimeError('There is no a test class in module: %s' % test_module)
+#    if hasattr(test_module, 'test') and issubclass(test_module.test, ProcessorPluginTestBase):
+#      test_module = self._reloadModule(test_module)
+#      return test_module.test(self.context)
+#    else:
+#      raise RuntimeError('There is no a test class in module: %s' % test_module)
 
   def _getModuleFilePath(self, module):
     '''Get the .py file for a given module.
@@ -89,13 +93,13 @@ class ForkInotifyUtilsBase(FrameworkBase):
     function(*args, **kwargs)
     return 0
 
-class ModuleAutoTesterBase(FrameworkBase):
+class ModuleAutoTesterBase(FrameworkBase): #TODO remove and use util
   def _getClassModule(self, class_):
     if class_.__module__ == '__main__':
       import __main__
       return __main__
     else:
-      raise NotImplementedError()
+      return __import__(class_.__module__, fromlist='dummy')
 
   def _getPackageAndMinorVersion(self, plugin_manifest):
     if plugin_manifest.__class__.__module__ == '__main__':
