@@ -20,18 +20,15 @@ along with Mepinta. If not, see <http://www.gnu.org/licenses/>.
 '''
 from mepinta.testing.plugins_testing.base import ModuleAutoTesterBase
 from mepinta.testing.plugins_testing.ProcessorPluginTestRunner import ProcessorPluginTestRunner
-from mepinta.testing.plugins_testing.ModuleAutoTesterUtil import ModuleAutoTesterUtil
 
 class PluginTestAutoTester(ModuleAutoTesterBase):
-  def __post_init__(self):
-    self.processor_plugin_testrunner = ProcessorPluginTestRunner(self.context)
-    self.module_autotester_util = ModuleAutoTesterUtil(self.context)
-
   def test(self, gui=True):
+    self.context.nodebox_gui = gui
     import __main__
     test_module = __main__
     self.log.debug('Autotested module module %s' % test_module)
-    self.processor_plugin_testrunner.blockListeningEvents(test_module, gui=gui)
+    #Since we create a new context config, logic classes must be instanced here
+    ProcessorPluginTestRunner(self.context).blockListeningEvents(test_module)
 
 if __name__ == "__main__":
   pass

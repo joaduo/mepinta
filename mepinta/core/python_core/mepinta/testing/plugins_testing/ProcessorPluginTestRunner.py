@@ -24,11 +24,10 @@ from common.inotify.actions.PathAction import PathAction
 from common.inotify.mask import IN_CLOSE_WRITE#, IN_ATTRIB, IN_ALL_EVENTS
 from mepinta.testing.plugins_testing.base import ForkInotifyUtilsBase
 from common.type_checking.isiterable import isiterable
-from mepinta.testing.plugins_testing.test_pipeline.GUIInotifyTestPipeline import GUIInotifyTestPipeline
-import os
 from mepinta.testing.plugins_testing.test_pipeline.InotifySimpleTestPipeline import InotifySimpleTestPipeline
 import signal
 import sys
+import os
 
 class ProcessorPluginTestRunner(ForkInotifyUtilsBase):
   '''Runs a realtime interactive tests for plugin development.
@@ -68,12 +67,9 @@ class ProcessorPluginTestRunner(ForkInotifyUtilsBase):
     #return the just created function
     return manifestInotifyFunction
 
-  def blockListeningEvents(self, test_modules, test_pline=None, timeout=None, gui=True):
+  def blockListeningEvents(self, test_modules, test_pline=None, timeout=None):
     if not test_pline: #If no pipeline  is provided, create one
-      if gui:
-        test_pline = GUIInotifyTestPipeline(self.context)
-      else:
-        test_pline = InotifySimpleTestPipeline(self.context)
+      test_pline = InotifySimpleTestPipeline(self.context)
     #Create the first fork (that will be killed when a processor manifest changes)
     manifestInotifyFunction = self.__getManifestInotifyFunction(test_modules, test_pline)
     self._child_pid = self._callFunctionOnFork(manifestInotifyFunction, wait_child=False)

@@ -32,6 +32,7 @@ from mepinta.testing.plugins_testing.test_pipeline.SimpleTestPipeline import Sim
 import time
 from mepinta.pipeline.hi.FactoryLo import unwrap_lo
 
+
 #TODO: Split into implementation classes
 #(A main wrapper that uses watcher creator)
 
@@ -112,7 +113,12 @@ class InotifySimpleTestPipeline(ForkInotifyUtilsBase):
     self.registerTestModules(test_modules)
     if not (len(self._watched_test_modules) or len(self._watched_processors)):
       raise MepintaError('Should should at least watch one test module or processor.')
-    self._inotify_mngr.blockListeningEvents(timeout)
+    if self.context.nodebox_gui:
+      #Nodebox Gui add too much loading overhead. (then, import it here)
+      from mepinta.testing.plugins_testing.gui.SimpleTestPipelineGui import SimpleTestPipelineGui
+      SimpleTestPipelineGui(self.context, test_pline=self).runWithInotify(self._inotify_mngr)
+    else:
+      self._inotify_mngr.blockListeningEvents(timeout)
 
   def registerTestModules(self, test_modules):
     if not isiterable(test_modules):

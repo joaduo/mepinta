@@ -122,13 +122,9 @@ class ProcessorPluginTestBase(FrameworkBase):
     '''
     pass
 
-  def runTest(self, gui=False):
-    from mepinta.testing.plugins_testing.test_pipeline.GUIInotifyTestPipeline import GUIInotifyTestPipeline
+  def runTest(self):
     from mepinta.testing.plugins_testing.test_pipeline.InotifySimpleTestPipeline import InotifySimpleTestPipeline
-    if gui:
-      test_pline = GUIInotifyTestPipeline(self.context)
-    else:
-      test_pline = InotifySimpleTestPipeline(self.context)
+    test_pline = InotifySimpleTestPipeline(self.context)
     self.definePipeline(test_pline)
     test_pline.evaluateProp()
 

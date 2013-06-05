@@ -31,7 +31,8 @@ class Geometry2DPluginTest(ProcessorPluginTestBase):
     test_pline.setValue(circle_node.inputs.radius, 5.0)
     return circle_node
 
-  def _createOutputGeometry(self, test_pline, gui=False):
+  def _createOutputGeometry(self, test_pline):
+    gui = self.context.nodebox_gui
     if gui:
       import plugins.python.processors.demov1.Geometry2D.output.NodeboxRenderer as renderer
     else:
@@ -42,10 +43,10 @@ class Geometry2DPluginTest(ProcessorPluginTestBase):
     test_pline.default_evaluated.append(output_node.functions.render)
     return output_node
 
-  def definePipeline(self, test_pline, gui=False):
+  def definePipeline(self, test_pline):
     self._createInputGeometry(test_pline)
     self.definePluginPipeline(test_pline)
-    self._createOutputGeometry(test_pline, gui)
+    self._createOutputGeometry(test_pline)
 
   def stressPipeline(self, test_pline, time):
     import math

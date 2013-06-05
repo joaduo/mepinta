@@ -49,13 +49,14 @@ class MepintaSimpleDemos(FrameworkBase):
   def nodeboxInteractivePipeline(self):
     ''' Mepinta interactive GUI demo. Shows Pipeline and lets the user change properties values.'''
     from mepinta.testing.plugins_testing.gui.SimpleTestPipelineGui import SimpleTestPipelineGui
-    gui = SimpleTestPipelineGui(self.context, test_pline=self.__getTestPipeline(gui=True))
+    self.context.nodebox_gui = True
+    gui = SimpleTestPipelineGui(self.context, test_pline=self.__getTestPipeline())
     gui.run()
 
-  def __getTestPipeline(self, gui=False):
+  def __getTestPipeline(self):
     test_pline = InotifySimpleTestPipeline(self.context)
     deformation_expression_test = DeformationExpression(self.context)
-    deformation_expression_test.definePipeline(test_pline, gui)
+    deformation_expression_test.definePipeline(test_pline)
     return test_pline
 
 def test_module():

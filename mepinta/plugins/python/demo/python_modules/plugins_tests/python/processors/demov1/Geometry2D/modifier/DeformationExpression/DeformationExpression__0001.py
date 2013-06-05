@@ -42,10 +42,5 @@ class DeformationExpression(Geometry2DPluginTest, TestCase):
     test_pline.setValue(deformation_node.inputs.time, 10 * time)
 
 if __name__ == "__main__":
-#  import unittest
-#  unittest.main()
-
-  from mepinta.testing.plugins_testing.PluginTestAutoTester import PluginTestAutoTester
-  from default_context import getDefaultContext
-  from pipeline_backend.logging.logging import LOG_INFO
-  PluginTestAutoTester(getDefaultContext(LOG_INFO)).test()#(gui=False)
+  import unittest
+  unittest.main()
