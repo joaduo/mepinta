@@ -23,7 +23,7 @@ from mepinta.abstract.MepintaError import MepintaError
 from mepinta.testing.plugins_testing.time.TestTime import TestTime
 from unittest import TestCase
 
-cached_context = None
+tests_context = None
 class ProcessorPluginTestBase(FrameworkBase):
   '''Base class for plugins' test modules.
 
@@ -39,6 +39,7 @@ class ProcessorPluginTestBase(FrameworkBase):
    mepinta.testing.plugins_testing.processor.K3dMeshPluginTest.K3dMeshPluginTest
   '''
   def __init__(self, context=None):
+    #Initialize the class if inheriting from TestCase
     if isinstance(self, TestCase): #If using unittest, then initialize the class
       #Keep signature
       if isinstance(context, str):
@@ -48,12 +49,13 @@ class ProcessorPluginTestBase(FrameworkBase):
       else:
         TestCase.__init__(self)
 
-    global cached_context
+    #Solve context if not provided
+    global tests_context
     if context == None:
-      if cached_context == None: #To enable context free initialization supporting unittest.TestCase
+      if tests_context == None: #To enable context free initialization supporting unittest.TestCase
         from default_context import getDefaultContext
-        cached_context = getDefaultContext()
-      context = cached_context
+        tests_context = getDefaultContext()
+      context = tests_context
     FrameworkBase.__init__(self, context)
 
   def __post_init__(self):
