@@ -32,14 +32,15 @@ class deployment_config(object):
   libgsigc2_path = '##libgsigc2_path'
   libboost_unit_test_framework_path = '##libboost_unit_test_framework_path'
 
-def configurePythonPaths():
+def configurePythonPaths(create_context=True):
   import sys
   config = deployment_config()
   sys.path.append(config.mepinta_source_path + '/developer_tools/python_tools')
   from mepinta_devtools.deployment.PythonPathManager import PythonPathManager
   PythonPathManager().appendAll(config.mepinta_source_path)
   from default_context import getDefaultContext
-  return getDefaultContext()
+  if create_context:
+    return getDefaultContext()
 
 '''
 

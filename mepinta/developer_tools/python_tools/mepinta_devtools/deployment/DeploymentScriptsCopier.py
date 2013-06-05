@@ -28,7 +28,7 @@ class DeploymentScriptsCopier(FrameworkBase):
     return joinPath(os.path.dirname(os.path.realpath(__file__)), 'scripts_repository')
 
   def copyScriptsTo(self, deployment_path):
-    scripts = ['demo']
+    scripts = ['demo', 'tests']
     src_path = self._getSrcPath()
     for s in scripts:
       file_name = 'mepinta_%s.py' % s
