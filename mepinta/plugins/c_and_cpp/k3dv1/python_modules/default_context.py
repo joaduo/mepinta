@@ -18,23 +18,20 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with Mepinta. If not, see <http://www.gnu.org/licenses/>.
 '''
-from mepinta.context.MepintaContext import MepintaContext
 from pipeline_backend.logging.logging import LOG_INFO, LOG_DEBUG
 from k3d.load_libs import load_k3d_libs
-from common.config.ContextWrapper import ContextWrapper
-from mepinta.abstract.MepintaError import MepintaError
+from mepinta.context.getMepintaContext import getMepintaContext
 
 called_once = False
-def getDefaultContext(log_level=LOG_DEBUG):
+def getDefaultContext(log_level=LOG_INFO):
   '''Creates a default context to reduce verbosity on start.'''
   global called_once
   if called_once:
-    raise MepintaError('You should call the default context only once. Then you should pass it in the constructors for FrameworkBase child classes.')
+    raise RuntimeError('You should call the default context only once. (in the main script)')
   else:
     called_once = True
   load_k3d_libs()
-  context = MepintaContext('c_and_cpp')
-  context = ContextWrapper(context)
+  context = getMepintaContext('python')
   context.log.set_level(log_level)
   return context
 

@@ -85,10 +85,10 @@ class Logger(object):
   def warning(self, msg):
     self.output.warning(str(msg))
   def info(self, msg):
-
+    #self.trace()
     self.output.info(str(msg))
   def debug(self, msg):
-    self.trace()
+    #self.trace()
     self.output.debug(str(msg))
   def verbose(self, msg):
     self.output.verbose(str(msg))
