@@ -49,7 +49,7 @@ def render(args):
   log_info(stdout_str)
 
 if __name__ == "__main__":
-  from default_context import getDefaultContext
+  from getDefaultContext import getDefaultContext
   from mepinta.testing.plugins_testing.PluginManifestAutoTester import PluginManifestAutoTester
   context = getDefaultContext()
   PluginManifestAutoTester(context=context).test(manifest)

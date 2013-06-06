@@ -48,7 +48,7 @@ class PluginsBrowser(FrameworkBase):
     return manifests
 
 def test_module():
-  from default_context import getDefaultContext
+  from getDefaultContext import getDefaultContext
   context = getDefaultContext()
   psb = PluginsBrowser(context)
 #  import plugins.c_and_cpp.processors.k3dv1 as k3dv1

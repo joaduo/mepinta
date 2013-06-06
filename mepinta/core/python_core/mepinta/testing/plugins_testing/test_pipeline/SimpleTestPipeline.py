@@ -138,5 +138,5 @@ class SimpleTestPipeline(FrameworkBase):
     return nodes_dict
 
 if __name__ == "__main__":
-  from default_context import getDefaultContext
+  from getDefaultContext import getDefaultContext
   itp = SimpleTestPipeline(getDefaultContext())

@@ -37,7 +37,7 @@ class K3dv1EclipseProjectTemplates_test(MepintaTestBase):
     return True
 
 def test_module():
-  from default_context import getDefaultContext
+  from getDefaultContext import getDefaultContext
   context = getDefaultContext()
   test = K3dv1EclipseProjectTemplates_test(context=context)
   return test.run()

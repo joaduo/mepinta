@@ -272,7 +272,7 @@ class InotifySimpleTestPipeline(ForkInotifyUtilsBase):
     self._eval_on_test = evalOnTest
 
 if __name__ == "__main__":
-  from default_context import getDefaultContext
+  from getDefaultContext import getDefaultContext
   from pipeline_backend.logging.logging import LOG_DEBUG
   context = getDefaultContext(LOG_DEBUG)
   istp = InotifySimpleTestPipeline(context)

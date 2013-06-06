@@ -62,7 +62,7 @@ if __name__ == "__main__":
   from pipeline_backend.logging.logging import LOG_INFO
   from mepinta.testing.plugins_testing.test_pipeline.InotifySimpleTestPipeline import InotifySimpleTestPipeline
   from mepinta.testing.plugins_testing.PluginTestAutoTester import PluginTestAutoTester
-  from default_context import getDefaultContext
+  from getDefaultContext import getDefaultContext
 #  context = getDefaultContext()
 #  from mepinta.testing.plugins_testing.nodebox.NodeBoxSimplePipelineOutput import NodeBoxSimplePipelineOutput
 #  test_pline = InotifySimpleTestPipeline(context)

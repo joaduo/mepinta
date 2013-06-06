@@ -47,6 +47,6 @@ class SelectPointsExpression(K3dMeshPluginTest):
 test = SelectPointsExpression
         
 if __name__ == "__main__":
-  from default_context import getDefaultContext
+  from getDefaultContext import getDefaultContext
   from mepinta.testing.plugins_testing.PluginTestAutoTester import PluginTestAutoTester
   PluginTestAutoTester(getDefaultContext(LOG_INFO)).test(test)#,gui=False)

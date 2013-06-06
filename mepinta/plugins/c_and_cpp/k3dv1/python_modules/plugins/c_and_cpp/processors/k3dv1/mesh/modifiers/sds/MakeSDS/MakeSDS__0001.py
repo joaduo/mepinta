@@ -33,7 +33,7 @@ class MakeSDS(MeshModifierBase):
 manifest = MakeSDS
 
 if __name__ == "__main__":
-  from default_context import getDefaultContext
+  from getDefaultContext import getDefaultContext
   from mepinta.testing.plugins_testing.PluginManifestAutoTester import PluginManifestAutoTester
   PluginManifestAutoTester(getDefaultContext()).test(manifest, gui=False)
 

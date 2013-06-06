@@ -56,5 +56,5 @@ class PluginManifestDummy(PluginManifestBase):
 manifest = PluginManifestDummy
 
 if __name__ == "__main__":
-  from default_context import getDefaultContext
+  from getDefaultContext import getDefaultContext
   PluginManifestDummy(context=getDefaultContext())

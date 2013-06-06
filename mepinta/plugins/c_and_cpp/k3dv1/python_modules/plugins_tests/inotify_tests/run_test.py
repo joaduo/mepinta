@@ -19,7 +19,7 @@ You should have received a copy of the GNU General Public License
 along with Mepinta. If not, see <http://www.gnu.org/licenses/>.
 '''
 from mepinta.testing.plugins_testing.ProcessorPluginTestRunner import ProcessorPluginTestRunner
-from default_context import getDefaultContext
+from getDefaultContext import getDefaultContext
 from pipeline_backend.logging.logging import LOG_INFO#, LOG_DEBUG
         
 if __name__ == "__main__":

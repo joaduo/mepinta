@@ -64,7 +64,7 @@ class FileToFileMap(MapperBase):
   template = property(getTemplate, None, None, None)
 
 def test_module():
-  from default_context import getDefaultContext
+  from getDefaultContext import getDefaultContext
   context = getDefaultContext()
 
 if __name__ == "__main__":

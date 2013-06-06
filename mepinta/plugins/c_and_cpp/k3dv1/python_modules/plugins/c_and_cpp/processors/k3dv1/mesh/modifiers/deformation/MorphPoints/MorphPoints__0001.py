@@ -38,7 +38,7 @@ manifest = MorphPoints
 
 if __name__ == "__main__":
   from mepinta.testing.plugins_testing.PluginManifestTester import PluginManifestTester
-  from default_context import getDefaultContext
+  from getDefaultContext import getDefaultContext
   context = getDefaultContext()
   plugin_instance = manifest(context=context)
   context.log(manifest)

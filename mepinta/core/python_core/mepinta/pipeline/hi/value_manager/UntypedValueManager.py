@@ -51,7 +51,7 @@ class UntypedValueManager(FrameworkBase):
     self._value_manager_lo.setUntypedPropsValues(pline, props, values)
 
 def test_module():
-  from default_context import getDefaultContext
+  from getDefaultContext import getDefaultContext
   context = getDefaultContext()
 
 if __name__ == "__main__":

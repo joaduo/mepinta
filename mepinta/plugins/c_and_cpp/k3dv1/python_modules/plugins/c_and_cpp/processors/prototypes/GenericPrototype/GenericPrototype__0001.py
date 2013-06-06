@@ -39,6 +39,6 @@ class GenericPrototype(PluginManifestBase):
 manifest = GenericPrototype
 
 if __name__ == "__main__":
-  from default_context import getDefaultContext
+  from getDefaultContext import getDefaultContext
   from mepinta.plugins_manifest.PluginManifestTester import PluginManifestAutoTester
   PluginManifestAutoTester(getDefaultContext()).test(manifest(getDefaultContext()))

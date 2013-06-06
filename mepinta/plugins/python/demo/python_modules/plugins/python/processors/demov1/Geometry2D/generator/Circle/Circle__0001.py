@@ -64,7 +64,7 @@ def create_geometry(args):
   geometry.bezier_paths.append(range(points) + [0])
 
 if __name__ == "__main__":
-  from default_context import getDefaultContext
+  from getDefaultContext import getDefaultContext
   from mepinta.testing.plugins_testing.PluginManifestAutoTester import PluginManifestAutoTester
   context = getDefaultContext()
   PluginManifestAutoTester(context=context).test(manifest)

@@ -69,7 +69,7 @@ class MepintaEclipseProjectCreator(FrameworkBase):
     pass  # TOOD:
 
 def test_module():
-  from default_context import getDefaultContext
+  from getDefaultContext import getDefaultContext
   context = getDefaultContext()
   mepc = MepintaEclipseProjectCreator(context)
   #  print mepc.__class__.__module__

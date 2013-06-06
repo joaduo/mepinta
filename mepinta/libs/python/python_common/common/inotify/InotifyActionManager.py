@@ -22,7 +22,7 @@ from common.abstract.FrameworkBase import FrameworkBase
 from inotifyx import init, add_watch, rm_watch, get_events, IN_ALL_EVENTS, \
  IN_CREATE, IN_IGNORED, IN_CREATE, IN_DELETE_SELF, IN_DELETE, IN_CLOSE_WRITE, \
  constants, IN_ATTRIB
-from default_context import getDefaultContext
+from getDefaultContext import getDefaultContext
 
 class InotifyActionManager(FrameworkBase):
   def __post_init__(self):

@@ -48,6 +48,6 @@ test = QSlim
 
 if __name__ == "__main__":
   from mepinta.testing.plugins_testing.PluginTestAutoTester import PluginTestAutoTester
-  from default_context import getDefaultContext
+  from getDefaultContext import getDefaultContext
   from pipeline_backend.logging.logging import LOG_INFO
   PluginTestAutoTester(getDefaultContext(LOG_INFO)).test(test, gui=False)

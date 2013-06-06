@@ -38,7 +38,7 @@ def configurePythonPaths(create_context=True):
   sys.path.append(config.mepinta_source_path + '/developer_tools/python_tools')
   from mepinta_devtools.deployment.PythonPathManager import PythonPathManager
   PythonPathManager().appendAll(config.mepinta_source_path)
-  from default_context import getDefaultContext
+  from getDefaultContext import getDefaultContext
   if create_context:
     return getDefaultContext()
 
@@ -54,7 +54,7 @@ class DeploymentConfigCreator(FrameworkBase):
     self.file_manager.saveTextFile(file_path, content, overwrite)
 
 def test_module():
-  from default_context import getDefaultContext
+  from getDefaultContext import getDefaultContext
   context = getDefaultContext()
 
 if __name__ == "__main__":

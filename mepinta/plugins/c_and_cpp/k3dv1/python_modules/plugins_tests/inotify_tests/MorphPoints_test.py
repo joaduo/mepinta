@@ -19,7 +19,7 @@ You should have received a copy of the GNU General Public License
 along with Mepinta. If not, see <http://www.gnu.org/licenses/>.
 '''
 
-from default_context import getDefaultContext
+from getDefaultContext import getDefaultContext
 from pipeline_backend.logging.logging import LOG_INFO
 from plugins_tests.base.K3dMeshPluginTest import K3dMeshPluginTest
 

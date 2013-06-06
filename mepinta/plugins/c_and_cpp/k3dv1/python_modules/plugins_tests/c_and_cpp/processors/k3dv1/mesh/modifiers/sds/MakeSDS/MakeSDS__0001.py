@@ -40,5 +40,5 @@ class MakeSDS(K3dMeshPluginTest):
 test = MakeSDS
         
 if __name__ == "__main__":
-  from default_context import getDefaultContext
+  from getDefaultContext import getDefaultContext
   PluginTestAutoTester(getDefaultContext(LOG_INFO)).test(test)#,gui=False)

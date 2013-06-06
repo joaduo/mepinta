@@ -69,7 +69,7 @@ class MepintaDemo(FrameworkBase):
     return parser
 
 def test_module():
-  from default_context import getDefaultContext
+  from getDefaultContext import getDefaultContext
   context = getDefaultContext()
   MepintaDemo(context).run()
 

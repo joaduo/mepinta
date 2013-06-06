@@ -33,12 +33,12 @@ class Deployment(object):
     from mepinta_devtools.deployment.DeploymentConfigCreator import DeploymentConfigCreator
     from mepinta_devtools.ide_projects.FileManager import FileManager
     from pipeline_backend.logging.logging import LOG_INFO, LOG_DEBUG
-    from default_context import getDefaultContext
+    from getDefaultContext import getDefaultContext
     if debug:
       self.context = getDefaultContext(LOG_DEBUG)
     else:
       self.context = getDefaultContext(LOG_INFO)
-    self.log = self.log
+    self.log = self.context.log
     self.file_mananger = FileManager(self.context)
     self.deployment_config_creator = DeploymentConfigCreator(self.context)
     self.deployment_scripts_copier = DeploymentScriptsCopier(self.context)

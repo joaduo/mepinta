@@ -60,7 +60,7 @@ class MepintaSimpleDemos(FrameworkBase):
     return test_pline
 
 def test_module():
-  from default_context import getDefaultContext
+  from getDefaultContext import getDefaultContext
   context = getDefaultContext()
   MepintaSimpleDemos(context).evaluatePipelineAndPrint()
 

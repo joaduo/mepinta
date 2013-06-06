@@ -142,7 +142,7 @@ class ProcessorPluginTestRunner(ForkInotifyUtilsBase):
     self._inotify_mngr.registerAction(path_action)
 
 if __name__ == "__main__":
-  from default_context import getDefaultContext
+  from getDefaultContext import getDefaultContext
   from pipeline_backend.logging.logging import LOG_INFO#, LOG_DEBUG
   #ptr = ProcessorPluginTestRunner(getDefaultContext(LOG_DEBUG))
   ptr = ProcessorPluginTestRunner(getDefaultContext(LOG_INFO))

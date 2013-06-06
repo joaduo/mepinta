@@ -53,7 +53,7 @@ class ProcessorPluginTestBase(FrameworkBase):
     global tests_context
     if context == None:
       if tests_context == None: #To enable context free initialization supporting unittest.TestCase
-        from default_context import getDefaultContext
+        from getDefaultContext import getDefaultContext
         tests_context = getDefaultContext()
       context = tests_context
     FrameworkBase.__init__(self, context)

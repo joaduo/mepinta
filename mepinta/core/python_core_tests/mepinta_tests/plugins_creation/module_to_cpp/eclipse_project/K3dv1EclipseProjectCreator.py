@@ -33,7 +33,7 @@ class K3dv1EclipseProjectCreator_test(MepintaTestBase):
     return True
 
 def test_module():
-  from default_context import getDefaultContext
+  from getDefaultContext import getDefaultContext
   context = getDefaultContext()
   test = K3dv1EclipseProjectCreator_test(context=context)
   return test.run()

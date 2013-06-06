@@ -18,23 +18,20 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with Mepinta. If not, see <http://www.gnu.org/licenses/>.
 '''
+from pipeline_backend.logging.logging import LOG_INFO, LOG_DEBUG
+from mepinta.context.getMepintaContext import getMepintaContext
 
-from mepinta.plugins_manifest import PluginManifestBase, FunctionProperty
-
-class DefaultPipeline(PluginManifestBase):
-  def define(self, inputs, internals, functions, outputs):
-    outputs.pipeline = 'actiontree.Pipeline'
-    functions.createPipeline = FunctionProperty()
-
-    outputs.pipeline.dpdencies += [functions.createPipeline]
-
-manifest = DefaultPipeline
-
-def createPipeline(args):
-  pipeline = 
-
+called_once = False
+def getDefaultContext(log_level=LOG_INFO):
+  '''Creates a default context to reduce verbosity on start.'''
+  global called_once
+  if called_once:
+    raise RuntimeError('You should call the default context only once. (in the main script)')
+  else:
+    called_once = True
+  context = getMepintaContext('python')
+  context.log.set_level(log_level)
+  return context
 
 if __name__ == "__main__":
-  from getDefaultContext import getDefaultContext
-  from mepinta.testing.plugins_testing.PluginManifestAutoTester import PluginManifestAutoTester
-  PluginManifestAutoTester(getDefaultContext()).test(manifest)#, gui=True)
+  pass

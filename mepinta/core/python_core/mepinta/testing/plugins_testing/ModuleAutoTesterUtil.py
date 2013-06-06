@@ -24,7 +24,7 @@ class ModuleAutoTesterUtil(ModuleAutoTesterBase):
   pass
 
 def test_module():
-  from default_context import getDefaultContext
+  from getDefaultContext import getDefaultContext
   context = getDefaultContext()
 
 if __name__ == "__main__":

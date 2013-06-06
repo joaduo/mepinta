@@ -40,10 +40,7 @@ function rename_files(){
   done 
 }
 
-#RENAMING_DICT="self.context.log self.log"
-RENAMING_DICT="self.context.backend_name self.context.config.backend_name
-self.context.minor_version_separator self.context.config.minor_version_separator
-self.context.nodebox_gui self.context.config.nodebox_gui"
+RENAMING_DICT="default_context getDefaultContext"
 
 
 # FILES=$(find ./ -iname "*.cpp"); replace_in_text $1
@@ -52,12 +49,14 @@ self.context.nodebox_gui self.context.config.nodebox_gui"
 # FILES=$(find ./ -iname "*.h") ; replace_in_text $1
 
 cd ../../
+cd /home/jduo/001-Mepinta/EclipseProjects_GitRepo/mepinta_test_folders/test
 
 #echo "$RENAMING_DICT"
-FILES=$(find ./ -iname "*.py") ; replace_in_text $1
+FILES=$(find ./ -iname "*.py") ; 
+#replace_in_text $1
 
-# FILES_RENAMING_DICT=$RENAMING_DICT
-# rename_files $1
+FILES_RENAMING_DICT=$RENAMING_DICT
+rename_files $1
 
 if [ "$1" = "-y" ] ; then
   echo "Running the commands!"

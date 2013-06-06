@@ -42,6 +42,6 @@ class FlipOrientation(K3dMeshPluginTest):
 test = FlipOrientation
         
 if __name__ == "__main__":
-  from default_context import getDefaultContext
+  from getDefaultContext import getDefaultContext
   from pipeline_backend.logging.logging import LOG_INFO
   PluginTestAutoTester(getDefaultContext(LOG_INFO)).test(test,gui=True)

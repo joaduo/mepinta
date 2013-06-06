@@ -98,7 +98,7 @@ class PathAction(FrameworkBase):
   mask = property(get_mask, None, None, None)
 
 if __name__ == "__main__":
-  from default_context import getDefaultContext
+  from getDefaultContext import getDefaultContext
   context = getDefaultContext()
   path_action = PathAction(context, path='/path')
   context.log(path_action)

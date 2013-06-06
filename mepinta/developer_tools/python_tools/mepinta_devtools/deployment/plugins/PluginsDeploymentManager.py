@@ -101,7 +101,7 @@ class PluginsDeploymentManager(FrameworkBase):
 
 
 def test_module():
-  from default_context import getDefaultContext
+  from getDefaultContext import getDefaultContext
   from pipeline_backend.logging.logging import LOG_INFO
   from mepinta_devtools.plugins.PluginsBrowser import PluginsBrowser
   context = getDefaultContext(LOG_INFO)
