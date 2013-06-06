@@ -42,8 +42,8 @@ class InitStrategyBase(object): #TODO: only use PostInitStrategyBase
       try:
         func(self, **func_kwargs)
       except TypeError as e:
-        self.context.log.last_exception(level='error')
-        self.context.log.error(e)
+        self.log.last_exception(level='error')
+        self.log.error(e)
         raise TypeError('For class %s.%s' % (class_.__module__, class_.__name__))
   def __getInitLists(self, class_, pres, posts, already_added):
     # TODO: check here when arriving to InitStrategyBase, if it doesn't, it

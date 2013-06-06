@@ -104,7 +104,7 @@ class NodeBoxSimplePipelineOutput(object):
       return dtypes_dict
 
     append = True
-    for d_id, dtype in mc.context.get_config('context_lo').data_types.iteritems():
+    for d_id, dtype in mc.context.getConfig('context_lo').data_types.iteritems():
       if dtype.name == 'double':
         function = mc.vm.get_doubles
       elif dtype.name == 'charp':

@@ -34,8 +34,8 @@ class PluginsBrowser(FrameworkBase):
       module = __import__( packmod_path, fromlist="dummy")
       return module
     except Exception as e:
-      self.context.log.last_exception() #TODO: add a config for this printing
-      self.context.log.debug('Couldnt import %r. Exception: %r'%(packmod_path,e))
+      self.log.last_exception() #TODO: add a config for this printing
+      self.log.debug('Couldnt import %r. Exception: %r'%(packmod_path,e))
       return None
         
 if __name__ == "__main__":

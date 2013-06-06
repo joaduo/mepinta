@@ -27,10 +27,10 @@ class PluginCreatorBase(FrameworkBase):
   def _pathExists(self, path, package=False):
     if os.access(path, os.W_OK):
       if package and not os.access("%s/__init__.py" % path, os.W_OK):
-        self.context.log.warning("The package path %r exist but there is no %r file." % (path, "%s/__init__.py" % path))
-      self.context.log.debug("Exists: %r" % path)
+        self.log.warning("The package path %r exist but there is no %r file." % (path, "%s/__init__.py" % path))
+      self.log.debug("Exists: %r" % path)
       return True
-    self.context.log.debug("Doesn't exist: %r" % path)
+    self.log.debug("Doesn't exist: %r" % path)
     return False
   def _saveFile(self, path, content, overwrite):
     '''

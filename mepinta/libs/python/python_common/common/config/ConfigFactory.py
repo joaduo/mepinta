@@ -22,10 +22,10 @@ along with Mepinta. If not, see <http://www.gnu.org/licenses/>.
 class ModuleDummy:
   class config_base(dict):
     def __init__(self):
-      self[("global", 'backend_name')] = str(self.__class__.__name__)[len('config_'):]
-      self[("global", 'minor_version_separator')] = '__'
-      self[("global", 'plugin_build_targets')] = ['Debug', 'Release', 'ReleasePointerSafe', 'ReleaseTypeSafe', 'ReleaseArgumentsSafe', ]
-      self[("global", 'nodebox_gui')] = False
+      self[('global', 'backend_name')] = str(self.__class__.__name__)[len('config_'):]
+      self[('global', 'minor_version_separator')] = '__'
+      self[('global', 'plugin_build_targets')] = ['Debug', 'Release', 'ReleasePointerSafe', 'ReleaseTypeSafe', 'ReleaseArgumentsSafe', ]
+      self[('global', 'nodebox_gui')] = False
 
   class config_python(config_base):
     pass

@@ -67,7 +67,7 @@ class GraphManager(FrameworkBase):
   def auto_connect(self, pline, dent_node, dency_node):
     inputs_names = dent_node.inputs.get_properties().keys()
     outputs_names = dency_node.outputs.get_properties().keys()
-    self.context.log.debug('Autoconnecting in:%s out:%s' % (inputs_names, outputs_names))
+    self.log.debug('Autoconnecting in:%s out:%s' % (inputs_names, outputs_names))
     for name in outputs_names:
       if name in inputs_names:
         self.topo_mngr.connect(pline

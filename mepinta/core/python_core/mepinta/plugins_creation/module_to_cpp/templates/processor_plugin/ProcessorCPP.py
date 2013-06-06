@@ -92,7 +92,7 @@ class ProcessorCPP(ManifestAndFileTemplateBase):
   def processorFunctions(self):
     content = ''
     for name, proxy in self.plugin_manifest.get_functions_dict().items():
-      self.context.log.debug('Processing function %s template' % name)
+      self.log.debug('Processing function %s template' % name)
       props_declaration = FunctionPropertiesDeclaration(self.context, proxy=proxy, plugin_manifest=self.plugin_manifest)
       # translation_dict = {'functionName':name,
       #                    'inputsDeclaration':'//Declare Inputs\n  %s_INPUTS_DECLARATION();'%name,

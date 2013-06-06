@@ -35,7 +35,7 @@ class ValueManager(FrameworkBase): #TODO: rename to TypedValueManager
     if prop.data_type_name in self.__get_dispatch_dict:
       return self.__get_dispatch_dict[prop.data_type_name](pline, prop)
     else:
-      self.context.log.warning('Unsupported getter for type %s' % prop.getDataTypeShortName())
+      self.log.warning('Unsupported getter for type %s' % prop.getDataTypeShortName())
 
   def setValue(self, pline, prop, value):
     if isinstance(prop, GenericEnumProxy):
@@ -43,7 +43,7 @@ class ValueManager(FrameworkBase): #TODO: rename to TypedValueManager
     elif prop.data_type_name in self.__set_dispatch_dict:
       self.__set_dispatch_dict[prop.data_type_name](pline, prop, value)
     else:
-      self.context.log.warning('Unsupported setter for type %s' % prop.getDataTypeShortName())
+      self.log.warning('Unsupported setter for type %s' % prop.getDataTypeShortName())
 
   @unwrap_decorator
   def markChanged(self, pline, prop):

@@ -103,7 +103,7 @@ class ModuleCreator(FrameworkBase):
     self.templates = Templates()
   def getContents(self, template,tmplt_values):
     if not hasattr(self.templates, template):
-      self.context.log.warning("There is no template %r for module creator."%template)
+      self.log.warning("There is no template %r for module creator."%template)
       return ""
     else:
       contents = getattr(self.templates, template)
@@ -113,7 +113,7 @@ class ModuleCreator(FrameworkBase):
   def create(self, os_path, template="empty", tmplt_values={}):
     if not os_path.lower().endswith('.py'):
       os_path = '%s.py'%os_path
-    self.context.log.verbose('Creating module at %r'%(os_path))
+    self.log.verbose('Creating module at %r'%(os_path))
     file_contents = self.getContents(template,tmplt_values)
     f = open(os_path,"w") 
     if file_contents != "":

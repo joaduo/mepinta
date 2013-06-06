@@ -38,7 +38,7 @@ class TemplateTranslatorBase(FrameworkBase):
     '''Use the str operator to mimic a string.'''
     return self.getContent()
   def __call__(self, *a, **ad):
-    self.context.log.error('If you are calling this method, probably you may want to reimplement it on the children class.')
+    self.log.error('If you are calling this method, probably you may want to reimplement it on the children class.')
     return self
   def getOverwritePolicy(self):
     '''Default overwrite policy.'''
@@ -88,7 +88,7 @@ class MethodPerTemplateVar(FileBasedTemplate):
     translation_dict = {}
     for name, attr in inspect.getmembers(self):
       if isinstance(attr, on_template_decorator):
-        self.context.log.debug('Calling %r decorated template method.' % name)
+        self.log.debug('Calling %r decorated template method.' % name)
         translation_dict[name] = attr(self)
     return translation_dict
   def getTemplateStr(self):
@@ -108,7 +108,7 @@ class ManifestAndFileTemplateBase(MethodPerTemplateVar):
     self.plugin_manifest = plugin_manifest
   def _requiredDataTypes(self):
     required_data_types = self.plugin_manifest.getRequiredDataTypes(types_classes=[DataPropertyProxy, FunctumPropertyProxy])
-    self.context.log('Using data type minor version from eclipse projects.')
+    self.log('Using data type minor version from eclipse projects.')
     return required_data_types.keys()
   def __call__(self, context, plugin_manifest, path):
     self.path = path

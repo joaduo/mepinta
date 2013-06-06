@@ -26,7 +26,7 @@ class TemplateCPPBase(TemplateLogicBase):
   _file_ext = 'cpp'
   def _requiredDataTypes(self, plugin_manifest):
     required_data_types = plugin_manifest.getRequiredDataTypes(types_classes=[DataPropertyProxy, FunctumPropertyProxy])
-    # self.context.log('Using data type minor version from eclipse projects.') #TODO
+    # self.log('Using data type minor version from eclipse projects.') #TODO
     return required_data_types.keys()
 
 def test_module():

@@ -30,7 +30,7 @@ class ModuleCreator(FrameworkBase):
   def create(self, path, template=None, translation_dict={}):
     if not path.lower().endswith('.py'):
       path = '%s.py' % path
-    self.context.log.verbose('Creating module at %r' % (path))
+    self.log.verbose('Creating module at %r' % (path))
     file_contents = self.getContents(template, translation_dict)
     f = open(path, "w")
     if file_contents != "":

@@ -39,7 +39,7 @@ class FactoryLo(FrameworkBase):
   def __load_libmepintacore(self):
       sep = os.sep
       path = sep.join(__file__.split(sep)[:-3]) + "%slib%slibMepintaArgsApi.so" % (sep, sep)
-      self.context.log.debug("Loading lib at %r." % path)
+      self.log.debug("Loading lib at %r." % path)
       if not load_library_stand_alone(path, "global"):
         raise MepintaError("Couldn't load mepinta_cpp core at %s." % path)
   def get_wrapped(self):

@@ -52,12 +52,12 @@ def pathHead(path):
 
 def pathExists(path, write=False):
   if write and os.access(path, os.W_OK):
-    # self.context.log.debug("Exists: %r (writable)"%path)
+    # self.log.debug("Exists: %r (writable)"%path)
     return True
   elif os.access(path, os.R_OK):
-    # self.context.log.debug("Exists: %r  (readable)"%path)
+    # self.log.debug("Exists: %r  (readable)"%path)
     return True
-  # self.context.log.debug("Doesn't exist: %r"%path)
+  # self.log.debug("Doesn't exist: %r"%path)
   return False
 
 def splitPath(path, *path_list):

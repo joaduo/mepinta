@@ -22,15 +22,15 @@ along with Mepinta. If not, see <http://www.gnu.org/licenses/>.
 class context_singleton(object):
   '''
     Singleton pattern decorator.
-    It provides a singleton for a determined Class in a determined Context.
+    It provides a singleton for a determined class_ in a determined Context.
     So for each Context there will be only once instance of the decorated class.
   '''
-  def __init__(self, Class):
-    self.Class = Class  
+  def __init__(self, class_):
+    self.class_ = class_  
   def __call__(self, context=None, *a, **ad):
     if context == None:
-      msg = "You should always provide a context for class: %r"%self.Class.__class__.__name__
+      msg = "You should always provide a context for class: %r"%self.class_.__class__.__name__
       raise RuntimeError(msg)
-    if not context.has_config('singleton',self.Class):
-      context.set_config('singleton',self.Class(context=context,*a,**ad),self.Class)
-    return context.get_config('singleton',self.Class)
+    if not context.hasConfig('singleton',self.class_):
+      context.setConfig('singleton',self.class_(context=context,*a,**ad),self.class_)
+    return context.getConfig('singleton',self.class_)

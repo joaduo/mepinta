@@ -20,9 +20,8 @@ along with Mepinta. If not, see <http://www.gnu.org/licenses/>.
 '''
 
 from common.abstract.ContextClientBase import ContextClientBase
-from common.config.ConfigWrapper import ConfigWrapper
+from common.config.SelfConfigWrapper import SelfConfigWrapper
 
-#TODO: rename to ClassConfigBase
 class SelfConfigBase(ContextClientBase):
   '''
     They will do to save some config:
@@ -31,23 +30,25 @@ class SelfConfigBase(ContextClientBase):
       <variable> = self.config.some_parameter
     Where 'self' would be an instance of the owner class (OwnerClass).
     Without this wrapper the class should have to do:
-      <variable> = self.context.get_config(self.__class__,'some_parameter')
-    This way, accessing to the config is straightforward. 
+      <variable> = self.context.getConfig('some_parameter', self.__class__)
+    This way, accessing to the config of the own class is straightforward.
 
-  '''  
+  '''
   def __init__(self, context):
     ContextClientBase.__init__(self, context)
-    #TODO: rename it to class_config?
-    self.config = ConfigWrapper(OwnerClass=self.__class__, context=self.context)
-    self.log = self.context.log
+    self.config = SelfConfigWrapper(owner_class=self.__class__, context=self.context)
 
-def test_SelfConfigBase():
+  @property
+  def log(self):
+    return self.context.log
+
+def test_module():
   from common.context.Context import Context
   class FooTestPluginsManager(SelfConfigBase):
     def __post_init__(self):
-      self.processors = {}  
+      self.processors = {}
   ctx = Context('python')
-  pm= FooTestPluginsManager(context=ctx)
+  pm = FooTestPluginsManager(context=ctx)
   print(pm.config)
   pm.config.hola = 'valor'
   print(pm.config.hola)
@@ -57,4 +58,4 @@ def test_SelfConfigBase():
     print e
 
 if __name__ == '__main__':
-  test_SelfConfigBase()
+  test_module()

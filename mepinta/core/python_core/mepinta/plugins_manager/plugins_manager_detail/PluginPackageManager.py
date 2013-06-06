@@ -57,8 +57,8 @@ class PluginPackageManager(FrameworkBase):
         module = __import__(name, fromlist="dummy")
         return module
       except Exception as e:
-        self.context.log.last_exception()  # TODO: add an config for this printing
-        self.context.log.debug('Couldnt import %s. Exception: %s' % (name, e))
+        self.log.last_exception()  # TODO: add an config for this printing
+        self.log.debug('Couldnt import %s. Exception: %s' % (name, e))
     raise RuntimeError('Couldn\'t load (%s).%s.%s plugin.' % ('|'.join(prefixes), self.plugins_type, short_name))
   def get_package_and_name(self, plugin):
     '''
@@ -77,7 +77,7 @@ class PluginPackageManager(FrameworkBase):
       plugin_package = plugin
       # TODO: fix this??
       plugin_name = '.'.join(plugin_package.__name__.split('.')[3:])
-    self.context.log.debug('Name: %r, package: %s' % (plugin_name, plugin_package))
+    self.log.debug('Name: %r, package: %s' % (plugin_name, plugin_package))
     return plugin_name, plugin_package
   def get_revision_modules(self, plugin_package):
     '''
@@ -91,7 +91,7 @@ class PluginPackageManager(FrameworkBase):
     name_version_separator = self.context.minor_version_separator  # '__'
     for importer, modname, ispkg in pkgutil.iter_modules(plugin_package.__path__, prefix):  # TODO: remove prefix
       module_name = modname.split('.')[-1]  # TODO: with prefix removed, this is not necessary
-      self.context.log.debug("Found submodule %s (is a plugin_package: %s)" % (module_name, ispkg))
+      self.log.debug("Found submodule %s (is a plugin_package: %s)" % (module_name, ispkg))
       if not ispkg:
         if name_version_separator in module_name:
           modules_names.append(module_name)
@@ -99,16 +99,16 @@ class PluginPackageManager(FrameworkBase):
           other_modules.append(module_name)
     vers_mod_name = 'plugin_versioning'
     if vers_mod_name in other_modules:
-      self.context.log.debug('Found versioning module for plugin: %s' % plugin_package.__name__)
+      self.log.debug('Found versioning module for plugin: %s' % plugin_package.__name__)
       versioning_module = __import__(plugin_package.__name__ + '.' + vers_mod_name, fromlist="dummy")
       if hasattr(versioning_module, 'str_to_version'):
         # The developer can implement it's own minor versioning convention
         str_to_version = versioning_module.str_to_version
       else:
-        self.context.log.warning('Found plugin versioning module, but has no versioning function "str_to_version". Using default')
+        self.log.warning('Found plugin versioning module, but has no versioning function "str_to_version". Using default')
         str_to_version = int
     else:
-      self.context.log.debug('There is no versioning module for this plugin. Using default')
+      self.log.debug('There is no versioning module for this plugin. Using default')
       str_to_version = int
 
     sorted_names_list = []
@@ -118,7 +118,7 @@ class PluginPackageManager(FrameworkBase):
       try:
         version = str_to_version(version_str)
       except Exception as e:  # If there is an exception while converting
-        self.context.log.error('Exception while trying to convert string to version object')
+        self.log.error('Exception while trying to convert string to version object')
         raise e
       index = bisect_left(sorted_version_list, version)
       sorted_version_list.insert(index, version)

@@ -5,7 +5,7 @@ REFACTORING_DIR=""
 function replace_in_text(){
   for f in $FILES ; do 
     if [ $(echo "$f" | grep -v "developer_tools/refactoring") ] ; then
-      echo "Replacing on $f"
+      #echo "Replacing on $f"
       echo "$RENAMING_DICT" | while read LINE ; do
         FROMTX=$( echo "$LINE" | cut -d" " -f1)
         TOTX=$( echo "$LINE" | cut -d" " -f2)
@@ -40,7 +40,11 @@ function rename_files(){
   done 
 }
 
-RENAMING_DICT="$(python ./convert_functions_names.py)"
+#RENAMING_DICT="self.context.log self.log"
+RENAMING_DICT="self.context.backend_name self.context.config.backend_name
+self.context.minor_version_separator self.context.config.minor_version_separator
+self.context.nodebox_gui self.context.config.nodebox_gui"
+
 
 # FILES=$(find ./ -iname "*.cpp"); replace_in_text $1
 # FILES=$(find ./ -iname "*.hpp"); replace_in_text $1

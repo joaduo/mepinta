@@ -33,7 +33,7 @@ class ProcessorPluginsManager(PluginsManagerBase):
   '''
   '''
   def load_processor_library(self,processor):
-    self.context.log.info('Loading processor %r shared library'%processor)
+    self.log.info('Loading processor %r shared library'%processor)
     #Ask the lower lever C api to load this library, with local symbols, since we only call functions with pointers
     self.plugin_loader.load_processor_library(processor)
     #Add the processor as a dependant of the data_types
@@ -42,7 +42,7 @@ class ProcessorPluginsManager(PluginsManagerBase):
     #Add it to the loaded processors
     self.processors[processor.name][processor.version] = processor
   def unload_processor_library(self,processor):
-    self.context.log.info('Unloading processor %r shared library'%processor)
+    self.log.info('Unloading processor %r shared library'%processor)
     #Ask the lower lever C api to unload this library
     self.plugin_loader.unload_processor_library(processor)
     #Remove dependents from data types
@@ -72,7 +72,7 @@ class ProcessorPluginsManager(PluginsManagerBase):
       raise FrameworkException('There is no definition on the module: %r.'%(processor_module))
     return processor_proxy
   def load_processor(self,processor,minor_version,replace,replace_version,reload_):
-    self.context.log.debug('Loading processor: %r'%processor)
+    self.log.debug('Loading processor: %r'%processor)
     processor_name, processor_package = self.processor_pkg_mngr.get_package_and_name(processor)
     build_modules = self.processor_pkg_mngr.get_revision_modules(processor_package)
     
@@ -106,7 +106,7 @@ class ProcessorPluginsManager(PluginsManagerBase):
     if processor_name not in self.processors:
       self.processors[processor_name] = {}
     elif build_version in  self.processors[processor_name] and not reload_:
-      self.context.log.debug('Requested minor_version=%r for processor %r is already loaded.'%(build_version,processor_name))
+      self.log.debug('Requested minor_version=%r for processor %r is already loaded.'%(build_version,processor_name))
       return self.processors[processor_name][build_version]
     
     #Do we need to create a processor or we use the existent one?

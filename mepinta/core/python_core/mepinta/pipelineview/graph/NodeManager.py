@@ -37,6 +37,6 @@ class NodeManager(FrameworkBase):
     #adds properties to the context_lo_hi
     #
     node_name = self.new_name(processor.proxy.name)
-    self.context.log.debug('Creating a new node %r of type %s'%(node_name, processor))
+    self.log.debug('Creating a new node %r of type %s'%(node_name, processor))
     node_proxy = Node(node_name, processor)
     return node_proxy

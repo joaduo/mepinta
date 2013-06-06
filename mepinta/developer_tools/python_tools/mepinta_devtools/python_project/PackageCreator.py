@@ -36,12 +36,12 @@ class PackageCreator(FrameworkBase):
     else:
       split_path = splitPath(path)
       full_path = path
-    self.context.log.verbose('Creating package in: %r' % full_path)
+    self.log.verbose('Creating package in: %r' % full_path)
     os.makedirs(full_path)
     for index in range(len(split_path) - 1):
       init_file = joinPath(split_path[:len(split_path) - index] +
                               ['__init__.py'])
-      self.context.log.debug('Checking %r' % (init_file))
+      self.log.debug('Checking %r' % (init_file))
       if os.access(init_file, os.R_OK):
         break
       else:

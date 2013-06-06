@@ -91,7 +91,7 @@ class PluginManifestBase(FrameworkBase):
         self.__updateKwArgs(kwargs, meth(self, *args))
         called_methods.add(meth)
       else:
-        self.context.log.warning('Same _superDefine method %r for manifest: %r' % (meth, self))
+        self.log.warning('Same _superDefine method %r for manifest: %r' % (meth, self))
     return args, kwargs
 
   def __updateKwArgs(self, kwargs, props):
@@ -123,7 +123,7 @@ class PluginManifestBase(FrameworkBase):
         if hasattr(class_, '_superClassDefine'):
           methods.append(class_._superClassDefine)
         else:
-          self.context.log.warning("Class %r has no '_superClassDefine' method" % class_)
+          self.log.warning("Class %r has no '_superClassDefine' method" % class_)
         methods += self.__collectDefineMethods(class_.__bases__)
     return methods
 

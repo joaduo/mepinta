@@ -38,12 +38,12 @@ class PluginManifestAutoTester(ModuleAutoTesterBase):
     return pline,node
 
   def logPline(self, pline):
-    self.context.log.debug(pline.all_properties)
-    self.context.log.debug(pline.get_topology())
+    self.log.debug(pline.all_properties)
+    self.log.debug(pline.get_topology())
 
   def test(self, plugin_manifest_class, gui=True):
     plugin_manifest = plugin_manifest_class(self.context)
-    self.context.set_config('non_cached', False, GraphTopologyManager)
+    self.context.setConfig('non_cached', False, GraphTopologyManager)
     pline, _ = self.__createNode(plugin_manifest)
     if gui:
       #import here to avoid unnecessary memory use and delays

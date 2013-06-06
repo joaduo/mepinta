@@ -65,7 +65,7 @@ class SimpleTestPipeline(FrameworkBase):
   def _setConfig(self):
     non_cached = False
     #  non_cached = True
-    self.context.set_config('non_cached', non_cached, GraphTopologyManager)
+    self.context.setConfig('non_cached', non_cached, GraphTopologyManager)
 
   def append(self, processor, connect=True):
     if processor not in self._processors_metadata:

@@ -35,7 +35,7 @@ class DataTypePluginsManager(PluginsManagerBase):
     
     #Let's check first if we need to do all this stuff.
     if data_type_name in self.data_types and self.data_types[data_type_name].version >= minor_version: #We have a newer minor_version loaded
-      self.context.log.debug('Loaded minor_version is equal or greater than required minor_version. Doing nothing.')
+      self.log.debug('Loaded minor_version is equal or greater than required minor_version. Doing nothing.')
       return self.data_types[data_type_name]
 
     #Now we get the list of builds for this data type and their versions. 
@@ -83,7 +83,7 @@ class DataTypePluginsManager(PluginsManagerBase):
       for processor in dependent_processors:
         self.load_processor(processor)
   def load_data_type_library(self,data_type):
-    self.context.log.info('Loading %r,%r data type.'%(data_type.name,data_type.version))
+    self.log.info('Loading %r,%r data type.'%(data_type.name,data_type.version))
     #Ask the lower lever C api to load this library, with global symbols, since they will be used by the processors
     self.plugin_loader.load_data_type_library(data_type)
     #data_type.name_in_backend = self.shared_library_loader.load_data_type_library(data_type) #TODO: comes from the backend
@@ -94,7 +94,7 @@ class DataTypePluginsManager(PluginsManagerBase):
     #Unload processors depending on this data type (we need to reaload them later to use new API)
     for processor in data_type.processors:
       self.unload_processor_library(processor)
-    self.context.log.info('Unloading %r data type.'%(data_type.name))
+    self.log.info('Unloading %r data type.'%(data_type.name))
     #Ask the lower lever C api to unload this library
     self.plugin_loader.unload_data_type_library(data_type)
     #Delete previous version data_type

@@ -34,15 +34,15 @@ class chicken_egg_solver(object):
    (ContextLo and LogOutput need the MepintaContext, but don't use log or
      context_lo attributes)
   '''
-  def __init__(self, Class):
-    self.Class = Class
+  def __init__(self, class_):
+    self.class_ = class_
   def __call__(self, *a, **ad):
-    instance = self.Class(*a, **ad)
+    instance = self.class_(*a, **ad)
     return self.__solve(instance)
   def __solve(self, context):
     context_lo = ContextLo(context=context)
-    context.set_config('context_lo', context_lo)
-    logger = context.get_config('log')
+    context.setConfig('context_lo', context_lo)
+    logger = context.getConfig('log')
     logger.set_output(LogOutput(context=context))
     return context
 
@@ -55,7 +55,7 @@ if __name__ == '__main__':
   pass
   ctx = MepintaContext('python')
   print(ctx)
-  log = ctx.get_config('log')
+  log = ctx.getConfig('log')
   log.set_level(60)
   log.info('Hello')
   log.trace('Hello')

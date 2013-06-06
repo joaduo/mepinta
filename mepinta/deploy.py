@@ -38,7 +38,7 @@ class Deployment(object):
       self.context = getDefaultContext(LOG_DEBUG)
     else:
       self.context = getDefaultContext(LOG_INFO)
-    self.log = self.context.log
+    self.log = self.log
     self.file_mananger = FileManager(self.context)
     self.deployment_config_creator = DeploymentConfigCreator(self.context)
     self.deployment_scripts_copier = DeploymentScriptsCopier(self.context)

@@ -30,7 +30,7 @@ class PipelineEvaluatorFunctum(HiAutoBase):
       self.ppgation_mngr.propagate_changes(pline)
       return self.wrapped.evaluateProp(pline,prop_id)
     else:
-      self.context.log.warning('Property is not in the current topology. Not evaluating')
+      self.log.warning('Property is not in the current topology. Not evaluating')
 
 
 if __name__ == '__main__':
