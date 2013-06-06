@@ -30,17 +30,15 @@ class SelfConfigBase(ContextClientBase):
       <variable> = self.config.some_parameter
     Where 'self' would be an instance of the owner class (OwnerClass).
     Without this wrapper the class should have to do:
-      <variable> = self.context.getConfig('some_parameter', self.__class__)
-    This way, accessing to the config of the own class is straightforward.
+      <variable> = self.context.get_config(self.__class__,'some_parameter')
+    This way, accessing to the config is straightforward.
 
   '''
   def __init__(self, context):
     ContextClientBase.__init__(self, context)
-    self.config = SelfConfigWrapper(owner_class=self.__class__, context=self.context)
 
-  @property
-  def log(self):
-    return self.context.log
+    self.config = SelfConfigWrapper(OwnerClass=self.__class__, context=self.context)
+    self.log = self.context.log
 
 def test_module():
   from common.context.Context import Context

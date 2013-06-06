@@ -23,16 +23,16 @@ class ContextWrapper(object):
   '''
     Provides a wrapper for a context object.
     This wrapper is used by other classes for managing the global config.
-ContextClientBase
-    They will do to save some config:
-      self.context.config.some_parameter = <value>
-      self.context.some_parameter = <value>
-    And to retrieve it:
-      <variable> = self.context.config.some_parameter
-    Where 'self' would be an instance of this class.
-    Without this wrapper the class should have to do:
-      <variable> = self.context.getConfig('global','some_parameter')
-    This way, accessing to the global config is straightforward.
+    ContextClientBase
+        They will do to save some config:
+          self.context.config.some_parameter = <value>
+          self.context.some_parameter = <value>
+        And to retrieve it:
+          <variable> = self.context.config.some_parameter
+        Where 'self' would be an instance of this class.
+        Without this wrapper the class should have to do:
+          <variable> = self.context.getConfig('global','some_parameter')
+        This way, accessing to the global config is straightforward.
   '''
   def __init__(self, context):
     object.__setattr__(self, 'context', context)
@@ -40,9 +40,7 @@ ContextClientBase
   def __getattr__(self, name):
     if name in ['context', '__deepcopy__']:
       object.__getattribute__(self, name)
-    elif name in ['config']:
-      return self
-    elif name in ['hasConfig', 'getConfig', 'setConfig']:
+    elif name in ['hasConfig', 'getConfig', 'setConfig', 'newChildConfig']:
       return getattr(self.context, name)
     elif self.context.hasConfig(name):
       return self.context.getConfig(name)
@@ -50,7 +48,11 @@ ContextClientBase
       raise AttributeError('There is no global config named %r ' % (name))
 
   def __setattr__(self, name, value):
-    self.context.setConfig(name, value)
+    reserved_props = ['context', '__deepcopy__', 'config', 'hasConfig', 'getConfig', 'setConfig']
+    if name not in reserved_props:
+      self.context.setConfig(name, value)
+    else:
+      raise KeyError('Cannot set config with name in %r. Those are reserved names.' % reserved_props)
 
   def __deepcopy__(self, memo): #Disable DeepCopy
     return self

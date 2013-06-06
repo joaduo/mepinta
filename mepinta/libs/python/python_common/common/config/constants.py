@@ -18,26 +18,4 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with Mepinta. If not, see <http://www.gnu.org/licenses/>.
 '''
-from common.context.base import ContextBase
-
-class arg_singleton(object):
-  '''
-    Decorator that provides a single instance for the arguments provided
-      I.e.: same arguments, same instance
-      If the arguments differ, then a new instance is created
-      In this case arguments are: name
-  '''
-  __instances = {}
-  def __init__(self, class_):
-    self.class_ = class_
-  def __call__(self, name):
-    if name not in self.__instances:
-      self.__instances[name] = self.class_(name)
-    return self.__instances[name]
-  def getCurrentContexts(self):
-    return self.__instances
-
-@arg_singleton
-class Context(ContextBase):
-  pass
-
+global_config_namespace = 'global::config'

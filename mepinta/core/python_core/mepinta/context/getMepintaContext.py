@@ -18,26 +18,23 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with Mepinta. If not, see <http://www.gnu.org/licenses/>.
 '''
-from common.context.base import ContextBase
+from common.context.Context import Context
+from mepinta.pipeline.hi.context_lo.ContextLo import ContextLo
+from mepinta.pipeline.hi.LogOutput import LogOutput
+from common.config.ContextWrapper import ContextWrapper
 
-class arg_singleton(object):
-  '''
-    Decorator that provides a single instance for the arguments provided
-      I.e.: same arguments, same instance
-      If the arguments differ, then a new instance is created
-      In this case arguments are: name
-  '''
-  __instances = {}
-  def __init__(self, class_):
-    self.class_ = class_
-  def __call__(self, name):
-    if name not in self.__instances:
-      self.__instances[name] = self.class_(name)
-    return self.__instances[name]
-  def getCurrentContexts(self):
-    return self.__instances
+def getMepintaContext(backend_name='python'):
+  context = Context(backend_name)
+  context_lo = ContextLo(context=context)
+  context.setConfig('context_lo', context_lo)
+  logger = context.getConfig('log')
+  logger.set_output(LogOutput(context=context))
+  return ContextWrapper(context)
 
-@arg_singleton
-class Context(ContextBase):
-  pass
+def test_module():
+  print getMepintaContext()
+  print getMepintaContext('python')
+  print getMepintaContext('c_and_cpp')
 
+if __name__ == "__main__":
+  test_module()

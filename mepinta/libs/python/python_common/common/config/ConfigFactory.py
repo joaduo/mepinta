@@ -18,14 +18,15 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with Mepinta. If not, see <http://www.gnu.org/licenses/>.
 '''
+from common.config.constants import global_config_namespace
 
 class ModuleDummy:
   class config_base(dict):
     def __init__(self):
-      self[('global', 'backend_name')] = str(self.__class__.__name__)[len('config_'):]
-      self[('global', 'minor_version_separator')] = '__'
-      self[('global', 'plugin_build_targets')] = ['Debug', 'Release', 'ReleasePointerSafe', 'ReleaseTypeSafe', 'ReleaseArgumentsSafe', ]
-      self[('global', 'nodebox_gui')] = False
+      self[(global_config_namespace, 'backend_name')] = str(self.__class__.__name__)[len('config_'):]
+      self[(global_config_namespace, 'minor_version_separator')] = '__'
+      self[(global_config_namespace, 'plugin_build_targets')] = ['Debug', 'Release', 'ReleasePointerSafe', 'ReleaseTypeSafe', 'ReleaseArgumentsSafe', ]
+      self[(global_config_namespace, 'nodebox_gui')] = False
 
   class config_python(config_base):
     pass

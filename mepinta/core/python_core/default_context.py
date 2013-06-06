@@ -18,9 +18,8 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with Mepinta. If not, see <http://www.gnu.org/licenses/>.
 '''
-from mepinta.context.MepintaContext import MepintaContext
 from pipeline_backend.logging.logging import LOG_INFO, LOG_DEBUG
-from common.config.ContextWrapper import ContextWrapper
+from mepinta.context.getMepintaContext import getMepintaContext
 
 called_once = False
 def getDefaultContext(log_level=LOG_INFO):
@@ -30,8 +29,7 @@ def getDefaultContext(log_level=LOG_INFO):
     raise RuntimeError('You should call the default context only once. (in the main script)')
   else:
     called_once = True
-  context = MepintaContext('python')
-  context = ContextWrapper(context)
+  context = getMepintaContext('python')
   context.log.set_level(log_level)
   return context
 

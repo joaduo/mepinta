@@ -20,81 +20,53 @@ along with Mepinta. If not, see <http://www.gnu.org/licenses/>.
 '''
 from common.config.ConfigFactory import ConfigLoader
 from common.log.Logger import Logger
-import inspect
+from common.context.data_model import TreeContextStore, CommonNode
 
-class ContextBase(object):
-  def __init__(self, name):
-    self.name = name
-    #TODO: Create a persisted __config with self.__config.value = PersistConfig(10)
-    #or self.__config.value = PersistPolicy(value=10, future_changes=true)
-    #or PersistPolicy(self, 'value')
-    self.__config = ConfigLoader().load(name)
-    self.setConfig('log', Logger())
-
-#  @property #TODO: remove
-#  def log(self):
-#    return self.getConfig('log')
-
-  def hasConfig(self, name, owner="global"):
-    return self.__getConfigKey(name, owner) in self.__config
-
-  def getConfig(self, name, owner="global"):
-    if self.hasConfig(name, owner):
-      return self.__config[self.__getConfigKey(name, owner)]
-    else:
-      raise RuntimeWarning("No config '%s'." % self.__configKeyStr(name, owner))
-
-  def setConfig(self, name, value, owner="global"):
-    self.__config[self.__getConfigKey(name, owner)] = value
-
-  def __getConfigKey(self, name, owner="global"):
-    return (owner, name)
-
-  def __configKeyStr(self, name, owner="global"): #TODO: use
-    #TODO: Use this for persistence purposes
-    if inspect.isclass(owner):
-      string = "%s.%s" % (owner.__module__.__str__(),
-                    owner.__name__)
-    elif isinstance(owner, str):
-      string = "%s" % owner
-    else:#TODO: print warning!!
-      string = "%s" % owner
-    string += '.%s' % name
-    return string
-
-  def __repr__(self):
-    return 'Context:%r with Config: %r' % (self.name, str(self.__config))
+class ContextBase(TreeContextStore):
+  def __init__(self, arg):
+    if isinstance(arg, str):
+      name = arg
+      TreeContextStore.__init__(self)
+      self.updateConfig(ConfigLoader().load(name))
+      self.setConfig('name', name)
+      self.setConfig('log', Logger())
+    elif isinstance(arg, CommonNode):
+      config_tree_node = arg
+      TreeContextStore.__init__(self, config_tree_node)
 
 def test_module():
+  pass
   #TODO: clean?
-  from common.decorator.args_singleton import args_singleton
-  @args_singleton
-  class Context(ContextBase):
-    pass
-  from common.config.ContextWrapper import ContextWrapper
-  ctxp = Context('python')
-  ctxp2 = Context('python')
-  ctxp3 = Context('python')
-  ctxc = Context('c_and_cpp')
-  print (ctxp)
-  print (ctxp2)
-  print (ctxp3)
-  class Pototo:
-    pass
-  a = Pototo()
-  from common.config.SelfConfigWrapper import SelfConfigWrapper
-  cwrapper = SelfConfigWrapper(OwnerClass=a.__class__, context=ctxp)
-  cwrapper.hola = 1
-  print(cwrapper.hola)
-  try:
-    print(cwrapper.hola1)
-  except Exception as e:
-    print(e)
-  print (ctxp)
-  cwrapper = ContextWrapper(context=ctxp)
-  cwrapper.hola = 1
-  print (ctxp)
-  print (cwrapper.backend_name)
+#  from common.decorator.args_singleton import args_singleton
+#  @args_singleton
+#  class Context(ContextBase):
+#    pass
+#  from common.config.ContextWrapper import ContextWrapper
+#  ctxp = Context('python')
+#  ctxp2 = Context('python')
+#  ctxp3 = Context('python')
+#  ctxc = Context('c_and_cpp')
+#  print (ctxp)
+#  print (ctxp2)
+#  print (ctxp3)
+#  class Pototo:
+#    pass
+#  a = Pototo()
+#  from common.config.SelfConfigWrapper import SelfConfigWrapper
+#  cwrapper = SelfConfigWrapper(OwnerClass=a.__class__, context=ctxp)
+#  cwrapper.hola = 1
+#  print(cwrapper.hola)
+#  try:
+#    print(cwrapper.hola1)
+#  except Exception as e:
+#    print(e)
+#  print (ctxp)
+#  cwrapper = ContextWrapper(context=ctxp)
+#  cwrapper.hola = 1
+#  child = cwrapper.newChildConfig()
+#  print (ctxp)
+#  print (cwrapper.backend_name)
+
 
 if __name__ == "__main__":
   test_module()
