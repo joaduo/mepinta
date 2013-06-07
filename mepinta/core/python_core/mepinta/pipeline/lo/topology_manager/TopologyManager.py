@@ -26,7 +26,7 @@ class TopologyManager(object):
     pass
   def add_properties(self, topo, prop_ids):
     for prop_id in prop_ids:
-      topo.add_property(prop_id)
+      topo.addProperty(prop_id)
   def remove_properties(self, topo, prop_ids):
     for prop_id in prop_ids:
       topo.remove_property(prop_id)

@@ -18,14 +18,30 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with Mepinta. If not, see <http://www.gnu.org/licenses/>.
 '''
-from common.abstract.FrameworkBase import FrameworkBase
-from mepinta.pipelineview.graph.data_model import Graph
+from common.abstract.FrameworkObject import FrameworkObject
+from mepinta.pipeline.lo.constants import NULL_UID
 
-class UndoableGraph(FrameworkBase):
-  def __post_init__(self):
-    self.__graph = Graph(self.context)
+class UndoableGraph(FrameworkObject):
+  def __init__(self):
+    self.__graph = None
+    self.topology_changed = False
     self.created_nodes = set() #(node)
     self.old_properties = dict() #prop_id:value
+    self.topology_id = NULL_UID #graph.growTopologies()
+
+  def startTopologyChangeSet(self):
+    if self.topology_id == NULL_UID:
+      self.topology_id = self.__graph.pline.startTopologyChangeSet()
+
+  def resetTopology(self, u_graph):
+    if self.topology_id != NULL_UID:
+      pline = u_graph.pline
+      if pline.pendingChanges(): #TODO: remove?
+        raise RuntimeError('There are pending changes you should propagate changes')
+      copied_topo = pline.getTopology()
+      topo = pline.getTopology(self.topology_id)
+      topo.copyFrom(copied_topo)
+      pline.setCurrentTopologyId(self.topology_id)
 
   def addNode(self, node):
     self.created_nodes.add(node)
@@ -46,13 +62,12 @@ class UndoableGraph(FrameworkBase):
   def pline(self):
     return self.__graph.pline
 
-  def getTopologyChanged(self):
-    return self.__graph.topology_changed
+  @property
+  def graph(self):
+    return self.__graph
 
-  def setTopologyChanged(self, value):
-    self.__graph.topology_changed = value
-
-  topology_changed = property(getTopologyChanged, setTopologyChanged, None, None)
+  def setGraph(self, graph):
+    self.__graph = graph
 
 def test_module():
   from getDefaultContext import getDefaultContext

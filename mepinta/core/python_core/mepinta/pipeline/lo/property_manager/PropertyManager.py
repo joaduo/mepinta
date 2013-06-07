@@ -39,7 +39,7 @@ class PropertyManager(object):
     log_debug('Creating properties %s' % (prop_names))
     for index, prop_name in enumerate(prop_names):
       prop = Property(prop_flags, prop_name, dtype_ids[index])
-      prop_ids.append(pline.add_property(prop))
+      prop_ids.append(pline.addProperty(prop))
     return prop_ids
   def create_func_properties(self, pline, prop_names, func_ptr_ids):
     log_debug('Creating functions %s' % (prop_names))
@@ -47,7 +47,7 @@ class PropertyManager(object):
     for index, prop_name in enumerate(prop_names):
       prop = Property(FUNCTION_PROPERTY_FLAG, prop_name, dtype_id=NULL_UID)
       self.p_value_mngr.new_prop_value(prop, any_ptr_to_voidp(FunctionPropertyValue(func_ptr_ids[index])))
-      prop_ids.append(pline.add_property(prop))
+      prop_ids.append(pline.addProperty(prop))
     return prop_ids
   def create_functum_properties(self, pline, prop_names, func_ptr_ids, dtype_ids, prop_flags):
     log_debug('Creating functums %s' % (prop_names))
@@ -56,7 +56,7 @@ class PropertyManager(object):
       prop = Property(FUNCTUM_PROPERTY_FLAG | prop_flags, prop_name, dtype_id=NULL_UID) #Contains the functum prop and  pointer to the function
       functum_prop = Property(FUNCTION_PROPERTY_FLAG, prop_name, dtype_id=dtype_ids[index])
       self.p_value_mngr.new_prop_value(prop, any_ptr_to_voidp(FunctumPropertyValue(func_ptr_ids[index], functum_prop)))
-      prop_ids.append(pline.add_property(prop))
+      prop_ids.append(pline.addProperty(prop))
     return prop_ids
   def deleteProperties(self, pline, prop_ids):
     '''
@@ -67,7 +67,7 @@ class PropertyManager(object):
     '''
     props = []
     for p_id in prop_ids:
-      props.append(pline.delete_property(p_id))
+      props.append(pline.deleteProperty(p_id))
     self.p_value_mngr.deletePropertiesValues(props)
   def add_filters(self, pline, prop_ids):
     log_debug('Adding propagation filter properties %r' % prop_ids)

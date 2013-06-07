@@ -42,12 +42,12 @@ data_type_description = {
 def new():
   return Graph()
 
-def copy(graph):
-  return graph
+def copy(u_graph):
+  return u_graph
 
-def delete(graph):
+def delete(u_graph):
   pass
 
-#def copy_to(to_graph, from_graph):
-#  pass
+def copy_to(to_u_graph, from_u_graph):
+  to_u_graph.setGraph(from_u_graph.graph)
 

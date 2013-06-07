@@ -26,6 +26,7 @@ from mepinta.pipelineview.graph.GraphTopologyManager import GraphTopologyManager
 from mepinta.pipeline.hi.pipeline_evaluator.PipelineEvaluatorFunctum import PipelineEvaluatorFunctum
 from mepinta.pipeline.hi.value_manager.AbstractValueManager import AbstractValueManager
 from mepinta.pipelineview.graph.data_model import Graph
+from mepinta.pipeline.hi.pipeline_data.data_model import Pipeline
 
 
 class SimpleTestPipeline(FrameworkBase):
@@ -46,7 +47,7 @@ class SimpleTestPipeline(FrameworkBase):
   def __post_init__(self):
     self._graph_manager = GraphManager(context=self.context)
     self._plugins_manager = PluginsManager(context=self.context)
-    self._graph = Graph(context=self.context)#Pipeline(context=self.context)
+    self._graph = Graph(Pipeline(context=self.context))
     self._nodes = []
     self._last_node = None
     self._processors_metadata = {}

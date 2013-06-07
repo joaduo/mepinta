@@ -27,16 +27,16 @@ def convert_pline_to_topo(method):
   method = unwrap_decorator(method)
   def method_wrapper(self, *a, **ad):
     if method_name.startswith('_') and method_name.endswith('_safe'):
-      if not ('topo' in ad and hasattr(ad['topo'], 'get_topology') \
-      or len(a) > 0 and hasattr(a[0], 'get_topology')):
+      if not ('topo' in ad and hasattr(ad['topo'], 'getTopology') \
+      or len(a) > 0 and hasattr(a[0], 'getTopology')):
         raise MepintaError("You should provide a Pipeline instead of a Topology to safe checking functions")
       return method(self, *a, **ad)
     else:
-      if 'topo' in ad and hasattr(ad['topo'], 'get_topology'):
-        ad['topo'] = ad['topo'].get_topology()
-      elif len(a) > 0 and hasattr(a[0], 'get_topology'):
+      if 'topo' in ad and hasattr(ad['topo'], 'getTopology'):
+        ad['topo'] = ad['topo'].getTopology()
+      elif len(a) > 0 and hasattr(a[0], 'getTopology'):
         a = list(a)
-        a[0] = a[0].get_topology()
+        a[0] = a[0].getTopology()
       return method(self, *a, **ad)
   return method_wrapper
 
@@ -55,11 +55,11 @@ class TopologyManager(HiAutoBase):
   @convert_pline_to_topo
   def _connect_properties_safe(self, pline, dpdents, dpdencies):
     def filter_valid_connections(dent_id):
-      if len(pline.get_topology().connections.dpdencies.__getitem__(dent_id)) > 0:
+      if len(pline.getTopology().connections.dpdencies.__getitem__(dent_id)) > 0:
         dent_prop = pline.all_properties[dent_id]
         if dent_prop.type == INPUT_PROPERTY_FLAG:
           raise RuntimeError("You shouldn't connect one input property to more than one output.")
-    filter_func = lambda prop: prop not in pline.get_topology().properties
+    filter_func = lambda prop: prop not in pline.getTopology().properties
     return {filter_func:dpdents + dpdencies, filter_valid_connections:dpdents}
   @convert_pline_to_topo
   def connect_properties(self, pline, dpdents, dpdencies):
@@ -102,7 +102,7 @@ if __name__ == '__main__':
   context = MepintaContext('python')
   pline = Pipeline(context=context)
   pline.grow()
-  print(pline.get_topology())
+  print(pline.getTopology())
   propm = PropertyManager(context=context)
   print(propm)
   print(propm.context.context_lo.data_types)
@@ -114,7 +114,7 @@ if __name__ == '__main__':
   print(topom)
   topom.add_properties(pline, prop_ids)
 #  topom.connect_properties(pline, [1], [2])
-#  topo = pline.get_topology()
+#  topo = pline.getTopology()
 #  print(topo)
 #  topom.add(pline, 3)
 ##  topom.connect_properties(pline, [3,3,4,5], [4,5,7,8])

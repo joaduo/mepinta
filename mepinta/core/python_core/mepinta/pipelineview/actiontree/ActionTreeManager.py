@@ -70,6 +70,8 @@ class ActionTreeManager(object):
       raise RuntimeError('To and From node shouldn\'t have None as common node')
     return node
 
+  def initTree(self, tree):
+    pass
   def appendAction(self, tree, processor):
     pass
   def appendFutureAction(self, tree, tree_node, processor):

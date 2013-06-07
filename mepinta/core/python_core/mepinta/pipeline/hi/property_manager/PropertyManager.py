@@ -68,7 +68,7 @@ if __name__ == '__main__':
   context = MepintaContext('python')
   pline = Pipeline(context=context)
   pline.grow()
-  print(pline.get_topology())
+  print(pline.getTopology())
   propm = PropertyManager(context=context)
   print( getattr(propm, 'create_properties'))
   print(propm)

@@ -25,12 +25,6 @@ from mepinta.pipelineview.graph.GraphTopologyManager import GraphTopologyManager
 from mepinta.plugins_manager.PluginsManager import PluginsManager
 from types import MethodType
 
-#TODO
-#deleteCustomProperty
-#appendAppendProperty
-#deleteNodePermanently
-#deleteNodePermanentlyFast (use a fast method to delete node created in an action node)
-
 class topology_changed(object):
   def __init__(self, method):
     self.method = method
@@ -47,6 +41,11 @@ class topology_changed(object):
   def __get__(self, obj, objtype=None):
     return MethodType(self, obj, objtype)
 
+#TODO
+#deleteCustomProperty
+#appendAppendProperty
+#deleteNodePermanently
+#deleteNodePermanentlyFast (use a fast method to delete node created in an action node)
 class GraphManager(FrameworkBase):
   def __post_init__(self):
     self.prop_mngr = GraphPropertyManager(self.context)
@@ -54,6 +53,7 @@ class GraphManager(FrameworkBase):
     self.node_mngr = NodeManager(self.context)
     self.plugins_mngr = PluginsManager(self.context)
 
+  @topology_changed
   def createNode(self, graph, processor): #TODO: add support for debugging version
     #create the node proxy
     node = self.node_mngr.new(processor)
@@ -64,6 +64,7 @@ class GraphManager(FrameworkBase):
     #return new node
     return node
 
+  @topology_changed
   def deleteNode(self, graph, node):
     node_id = node.node_id
     raise NotImplementedError()
@@ -80,12 +81,15 @@ class GraphManager(FrameworkBase):
     #Return the node
     return node
 
+  @topology_changed
   def connect(self, graph, dent_prop, dency_prop):
     return self.topo_mngr.connect(graph.pline, dent_prop, dency_prop)
 
+  @topology_changed
   def disconnect(self, graph, dent_prop, dency_prop=None):
     return self.topo_mngr.disconnect(graph.pline, dent_prop, dency_prop)
 
+  @topology_changed
   def auto_connect(self, graph, dent_node, dency_node):
     inputs_names = dent_node.inputs.get_properties().keys()
     outputs_names = dency_node.outputs.get_properties().keys()

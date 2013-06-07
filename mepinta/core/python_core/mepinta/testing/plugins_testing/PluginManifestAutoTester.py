@@ -22,6 +22,7 @@ from mepinta.pipeline.hi.pipeline_data.data_model import Pipeline
 from mepinta.pipelineview.graph.GraphManager import GraphManager
 from mepinta.plugins_manager.PluginsManager import PluginsManager
 from mepinta.pipelineview.graph.GraphTopologyManager import GraphTopologyManager
+from mepinta.pipelineview.graph.data_model import Graph
 from mepinta.testing.plugins_testing.base import ModuleAutoTesterBase
 from mepinta.testing.plugins_testing.graphviz.PipelineGraphvizTranslator import PipelineGraphvizTranslator
 from mepinta_devtools.ide_projects.FileManager import FileManager
@@ -30,20 +31,20 @@ import os
 
 class PluginManifestAutoTester(ModuleAutoTesterBase):
   def __createNode(self, plugin_manifest):
-    pline = Pipeline(context=self.context)
+    graph = Graph(Pipeline(context=self.context))
     #pline.grow()
-    pline.endChangeSet()
+    graph.pline.startTopologyChangeSet()
     plinmngr = PluginsManager(context=self.context)
     plugin_package, minor_version = self._getPackageAndMinorVersion(plugin_manifest)
     processor_metadata = plinmngr.load_processor(plugin_package, minor_version)
     gm = GraphManager(context=self.context)
-    node = gm.createNode(pline, processor_metadata)
-    self.logPline(pline)
-    return pline, node
+    node = gm.createNode(graph, processor_metadata)
+    self.logPline(graph.pline)
+    return graph.pline, node
 
   def logPline(self, pline):
     self.log.debug(pline.all_properties)
-    self.log.debug(pline.get_topology())
+    self.log.debug(pline.getTopology())
 
   def __getPline(self, plugin_manifest_class):
     self.context.setConfig('non_cached', False, GraphTopologyManager)

@@ -19,36 +19,17 @@ You should have received a copy of the GNU General Public License
 along with Mepinta. If not, see <http://www.gnu.org/licenses/>.
 '''
 from common.abstract.FrameworkBase import FrameworkBase
-from mepinta.pipelineview.actiontree.undoable_graph.data_model import UndoableGraph
 from mepinta.pipelineview.graph.GraphManager import GraphManager
 from mepinta.pipeline.hi.value_manager.AbstractValueManager import AbstractValueManager
 from mepinta.pipeline.hi.FactoryLo import unwrap_lo
-from types import MethodType
 from mepinta.plugins_manager.PluginsManager import PluginsManager
 from mepinta.plugins_manager.data_model import ProcessorMetadata
-
-#class topology_changed(object):
-#  def __init__(self, method):
-#    self.method = method
-#  def __call__(self, *args, **kwargs):
-#    if len(args) > 2 and hasattr(args[1], 'topology_changed'):
-#      u_graph = args[0]
-#    elif 'u_graph' in kwargs:
-#      u_graph = kwargs['u_graph']
-#    else:
-#      raise TypeError('You should provide an u_graph to the method %r' % self.method)
-#    return_value = self.method(*args, **kwargs)
-#    u_graph.topology_changed = True
-#    return return_value
-#  def __get__(self, obj, objtype=None):
-#    return MethodType(self, obj, objtype)
 
 class UndoableGraphManager(FrameworkBase):
   def __post_init__(self):
     self.graph_manager = GraphManager(self.context)
     self.value_manager = AbstractValueManager(self.context)
     self._plugins_manager = PluginsManager(context=self.context)
-
 
   def connect(self, u_graph, dent_prop, dency_prop):
     return self.graph_manager.connect(u_graph, dent_prop, dency_prop)
@@ -69,9 +50,13 @@ class UndoableGraphManager(FrameworkBase):
     return node
 
   def deleteNode(self, u_graph, node):
-    pass
+    self.graph_manager.deleteNode(u_graph, node)
 
   def resetTopology(self, u_graph):
+    '''
+    When receiving a topology_changed signal, we need to reset the topology.
+    :param u_graph:
+    '''
     pass
 
   def setValue(self, u_graph, prop, value):
@@ -80,13 +65,17 @@ class UndoableGraphManager(FrameworkBase):
     self.value_manager.setValue(u_graph.pline, prop, value)
 
   def undoPropertiesChanges(self, u_graph):
-    pass
+    for prop_id, old_value in u_graph.old_properties:
+      self.value_manager.setValue(u_graph.pline, prop_id, old_value)
 
 def test_module():
   from getDefaultContext import getDefaultContext
   context = getDefaultContext()
   ugm = UndoableGraphManager(context)
-  u_graph = UndoableGraph(context)
+  from mepinta.pipelineview.actiontree.undoable_graph.data_model import UndoableGraph
+  from mepinta.pipelineview.graph.data_model import Graph
+  from mepinta.pipeline.hi.pipeline_data.data_model import Pipeline
+  u_graph = UndoableGraph(Graph(Pipeline(context)))
   #ugm.setPropValue(u_graph, prop, value)
   import plugins.python.processors.demov1.Geometry2D.generator.Circle as processor
   ugm.createNode(u_graph, processor)

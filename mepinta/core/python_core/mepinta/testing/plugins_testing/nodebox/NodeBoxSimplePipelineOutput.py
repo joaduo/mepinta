@@ -64,7 +64,7 @@ class NodeBoxSimplePipelineOutput(object):
     gph = Graph()
     #for pline_i, topo in enumerate(self.pline.topologies.values()):
     pline_i=0
-    topo = self.pline.get_topology()
+    topo = self.pline.getTopology()
     for p_id in topo.properties:
       prop = self.pline.all_properties[p_id]
       if len(self.pline.topologies)>1:

@@ -44,15 +44,17 @@ def demuxSignal(args):
   '''
   #Get the inputs
   #The graph to demux the signal from
-  graph = get_prop_value(args, 'inputs', 'graph')
+  in_graph = get_prop_value(args, 'inputs', 'graph')
   #Get the functums to be initialized
   changeGraphTopology = get_prop_value(args, 'inputs', 'changeGraphTopology')
   changeGraphValues = get_prop_value(args, 'inputs', 'changeGraphValues')
-  resetTopology = get_prop_value(args, 'inputs', 'resetTopology')
+  #resetTopology = get_prop_value(args, 'inputs', 'resetTopology')
+  #output
+  out_graph = get_prop_value(args, 'outputs', 'graph')
   #DemuxSignal
-  if graph.changedTopology():
+  if in_graph.topology_changed:
     #We have a new topology, then start from this new topology
-    resetTopology.function_ptr(resetTopology.args)
+    #resetTopology.function_ptr(resetTopology.args)
     #Modify the topology on the new given topology
     changeGraphTopology.function_ptr(changeGraphTopology.args)
   #Set the necessary values
@@ -66,7 +68,7 @@ def setTopologyIdOnce(args):
   graph = get_prop_value(args, 'inputs', 'graph')
   topology_id = get_prop_value(args, 'topology_id', 'graph')
   if topology_id == 0:
-    topology_id = graph.pline.get_current_topology()
+    topology_id = graph.pline.getCurrentTopologyId()
     replace_out_prop_value(args, 'topology_ud', topology_id)
 
 

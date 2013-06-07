@@ -23,7 +23,7 @@ from mepinta.pipeline.lo.constants import NULL_UID
 
 class PipelineGraphvizTranslator(FrameworkBase):
   def __getNodesStr(self, pline):
-    topo = pline.get_topology()
+    topo = pline.getTopology()
     nodes_str = ''
     for p_id in topo.properties:
       nodes_str += '  %s [label="%s\\n%s"] \n' % (p_id, p_id, pline.all_properties[p_id])
@@ -31,7 +31,7 @@ class PipelineGraphvizTranslator(FrameworkBase):
 
   def __getConnectionsStr(self, pline):
     connections_str = ''
-    topo = pline.get_topology()
+    topo = pline.getTopology()
     dpdencies_iterator = topo.connections.dpdencies.get_ss_iterator()
     p_id_dent, p_id_dency = dpdencies_iterator.next()
     while p_id_dent != NULL_UID:

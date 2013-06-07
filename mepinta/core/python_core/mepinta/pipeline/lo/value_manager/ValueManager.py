@@ -49,7 +49,7 @@ class ValueManager(object):
     '''
     #Will propagate change, then mark it as a primary change in the topology
     for p_id in prop_ids:
-      pline.get_topology().changed_primary.add(p_id)
+      pline.getTopology().changed_primary.add(p_id)
 
   def __setPropValue(self, pline, prop_id, value):
     '''Directly passing a void*, no need for casting and checking (checking must be done before)'''

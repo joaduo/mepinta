@@ -19,7 +19,8 @@ You should have received a copy of the GNU General Public License
 along with Mepinta. If not, see <http://www.gnu.org/licenses/>.
 '''
 from common.abstract.FrameworkBase import FrameworkBase
-from mepinta.pipelineview.actiontree.undoable_graph.data_model import UndoableGraph
+from mepinta.pipelineview.graph.data_model import Graph
+from mepinta.pipeline.hi.pipeline_data.data_model import Pipeline
 
 class ActionRootNode(object):
   def __init__(self):
@@ -37,13 +38,19 @@ class ActionNode(ActionRootNode):
     self.graph_node = graph_node
     self.children = []
 
-
 class ActionTree(FrameworkBase):
   def __post_init__(self):
     self.root_node = ActionRootNode()
     self.current_node = self.root_node
-    self.graph = UndoableGraph(self.context)
+    self.meta_graph = Graph(Pipeline(self.context))
 
   def appendActionNode(self, graph_node):
     self.current_node = self.current_node.newChild(graph_node)
 
+def test_module():
+  from getDefaultContext import getDefaultContext
+  context = getDefaultContext()
+  context.log(ActionTree(context))
+
+if __name__ == "__main__":
+  test_module()

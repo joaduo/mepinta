@@ -27,36 +27,33 @@ class GraphTopologyModifierBase(PluginManifestBase):
     #inputs
     inputs.graph = 'actiontree.Graph'
     #internals
-    internals.topology_id = 'int' #need to know which topo id we are working on
-    internals.created_nodes = 'str'#'list'
+#    internals.topology_id = 'int' #need to know which topo id we are working on
+#    internals.created_nodes = 'str'#'list'
     #outputs
     outputs.graph = 'actiontree.Graph'
     #functions
-    functions.setTopologyIdOnce = FunctionProperty()
+    #functions.setTopologyIdOnce = FunctionProperty()
     functions.demuxSignal = FunctionProperty()
-    internals.resetTopology = 'str'
+    #internals.resetTopology = 'str'
     internals.changeGraphTopology = 'str'#Functum()
     internals.changeGraphValues = 'str'#Functum()
 
     #Set dependencies
     #Set toplogy id related dependencies
-    internals.topology_id.dpdencies += functions.setTopologyIdOnce
-    functions.setTopologyIdOnce.dpdencies += directed('>', inputs.graph)
+#    internals.topology_id.dpdencies += functions.setTopologyIdOnce
+    #functions.setTopologyIdOnce.dpdencies += directed('>', inputs.graph)
     #Set signal demux dependencies
     functions.demuxSignal.dpdencies += [inputs.graph,
-                                        internals.topology_id,
-                                        directed('>', internals.resetTopology),
+#                                        internals.topology_id,
+#                                        directed('>', internals.resetTopology),
                                         directed('>', internals.changeGraphTopology),
                                         directed('>', internals.changeGraphValues), ]
-    internals.resetTopology.dpdencies += [inputs.graph,
-                                          internals.topology_id, ]
+#    internals.resetTopology.dpdencies += [inputs.graph,
+#                                          internals.topology_id, ]
     #Set modifier related topology ids
-    internals.changeGraphTopology.dpdencies += [inputs.graph,
-                                                internals.topology_id,
-                                                internals.created_nodes, ]
+    internals.changeGraphTopology.dpdencies += inputs.graph
     internals.changeGraphValues.dpdencies += [internals.changeGraphTopology,
-                                              inputs.graph,
-                                              internals.topology_id]
+                                              inputs.graph, ]
     outputs.graph.dpdencies += functions.demuxSignal
 
     self.nonCached(outputs.graph)

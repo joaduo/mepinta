@@ -68,8 +68,8 @@ class PipelineEvaluatorFunctum(PipelineEvaluatorBase):
     pline.changed_track.remove(prop_id) #Mark as visited for this round
 
     func_prop_value = voidp_to_FunctionPropertyValue(prop.get_value())
-    inputs_ids = pline.get_topology().connections.dpdencies[prop_id]
-    outputs_ids = pline.get_topology().connections.dpdents[prop_id]
+    inputs_ids = pline.getTopology().connections.dpdencies[prop_id]
+    outputs_ids = pline.getTopology().connections.dpdents[prop_id]
     args_mngr = ProcessorArgsManager(self.context_lo, func_prop_value, thread_id=0)
 
     #processor_context = ProcessorContext(self.context_lo, pline, self)
@@ -130,7 +130,7 @@ class PipelineEvaluatorFunctum(PipelineEvaluatorBase):
     input_id = pline.cached_link.get_first(out_id)
     input_prop = pline.all_properties[input_id]
     input_id, input_prop = self.__evalProperty(pline, input_id, input_prop)
-    if out_id in pline.get_topology().cached: #We are caching on this node, then we must copy values
+    if out_id in pline.getTopology().cached: #We are caching on this node, then we must copy values
       log_debug('Copying value for property:%r id=%r' % (out_prop.name, out_id))
       self.p_value_mngr.copy_prop_value(out_prop, input_prop.get_value_ptr())
     else: #We can directly pass the value_pointer
@@ -148,7 +148,7 @@ class PipelineEvaluatorFunctum(PipelineEvaluatorBase):
     log_debug('Detaching from previous property:%r id=%r' % (input_prop.name, input_id))
     vpointer_none = PropertyValuePointer() #Create a value pointer with None as value #TODO: relies on garbage collector
     self.p_value_mngr.set_prop_value(input_prop, vpointer_none) #Ok, you do not own the previous value anymore.
-    pline.get_topology().changed_primary.add(input_id) #input changed (we stole it's value and needs to propagate the change)
+    pline.getTopology().changed_primary.add(input_id) #input changed (we stole it's value and needs to propagate the change)
 
   def __evalFunctum(self, pline, prop_id, prop):
     '''
@@ -161,8 +161,8 @@ class PipelineEvaluatorFunctum(PipelineEvaluatorBase):
     log_debug("Evaluating functum with prop_id=%r" % prop_id)
     #TODO: review if this code is necessary.
     functum_prop_value = voidp_to_FunctumPropertyValue(prop.get_value())
-    inputs_ids = pline.get_topology().connections.dpdencies[prop_id]
-    outputs_ids = pline.get_topology().connections.dpdents[prop_id]
+    inputs_ids = pline.getTopology().connections.dpdencies[prop_id]
+    outputs_ids = pline.getTopology().connections.dpdents[prop_id]
     args_mngr = ProcessorArgsManager(self.context_lo, functum_prop_value, thread_id=0)
     if prop_id in pline.changed_track: #Already visited on this evaluation round?
       pline.changed_track.remove(prop_id) #Mark as visited for this round
@@ -190,7 +190,7 @@ class PipelineEvaluatorFunctum(PipelineEvaluatorBase):
     if has_flags(prop.type, FUNCTION_PROPERTY_FLAG): #is a function, then evaluate it
       self.__evalFunction(pline, prop_id, prop)
     else:
-      dencies = pline.get_topology().connections.dpdencies[prop_id]
+      dencies = pline.getTopology().connections.dpdencies[prop_id]
       if has_flags(prop.type, FUNCTUM_PROPERTY_FLAG): #Its a functum (datum + function)
         if len(dencies) == 1: #Check if connected to other functum
           dency_id = dencies[0]

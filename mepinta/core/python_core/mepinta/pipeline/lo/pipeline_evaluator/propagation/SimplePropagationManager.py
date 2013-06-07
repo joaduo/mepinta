@@ -44,7 +44,7 @@ class SimplePropagationManager(object):
   def propagate_changes(self, pline):
     #for prop_id in pline.changed_primary:
     if len(pline.changed_primary) > 0:
-      self.__recursivePropagation(pline.get_topology(), pline.changed_primary, pline.changed_track)
+      self.__recursivePropagation(pline.getTopology(), pline.changed_primary, pline.changed_track)
   def __recursivePropagation(self,topo, changed, changed_ppgation):
     prop_id = changed.pop()
     affected_props = set()
