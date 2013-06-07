@@ -38,11 +38,11 @@ def get_processor_proxy(context):
   pp.inputs.y_limit = InOutPropertyProxy('Py_float',1)  
   #Outputs
   pp.outputs.geometry_2d = InOutPropertyProxy('Geometry2D_v1',1)
-  pp.functions.modify_geometry = FunctionPropertyProxy()
+  pp.functions.modifyGeometry = FunctionPropertyProxy()
   
   #Set sinks & dpdencies
-  pp.outputs.geometry_2d.dpdencies += [pp.functions.modify_geometry]
-  pp.functions.modify_geometry.dpdencies += [pp.inputs.geometry_2d
+  pp.outputs.geometry_2d.dpdencies += [pp.functions.modifyGeometry]
+  pp.functions.modifyGeometry.dpdencies += [pp.inputs.geometry_2d
                                            ,pp.inputs.amount
                                            ,pp.inputs.x_limit
                                            ,pp.inputs.y_limit
@@ -53,7 +53,7 @@ def get_processor_proxy(context):
   
   return pp
 
-def modify_geometry(args):
+def modifyGeometry(args):
   #Inputs
   amount = get_prop_value(args, 'inputs','point_indexes')
   x_limit = get_prop_value(args, 'inputs','x_limit')

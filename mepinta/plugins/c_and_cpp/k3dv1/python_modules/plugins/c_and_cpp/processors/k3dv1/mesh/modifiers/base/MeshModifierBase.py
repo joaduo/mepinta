@@ -18,13 +18,13 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with Mepinta. If not, see <http://www.gnu.org/licenses/>.
 '''
-from mepinta.plugins_manifest import PluginManifestBase, DataProperty, FunctionProperty,\
+from mepinta.plugins_manifest import PluginManifestBase, DataProperty, FunctionProperty, \
   Functum, directed
 
 class MeshModifierBase(PluginManifestBase):
   def _superClassDefine(self, inputs, internals, functions, outputs):
     '''
-      Creates a common topology pipeline for mesh modifiers. 
+      Creates a common topology pipeline for mesh modifiers.
       (demuxing the mesh Topology and Geometry updates signals)
     '''
     inputs.mesh = DataProperty('k3d::mesh')
@@ -32,27 +32,27 @@ class MeshModifierBase(PluginManifestBase):
     internals.createMesh = Functum()
     internals.updateMesh = Functum()
     functions.demuxMeshSignal = FunctionProperty()
-    
-    internals.createMesh.dpdencies +=[directed('>',inputs.mesh),]
-    internals.updateMesh.dpdencies +=[directed('>',inputs.mesh),]
-    
+
+    internals.createMesh.dpdencies += [directed('>', inputs.mesh), ]
+    internals.updateMesh.dpdencies += [directed('>', inputs.mesh), ]
+
     functions.demuxMeshSignal.dpdencies += [internals.createMesh,
                                             internals.updateMesh,
-                                            inputs.mesh,]
+                                            inputs.mesh, ]
     outputs.mesh.dpdencies += [functions.demuxMeshSignal,
-                               directed('<',internals.createMesh),
-                               directed('<',internals.updateMesh),]
-    return internals.createMesh,internals.updateMesh
+                               directed('<', internals.createMesh),
+                               directed('<', internals.updateMesh), ]
+    return internals.createMesh, internals.updateMesh
 
   def define(self, inputs, internals, functions, outputs, createMesh, updateMesh):
     '''
       Implement this method on children classes.
       Example:
-        inputs.rows = DataProperty('uint')
+        inputs.rows = 'uint'
         createMesh.dpdencies += [inputs.rows]
     '''
     pass
-  
-        
+
+
 if __name__ == "__main__":
   pass

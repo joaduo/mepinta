@@ -23,6 +23,10 @@ from mepinta.pipelineview.graph.GraphManager import GraphManager
 from mepinta.plugins_manager.PluginsManager import PluginsManager
 from mepinta.pipelineview.graph.GraphTopologyManager import GraphTopologyManager
 from mepinta.testing.plugins_testing.base import ModuleAutoTesterBase
+from mepinta.testing.plugins_testing.graphviz.PipelineGraphvizTranslator import PipelineGraphvizTranslator
+from mepinta_devtools.ide_projects.FileManager import FileManager
+from common.shellcmds.CommandRunner import CommandRunner
+import os
 
 class PluginManifestAutoTester(ModuleAutoTesterBase):
   def __createNode(self, plugin_manifest):
@@ -31,24 +35,37 @@ class PluginManifestAutoTester(ModuleAutoTesterBase):
     pline.endChangeSet()
     plinmngr = PluginsManager(context=self.context)
     plugin_package, minor_version = self._getPackageAndMinorVersion(plugin_manifest)
-    processor_metadata = plinmngr.load_processor(plugin_package, minor_version) 
+    processor_metadata = plinmngr.load_processor(plugin_package, minor_version)
     gm = GraphManager(context=self.context)
-    node = gm.create_node(pline, processor_metadata)
+    node = gm.createNode(pline, processor_metadata)
     self.logPline(pline)
-    return pline,node
+    return pline, node
 
   def logPline(self, pline):
     self.log.debug(pline.all_properties)
     self.log.debug(pline.get_topology())
 
-  def test(self, plugin_manifest_class, gui=True):
-    plugin_manifest = plugin_manifest_class(self.context)
+  def __getPline(self, plugin_manifest_class):
     self.context.setConfig('non_cached', False, GraphTopologyManager)
+    plugin_manifest = plugin_manifest_class(self.context)
     pline, _ = self.__createNode(plugin_manifest)
+    return pline
+
+  def visualizeXdot(self, plugin_manifest_class):
+    pline = self.__getPline(plugin_manifest_class)
+    graphviz_translator = PipelineGraphvizTranslator(self.context)
+    graphviz_str = graphviz_translator.translate(pline)
+    path = './pipeline.dot'
+    FileManager(self.context).saveTextFile(path, graphviz_str, overwrite=True)
+    CommandRunner(self.context).run('xdot %s' % path)
+    os.remove(path)
+
+  def test(self, plugin_manifest_class, gui=True):
+    pline = self.__getPline(plugin_manifest_class)
     if gui:
       #import here to avoid unnecessary memory use and delays
       from mepinta.testing.plugins_testing.nodebox.NodeBoxSimplePipelineOutput import NodeBoxSimplePipelineOutput
       NodeBoxSimplePipelineOutput(pline, 600, 600).run()
-        
+
 if __name__ == "__main__":
   pass

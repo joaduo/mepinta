@@ -93,6 +93,7 @@ class PipelineEvaluatorFunctum(PipelineEvaluatorBase):
       args_mngr.set_in_out(INPUT_PROPS)
 
     if has_flags(input_prop.type, FUNCTION_PROPERTY_FLAG):
+      #Its a function, then evaluate it
       self.__evalFunction(pline, input_id, input_prop)
       return input_id
     else:
@@ -150,6 +151,13 @@ class PipelineEvaluatorFunctum(PipelineEvaluatorBase):
     pline.get_topology().changed_primary.add(input_id) #input changed (we stole it's value and needs to propagate the change)
 
   def __evalFunctum(self, pline, prop_id, prop):
+    '''
+    Evaluates all the dependencies of a functum, and packs function and
+    dependencies together for later evaluation.
+    :param pline: Pipeline
+    :param prop_id: Property id of the prop parameter
+    :param prop: Pipeline's Property
+    '''
     log_debug("Evaluating functum with prop_id=%r" % prop_id)
     #TODO: review if this code is necessary.
     functum_prop_value = voidp_to_FunctumPropertyValue(prop.get_value())
@@ -183,11 +191,11 @@ class PipelineEvaluatorFunctum(PipelineEvaluatorBase):
       self.__evalFunction(pline, prop_id, prop)
     else:
       dencies = pline.get_topology().connections.dpdencies[prop_id]
-      if has_flags(prop.type, FUNCTUM_PROPERTY_FLAG): #Its a functum
-        if len(dencies) == 1:
+      if has_flags(prop.type, FUNCTUM_PROPERTY_FLAG): #Its a functum (datum + function)
+        if len(dencies) == 1: #Check if connected to other functum
           dency_id = dencies[0]
           dency_prop = pline.all_properties[dency_id]
-          if has_flags(dency_prop.type, FUNCTUM_PROPERTY_FLAG):
+          if has_flags(dency_prop.type, FUNCTUM_PROPERTY_FLAG): #Its a functum connected to other functum
             return self.__evalProperty(pline, dency_id, dency_prop)
         return self.__evalFunctum(pline, prop_id, prop)
       else: #Its a common property

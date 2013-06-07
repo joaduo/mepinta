@@ -29,11 +29,11 @@ class DeformationExpression(PluginManifestBase):
     inputs.time = 'float'
     #Outputs
     outputs.geometry = 'demov1.Geometry2D'
-    functions.modify_geometry = FunctionProperty()
+    functions.modifyGeometry = FunctionProperty()
 
     #Set sinks & dpdencies
-    outputs.geometry.dpdencies += [functions.modify_geometry]
-    functions.modify_geometry.dpdencies += [   inputs.geometry
+    outputs.geometry.dpdencies += [functions.modifyGeometry]
+    functions.modifyGeometry.dpdencies += [   inputs.geometry
                                              , inputs.x_expression
                                              , inputs.y_expression
                                              , inputs.time]
@@ -45,7 +45,7 @@ manifest = DeformationExpression
 
 from mepinta_python_sdk.props import get_prop_value
 
-def eval_expression(expression, locals_dict):
+def evalExpression(expression, locals_dict):
   #print locals_dict
   try:
     value = eval(expression, {"__builtins__":None}, locals_dict)
@@ -53,7 +53,7 @@ def eval_expression(expression, locals_dict):
   except:
     return 0.
 
-def get_func_dict():
+def getFunctionsDict():
   from math import acos, asin, atan, atan2, ceil, cos, cosh, degrees \
                   , e, exp, fabs, floor, fmod, frexp, hypot, ldexp, log, \
                   log10, modf, pi, pow, radians, sin, sinh, sqrt, tan, tanh
@@ -64,9 +64,9 @@ def get_func_dict():
   #functions_dict['abs'] = abs
   return functions_dict
 
-functions_dict = get_func_dict()
+functions_dict = getFunctionsDict()
 
-def modify_geometry(args):
+def modifyGeometry(args):
   #Inputs
   x_expression = get_prop_value(args, 'inputs', 'x_expression')
   y_expression = get_prop_value(args, 'inputs', 'y_expression')
@@ -80,11 +80,10 @@ def modify_geometry(args):
   for point in geom2d.points:
     locals_dict['x'] = point[0]
     locals_dict['y'] = point[1]
-    point[0] = eval_expression(x_expression, locals_dict)
-    point[1] = eval_expression(y_expression, locals_dict)
+    point[0] = evalExpression(x_expression, locals_dict)
+    point[1] = evalExpression(y_expression, locals_dict)
 
 if __name__ == "__main__":
   from getDefaultContext import getDefaultContext
   from mepinta.testing.plugins_testing.PluginManifestAutoTester import PluginManifestAutoTester
-  context = getDefaultContext()
-  PluginManifestAutoTester(context=context).test(manifest)
+  PluginManifestAutoTester(context=getDefaultContext()).test(manifest)

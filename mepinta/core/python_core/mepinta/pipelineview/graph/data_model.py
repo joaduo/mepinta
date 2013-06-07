@@ -21,6 +21,8 @@ along with Mepinta. If not, see <http://www.gnu.org/licenses/>.
 
 from copy import deepcopy
 from common.abstract.FrameworkObject import FrameworkObject
+from mepinta.pipeline.hi.pipeline_data.data_model import Pipeline
+from common.abstract.FrameworkBase import FrameworkBase
 
 class Node(FrameworkObject):
   '''
@@ -54,9 +56,9 @@ class Node(FrameworkObject):
   def __repr__(self):
     return '<%r %s>' % (self.name, object.__repr__(self))
 
-class Graph(FrameworkObject):
-  def __init__(self, name, graph_type):
-    self.name = name
-    self.type = graph_type
+class Graph(FrameworkBase):
+  def __post_init__(self):
+    self.pline = Pipeline(self.context)
+    self.nodes = dict() #id:Node
 
 

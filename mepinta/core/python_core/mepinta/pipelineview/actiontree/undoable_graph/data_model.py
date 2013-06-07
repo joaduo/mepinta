@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 '''
 Mepinta
-Copyright (c) 2011-2012, Joaquin G. Duo, mepinta@joaquinduo.com.ar
+Copyright (c) 2011-2012, Joaquin G. Duo
 
 This file is part of Mepinta.
 
@@ -18,15 +18,20 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with Mepinta. If not, see <http://www.gnu.org/licenses/>.
 '''
-from mepinta.pipeline.hi.base import HiBase
 
-class Pipeline(HiBase):
-  def __post_init__(self):
-    self.wrapped = self._getWrappedClass()()
+class UndoableGraph(object):
+  def __init__(self, name, graph_type, pline):
+    self.name = name
+    self.type = graph_type
+    self.pline = pline
+    self.created_nodes = dict()
+    self.old_properties = dict()
+    self.nodes = dict() #id:Node
 
-if __name__ == '__main__':
+
+def test_module():
   from getDefaultContext import getDefaultContext
-  from mepinta.pipeline.hi.FactoryLo import unwrap_lo
-  pline = Pipeline(context=getDefaultContext())
-  print(pline)
-  print(unwrap_lo(pline))
+  context = getDefaultContext()
+
+if __name__ == "__main__":
+  test_module()

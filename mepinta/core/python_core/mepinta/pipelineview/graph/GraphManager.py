@@ -31,7 +31,7 @@ class GraphManager(FrameworkBase):
     self.node_mngr = NodeManager(self.context)
     self.plugins_mngr = PluginsManager(self.context)
 
-  def create_node(self, pline, processor): #TODO: add support for debugging version
+  def createNode(self, pline, processor): #TODO: add support for debugging version
     #create the node proxy
     node = self.node_mngr.new(processor)
     #sychronize node and inner pipeline
@@ -39,7 +39,7 @@ class GraphManager(FrameworkBase):
     #return new node
     return node
 
-  def syncNode(self, pline, node):
+  def syncNode(self, pline, node): #TODO: what is this used for?
     #update the new data types to be loaded
     self.plugins_mngr.processor_plugins_manager.load_processors_data_types(node)
     #Set the new data types id to the node
@@ -58,6 +58,7 @@ class GraphManager(FrameworkBase):
     self.topo_mngr.enable_cached(pline, node)
     #Return the node
     return node
+
   def connect(self, pline, dent_prop, dency_prop):
     return self.topo_mngr.connect(pline, dent_prop, dency_prop)
 

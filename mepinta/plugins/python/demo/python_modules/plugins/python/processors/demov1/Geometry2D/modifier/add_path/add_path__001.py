@@ -35,18 +35,18 @@ def get_processor_proxy(context):
   pp.inputs.point_indexes = InOutPropertyProxy('Py_list',1)
   #Outputs
   pp.outputs.geometry_2d = InOutPropertyProxy('Geometry2D_v1',1)
-  pp.functions.modify_geometry = FunctionPropertyProxy()
+  pp.functions.modifyGeometry = FunctionPropertyProxy()
   
   #Set sinks & dpdencies
-  pp.outputs.geometry_2d.dpdencies += [pp.functions.modify_geometry]
-  pp.functions.modify_geometry.dpdencies += [pp.inputs.geometry_2d,pp.inputs.point_indexes]
+  pp.outputs.geometry_2d.dpdencies += [pp.functions.modifyGeometry]
+  pp.functions.modifyGeometry.dpdencies += [pp.inputs.geometry_2d,pp.inputs.point_indexes]
   
   #We can work directly on the output
   pp.non_cached_capable += ['geometry_2d']
   
   return pp
 
-def modify_geometry(args):
+def modifyGeometry(args):
   #Inputs
   point_indexes = get_prop_value(args, 'inputs','point_indexes')
   #Outputs

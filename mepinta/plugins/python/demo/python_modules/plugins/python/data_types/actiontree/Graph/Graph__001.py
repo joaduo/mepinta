@@ -42,8 +42,12 @@ data_type_description = {
 def new():
   return Graph()
 
-def copy(bool_):
-  return bool_
+def copy(graph):
+  return graph
 
-def delete(bool_):
+def delete(graph):
   pass
+
+#def copy_to(to_graph, from_graph):
+#  pass
+

@@ -18,16 +18,39 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with Mepinta. If not, see <http://www.gnu.org/licenses/>.
 '''
-'''
-Created on Nov 8, 2011
 
-@author: jduo
-'''
-from mepinta.pipeline.lo.pipeline_data.data_model import Pipeline
-
-#TODO: memory limits? other choices? or should they go to config?
-class ActionTree:
+class ActionRootNode(object):
   def __init__(self):
-    self.metapipeline = Pipeline(copied=True)
-    self.nodes = {} #id:Node
-    self.current_node = None
+    self.parent = None
+    self.children = []
+
+  def newChild(self, graph_node):
+    node = ActionNode(self, graph_node)
+    self.children.append(node)
+    return node
+
+class ActionNode(ActionRootNode):
+  def __init__(self, parent, graph_node):
+    self.parent = parent
+    self.graph_node = graph_node
+    self.children = []
+
+
+class ActionTree(object):
+  def __init__(self):
+    self.root_node = ActionRootNode()
+    self.current_node = self.root_node
+    self.graph = None
+
+
+  def appendActionNode(self, graph_node):
+    self.current_node = self.current_node.newChild(graph_node)
+
+#from mepinta.pipeline.lo.pipeline_data.data_model import Pipeline
+#
+##TODO: memory limits? other choices? or should they go to config?
+#class ActionTree:
+#  def __init__(self):
+#    self.metapipeline = Pipeline(copied=True)
+#    self.nodes = {} #id:Node
+#    self.current_node = None

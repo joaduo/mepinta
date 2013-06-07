@@ -18,15 +18,28 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with Mepinta. If not, see <http://www.gnu.org/licenses/>.
 '''
-from mepinta.pipeline.hi.base import HiBase
 
-class Pipeline(HiBase):
-  def __post_init__(self):
-    self.wrapped = self._getWrappedClass()()
+data_type_description = {
+# 'plugin_url':'http://mepinta.joaquinduo.com.ar/plugins/',
+# 'future_plugin_url':'http://mepinta.joaquinduo.com.ar/plugins/',
+# 'additional_urls':{},
+# 'authors':'Joaquín Duo',
+# 'description':'''Simple python string data type. In fact there is no real API for this, since it handles consistency easily''',
+# 'changes':'First writing',
+# 'api':'python', #What kind of api is available for accessing this data
+# 'python_module':None,
+}
 
-if __name__ == '__main__':
-  from getDefaultContext import getDefaultContext
-  from mepinta.pipeline.hi.FactoryLo import unwrap_lo
-  pline = Pipeline(context=getDefaultContext())
-  print(pline)
-  print(unwrap_lo(pline))
+def new():
+  return list()
+
+def copy(list_):
+  return list(list_)
+
+def delete(list_):
+  pass
+
+def copy_to(to_list, from_list):
+  del to_list[:]
+  to_list += from_list
+  return to_list

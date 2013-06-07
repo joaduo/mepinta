@@ -72,16 +72,19 @@ def voidp_to_func_arg_voidp(voidp):
 def voidp_to_processor_func(voidp):
   return voidp
 
+def voidp_to_copy_to_func(voidp):
+  return voidp
+
 def shedskin_type_generation_voidp():
-  voidp=None
+  voidp = None
   voidp_to_func_arg_void(voidp)
   voidp_to_func_arg_voidp(voidp)
-  
+
   voidp_to_int(voidp)
   voidp_to_str(voidp)
   voidp_to_double(voidp)
   voidp_to_list_int(voidp)
-  
+
   any_ptr_to_voidp(voidp)
   int_to_voidp(1)
   double_to_voidp(10.0)

@@ -34,6 +34,8 @@ class DataTypeAliasManager(FrameworkBase):
                   'int':'python.builtin.int',
                   'float':'python.builtin.float',
                   'str':'python.builtin.str',
+                  'list':'python.builtin.list',
+                  'dict':'python.builtin.dict',
                   'actiontree.Processor':'python.builtin.str',
                   }
     return alias_dict
@@ -83,11 +85,10 @@ class DataTypeAliasManager(FrameworkBase):
 
   def getRealDataTypeName(self, data_type_alias):
     '''
-      This is a current hack to support data_type aliases
-      Later
+      Support data_type aliases. (avoiding redundant data types)
     '''
     if data_type_alias == 'k3d::filesystem::path*':
-      self.log.w("The conversion of %s is to char*.(this is wrong, and is a hack) WORK IN PROGRESS!" % data_type_alias)
+      self.log.w("Conversion of %s is to char*.(this is wrong and is just a hack) WORK IN PROGRESS!" % data_type_alias)
 
     alias_dict = self.__getAliasDict(self.context.backend_name)
     if data_type_alias in alias_dict:

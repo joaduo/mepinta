@@ -63,15 +63,15 @@ class SimpleTestPipeline(FrameworkBase):
     return self._processors_metadata[processor]
 
   def _setConfig(self):
-    non_cached = False
-    #  non_cached = True
+    #non_cached = False
+    non_cached = True
     self.context.setConfig('non_cached', non_cached, GraphTopologyManager)
 
   def append(self, processor, connect=True):
     if processor not in self._processors_metadata:
       self._processors_metadata[processor] = self._plugins_manager.load_processor(processor, reload_=True)
     processor = self._processors_metadata[processor]
-    node = self._graph_manager.create_node(self._pline, processor)
+    node = self._graph_manager.createNode(self._pline, processor)
     if connect:
       self._connectWithLastNode(node)
     self._pline_changed = True
@@ -120,6 +120,11 @@ class SimpleTestPipeline(FrameworkBase):
     return ui_nodes_props
 
   def prepareForAnimation(self):
+    '''
+    When animating we need to use the changed set specifically from the animation
+    changes, so prior secondary changes should be ignored. (thats why we 'grow'
+    the pipeline to get a new topology)
+    '''
     if self._pline_changed:
       self._pline.grow()
       self._pline_changed = False
