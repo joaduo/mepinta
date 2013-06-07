@@ -79,21 +79,3 @@ class ActionTreeManager(object):
   def setActionPropValue(self, tree, prop):
     pass
 
-
-#class ActionTreeManager(FrameworkBase):
-##  def __post_init__(self, *a, **ad):
-##    pass
-#  def init_tree(self):
-#    pass
-#  def append_node(self,processor):
-#    pass
-#  def set_current_node(self,node):
-#    pass
-#  def set_property(self):
-#    pass
-#  def open_tree(self):
-#    pass
-#  def save_tree(self):#force overwrite?
-#    pass
-#  def delete_pipeline_property(self):
-#    pass

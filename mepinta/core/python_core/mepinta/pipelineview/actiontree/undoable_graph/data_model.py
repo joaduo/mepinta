@@ -18,16 +18,41 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with Mepinta. If not, see <http://www.gnu.org/licenses/>.
 '''
+from common.abstract.FrameworkBase import FrameworkBase
+from mepinta.pipelineview.graph.data_model import Graph
 
-class UndoableGraph(object):
-  def __init__(self, name, graph_type, pline):
-    self.name = name
-    self.type = graph_type
-    self.pline = pline
-    self.created_nodes = dict()
-    self.old_properties = dict()
-    self.nodes = dict() #id:Node
+class UndoableGraph(FrameworkBase):
+  def __post_init__(self):
+    self.__graph = Graph(self.context)
+    self.created_nodes = set() #(node)
+    self.old_properties = dict() #prop_id:value
 
+  def addNode(self, node):
+    self.created_nodes.add(node)
+    self.__graph.addNode(node)
+
+  def deleteNode(self, node):
+    if node in self.created_nodes and \
+       node in self.__graph.all_nodes:
+      self.created_nodes.remove(node)
+      self.__graph.all_nodes.removeNode(node)
+    raise KeyError('Node %r seems not to be consistent in the __graph' % node)
+
+  @property
+  def all_nodes(self):
+    return self.__graph.all_nodes
+
+  @property
+  def pline(self):
+    return self.__graph.pline
+
+  def getTopologyChanged(self):
+    return self.__graph.topology_changed
+
+  def setTopologyChanged(self, value):
+    self.__graph.topology_changed = value
+
+  topology_changed = property(getTopologyChanged, setTopologyChanged, None, None)
 
 def test_module():
   from getDefaultContext import getDefaultContext

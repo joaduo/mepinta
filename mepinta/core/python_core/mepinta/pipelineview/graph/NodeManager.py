@@ -29,14 +29,14 @@ class NodeManager(FrameworkBase):
       self.names_counter[processor_name] = 0
     self.names_counter[processor_name] += 1
     count = self.names_counter[processor_name]
-    return '%s %s'%(processor_name,count)
+    return '%s %s' % (processor_name, count)
   def new(self, processor):
-    #makes a copy of the proxy and assigns values to 
+    #makes a copy of the proxy and assigns values to
     #its properties (id and node proxy)
     #and node (id)
     #adds properties to the context_lo_hi
     #
     node_name = self.new_name(processor.proxy.name)
-    self.log.debug('Creating a new node %r of type %s'%(node_name, processor))
+    self.log.debug('Creating a new node %r of type %s' % (node_name, processor))
     node_proxy = Node(node_name, processor)
     return node_proxy

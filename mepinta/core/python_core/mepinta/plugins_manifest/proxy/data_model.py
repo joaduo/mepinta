@@ -209,7 +209,7 @@ class PropertyProxy(PropertyAndQualifierBase):
     from mepinta.plugins_manifest package
   '''
   def __init__(self):
-    self.id = None
+    self.property_id = None
     #by default the connection is bidirectional. This may be overrided by wrapping it in a Directed
     self.direction = '<>'
     #TODO: check that a property is not added twice, or two declaration_order with the same name
@@ -221,10 +221,10 @@ class PropertyProxy(PropertyAndQualifierBase):
     return self
 
   def __wrapped_lo__(self):
-    if self.id != None:
-      return self.id
+    if self.property_id != None:
+      return self.property_id
     else:
-      raise RuntimeError('Property: %s has no id defined' % self.name)
+      raise RuntimeError('Property: %s has no property_id defined' % self.name)
   def variableString(self):
     return self.name
   def __str__(self):
@@ -338,7 +338,7 @@ class GenericEnumProxy(DataPropertyProxy):
   #Properties
   def get_enum_id(self):
     if self.__enum_id == None:
-      raise RuntimeError('A enum id must be set from the PropertyProxyContainer class.')
+      raise RuntimeError('A enum property_id must be set from the PropertyProxyContainer class.')
     return self.__enum_id
   def set_enum_id(self, value):
     self.__enum_id = value

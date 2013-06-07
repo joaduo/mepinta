@@ -20,11 +20,13 @@ along with Mepinta. If not, see <http://www.gnu.org/licenses/>.
 '''
 from common.abstract.FrameworkBase import FrameworkBase
 from mepinta.pipelineview.graph.GraphManager import GraphManager
-from mepinta.pipeline.hi.pipeline_data.data_model import Pipeline
+#from mepinta.pipeline.hi.pipeline_data.data_model import Pipeline
 from mepinta.plugins_manager.PluginsManager import PluginsManager
 from mepinta.pipelineview.graph.GraphTopologyManager import GraphTopologyManager
 from mepinta.pipeline.hi.pipeline_evaluator.PipelineEvaluatorFunctum import PipelineEvaluatorFunctum
 from mepinta.pipeline.hi.value_manager.AbstractValueManager import AbstractValueManager
+from mepinta.pipelineview.graph.data_model import Graph
+
 
 class SimpleTestPipeline(FrameworkBase):
   '''This class wraps the mepinta.pipeline.hi.pipeline_data.data_model.Pipeline
@@ -44,7 +46,7 @@ class SimpleTestPipeline(FrameworkBase):
   def __post_init__(self):
     self._graph_manager = GraphManager(context=self.context)
     self._plugins_manager = PluginsManager(context=self.context)
-    self._pline = Pipeline(context=self.context)
+    self._graph = Graph(context=self.context)#Pipeline(context=self.context)
     self._nodes = []
     self._last_node = None
     self._processors_metadata = {}
@@ -54,10 +56,13 @@ class SimpleTestPipeline(FrameworkBase):
     self.pline_evaluator = PipelineEvaluatorFunctum(context=self.context)
 
   def getPipeline(self):
-    return self._pline
+    return self._graph.pline
+
+  def getGraph(self):
+    return self._graph
 
   def markChanged(self, prop):
-    self.value_manager.markChanged(self._pline, prop)
+    self.value_manager.markChanged(self._graph.pline, prop)
 
   def getMetadata(self, processor):
     return self._processors_metadata[processor]
@@ -71,7 +76,7 @@ class SimpleTestPipeline(FrameworkBase):
     if processor not in self._processors_metadata:
       self._processors_metadata[processor] = self._plugins_manager.load_processor(processor, reload_=True)
     processor = self._processors_metadata[processor]
-    node = self._graph_manager.createNode(self._pline, processor)
+    node = self._graph_manager.createNode(self._graph, processor)
     if connect:
       self._connectWithLastNode(node)
     self._pline_changed = True
@@ -81,10 +86,10 @@ class SimpleTestPipeline(FrameworkBase):
 
   def _connectWithLastNode(self, dent_node):
     if self._last_node != None:
-      self._graph_manager.auto_connect(self._pline, dent_node, self._last_node)
+      self._graph_manager.auto_connect(self._graph, dent_node, self._last_node)
 
   def syncNode(self, node):
-    self._graph_manager.syncNode(self._pline, node)
+    self._graph_manager.syncNode(self._graph, node)
 
   def setLastNode(self, node):
     self._last_node = node
@@ -93,13 +98,13 @@ class SimpleTestPipeline(FrameworkBase):
     return self._last_node
 
   def setValue(self, prop, value):
-    self.value_manager.setValue(self._pline, prop, value)
+    self.value_manager.setValue(self._graph.pline, prop, value)
 
   def connect(self, dent_prop, dency_prop):
-    self._graph_manager.connect(self._pline, dent_prop, dency_prop)
+    self._graph_manager.connect(self._graph, dent_prop, dency_prop)
 
   def getValue(self, prop):
-    return self.value_manager.getValue(self._pline, prop)
+    return self.value_manager.getValue(self._graph.pline, prop)
 
   def setPropsDefaultValues(self, nodes=None):
     raise RuntimeError('Implement!')
@@ -126,15 +131,15 @@ class SimpleTestPipeline(FrameworkBase):
     the pipeline to get a new topology)
     '''
     if self._pline_changed:
-      self._pline.grow()
+      self._graph.pline.grow()
       self._pline_changed = False
 
   def evaluateProp(self, prop):
-    return self.pline_evaluator.evaluateProp(self._pline, prop)
+    return self.pline_evaluator.evaluateProp(self._graph.pline, prop)
 
   def simpleVisualization(self, x_width=600, y_height=700):
     from mepinta.testing.plugins_testing.nodebox.NodeBoxSimplePipelineOutput import NodeBoxSimplePipelineOutput
-    NodeBoxSimplePipelineOutput(self._pline, x_width, y_height).run()
+    NodeBoxSimplePipelineOutput(self._graph.pline, x_width, y_height).run()
 
   def getNodesDict(self):
     nodes_dict = {}

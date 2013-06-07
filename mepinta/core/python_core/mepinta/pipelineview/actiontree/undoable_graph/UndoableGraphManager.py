@@ -19,32 +19,78 @@ You should have received a copy of the GNU General Public License
 along with Mepinta. If not, see <http://www.gnu.org/licenses/>.
 '''
 from common.abstract.FrameworkBase import FrameworkBase
+from mepinta.pipelineview.actiontree.undoable_graph.data_model import UndoableGraph
+from mepinta.pipelineview.graph.GraphManager import GraphManager
+from mepinta.pipeline.hi.value_manager.AbstractValueManager import AbstractValueManager
+from mepinta.pipeline.hi.FactoryLo import unwrap_lo
+from types import MethodType
+from mepinta.plugins_manager.PluginsManager import PluginsManager
+from mepinta.plugins_manager.data_model import ProcessorMetadata
 
-class UndoableGraphManager(object):
-  def connect(self, graph, dent_prop, dency_prop):
+#class topology_changed(object):
+#  def __init__(self, method):
+#    self.method = method
+#  def __call__(self, *args, **kwargs):
+#    if len(args) > 2 and hasattr(args[1], 'topology_changed'):
+#      u_graph = args[0]
+#    elif 'u_graph' in kwargs:
+#      u_graph = kwargs['u_graph']
+#    else:
+#      raise TypeError('You should provide an u_graph to the method %r' % self.method)
+#    return_value = self.method(*args, **kwargs)
+#    u_graph.topology_changed = True
+#    return return_value
+#  def __get__(self, obj, objtype=None):
+#    return MethodType(self, obj, objtype)
+
+class UndoableGraphManager(FrameworkBase):
+  def __post_init__(self):
+    self.graph_manager = GraphManager(self.context)
+    self.value_manager = AbstractValueManager(self.context)
+    self._plugins_manager = PluginsManager(context=self.context)
+
+
+  def connect(self, u_graph, dent_prop, dency_prop):
+    return self.graph_manager.connect(u_graph, dent_prop, dency_prop)
+
+  def disconnect(self, u_graph, dent_prop, dency_prop):
+    return self.graph_manager.disconnect(u_graph, dent_prop, dency_prop)
+
+  def disconnectAll(self, u_graph, dent_prop):
+    raise NotImplementedError()#return self.graph_manager.di
+
+  def autoConnect(self, u_graph, dent_node, dency_node):
+    return self.graph_manager.auto_connect(u_graph, dent_node, dency_node)
+
+  def createNode(self, u_graph, processor, name=''):
+    if not isinstance(processor, ProcessorMetadata):
+      processor = self._plugins_manager.load_processor(processor)
+    node = self.graph_manager.createNode(u_graph, processor)
+    return node
+
+  def deleteNode(self, u_graph, node):
     pass
-  def disconnect(self, graph, dent_prop, dency_prop):
+
+  def resetTopology(self, u_graph):
     pass
-  def disconnectAll(self, graph, dent_prop):
-    pass
-  def autoConnect(self, graph, dent_node, dency_node):
-    pass
-  def setPropValue(self, graph, prop, value):
-    pass
-  def createNode(self, graph, processor, name=''):
-    pass
-  def deleteNodeByName(self, graph, name):
-    pass
-  def deleteNode(self, graph, node):
-    pass
-  def resetTopology(self, graph):
-    pass
-  def undoPropertiesChanges(self, graph):
+
+  def setValue(self, u_graph, prop, value):
+    old_value = self.value_manager.getValue(u_graph.pline, prop)
+    u_graph.old_properties[unwrap_lo(prop)] = old_value
+    self.value_manager.setValue(u_graph.pline, prop, value)
+
+  def undoPropertiesChanges(self, u_graph):
     pass
 
 def test_module():
   from getDefaultContext import getDefaultContext
   context = getDefaultContext()
+  ugm = UndoableGraphManager(context)
+  u_graph = UndoableGraph(context)
+  #ugm.setPropValue(u_graph, prop, value)
+  import plugins.python.processors.demov1.Geometry2D.generator.Circle as processor
+  ugm.createNode(u_graph, processor)
+
 
 if __name__ == "__main__":
   test_module()

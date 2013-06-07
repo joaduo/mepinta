@@ -146,7 +146,7 @@ class ProcessorPluginsManager(PluginsManagerBase):
     self.set_containers_dtype_id(processor.proxy)
     processor.proxy.set_functions_id(processor.functions)
   def set_containers_dtype_id(self, proxy):
-    #For each processor's property set its data type id
+    #For each processor's property set its data type property_id
     for props_container in proxy.containers.values():
       for prop in props_container.get_properties(DataPropertyProxy,FunctumPropertyProxy).values():
-        prop.dtype_id  = self.data_types[prop.data_type_name].id
+        prop.dtype_id  = self.data_types[prop.data_type_name].property_id

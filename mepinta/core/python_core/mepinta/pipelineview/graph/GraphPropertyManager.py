@@ -40,7 +40,7 @@ class GraphNodePropertyCreator(FrameworkBase):
   #TODO: def __create_containers_props(self, pline, containers)
   def __set_props_ids(self, prop_dict, prop_names, prop_ids):
     for index, name in enumerate(prop_names):
-      prop_dict[name].id = prop_ids[index]
+      prop_dict[name].property_id = prop_ids[index]
   def __create_functions_props(self, pline, container):
     prop_dict = container.get_properties(FunctionPropertyProxy)
     prop_names = list(prop_dict.keys())
@@ -60,7 +60,7 @@ class GraphNodePropertyCreator(FrameworkBase):
     prop_names = list(prop_dict.keys())
     new_prop_names = []
     for name in prop_names:
-      if not prop_dict[name].id:
+      if not prop_dict[name].property_id:
         new_prop_names.append(name)
     if len(new_prop_names) == len(prop_dict):
       prop_flags = 0
@@ -89,7 +89,7 @@ class GraphNodePropertyCreator(FrameworkBase):
   def __set_propagation_filter(self, pline, node_proxy):
     if len(node_proxy.processor.proxy.marked_outputs) == 0:
       return    
-    prop_ids = [getattr(node_proxy.functions, prop_prxy.name).id for prop_prxy in node_proxy.processor.proxy.marked_outputs ]
+    prop_ids = [getattr(node_proxy.functions, prop_prxy.name).property_id for prop_prxy in node_proxy.processor.proxy.marked_outputs ]
     self.prop_mngr.add_filters(pline,prop_ids)
   def __set_non_cached(self, pline, node_proxy):
     prop_names = node_proxy.non_cached_capable

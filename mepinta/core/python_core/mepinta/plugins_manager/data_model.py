@@ -41,14 +41,14 @@ class DataTypeMetadata(PluginMetadata):
     #TODO: passing all data in initialization
     #List of processors dependent on this data type
     self.processors = []
-    self.id = None
+    self.property_id = None
     #To be initialized #TODO: make a decorator to make sure they are initialized
       #self.info = None
   def __wrapped_lo__(self):
-    if self.id != None:
-      return self.id
+    if self.property_id != None:
+      return self.property_id
     else:
-      raise RuntimeError('Property: %s has no id defined'%self.name)
+      raise RuntimeError('Property: %s has no property_id defined'%self.name)
   def getShortName(self):
     return  self.name.split('.')[-1]
   def get_c_namespace(self):
@@ -61,6 +61,6 @@ class ProcessorMetadata(PluginMetadata):
   def __init__(self):
     self.data_types = [] #data types used by this processor 
     #We need to keep the functions ids across reloads
-    self.functions = None #Leave it like this! Means functions were not loaded! #name:id
+    self.functions = None #Leave it like this! Means functions were not loaded! #name:property_id
   def getFollowLibraryPath(self):
     pass

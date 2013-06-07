@@ -71,8 +71,8 @@ class DataTypePluginsManager(PluginsManagerBase):
     if data_type.name not in self.data_types: #The data type is not already loaded
       self.load_data_type_library(data_type)
     else: #Ok, its loaded. We need to reload_
-      #save previous id
-      data_type.id = self.data_types[data_type.name].id
+      #save previous property_id
+      data_type.property_id = self.data_types[data_type.name].property_id
       #Save unloaded processors before
       dependent_processors = copy.copy(self.data_types[data_type.name].processors)
       #Unload the data_type library #TODO: maybe later also data types could be dependents of other data types.

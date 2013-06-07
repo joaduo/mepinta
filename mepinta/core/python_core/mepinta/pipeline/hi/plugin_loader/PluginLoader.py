@@ -40,12 +40,12 @@ class PluginLoader(HiAutoBase):
     return self.last_dtype_id
   
   def unload_data_type_library(self, data_type):
-    self.wrapped.unload_data_type_library(data_type.library_path, data_type.id)
+    self.wrapped.unload_data_type_library(data_type.library_path, data_type.property_id)
     
   def load_data_type_library(self, data_type):
-    if data_type.id == None: 
-      data_type.id = self.get_new_dtype_id()
-    self.wrapped.load_data_type_library(data_type.library_path, data_type.c_namespace, data_type.id)
+    if data_type.property_id == None: 
+      data_type.property_id = self.get_new_dtype_id()
+    self.wrapped.load_data_type_library(data_type.library_path, data_type.c_namespace, data_type.property_id)
 
   def dataTypeIsLoaded(self, data_type):
     return self.wrapped.dataTypeIsLoaded(data_type.library_path)

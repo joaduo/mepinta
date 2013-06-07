@@ -21,6 +21,11 @@ along with Mepinta. If not, see <http://www.gnu.org/licenses/>.
 from pipeline_backend.logging.logging import LOG_INFO, LOG_DEBUG
 from mepinta.context.getMepintaContext import getMepintaContext
 
+def setClassConfigs(context):
+  from mepinta.pipelineview.graph.GraphTopologyManager import GraphTopologyManager
+  non_cached = False
+  context.setConfig('non_cached', non_cached, GraphTopologyManager)
+
 called_once = False
 def getDefaultContext(log_level=LOG_INFO):
   '''Creates a default context to reduce verbosity on start.'''
@@ -31,6 +36,7 @@ def getDefaultContext(log_level=LOG_INFO):
     called_once = True
   context = getMepintaContext('python')
   context.log.set_level(log_level)
+  setClassConfigs(context)
   return context
 
 if __name__ == "__main__":
