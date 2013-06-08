@@ -40,6 +40,7 @@ class Node(FrameworkObject):
       and options.
     '''
     #TODO: automate this in order to maintain it from the ProcessorProxy perspective ?
+    #TODO: the code below makes the debugger useless!! Why?
     processor_proxy = deepcopy(processor_proxy)
     self.containers = processor_proxy.containers
     self.inputs = processor_proxy.inputs
