@@ -20,7 +20,7 @@ along with Mepinta. If not, see <http://www.gnu.org/licenses/>.
 '''
 
 from mepinta.plugins_manifest import PluginManifestBase, FunctionProperty, \
-  directed, Functum
+  directed
 
 class GraphTopologyModifierBase(PluginManifestBase):
   def _superClassDefine(self, inputs, internals, functions, outputs):

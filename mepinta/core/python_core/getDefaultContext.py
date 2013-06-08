@@ -23,7 +23,7 @@ from mepinta.context.getMepintaContext import getMepintaContext
 
 def setClassConfigs(context):
   from mepinta.pipelineview.graph.GraphTopologyManager import GraphTopologyManager
-  non_cached = False
+  non_cached = True
   context.setConfig('non_cached', non_cached, GraphTopologyManager)
 
 called_once = False

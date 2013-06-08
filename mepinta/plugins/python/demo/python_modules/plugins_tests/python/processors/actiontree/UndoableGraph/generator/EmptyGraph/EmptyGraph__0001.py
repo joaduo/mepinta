@@ -19,38 +19,69 @@ You should have received a copy of the GNU General Public License
 along with Mepinta. If not, see <http://www.gnu.org/licenses/>.
 '''
 from mepinta.testing.plugins_testing.processor.base import ProcessorPluginTestBase
+import unittest
 
-class EmptyGraphTest(ProcessorPluginTestBase):
+class EmptyGraphTest(ProcessorPluginTestBase, unittest.TestCase):
+  def __post_init__(self):
+    import plugins.python.processors.actiontree.UndoableGraph.generator.EmptyGraph as empty_graph
+    self.tested_processors.append(empty_graph)
+    self.context_name = 'python'
+
   def definePluginPipeline(self, test_pline):
-    raise NotImplementedError("Implement on children classes!")
+    empty_graph = self.tested_processors[0]
+    empty_graph_node = test_pline.append(empty_graph)
+    test_pline.setValue(empty_graph_node.inputs.context_name, self.context_name)
 
-  def _createInputGeometry(self, test_pline):
-    import plugins.python.processors.actiontree.Graph.generator.EmptyGraph as circle
-    circle_node = test_pline.append(circle)
-    test_pline.setValue(circle_node.inputs.segments, 1)
-    test_pline.setValue(circle_node.inputs.radius, 5.0)
-    return circle_node
+    import plugins.python.processors.actiontree.UndoableGraph.modifier.CreateNode as create_node
+    crt_nd_node = test_pline.append(create_node)
+    #import plugins.python.processors.demov1.Geometry2D.generator.Circle
+    processor_name = 'demov1.Geometry2D.generator.Circle'
+    test_pline.setValue(crt_nd_node.inputs.processor_name, processor_name)
+    test_pline.setValue(crt_nd_node.inputs.context_name, self.context_name)
 
-  def _createOutputGeometry(self, test_pline):
-    pass
-#    gui = self.context.nodebox_gui
-#    if gui:
-#      import plugins.python.processors.demov1.Geometry2D.output.NodeboxRenderer as renderer
-#    else:
-#      import plugins.python.processors.demov1.Geometry2D.output.StdoutPrint as renderer
-#    output_node = test_pline.append(renderer)
-#    if gui:
-#      test_pline.ui_default_evaluated.append(output_node.functions.render)
-#    test_pline.default_evaluated.append(output_node.functions.render)
-#    return output_node
+    return empty_graph_node
+
+  def _createOutputGraph(self, test_pline):
+    gui = self.context.nodebox_gui
+    if gui:
+      import plugins.python.processors.actiontree.UndoableGraph.output.NodeboxRenderer as renderer
+    else:
+      import plugins.python.processors.actiontree.UndoableGraph.output.StdoutPrint as renderer
+    output_node = test_pline.append(renderer)
+    if gui:
+      test_pline.ui_default_evaluated.append(output_node.functions.render)
+    test_pline.setValue(output_node.inputs.context_name, self.context_name)
+    test_pline.default_evaluated.append(output_node.functions.render)
+    return output_node
 
   def definePipeline(self, test_pline):
-    self._createInputGeometry(test_pline)
+    #self._createInputGraph(test_pline)
     self.definePluginPipeline(test_pline)
-    self._createOutputGeometry(test_pline)
+    self._createOutputGraph(test_pline)
+
+  def getTimeParameters(self):
+    self.time.frames(1)
 
   def stressPipeline(self, test_pline, time):
-    import math
-    sphere_node = test_pline.getNodesDict()['Circle 1']
-    test_pline.setValue(sphere_node.inputs.radius, math.cos(time) * 0.5 + 1)
-    test_pline.setValue(sphere_node.inputs.segments, time * 2)
+    pass
+
+def test_module():
+  from mepinta.testing.plugins_testing.PluginTestAutoTester import PluginTestAutoTester
+  from getDefaultContext import getDefaultContext
+  from mepinta.testing.plugins_testing.test_pipeline.SimpleTestPipeline import SimpleTestPipeline
+  from mepinta.testing.plugins_testing.gui.SimpleTestPipelineGui import SimpleTestPipelineGui
+  from mepinta.testing.plugins_testing.test_pipeline.InotifySimpleTestPipeline import InotifySimpleTestPipeline
+
+  from pipeline_backend.logging.logging import LOG_INFO, LOG_DEBUG
+  context = getDefaultContext(LOG_DEBUG)
+  #PluginTestAutoTester(context=getDefaultContext()).test(gui=False)
+  test_pline = InotifySimpleTestPipeline(context)
+  EmptyGraphTest(context).definePipeline(test_pline)
+  test_pline.evaluateProp()
+  #SimpleTestPipelineGui(context, test_pline=test_pline).run()
+#  PluginTestAutoTester(context).test(gui=True)
+
+if __name__ == "__main__":
+  test_module()
+  #unittest.main()
+

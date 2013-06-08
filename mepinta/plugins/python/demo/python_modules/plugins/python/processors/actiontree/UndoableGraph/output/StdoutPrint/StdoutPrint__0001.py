@@ -18,30 +18,17 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with Mepinta. If not, see <http://www.gnu.org/licenses/>.
 '''
-from mepinta.plugins_manifest import PluginManifestBase, FunctionProperty
+from plugins.python.processors.actiontree.UndoableGraph.output.base.UndoableGraphRendererBase import UndoableGraphRendererBase
 
-class manifest(PluginManifestBase):
-  def define(self, inputs, internals, functions, outputs):
-    #Inputs
-    inputs.geometry = 'demov1.Geometry2D'
-    #Outputs
-    functions.render = FunctionProperty()
+class manifest(UndoableGraphRendererBase):
+  pass
 
-    #Set sinks & dpdencies
-    functions.render.dpdencies += [ inputs.geometry ]
-
+from mepinta_python_sdk.props import get_prop_value
 def render(args):
-  from mepinta_python_sdk.props import get_prop_value
   from pipeline_backend.logging.logging import log_info
   #Inputs
-  geometry = get_prop_value(args, 'inputs', 'geometry')
-  stdout_str = ''
-  stdout_str += 'points:%s ' % geometry.points
-  stdout_str += 'bezier_paths:%s' % geometry.bezier_paths
-  stdout_str += '\nSummary points:%s paths:%s ' % (len(geometry.points), len(geometry.bezier_paths))
-  if len(geometry.bezier_paths):
-    stdout_str += '\nFirst bezier path length:%s ' % len(geometry.bezier_paths[0])
-  log_info(stdout_str)
+  graph = get_prop_value(args, 'inputs', 'graph')
+  log_info(str(graph))
 
 if __name__ == "__main__":
   from getDefaultContext import getDefaultContext

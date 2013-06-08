@@ -18,22 +18,16 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with Mepinta. If not, see <http://www.gnu.org/licenses/>.
 '''
-from mepinta.pipelineview.graph.GraphManager import GraphManager
-from mepinta_python_sdk.props import get_prop_value
-from plugins.python.processors.actiontree.Graph.modifier.base.GraphTopologyModifierBase import GraphTopologyModifierBase
+from plugins.python.processors.actiontree.UndoableGraph.modifier.base.GraphTopologyModifierBase import GraphTopologyModifierBase
 
 class manifest(GraphTopologyModifierBase):
   def define(self, inputs, internals, functions, outputs, changeGraphValues, changeGraphTopology):
-    pass
-#    inputs.context = 'actiontree.Context'
-#    inputs.processor = 'actiontree.Processor'
-#    inputs.node_name = 'str'
-#    outputs.graph = 'actiontree.Graph'
-#    functions.onTopologyChange = FunctionProperty()
-#
-#    functions.onTopologyChange.dpdencies += [inputs.context,
-#                                             inputs.processor,]
-#    outputs.graph.dpdencies += [functions.onTopologyChange]
+    inputs.processor_name = 'actiontree.Processor'
+    inputs.node_name = 'str'
+    #Topology changes dependencies
+    changeGraphTopology.dpdencies += inputs.processor_name
+    #Values changes dependencies
+    changeGraphValues.dpdencies += inputs.node_name
 
 def demuxSignal(args):
   '''
@@ -41,6 +35,7 @@ def demuxSignal(args):
   call the appropriate functums.
   :param args: Opaque args to be used by the functions in mepinta_python_sdk.props
   '''
+  from mepinta_python_sdk.props import get_prop_value
   #Get the inputs
   #The graph to demux the signal from
   in_graph = get_prop_value(args, 'inputs', 'graph')
@@ -58,18 +53,24 @@ def demuxSignal(args):
   #Set the necessary values
   changeGraphValues.function_ptr(changeGraphValues.args)
 
-def onTopologyChange(args):
-  context = get_prop_value(args, 'inputs', 'context')
-  processor_name = get_prop_value(args, 'inputs', 'processor')
+def changeGraphValues(args):
+  pass
 
+def changeGraphTopology(args):
+  from mepinta.pipelineview.actiontree.undoable_graph.UndoableGraphManager import UndoableGraphManager
+  from mepinta_python_sdk.props import get_prop_value
+  context = get_prop_value(args, 'inputs', 'context_name')
+  processor_name = get_prop_value(args, 'inputs', 'processor_name')
   graph = get_prop_value(args, 'outputs', 'graph')
-  graph_manager = GraphManager(context)
+  graph_manager = UndoableGraphManager(context)
 
   graph_manager.createNode(graph.pipeline, processor_name)
 
-
-if __name__ == "__main__":
+def test_module():
   from getDefaultContext import getDefaultContext
   from mepinta.testing.plugins_testing.PluginManifestAutoTester import PluginManifestAutoTester
-  #PluginManifestAutoTester(getDefaultContext()).test(manifest)#, gui=True)
-  PluginManifestAutoTester(getDefaultContext()).test(manifest, gui=False)
+  PluginManifestAutoTester(getDefaultContext()).test(manifest)#, gui=True)
+  #PluginManifestAutoTester(getDefaultContext()).test(manifest, gui=False)
+
+if __name__ == "__main__":
+  test_module()

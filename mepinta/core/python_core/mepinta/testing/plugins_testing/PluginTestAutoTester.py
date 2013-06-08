@@ -22,6 +22,9 @@ from mepinta.testing.plugins_testing.base import ModuleAutoTesterBase
 from mepinta.testing.plugins_testing.ProcessorPluginTestRunner import ProcessorPluginTestRunner
 
 class PluginTestAutoTester(ModuleAutoTesterBase):
+  def deepTest(self, gui=True):
+    self.test(gui)
+    
   def test(self, gui=True):
     self.context.nodebox_gui = gui
     import __main__
@@ -29,6 +32,12 @@ class PluginTestAutoTester(ModuleAutoTesterBase):
     self.log.debug('Autotested module module %s' % test_module)
     #Since we create a new context config, logic classes must be instanced here
     ProcessorPluginTestRunner(self.context).blockListeningEvents(test_module)
+
+  def simpleTest(self, gui=True):
+    pass
+  
+  def smokeTest(self, gui=True):
+    
 
 if __name__ == "__main__":
   pass

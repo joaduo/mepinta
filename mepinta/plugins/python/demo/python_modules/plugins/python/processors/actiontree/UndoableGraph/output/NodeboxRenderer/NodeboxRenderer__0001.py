@@ -18,27 +18,18 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with Mepinta. If not, see <http://www.gnu.org/licenses/>.
 '''
+from plugins.python.processors.actiontree.UndoableGraph.output.base.UndoableGraphRendererBase import UndoableGraphRendererBase
+from mepinta.context.getMepintaContext import getMepintaContext
 
-from mepinta.plugins_manifest import PluginManifestBase, FunctionProperty
-from mepinta.pipelineview.actiontree.undoable_graph.UndoableGraphManager import UndoableGraphManager
+class manifest(UndoableGraphRendererBase):
+  pass
 
-class manifest(PluginManifestBase):
-  def define(self, inputs, internals, functions, outputs):
-    inputs.context_name = 'str'
-    outputs.graph = 'actiontree.UndoableGraph'
-    functions.changeGraphTopology = FunctionProperty()
-
-    functions.changeGraphTopology.dpdencies += inputs.context_name
-    outputs.graph.dpdencies += functions.changeGraphTopology
-
-def changeGraphTopology(args):
+def render(args):
   from mepinta_python_sdk.props import get_prop_value
-  from mepinta.context.getMepintaContext import getMepintaContext
-
-  context_name = get_prop_value(args, 'inputs', 'context_name')
-  out_graph = get_prop_value(args, 'outputs', 'graph')
-  context = getMepintaContext(context_name)
-  UndoableGraphManager(context).initGraph(out_graph)
+  from mepinta.testing.plugins_testing.nodebox.NodeBoxSimplePipelineOutput import NodeBoxSimplePipelineOutput
+  graph = get_prop_value(args, 'inputs', 'graph')
+  pline = graph.pline
+  NodeBoxSimplePipelineOutput(pline).update()
 
 if __name__ == "__main__":
   from getDefaultContext import getDefaultContext
