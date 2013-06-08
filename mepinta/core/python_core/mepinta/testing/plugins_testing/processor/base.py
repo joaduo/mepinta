@@ -93,7 +93,7 @@ class ProcessorPluginTestBase(FrameworkBase):
     Also may define a 'tail' pipeline to process the output to check its
     validity. (visually, in the case of an interactive test)
     '''
-    raise NotImplementedError('You should implement %s on children classes' % self.createPipeline)
+    raise NotImplementedError('You should implement %s on children classes' % self.definePipeline)
 
   def getTimeParameters(self):
     '''

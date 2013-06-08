@@ -186,13 +186,14 @@ class Pipeline(object):
     self.property_id_count += 1
     return self.property_id_count
   def startTopologyChangeSet(self):
+    #TODO :review!
     base_topo = self.getTopology()
-    if 0 != len(base_topo.changed_primary):
-      self.changed_primary.update(base_topo.changed_primary)
-      self.current_topolgy_id = self.__newTopologyId()
-      self.topologies[self.current_topolgy_id] = Topology(copied=base_topo)
-      return self.current_topolgy_id
-    return NULL_UID
+#    if 0 != len(base_topo.changed_primary):
+    self.changed_primary.update(base_topo.changed_primary)
+    self.current_topolgy_id = self.__newTopologyId()
+    self.topologies[self.current_topolgy_id] = Topology(copied=base_topo)
+    return self.current_topolgy_id
+#    return NULL_UID
   def pendingChanges(self):
     return 0 != len(self.getTopology().changed_primary)
   def popTopology(self, topo_id):
@@ -262,6 +263,7 @@ def shedskin_pipeline_data_model():
 
   topo = Topology()
   topo = Topology(copied=topo)
+  topo.copyFrom(copied_topo=topo)
   topo.addProperty(prop_id=1)
   topo.addProperty(prop_id=2)
   topo.connect(dent_id=1, dency_id=2)

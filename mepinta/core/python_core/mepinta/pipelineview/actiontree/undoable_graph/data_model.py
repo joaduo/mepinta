@@ -34,14 +34,13 @@ class UndoableGraph(FrameworkObject):
       self.topology_id = self.__graph.pline.startTopologyChangeSet()
 
   def resetTopology(self, u_graph):
-    if self.topology_id != NULL_UID:
-      pline = u_graph.pline
-      if pline.pendingChanges(): #TODO: remove?
-        raise RuntimeError('There are pending changes you should propagate changes')
-      copied_topo = pline.getTopology()
-      topo = pline.getTopology(self.topology_id)
-      topo.copyFrom(copied_topo)
-      pline.setCurrentTopologyId(self.topology_id)
+    pline = u_graph.pline
+    if pline.pendingChanges(): #TODO: remove?
+      raise RuntimeError('There are pending changes you should propagate changes')
+    copied_topo = pline.getTopology()
+    topo = pline.getTopology(self.topology_id)
+    topo.copyFrom(copied_topo)
+    pline.setCurrentTopologyId(self.topology_id)
 
   def addNode(self, node):
     self.created_nodes.add(node)
@@ -67,7 +66,11 @@ class UndoableGraph(FrameworkObject):
     return self.__graph
 
   def setGraph(self, graph):
-    self.__graph = graph
+    if self.__graph == None:
+      self.__graph = graph
+      self.startTopologyChangeSet()
+    elif self.__graph != graph:
+      raise RuntimeError('Graph should always be the same')  #TODO: remove?
 
 def test_module():
   from getDefaultContext import getDefaultContext

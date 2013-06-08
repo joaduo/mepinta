@@ -18,23 +18,22 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with Mepinta. If not, see <http://www.gnu.org/licenses/>.
 '''
-
-#from mepinta.plugins_manifest import PluginManifestBase, FunctionProperty
-#from mepinta.pipelineview.graph.GraphManager import GraphManager
-from mepinta_python_sdk.props import get_prop_value, replace_out_prop_value
-#from plugins.python.processors.actiontree.Graph.modifier.base.GraphValueModifierBase import GraphValueModifierBase
+from mepinta.pipelineview.graph.GraphManager import GraphManager
+from mepinta_python_sdk.props import get_prop_value
 from plugins.python.processors.actiontree.Graph.modifier.base.GraphTopologyModifierBase import GraphTopologyModifierBase
-#from mepinta.pipelineview.graph.data_model import Graph
 
-class RenameNode(GraphTopologyModifierBase):
-  #def define(self, inputs, internals, functions, outputs, changeGraphValues):
+class manifest(GraphTopologyModifierBase):
   def define(self, inputs, internals, functions, outputs, changeGraphValues, changeGraphTopology):
-    inputs.node_id = 'int'
-    inputs.new_name = 'str'
-
-    changeGraphValues.dpdencies += inputs.node_id, inputs.new_name
-
-manifest = RenameNode
+    pass
+#    inputs.context = 'actiontree.Context'
+#    inputs.processor = 'actiontree.Processor'
+#    inputs.node_name = 'str'
+#    outputs.graph = 'actiontree.Graph'
+#    functions.onTopologyChange = FunctionProperty()
+#
+#    functions.onTopologyChange.dpdencies += [inputs.context,
+#                                             inputs.processor,]
+#    outputs.graph.dpdencies += [functions.onTopologyChange]
 
 def demuxSignal(args):
   '''
@@ -48,32 +47,29 @@ def demuxSignal(args):
   #Get the functums to be initialized
   changeGraphTopology = get_prop_value(args, 'inputs', 'changeGraphTopology')
   changeGraphValues = get_prop_value(args, 'inputs', 'changeGraphValues')
-  #resetTopology = get_prop_value(args, 'inputs', 'resetTopology')
   #output
   out_graph = get_prop_value(args, 'outputs', 'graph')
   #DemuxSignal
   if in_graph.topology_changed:
     #We have a new topology, then start from this new topology
-    #resetTopology.function_ptr(resetTopology.args)
+    out_graph.resetTopology(in_graph)
     #Modify the topology on the new given topology
     changeGraphTopology.function_ptr(changeGraphTopology.args)
   #Set the necessary values
   changeGraphValues.function_ptr(changeGraphValues.args)
 
-def setTopologyIdOnce(args):
-  '''
-  The first time this processor is ran, we need to set the topology id for later use
-  :param args: Opaque args to be used by the functions in mepinta_python_sdk.props
-  '''
-  graph = get_prop_value(args, 'inputs', 'graph')
-  topology_id = get_prop_value(args, 'topology_id', 'graph')
-  if topology_id == 0:
-    topology_id = graph.pline.getCurrentTopologyId()
-    replace_out_prop_value(args, 'topology_ud', topology_id)
+def onTopologyChange(args):
+  context = get_prop_value(args, 'inputs', 'context')
+  processor_name = get_prop_value(args, 'inputs', 'processor')
+
+  graph = get_prop_value(args, 'outputs', 'graph')
+  graph_manager = GraphManager(context)
+
+  graph_manager.createNode(graph.pipeline, processor_name)
 
 
 if __name__ == "__main__":
   from getDefaultContext import getDefaultContext
   from mepinta.testing.plugins_testing.PluginManifestAutoTester import PluginManifestAutoTester
   #PluginManifestAutoTester(getDefaultContext()).test(manifest)#, gui=True)
-  PluginManifestAutoTester(getDefaultContext()).visualizeXdot(manifest)
+  PluginManifestAutoTester(getDefaultContext()).test(manifest, gui=False)

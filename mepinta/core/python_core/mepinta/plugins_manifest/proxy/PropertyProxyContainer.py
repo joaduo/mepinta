@@ -20,8 +20,8 @@ along with Mepinta. If not, see <http://www.gnu.org/licenses/>.
 '''
 from common.abstract.FrameworkBase import FrameworkBase
 from mepinta.plugins_manifest.proxy.data_model import FunctionPropertyProxy, \
-  InOutPropertyProxyBase, DataPropertyProxy, PropertyProxy, \
-  PropertyAndQualifierBase
+  InOutPropertyProxyBase, DataPropertyProxy, PropertyAndQualifierBase, \
+  FunctumPropertyProxy
 from mepinta.plugins_manager.data_types.DataTypeAliasManager import DataTypeAliasManager
 
 class PropertyProxyContainer(FrameworkBase):
@@ -56,13 +56,14 @@ class PropertyProxyContainer(FrameworkBase):
     '''
       Get the properties in this container of a specific property type.
       Possible types: (with hierarchy)
-        PropertyProxy
-          FunctionPropertyProxy    (functions declaration_order)
-          InOutPropertyProxyBase   (declaration_order carrying information)
-            FunctumPropertyProxy   (property carrying information and other declaration_order: functum = function + datum)
-            DataPropertyProxy      (pure data property)
-              InotifyPropertyProxy (The property receives signals from inotify, probably related to a File or Folder)
-              GenericEnumProxy     (data property implementing a generic enum data type)
+        PropertyAndQualifierBase
+          PropertyProxy
+            FunctionPropertyProxy    (functions declaration_order)
+            InOutPropertyProxyBase   (declaration_order carrying information)
+              FunctumPropertyProxy   (property carrying information and other declaration_order: functum = function + datum)
+              DataPropertyProxy      (pure data property)
+                InotifyPropertyProxy (The property receives signals from inotify, probably related to a File or Folder)
+                GenericEnumProxy     (data property implementing a generic enum data type)
       If no types are provided, then the type is choosen based on this container
         name.
         FunctionPropertyProxy if th
@@ -97,7 +98,10 @@ class PropertyProxyContainer(FrameworkBase):
     '''
     if not name.startswith('_') :
       if isinstance(value, str):
-        value = DataPropertyProxy(value)
+        if value in self.__data_type_alias_manager.getFunctumAliases():
+          value = FunctumPropertyProxy()
+        else:
+          value = DataPropertyProxy(value)
       if isinstance(value, tuple) and len(value) == 2  and \
          isinstance(value[0], str): #Passing a tuple like 'int',1 (data type, minor version)
         value = DataPropertyProxy(value[0], value[1])

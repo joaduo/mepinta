@@ -21,13 +21,11 @@ along with Mepinta. If not, see <http://www.gnu.org/licenses/>.
 from mepinta.plugins_manifest import PluginManifestBase, FunctionProperty
 from mepinta_python_sdk.props import get_prop_value
 
-class NodeboxRenderer(PluginManifestBase):
+class manifest(PluginManifestBase):
   def define(self, inputs, internals, functions, outputs):
     inputs.geometry = 'demov1.Geometry2D'
     functions.render = FunctionProperty()
     functions.render.dpdencies += [inputs.geometry, ]
-
-manifest = NodeboxRenderer
 
 def render(args):
   from nodebox.graphics import BezierPath, strokewidth, fill, directed, push, translate, rotate, pop, drawpath

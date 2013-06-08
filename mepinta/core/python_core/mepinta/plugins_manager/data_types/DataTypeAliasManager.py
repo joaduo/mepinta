@@ -29,6 +29,15 @@ class DataTypeAliasManager(FrameworkBase):
     else:
       return self._getPythonAliasDict()
 
+  def getFunctumAliases(self):
+    functum_aliases = []
+    alias_dict = self.__getAliasDict(self.context.backend_name)
+    functum_name = alias_dict['functum']
+    for alias, name in alias_dict.items():
+      if name == functum_name:
+        functum_aliases.append(alias)
+    return functum_aliases
+
   def _getPythonAliasDict(self):
     alias_dict = {
                   'int':'python.builtin.int',
@@ -37,6 +46,7 @@ class DataTypeAliasManager(FrameworkBase):
                   'list':'python.builtin.list',
                   'dict':'python.builtin.dict',
                   'actiontree.Processor':'python.builtin.str',
+                  'functum':'mepinta.functum',
                   }
     return alias_dict
 
@@ -46,6 +56,7 @@ class DataTypeAliasManager(FrameworkBase):
                   ##
                   'MP_generic_enum':'c.builtin.int',
                   'mepinta::generic_enum':'c.builtin.int',#'mepinta.generic_enum', #MP_generic_enum
+                  'functum':'mepinta.functum', #MP_functum
                   'MP_functum':'mepinta.functum', #MP_functum
                   'mepinta::functum':'mepinta.functum', #MP_functum
                   'MP_internal_any':'mepinta.internal_any', #MP_internal_any

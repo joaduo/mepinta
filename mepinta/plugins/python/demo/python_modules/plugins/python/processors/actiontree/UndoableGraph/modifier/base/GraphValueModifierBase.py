@@ -24,21 +24,14 @@ from mepinta.plugins_manifest import PluginManifestBase, FunctionProperty, \
 class GraphValueModifierBase(PluginManifestBase):
   def _superClassDefine(self, inputs, internals, functions, outputs):
     #inputs
-    inputs.graph = 'actiontree.Graph'
-    #internals
-    internals.topology_id = 'int' #need to know which topo id we are working on
+    inputs.graph = 'actiontree.UndoableGraph'
     #outputs
-    outputs.graph = 'actiontree.Graph'
+    outputs.graph = 'actiontree.UndoableGraph'
     #functions
-    functions.setTopologyIdOnce = FunctionProperty()
     functions.changeGraphValues = FunctionProperty()
     #Set dependencies
-    #Set toplogy id related dependencies
-    internals.topology_id.dpdencies += functions.setTopologyIdOnce
-    functions.setTopologyIdOnce.dpdencies += [ directed('>', inputs.graph) ]
     #Set modifier related topology ids
-    functions.changeGraphValues.dpdencies += [inputs.graph,
-                                              internals.topology_id, ]
+    functions.changeGraphValues.dpdencies += inputs.graph
     outputs.graph.dpdencies += functions.changeGraphValues
 
     self.nonCached(outputs.graph)

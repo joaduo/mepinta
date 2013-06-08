@@ -20,19 +20,25 @@ along with Mepinta. If not, see <http://www.gnu.org/licenses/>.
 '''
 
 from mepinta.plugins_manifest import PluginManifestBase, FunctionProperty
+from mepinta.pipelineview.actiontree.undoable_graph.UndoableGraphManager import UndoableGraphManager
 
-class DefaultPipeline(PluginManifestBase):
+class manifest(PluginManifestBase):
   def define(self, inputs, internals, functions, outputs):
-    outputs.pipeline = 'actiontree.Pipeline'
-    functions.createPipeline = FunctionProperty()
+    inputs.context_name = 'str'
+    outputs.pipeline = 'actiontree.UndoableGraph'
+    functions.changeGraphTopology = FunctionProperty()
 
-    outputs.pipeline.dpdencies += [functions.createPipeline]
+    functions.changeGraphTopology.dpdencies += inputs.context_name
+    outputs.pipeline.dpdencies += functions.changeGraphTopology
 
-manifest = DefaultPipeline
+def changeGraphTopology(args):
+  from mepinta_python_sdk.props import get_prop_value
+  from mepinta.context.getMepintaContext import getMepintaContext
 
-def createPipeline(args):
-  pipeline = 
-
+  context_name = get_prop_value(args, 'inputs', 'context_name')
+  out_graph = get_prop_value(args, 'outputs', 'graph')
+  context = getMepintaContext(context_name)
+  UndoableGraphManager(context).initGraph(out_graph)
 
 if __name__ == "__main__":
   from getDefaultContext import getDefaultContext

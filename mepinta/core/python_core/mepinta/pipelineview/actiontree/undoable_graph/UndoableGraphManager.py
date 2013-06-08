@@ -24,12 +24,18 @@ from mepinta.pipeline.hi.value_manager.AbstractValueManager import AbstractValue
 from mepinta.pipeline.hi.FactoryLo import unwrap_lo
 from mepinta.plugins_manager.PluginsManager import PluginsManager
 from mepinta.plugins_manager.data_model import ProcessorMetadata
+from mepinta.pipelineview.graph.data_model import Graph
+from mepinta.pipeline.hi.pipeline_data.data_model import Pipeline
 
 class UndoableGraphManager(FrameworkBase):
   def __post_init__(self):
     self.graph_manager = GraphManager(self.context)
     self.value_manager = AbstractValueManager(self.context)
     self._plugins_manager = PluginsManager(context=self.context)
+
+  def initGraph(self, u_graph):
+    u_graph.setGraph(Graph(Pipeline(self.context)))
+    u_graph.topology_changed = True
 
   def connect(self, u_graph, dent_prop, dency_prop):
     return self.graph_manager.connect(u_graph, dent_prop, dency_prop)
@@ -73,10 +79,8 @@ def test_module():
   context = getDefaultContext()
   ugm = UndoableGraphManager(context)
   from mepinta.pipelineview.actiontree.undoable_graph.data_model import UndoableGraph
-  from mepinta.pipelineview.graph.data_model import Graph
-  from mepinta.pipeline.hi.pipeline_data.data_model import Pipeline
-  u_graph = UndoableGraph(Graph(Pipeline(context)))
-  #ugm.setPropValue(u_graph, prop, value)
+  u_graph = UndoableGraph()
+  ugm.initGraph(u_graph)
   import plugins.python.processors.demov1.Geometry2D.generator.Circle as processor
   ugm.createNode(u_graph, processor)
 

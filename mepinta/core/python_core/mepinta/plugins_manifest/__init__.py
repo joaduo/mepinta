@@ -26,6 +26,8 @@ from mepinta.plugins_manifest.proxy.data_model import PropertyProxy, DataPropert
 from mepinta.abstract.MepintaError import MepintaError
 from common.type_checking.isiterable import isiterable
 from mepinta.plugins_manifest.proxy.ProcessorProxy import ProcessorProxy
+from common.path import splitPath
+import os
 
 __all__ = [
            'DataProperty',
@@ -39,7 +41,7 @@ __all__ = [
            ]
 
 #Better aliases
-DataProperty = DataPropertyProxy
+DataProperty = DataPropertyProxy #TODO: remove?
 FunctionProperty = FunctionPropertyProxy
 Functum = FunctumPropertyProxy
 GenericEnum = GenericEnumProxy
@@ -67,7 +69,12 @@ class PluginManifestBase(FrameworkBase):
     args, kwargs = self.__createDefineArguments()
     self.define(*args, **kwargs)
   def getName(self):
-    return self.__class__.__name__
+    if self.__class__.__module__ == '__main__':
+      import __main__
+      name = splitPath(__main__.__file__)[-2]
+    else:
+      name = self.__class__.__module__.split('.')[-2]
+    return name
   def __getBasicArguments(self):
     pp = self.processor_proxy
     return (pp.inputs, pp.internals, pp.functions, pp.outputs)

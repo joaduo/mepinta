@@ -18,15 +18,9 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with Mepinta. If not, see <http://www.gnu.org/licenses/>.
 '''
-from mepinta.pipeline.hi.pipeline_data.data_model import Pipeline
-
-class DataTypeManifestBase(object):
-  pass
-
-class manifest(DataTypeManifestBase):
-  def define(self):
-    self.force_non_cached = True
-    #self.addLibraries('bla.so')
+from mepinta.context.getMepintaContext import getMepintaContext
+from mepinta.pipeline.hi.pipeline_evaluator.PipelineEvaluatorFunctum import PipelineEvaluatorFunctum
+from mepinta.pipelineview.actiontree.undoable_graph.data_model import UndoableGraph
 
 data_type_description = {
 # 'plugin_url':'http://mepinta.joaquinduo.com.ar/plugins/',
@@ -40,10 +34,20 @@ data_type_description = {
 }
 
 def new():
-  return Pipeline()
+  return UndoableGraph()
 
-def copy(bool_):
-  return bool_
+def copy(u_graph):
+  raise NotImplementedError('You cannot copy an UndoableGraph. Is a non_cached forced.')
 
-def delete(bool_):
+def delete(u_graph):
   pass
+
+def copy_to(to_graph, from_graph):
+  #create the obvious context
+  context = getMepintaContext(backend_name='python')
+  PipelineEvaluatorFunctum(context).propagateChanges(from_graph.pline)
+  #pass the common data between undoable graphs
+  to_graph.setGraph(from_graph.graph)
+  #We start a topology change set, so we haven't done anything yet
+  to_graph.topology_changed = False
+

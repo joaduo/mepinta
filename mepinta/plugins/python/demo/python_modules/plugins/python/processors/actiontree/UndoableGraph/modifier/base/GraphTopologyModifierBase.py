@@ -19,41 +19,32 @@ You should have received a copy of the GNU General Public License
 along with Mepinta. If not, see <http://www.gnu.org/licenses/>.
 '''
 
-from mepinta.plugins_manifest import PluginManifestBase, DataProperty, FunctionProperty, \
+from mepinta.plugins_manifest import PluginManifestBase, FunctionProperty, \
   directed, Functum
 
 class GraphTopologyModifierBase(PluginManifestBase):
   def _superClassDefine(self, inputs, internals, functions, outputs):
     #inputs
-    inputs.graph = 'actiontree.Graph'
-    #internals
-#    internals.topology_id = 'int' #need to know which topo id we are working on
-#    internals.created_nodes = 'str'#'list'
+    inputs.graph = 'actiontree.UndoableGraph'
+    inputs.context_name = 'str'
     #outputs
-    outputs.graph = 'actiontree.Graph'
+    outputs.graph = 'actiontree.UndoableGraph'
     #functions
-    #functions.setTopologyIdOnce = FunctionProperty()
     functions.demuxSignal = FunctionProperty()
-    #internals.resetTopology = 'str'
-    internals.changeGraphTopology = 'str'#Functum()
-    internals.changeGraphValues = 'str'#Functum()
+    internals.changeGraphTopology = 'functum'
+    internals.changeGraphValues = 'functum'
 
     #Set dependencies
-    #Set toplogy id related dependencies
-#    internals.topology_id.dpdencies += functions.setTopologyIdOnce
-    #functions.setTopologyIdOnce.dpdencies += directed('>', inputs.graph)
     #Set signal demux dependencies
     functions.demuxSignal.dpdencies += [inputs.graph,
-#                                        internals.topology_id,
-#                                        directed('>', internals.resetTopology),
                                         directed('>', internals.changeGraphTopology),
                                         directed('>', internals.changeGraphValues), ]
-#    internals.resetTopology.dpdencies += [inputs.graph,
-#                                          internals.topology_id, ]
     #Set modifier related topology ids
-    internals.changeGraphTopology.dpdencies += inputs.graph
+    internals.changeGraphTopology.dpdencies += [inputs.graph,
+                                                inputs.context_name, ]
     internals.changeGraphValues.dpdencies += [internals.changeGraphTopology,
-                                              inputs.graph, ]
+                                              inputs.graph,
+                                              inputs.context_name, ]
     outputs.graph.dpdencies += functions.demuxSignal
 
     self.nonCached(outputs.graph)

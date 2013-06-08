@@ -18,36 +18,18 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with Mepinta. If not, see <http://www.gnu.org/licenses/>.
 '''
-
-from mepinta.plugins_manifest import PluginManifestBase, FunctionProperty
-from mepinta.pipelineview.graph.GraphManager import GraphManager
 from mepinta_python_sdk.props import get_prop_value
+from plugins.python.processors.actiontree.Graph.modifier.base.GraphValueModifierBase import GraphValueModifierBase
 
-class CreateNode(PluginManifestBase):
-  def define(self, inputs, internals, functions, outputs):
-    inputs.context = 'actiontree.Context'
-    inputs.processor = 'actiontree.Processor'
-    inputs.node_name = 'str'
-    outputs.graph = 'actiontree.Graph'
-    functions.onTopologyChange = FunctionProperty()
+class manifest(GraphValueModifierBase):
+  def define(self, inputs, internals, functions, outputs, changeGraphValues):
+    inputs.node_id = 'int'
+    inputs.new_name = 'str'
 
-    functions.onTopologyChange.dpdencies += [inputs.context, inputs.processor]
-    outputs.graph.dpdencies += [functions.onTopologyChange]
-
-manifest = CreateNode
-
-def onTopologyChange(args):
-  context = get_prop_value(args, 'inputs', 'context')
-  processor_name = get_prop_value(args, 'inputs', 'processor')
-
-  graph = get_prop_value(args, 'outputs', 'graph')
-  graph_manager = GraphManager(context)
-
-  graph_manager.createNode(graph.pipeline, processor_name)
-
+    changeGraphValues.dpdencies += inputs.node_id, inputs.new_name
 
 if __name__ == "__main__":
   from getDefaultContext import getDefaultContext
   from mepinta.testing.plugins_testing.PluginManifestAutoTester import PluginManifestAutoTester
   #PluginManifestAutoTester(getDefaultContext()).test(manifest)#, gui=True)
-  PluginManifestAutoTester(getDefaultContext()).test(manifest, gui=False)
+  PluginManifestAutoTester(getDefaultContext()).visualizeXdot(manifest)

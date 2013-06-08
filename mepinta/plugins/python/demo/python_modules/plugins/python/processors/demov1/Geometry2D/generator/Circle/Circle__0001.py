@@ -20,7 +20,7 @@ along with Mepinta. If not, see <http://www.gnu.org/licenses/>.
 '''
 from mepinta.plugins_manifest import PluginManifestBase, FunctionProperty
 
-class Circle(PluginManifestBase):
+class manifest(PluginManifestBase):
   def define(self, inputs, internals, functions, outputs):
     #Inputs
     inputs.geometry = 'demov1.Geometry2D' #TODO: review if necessary for nonCached
@@ -38,8 +38,6 @@ class Circle(PluginManifestBase):
 
     #We can work directly on the output
     self.nonCached(outputs.geometry)
-
-manifest = Circle
 
 import math
 from mepinta_python_sdk.props import get_prop_value

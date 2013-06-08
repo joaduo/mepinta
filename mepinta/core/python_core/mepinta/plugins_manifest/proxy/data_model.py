@@ -292,10 +292,6 @@ class InputFilePropertyProxy(InotifyPropertyProxy):
   '''
   def __init__(self):
     InotifyPropertyProxy.__init__(self, 'c.builtin.charp')
-#  def getPath(self, pline, context):
-#    from mepinta.pipeline.hi.value_manager.ValueManager import ValueManager
-#    value_mngr = ValueManager(context)
-#    return value_mngr.getValue(pline, self)
 
 class GenericEnumProxy(DataPropertyProxy):
   '''
@@ -351,7 +347,7 @@ class FunctumPropertyProxy(InOutPropertyProxyBase):
       from mepinta.plugins_manifest package
   '''
   def __init__(self):
-    InOutPropertyProxyBase.__init__(self, "MP_functum", data_type_version=1)
+    InOutPropertyProxyBase.__init__(self, 'functum', data_type_version=1)
 
 class FunctionPropertyProxy(PropertyProxy):
   '''
@@ -363,8 +359,8 @@ class FunctionPropertyProxy(PropertyProxy):
 
 if __name__ == '__main__':
   #TODO: review this
-  from mepinta.context.MepintaContext import MepintaContext
-  context = MepintaContext('python')
+  from getDefaultContext import getDefaultContext
+  context = getDefaultContext
   #  def test():
   #    prop1 = DataPropertyProxy('charp', '10_v10')
   #    #TODO: check out that user defined versions should compare correctly

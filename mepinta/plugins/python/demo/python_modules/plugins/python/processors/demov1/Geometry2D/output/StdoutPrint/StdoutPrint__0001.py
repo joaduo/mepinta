@@ -21,7 +21,7 @@ along with Mepinta. If not, see <http://www.gnu.org/licenses/>.
 from mepinta.plugins_manifest import PluginManifestBase, FunctionProperty
 from pipeline_backend.logging.logging import log_info
 
-class StdoutPrint(PluginManifestBase):
+class manifest(PluginManifestBase):
   def define(self, inputs, internals, functions, outputs):
     #Inputs
     inputs.geometry = 'demov1.Geometry2D'
@@ -30,8 +30,6 @@ class StdoutPrint(PluginManifestBase):
 
     #Set sinks & dpdencies
     functions.render.dpdencies += [ inputs.geometry ]
-
-manifest = StdoutPrint
 
 from mepinta_python_sdk.props import get_prop_value
 def render(args):
