@@ -22,7 +22,7 @@ along with Mepinta. If not, see <http://www.gnu.org/licenses/>.
 from mepinta.pipeline.lo.constants import FUNCTION_PROPERTY_FLAG, INPUT_PROPS, \
   OUTPUT_PROPS, FUNCTUM_PROPERTY_FLAG, has_flags, PROCESSOR_EXIT_NORMAL, \
   CUSTOM_INPUT_PROPS, CUSTOM_PROPERTY_FLAG, CUSTOM_OUTPUT_PROPS
-from pipeline_backend.logging.logging import log_debug, log_warning
+from pipeline_backend.logging.logging import log_debug, log_warning, log_info
 from pipeline_backend.void_pointer_casting.void_pointer_casting import voidp_to_FunctumPropertyValue, \
   voidp_to_FunctionPropertyValue
 from mepinta.pipeline.lo.pipeline_evaluator.ProcessorArgsManager import ProcessorArgsManager

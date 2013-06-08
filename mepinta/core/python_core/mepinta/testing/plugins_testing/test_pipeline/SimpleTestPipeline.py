@@ -20,14 +20,11 @@ along with Mepinta. If not, see <http://www.gnu.org/licenses/>.
 '''
 from common.abstract.FrameworkBase import FrameworkBase
 from mepinta.pipelineview.graph.GraphManager import GraphManager
-#from mepinta.pipeline.hi.pipeline_data.data_model import Pipeline
 from mepinta.plugins_manager.PluginsManager import PluginsManager
-from mepinta.pipelineview.graph.GraphTopologyManager import GraphTopologyManager
 from mepinta.pipeline.hi.pipeline_evaluator.PipelineEvaluatorFunctum import PipelineEvaluatorFunctum
 from mepinta.pipeline.hi.value_manager.AbstractValueManager import AbstractValueManager
 from mepinta.pipelineview.graph.data_model import Graph
 from mepinta.pipeline.hi.pipeline_data.data_model import Pipeline
-
 
 class SimpleTestPipeline(FrameworkBase):
   '''This class wraps the mepinta.pipeline.hi.pipeline_data.data_model.Pipeline
@@ -69,9 +66,7 @@ class SimpleTestPipeline(FrameworkBase):
     return self._processors_metadata[processor]
 
   def _setConfig(self):
-    #non_cached = False
-    non_cached = True
-    self.context.setConfig('non_cached', non_cached, GraphTopologyManager)
+    pass
 
   def append(self, processor, connect=True):
     if processor not in self._processors_metadata:
@@ -138,7 +133,7 @@ class SimpleTestPipeline(FrameworkBase):
   def evaluateProp(self, prop):
     return self.pline_evaluator.evaluateProp(self._graph.pline, prop)
 
-  def simpleVisualization(self, x_width=600, y_height=700):
+  def simpleVisualization(self, x_width=600, y_height=700): #TODO: remove?
     from mepinta.testing.plugins_testing.nodebox.NodeBoxSimplePipelineOutput import NodeBoxSimplePipelineOutput
     NodeBoxSimplePipelineOutput(self._graph.pline, x_width, y_height).run()
 
@@ -148,6 +143,12 @@ class SimpleTestPipeline(FrameworkBase):
       nodes_dict[node.name] = node
     return nodes_dict
 
-if __name__ == "__main__":
+def test_module():
   from getDefaultContext import getDefaultContext
-  itp = SimpleTestPipeline(getDefaultContext())
+  context = getDefaultContext()
+  itp = SimpleTestPipeline(context)
+  context.log(itp)
+
+if __name__ == "__main__":
+  test_module()
+

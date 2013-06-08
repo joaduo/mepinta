@@ -9,6 +9,7 @@ Running the console demo.
   cd ../../mepinta_deployment
   mepinta_demo.py     #lists the demos
   mepinta_demo.py 0   #run the first one
+  mepinta_tests.py    #run all the tests (no too much right now)
 
 For running the some of the Python demos you need installed:
   nodebox opengl library http://www.cityinabottle.org/nodebox/

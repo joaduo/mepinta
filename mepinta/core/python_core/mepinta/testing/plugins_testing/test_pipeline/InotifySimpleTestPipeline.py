@@ -138,8 +138,6 @@ class InotifySimpleTestPipeline(ForkInotifyUtilsBase):
     self.__watchTestModule(test_module)
 
   def evaluateProp(self, prop=None):
-    self.log.trace()
-    #return
     if prop:
       return self._test_pline.evaluateProp(prop)
     else:

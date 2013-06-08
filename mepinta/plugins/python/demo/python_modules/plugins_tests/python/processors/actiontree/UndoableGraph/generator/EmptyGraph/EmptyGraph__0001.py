@@ -69,7 +69,8 @@ def test_module():
   from mepinta.testing.plugins_testing.PluginTestAutoTester import PluginTestAutoTester
   from getDefaultContext import getDefaultContext
   tester = PluginTestAutoTester(context=getDefaultContext())
-  tester.shallowTest(gui=False)#.smokeTest()#.test(gui=False)
+  tester.shallowTest(gui=True)#.smokeTest()#.test(gui=False)
+  #tester.simpleTest(gui=False)
 
 if __name__ == "__main__":
   test_module()

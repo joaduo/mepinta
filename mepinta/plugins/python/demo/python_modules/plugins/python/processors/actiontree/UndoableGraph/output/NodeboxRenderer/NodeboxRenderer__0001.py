@@ -19,17 +19,22 @@ You should have received a copy of the GNU General Public License
 along with Mepinta. If not, see <http://www.gnu.org/licenses/>.
 '''
 from plugins.python.processors.actiontree.UndoableGraph.output.base.UndoableGraphRendererBase import UndoableGraphRendererBase
-from mepinta.context.getMepintaContext import getMepintaContext
 
 class manifest(UndoableGraphRendererBase):
-  pass
+  def define(self, inputs, internals, functions, outputs, render):
+    internals.temp_data = 'dict'
+    render.dpdencies += internals.temp_data
 
 def render(args):
   from mepinta_python_sdk.props import get_prop_value
   from mepinta.testing.plugins_testing.nodebox.NodeBoxSimplePipelineOutput import NodeBoxSimplePipelineOutput
   graph = get_prop_value(args, 'inputs', 'graph')
+  temp_data = get_prop_value(args, 'inputs', 'temp_data')
   pline = graph.pline
-  NodeBoxSimplePipelineOutput(pline).update()
+  data_name = 'NodeBoxSimplePipelineOutput'
+  if data_name not in temp_data:
+    temp_data[data_name] = NodeBoxSimplePipelineOutput(pline)
+  temp_data[data_name].update()
 
 if __name__ == "__main__":
   from getDefaultContext import getDefaultContext

@@ -46,6 +46,7 @@ class DataTypeAliasManager(FrameworkBase):
                   'list':'python.builtin.list',
                   'dict':'python.builtin.dict',
                   'actiontree.Processor':'python.builtin.str',
+                  'actiontree.NodesSelection':'python.builtin.list',
                   'functum':'mepinta.functum',
                   }
     return alias_dict

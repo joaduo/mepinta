@@ -47,7 +47,6 @@ class PluginManifestAutoTester(ModuleAutoTesterBase):
     self.log.debug(pline.getTopology())
 
   def __getPline(self, plugin_manifest_class):
-    self.context.setConfig('non_cached', False, GraphTopologyManager)
     plugin_manifest = plugin_manifest_class(self.context)
     pline, _ = self.__createNode(plugin_manifest)
     return pline
@@ -69,4 +68,6 @@ class PluginManifestAutoTester(ModuleAutoTesterBase):
       NodeBoxSimplePipelineOutput(pline, 600, 600).run()
 
 if __name__ == "__main__":
+  #import ftest
   pass
+

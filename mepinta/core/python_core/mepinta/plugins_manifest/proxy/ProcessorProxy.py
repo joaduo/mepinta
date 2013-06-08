@@ -65,7 +65,7 @@ class ProcessorProxy(FrameworkBase):
 
   def get_functions_dict(self):
     '''Get the Functions and Functums defined on this proxy'''
-    #returns a dict like: {name:propertyProxy_instance}
+    #returns a dict like: {name:PropertyProxy instance}
     func_dict = {}
     for container in self.containers.values():
       #filter declaration_order from containers

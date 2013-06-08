@@ -18,15 +18,25 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with Mepinta. If not, see <http://www.gnu.org/licenses/>.
 '''
-from mepinta.context.MepintaContext import MepintaContext
+from common.context.Context import arg_singleton_and_wrap
+from mepinta.pipeline.hi.context_lo.ContextLo import ContextLo
+from mepinta.pipeline.hi.LogOutput import LogOutput
+from common.context.base import ContextBase
 
-def getMepintaContext(backend_name='python'):
-  return MepintaContext(backend_name)
+@arg_singleton_and_wrap
+class MepintaContext(ContextBase):
+  def __init__(self, backend_name):
+    ContextBase.__init__(self, backend_name)
+    self.__initConfig()
+  def __initConfig(self):
+    context = self
+    context_lo = ContextLo(context=context)
+    context.setConfig('context_lo', context_lo)
+    logger = context.getConfig('log')
+    logger.set_output(LogOutput(context=context))
 
 def test_module():
-  print getMepintaContext()
-  print getMepintaContext('python')
-  print getMepintaContext('c_and_cpp')
+  pass
 
 if __name__ == "__main__":
   test_module()

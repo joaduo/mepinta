@@ -18,15 +18,19 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with Mepinta. If not, see <http://www.gnu.org/licenses/>.
 '''
-from mepinta.context.MepintaContext import MepintaContext
 
-def getMepintaContext(backend_name='python'):
-  return MepintaContext(backend_name)
+def fastIntegrationTest(context=None):
+  from getDefaultContext import getDefaultContext
+  if not context:
+    context = getDefaultContext()
+  if context.backend_name == 'python':
+    from plugins_tests.integration.fastIntegrationTest import fastIntegrationTestPython
+    fastIntegrationTestPython(context)
+  else:
+    raise NotImplementedError()
 
 def test_module():
-  print getMepintaContext()
-  print getMepintaContext('python')
-  print getMepintaContext('c_and_cpp')
+  fastIntegrationTest()
 
 if __name__ == "__main__":
   test_module()

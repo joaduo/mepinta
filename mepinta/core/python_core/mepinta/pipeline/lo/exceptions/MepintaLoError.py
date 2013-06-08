@@ -18,15 +18,9 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with Mepinta. If not, see <http://www.gnu.org/licenses/>.
 '''
-from mepinta.context.MepintaContext import MepintaContext
 
-def getMepintaContext(backend_name='python'):
-  return MepintaContext(backend_name)
+class MepintaLoError(Exception):
+  pass
 
-def test_module():
-  print getMepintaContext()
-  print getMepintaContext('python')
-  print getMepintaContext('c_and_cpp')
-
-if __name__ == "__main__":
-  test_module()
+def shedskin_MepintaLoError():
+  e = MepintaLoError()

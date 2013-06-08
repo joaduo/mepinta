@@ -68,4 +68,11 @@ class GraphTopologyManager(FrameworkBase):
       #finally enabling them
       self.topo_mngr.enable_cached(pline, prop_dst_ids)
 
+def test_module():
+  from getDefaultContext import getDefaultContext
+  context = getDefaultContext()
+  context.log(GraphTopologyManager(context))
+
+if __name__ == "__main__":
+  test_module()
 

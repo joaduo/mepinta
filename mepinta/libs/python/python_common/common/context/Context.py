@@ -19,8 +19,9 @@ You should have received a copy of the GNU General Public License
 along with Mepinta. If not, see <http://www.gnu.org/licenses/>.
 '''
 from common.context.base import ContextBase
+from common.config.ContextWrapper import ContextWrapper
 
-class arg_singleton(object):
+class arg_singleton_and_wrap(object):
   '''
     Decorator that provides a single instance for the arguments provided
       I.e.: same arguments, same instance
@@ -32,12 +33,12 @@ class arg_singleton(object):
     self.class_ = class_
   def __call__(self, name):
     if name not in self.__instances:
-      self.__instances[name] = self.class_(name)
+      self.__instances[name] = ContextWrapper(self.class_(name))
     return self.__instances[name]
   def getCurrentContexts(self):
     return self.__instances
 
-@arg_singleton
+@arg_singleton_and_wrap
 class Context(ContextBase):
   pass
 

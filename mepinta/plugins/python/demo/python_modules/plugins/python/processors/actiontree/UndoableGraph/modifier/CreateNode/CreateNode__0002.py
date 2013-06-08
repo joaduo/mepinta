@@ -58,13 +58,14 @@ def changeGraphValues(args):
 
 def changeGraphTopology(args):
   from mepinta.pipelineview.actiontree.undoable_graph.UndoableGraphManager import UndoableGraphManager
+  from mepinta.context.MepintaContext import MepintaContext
   from mepinta_python_sdk.props import get_prop_value
-  context = get_prop_value(args, 'inputs', 'context_name')
+  context_name = get_prop_value(args, 'inputs', 'context_name')
   processor_name = get_prop_value(args, 'inputs', 'processor_name')
   graph = get_prop_value(args, 'outputs', 'graph')
-  graph_manager = UndoableGraphManager(context)
+  graph_manager = UndoableGraphManager(MepintaContext(context_name))
 
-  graph_manager.createNode(graph.pipeline, processor_name)
+  graph_manager.createNode(graph, processor_name)
 
 def test_module():
   from getDefaultContext import getDefaultContext

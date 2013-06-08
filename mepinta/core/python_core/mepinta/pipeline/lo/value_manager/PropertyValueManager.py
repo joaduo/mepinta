@@ -25,6 +25,7 @@ from mepinta.pipeline.lo.constants import FUNCTION_PROPERTY_FLAG
 from pipeline_backend.args_management.args_management import delete_args
 from pipeline_backend.void_pointer_casting.void_pointer_casting import voidp_to_FunctionPropertyValue
 from pipeline_backend.logging.logging import log_critical, log_debug
+from mepinta.pipeline.lo.exceptions.MepintaLoError import MepintaLoError
 
 #TODO: make it thread safe
 class PropertyValueManager(object):
@@ -85,10 +86,14 @@ class PropertyValueManager(object):
     func_ptr_copy = data_type.get_func_ptr('copy_to')
     if func_ptr_copy != None:
       #the "copy_to" function is implemented
+      if prop.get_value_ptr().get_value() == None:
+        self.init_prop_value(prop)
       if (None != self.func_caller.call_copy_to_func(func_ptr_copy
                                          , prop.get_value_ptr().get_value()
                                          , value_ptr.get_value())):
-        log_critical('Couldn\'t copy to prop:%r from value_ptr:%r' % (prop, value_ptr))
+        msg = 'Couldn\'t copy to prop:%r from value_ptr:%r' % (prop, value_ptr)
+        log_critical(msg)
+        raise MepintaLoError(msg)
     else:
       #the "copy_to" function is not implemented,
       #then copy to a new value and delete prior one

@@ -45,7 +45,9 @@ class GraphTopologyModifierBase(PluginManifestBase):
     internals.changeGraphValues.dpdencies += [internals.changeGraphTopology,
                                               inputs.graph,
                                               inputs.context_name, ]
-    outputs.graph.dpdencies += functions.demuxSignal
+    outputs.graph.dpdencies += [functions.demuxSignal,
+                                directed('<', internals.changeGraphTopology),
+                                directed('<', internals.changeGraphValues), ]
 
     self.nonCached(outputs.graph)
 

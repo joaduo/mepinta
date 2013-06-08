@@ -65,7 +65,10 @@ class PluginPackageManager(FrameworkBase):
       PluginsManager can receive a package/module or a string.
       This functions gets whatever we don't have and returns both.
     '''
-    if isinstance(plugin, str):  # We have the name, then we need to get the package
+#    print plugin
+#    import pdb;
+#    pdb.set_trace()
+    if isinstance(plugin, (str, unicode)):  # We have the name, then we need to get the package
       plugin_name = plugin
       plugin_package = self.python2x_3x_import(plugin)
     elif isinstance(plugin, ProcessorMetadata) or isinstance(plugin, DataTypeMetadata):
@@ -75,7 +78,7 @@ class PluginPackageManager(FrameworkBase):
       plugin_package = plugin.package
     else:  # It's a package, we need the name
       plugin_package = plugin
-      # TODO: fix this??
+      # TODO: fix this?? plugin name is relative?
       plugin_name = '.'.join(plugin_package.__name__.split('.')[3:])
     self.log.debug('Name: %r, package: %s' % (plugin_name, plugin_package))
     return plugin_name, plugin_package

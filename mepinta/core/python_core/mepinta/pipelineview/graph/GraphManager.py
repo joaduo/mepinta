@@ -34,7 +34,7 @@ class topology_changed(object):
     elif 'graph' in kwargs:
       graph = kwargs['graph']
     else:
-      raise TypeError('You should provide an graph to the method %r' % self.method)
+      raise TypeError('You should provide an graph to the method %r. args:(%r,%r)' % (self.method, args, kwargs))
     return_value = self.method(*args, **kwargs)
     graph.topology_changed = True
     return return_value
