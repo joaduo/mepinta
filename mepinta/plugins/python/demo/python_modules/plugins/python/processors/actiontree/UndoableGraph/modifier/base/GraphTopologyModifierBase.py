@@ -50,6 +50,7 @@ class GraphTopologyModifierBase(PluginManifestBase):
     self.nonCached(outputs.graph)
 
     return internals.changeGraphValues, internals.changeGraphTopology
+
   def define(self, inputs, internals, functions, outputs, changeGraphValues, changeGraphTopology):
     '''
       Implement this method on children classes.

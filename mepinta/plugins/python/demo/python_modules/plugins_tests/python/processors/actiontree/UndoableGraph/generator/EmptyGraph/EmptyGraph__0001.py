@@ -68,18 +68,8 @@ class EmptyGraphTest(ProcessorPluginTestBase, unittest.TestCase):
 def test_module():
   from mepinta.testing.plugins_testing.PluginTestAutoTester import PluginTestAutoTester
   from getDefaultContext import getDefaultContext
-  from mepinta.testing.plugins_testing.test_pipeline.SimpleTestPipeline import SimpleTestPipeline
-  from mepinta.testing.plugins_testing.gui.SimpleTestPipelineGui import SimpleTestPipelineGui
-  from mepinta.testing.plugins_testing.test_pipeline.InotifySimpleTestPipeline import InotifySimpleTestPipeline
-
-  from pipeline_backend.logging.logging import LOG_INFO, LOG_DEBUG
-  context = getDefaultContext(LOG_DEBUG)
-  #PluginTestAutoTester(context=getDefaultContext()).test(gui=False)
-  test_pline = InotifySimpleTestPipeline(context)
-  EmptyGraphTest(context).definePipeline(test_pline)
-  test_pline.evaluateProp()
-  #SimpleTestPipelineGui(context, test_pline=test_pline).run()
-#  PluginTestAutoTester(context).test(gui=True)
+  tester = PluginTestAutoTester(context=getDefaultContext())
+  tester.shallowTest(gui=False)#.smokeTest()#.test(gui=False)
 
 if __name__ == "__main__":
   test_module()

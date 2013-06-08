@@ -30,7 +30,7 @@ class topology_changed(object):
     self.method = method
   def __call__(self, *args, **kwargs):
     if len(args) > 2 and hasattr(args[1], 'topology_changed'):
-      graph = args[0]
+      graph = args[1]
     elif 'graph' in kwargs:
       graph = kwargs['graph']
     else:
