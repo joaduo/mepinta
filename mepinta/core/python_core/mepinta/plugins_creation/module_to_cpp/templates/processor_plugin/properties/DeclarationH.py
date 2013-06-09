@@ -22,11 +22,11 @@ from mepinta.plugins_creation.templates.base import ManifestAndFileTemplateBase,
   on_template
 
 props_declaration_template='''
-#define ##FUNCTION_NAME_INPUTS_DECLARATION \
-  ##INPUTS_DECLARATION
+#define ${FUNCTION_NAME_INPUTS_DECLARATION} \
+  ${INPUTS_DECLARATION}
   
-#define ##FUNCTION_NAME_OUTPUTS_DECLARATION \
-  ##OUPUTS_DECLARATION  
+#define ${FUNCTION_NAME_OUTPUTS_DECLARATION} \
+  ${OUPUTS_DECLARATION}  
 '''
 
 class DeclarationH(ManifestAndFileTemplateBase):

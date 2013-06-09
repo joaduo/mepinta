@@ -25,12 +25,12 @@ from mepinta_devtools.templates.DictionaryBasedTranslator import DictionaryBased
 
 default_template = '''# -*- coding: utf-8 -*-
 class deployment_config(object):
-  mepinta_source_path = '##mepinta_source_path'
-  eclipse_projects_path = '##eclipse_projects_path'
-  qt_projects_path = '##qt_projects_path'
-  libk3dsdk_path = '##libk3dsdk_path'
-  libgsigc2_path = '##libgsigc2_path'
-  libboost_unit_test_framework_path = '##libboost_unit_test_framework_path'
+  mepinta_source_path = '${mepinta_source_path}'
+  eclipse_projects_path = '${eclipse_projects_path}'
+  qt_projects_path = '${qt_projects_path}'
+  libk3dsdk_path = '${libk3dsdk_path}'
+  libgsigc2_path = '${libgsigc2_path}'
+  libboost_unit_test_framework_path = '${libboost_unit_test_framework_path}'
 
 def configurePythonPaths(create_context=True):
   import sys

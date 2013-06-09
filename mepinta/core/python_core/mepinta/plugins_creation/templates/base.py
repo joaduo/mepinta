@@ -18,13 +18,12 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with Mepinta. If not, see <http://www.gnu.org/licenses/>.
 '''
-
-import re
 import inspect
 from common.abstract.FrameworkBase import FrameworkBase
 from common.path import joinPath, splitPath
 from mepinta.plugins_manifest.proxy.data_model import DataPropertyProxy, \
   FunctumPropertyProxy
+from string import Template
 
 # TODO: renaming, moving and documenting. UGLY!
 
@@ -117,20 +116,11 @@ class ManifestAndFileTemplateBase(MethodPerTemplateVar):
 
 class DictionaryBasedTranslator(TemplateTranslatorBase):
   ''''''
-  def __post_init__(self, template, translation_dict, start_mark='##'):
+  def __post_init__(self, template, translation_dict):
     self.template = template
     self.translation_dict = translation_dict
-    self.start_mark = start_mark
-  def __replace(self, processed_template, name, replacement, start_mark):
-    re_replace = re.compile(r'%s%s' % (start_mark, name))
-    if not isinstance(replacement, str):
-      raise RuntimeError('replacement %r for %r variable should be a string.' % (replacement, name))
-    return re_replace.sub(replacement, processed_template)
   def getContent(self):
-    processed_template = str(self.template)
-    for name, replacement in self.translation_dict.items():
-      processed_template = self.__replace(processed_template, name, replacement, self.start_mark)
-    return processed_template
+    return Template(self.template).safe_substitute(self.translation_dict)
 
 class ProjectTemplatesBase(FrameworkBase):
 #  def getCreatedDirs(self, plugin_manifest, target_root): #TODO: remove
@@ -195,7 +185,7 @@ class PluginTemplatesBase(ProjectTemplatesBase):  # TODO: rename to ProjectTempl
 if __name__ == "__main__":
   from mepinta.context.MepintaContext import MepintaContext
   context = MepintaContext('python')
-  template = '< ##FOO > < ##BAR>'
+  template = '< {FOO} > < {BAR}>'
   translation_dict = {'FOO':'value=10', 'BAR':'other="some"'}
   print(DictionaryBasedTranslator(context, template=template, translation_dict=translation_dict))
 

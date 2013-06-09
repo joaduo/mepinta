@@ -45,7 +45,7 @@ along with Mepinta. If not, see <http://www.gnu.org/licenses/>.
 from mepinta.plugins_manifest import PluginManifestBase, DataProperty, FunctionProperty, \\
   directed, Functum
 
-class ##name(PluginManifestBase):
+class ${name}(PluginManifestBase):
   def define(self, inputs, internals, functions, outputs):
     #inputs. = DataProperty('')
     #outputs. = DataProperty('')
@@ -54,7 +54,7 @@ class ##name(PluginManifestBase):
     #functions..dpdencies += [inputs.,]
     #outputs..dpdencies += [functions.]
 
-manifest = ##name
+manifest = ${name}
 
 if __name__ == "__main__":
   from getDefaultContext import getDefaultContext
@@ -90,7 +90,7 @@ data_type_description = {
  'authors':'',
  'description':'''.''',
  'changes':'',
- 'api':'##api', #What kind of api is available for accessing this data
+ 'api':'${api}', #What kind of api is available for accessing this data
 }
 
 """

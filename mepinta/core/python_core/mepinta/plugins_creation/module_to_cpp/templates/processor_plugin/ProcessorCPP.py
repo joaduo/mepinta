@@ -45,11 +45,11 @@ gpl_header = '''//Mepinta
 function_template = '''
 //Give a brief explanation for your function property.
 EXPORTED_SYMBOL
-int ##functionName(MP_args* args){
-  ##inputsDeclaration
-  ##outputsDeclaration
+int ${functionName}(MP_args* args){
+  ${inputsDeclaration}
+  ${outputsDeclaration}
 
-  log_info("Printing from ##functionName.\\\\n");
+  log_info("Printing from ${functionName}.\\\\n");
 
   return EXIT_NORMAL;
 }

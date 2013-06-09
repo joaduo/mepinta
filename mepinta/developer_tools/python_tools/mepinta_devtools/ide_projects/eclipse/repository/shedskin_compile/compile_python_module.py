@@ -7,7 +7,7 @@ import subprocess
 # Parameters
 #===============================================================================
 
-backend_path = '##BACKEND_PATH'
+backend_path = '${BACKEND_PATH}'
 python_module = 'pipeline_lo_facade'
 
 if __name__ == '__main__':
