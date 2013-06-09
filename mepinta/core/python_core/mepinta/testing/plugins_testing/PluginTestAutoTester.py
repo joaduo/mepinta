@@ -22,10 +22,12 @@ from mepinta.testing.plugins_testing.base import ModuleAutoTesterBase, \
   ForkInotifyUtilsBase
 from mepinta.testing.plugins_testing.ProcessorPluginTestRunner import ProcessorPluginTestRunner
 from mepinta.testing.plugins_testing.test_pipeline.InotifySimpleTestPipeline import InotifySimpleTestPipeline
+from mepinta.testing.plugins_testing.gui.SimpleTestPipelineGui import SimpleTestPipelineGui
 
 class PluginTestAutoTester(ModuleAutoTesterBase):
   def __post_init__(self):
     self.__fork_inotify_utils = ForkInotifyUtilsBase(self.context)
+    self.__plugin_testr_unner = ProcessorPluginTestRunner(self.context)
 
   def __getTestModule(self, test_module):
     if not test_module:
@@ -42,8 +44,7 @@ class PluginTestAutoTester(ModuleAutoTesterBase):
 
   def test(self, gui=True, test_module=None): #TODO: rename to deepTest
     self.__setGui(gui)
-    #Since we changed the context config, logic classes must be instanced here
-    ProcessorPluginTestRunner(self.context).blockListeningEvents(self.__getTestModule(test_module))
+    self.__plugin_testr_unner.blockListeningEvents(self.__getTestModule(test_module))
 
   def __createPipeline(self, test_module):
     test_instance = self.__fork_inotify_utils._getTestInstance(test_module)
@@ -61,7 +62,6 @@ class PluginTestAutoTester(ModuleAutoTesterBase):
     self.__setGui(gui)
     test_pline = self.__createPipeline(self.__getTestModule(test_module))
     if gui:
-      from mepinta.testing.plugins_testing.gui.SimpleTestPipelineGui import SimpleTestPipelineGui
       SimpleTestPipelineGui(self.context, test_pline=test_pline).run()
     else:
       test_instance = self.__fork_inotify_utils._getTestInstance(self.__getTestModule(test_module))
