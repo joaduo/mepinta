@@ -19,7 +19,7 @@ You should have received a copy of the GNU General Public License
 along with Mepinta. If not, see <http://www.gnu.org/licenses/>.
 '''
 
-from mepinta.pipeline.lo.pipeline_data.hidden_data_types import FunctionPropertyValue,\
+from mepinta.pipeline.lo.pipeline_data.hidden_data_types import FunctionPropertyValue, \
   FunctumPropertyValue
 
 #Functions prototypes
@@ -31,6 +31,9 @@ def func_arg_voidp(voidp):
 
 def processor_func(args_voidp):
   return 0
+
+def copyToFunc(to_voidp, from_voidp):
+  return None
 
 #Data
 def int_to_voidp(int_v):#TODO: remove
@@ -88,17 +91,22 @@ def voidp_to_processor_func(voidp):
   processor_func(None)
   return processor_func
 
+def voidp_to_copy_to_func(voidp):
+  copyToFunc(None, None)
+  return copyToFunc
+
 def shedskin_type_generation_voidp():
-  voidp=None
+  voidp = None
   voidp_to_func_arg_void(voidp)
   voidp_to_func_arg_voidp(voidp)
   voidp_to_processor_func(voidp)
-  
+  voidp_to_copy_to_func(voidp)
+
   voidp_to_int(voidp)
   voidp_to_str(voidp)
   voidp_to_double(voidp)
   voidp_to_list_int(voidp)
-  
+
   any_ptr_to_voidp(voidp)
   int_to_voidp(1)
   double_to_voidp(10.0)

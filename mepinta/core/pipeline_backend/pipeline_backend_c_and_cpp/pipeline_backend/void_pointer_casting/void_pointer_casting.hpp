@@ -52,6 +52,7 @@ extern str *const_0, *const_1;
 typedef void *(*lambda0)();
 typedef void *(*lambda1)(void *);
 typedef int (*lambda2)(void *);
+typedef void * (*lambda3)(void *, void *);
 
 extern str *__name__;
 
@@ -77,6 +78,7 @@ __mepinta__::__pipeline__::__lo__::__pipeline_data__::__hidden_data_types__::Fun
 lambda0 voidp_to_func_arg_void(void *voidp);
 lambda1 voidp_to_func_arg_voidp(void *voidp);
 lambda2 voidp_to_processor_func(void *voidp);
+lambda3 voidp_to_copy_to_func(void *voidp);
 void *shedskin_type_generation_voidp();
 
 } // module namespace

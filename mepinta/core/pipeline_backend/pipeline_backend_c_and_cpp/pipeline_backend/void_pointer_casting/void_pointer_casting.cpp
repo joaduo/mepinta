@@ -193,6 +193,10 @@ lambda2 voidp_to_processor_func(void *voidp) {
     return (lambda2)voidp;
 }
 
+lambda3 voidp_to_copy_to_func(void *voidp) {
+    return (lambda3)voidp;
+}
+
 //MANUALLY EDITED: END
 
 void *shedskin_type_generation_voidp() {
