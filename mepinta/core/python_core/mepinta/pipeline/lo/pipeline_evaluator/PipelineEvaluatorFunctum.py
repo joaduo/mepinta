@@ -22,7 +22,7 @@ along with Mepinta. If not, see <http://www.gnu.org/licenses/>.
 from mepinta.pipeline.lo.constants import FUNCTION_PROPERTY_FLAG, INPUT_PROPS, \
   OUTPUT_PROPS, FUNCTUM_PROPERTY_FLAG, has_flags, PROCESSOR_EXIT_NORMAL, \
   CUSTOM_INPUT_PROPS, CUSTOM_PROPERTY_FLAG, CUSTOM_OUTPUT_PROPS
-from pipeline_backend.logging.logging import log_debug, log_warning, log_info
+from pipeline_backend.logging.logging import log_debug, log_warning
 from pipeline_backend.void_pointer_casting.void_pointer_casting import voidp_to_FunctumPropertyValue, \
   voidp_to_FunctionPropertyValue
 from mepinta.pipeline.lo.pipeline_evaluator.ProcessorArgsManager import ProcessorArgsManager
@@ -186,40 +186,49 @@ class PipelineEvaluatorFunctum(PipelineEvaluatorBase):
     #TODO:IMPORTANT it's caching here beware! args should be ok, but func_ptr may change
     return prop_id, functum_prop
 
+  def __evalFunctumOrDependency(self, pline, prop_id, prop):
+    dencies = pline.getTopology().connections.dpdencies[prop_id]
+    if len(dencies) == 1: #Check if connected to other functum
+      dency_id = dencies[0]
+      dency_prop = pline.all_properties[dency_id]
+      if has_flags(dency_prop.type, FUNCTUM_PROPERTY_FLAG): #Its a functum connected to other functum
+        return self.__evalFunctumOrDependency(pline, dency_id, dency_prop)
+    return self.__evalFunctum(pline, prop_id, prop)
+
+  def __evaleDataProperty(self, pline, prop_id, prop):
+    dencies = pline.getTopology().connections.dpdencies[prop_id]
+    log_debug("Evaluating property with prop_id=%r" % prop_id)
+    changed = False
+    if prop_id in pline.changed_track:#Has changed?
+      changed = True
+      log_debug("Removing changed Property with prop_id=%r" % prop_id)
+      pline.changed_track.remove(prop_id)#Mark as visited for this round
+      if prop_id in pline.cached_link: #Steal input value
+        self.__solveNonCached(pline, prop_id, prop)
+    for dency_id in dencies:
+      dency_prop = pline.all_properties[dency_id]
+      if has_flags(dency_prop.type, FUNCTION_PROPERTY_FLAG):
+        if changed: #Only evaluateProp function if property was notified of a change
+          self.__evalFunction(pline, dency_id, dency_prop)
+      else: #Connected to several InOutProperties
+        if len(dencies) == 1:
+          return self.__evalProperty(pline, dency_id, dency_prop)
+        else:
+          log_warning("A common (in/out/internal) property shouldn't be connected to functions and other properties.For prop_id: %r " % prop_id)
+    if changed: #It's a leaf property, the value may be uninitialized
+      self.p_value_mngr.init_prop_value(prop)
+    return prop_id, prop
+
   def __evalProperty(self, pline, prop_id, prop):
+    #Distinguish between property's types and call the corresponding function
     if has_flags(prop.type, FUNCTION_PROPERTY_FLAG): #is a function, then evaluate it
       self.__evalFunction(pline, prop_id, prop)
+      return prop_id, prop
     else:
-      dencies = pline.getTopology().connections.dpdencies[prop_id]
       if has_flags(prop.type, FUNCTUM_PROPERTY_FLAG): #Its a functum (datum + function)
-        if len(dencies) == 1: #Check if connected to other functum
-          dency_id = dencies[0]
-          dency_prop = pline.all_properties[dency_id]
-          if has_flags(dency_prop.type, FUNCTUM_PROPERTY_FLAG): #Its a functum connected to other functum
-            return self.__evalProperty(pline, dency_id, dency_prop)
-        return self.__evalFunctum(pline, prop_id, prop)
-      else: #Its a common property
-        log_debug("Evaluating property with prop_id=%r" % prop_id)
-        changed = False
-        if prop_id in pline.changed_track:#Has changed?
-          changed = True
-          log_debug("Removing changed Property with prop_id=%r" % prop_id)
-          pline.changed_track.remove(prop_id)#Mark as visited for this round
-          if prop_id in pline.cached_link: #Steal input value
-            self.__solveNonCached(pline, prop_id, prop)
-        for dency_id in dencies:
-          dency_prop = pline.all_properties[dency_id]
-          if has_flags(dency_prop.type, FUNCTION_PROPERTY_FLAG):
-            if changed: #Only evaluateProp function if property was notified of a change
-              self.__evalFunction(pline, dency_id, dency_prop)
-          else: #Connected to several InOutProperties
-            if len(dencies) == 1:
-              return self.__evalProperty(pline, dency_id, dency_prop)
-            else:
-              log_warning("A common (in/out/internal) property shouldn't be connected to functions and other properties.For prop_id: %r " % prop_id)
-        if changed: #It's a leaf property, the value may be uninitialized
-          self.p_value_mngr.init_prop_value(prop)
-    return prop_id, prop
+        return self.__evalFunctumOrDependency(pline, prop_id, prop)
+      else: #Its a data property
+        return self.__evaleDataProperty(pline, prop_id, prop)
 
 def shedskin_PipelineEvaluatorFunctum(context_lo, pline, prop, args_mngr):
   pe = PipelineEvaluatorFunctum(context_lo)
@@ -229,4 +238,8 @@ def shedskin_PipelineEvaluatorFunctum(context_lo, pline, prop, args_mngr):
   pe.evaluateProp(pline, prop_id)
   #pe.animate(pline, prop_id)
   #pe.__evalProperty(pline, prop_id, prop)
+
+if __name__ == "__main__":
+  import ftest
+
 
