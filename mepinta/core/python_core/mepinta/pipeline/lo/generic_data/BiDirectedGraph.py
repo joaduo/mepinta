@@ -34,16 +34,16 @@ class BiDirectedGraph(object):
     if self.dpdencies.has(dent_id, dency_id):
       self.dpdencies.remove(dent_id, dency_id)
       self.dpdents.remove(dency_id, dent_id)
-  def disconnect_all(self, prop_id):
-    self.disconnect_dpdencies(prop_id)
+  def disconnectAll(self, prop_id):
+    self.disconnectDpdencies(prop_id)
     #return changed ids
-    return self.disconnect_dpdents(prop_id)
-  def disconnect_dpdencies(self, dent_id):
+    return self.disconnectDpdents(prop_id)
+  def disconnectDpdencies(self, dent_id):
     log_debug('Disconnecting property: %s'%dent_id)
     for dency_id in self.dpdencies[dent_id]: #for each dependency we delete the dency_id:dent_id relations
       self.dpdents.remove(dency_id,dent_id)
     self.dpdencies.__delitem__(dent_id) #we delete the dent_id:dency_id relations
-  def disconnect_dpdents(self, dency_id):
+  def disconnectDpdents(self, dency_id):
     dents_ids = self.dpdents[dency_id]
     log_debug('Disconnecting property: %s'%dency_id)
     for dent_id in dents_ids: #for each dependency we delete the dent_id:dency_id relations
@@ -61,9 +61,9 @@ def shedskin_BiDirectedGraph():
   dency_id=2
   bdg.connect(dent_id, dency_id)
   bdg.disconnect(dent_id, dency_id)
-  bdg.disconnect_dpdencies(dent_id)
-  bdg.disconnect_dpdencies(dent_id)
-  bdg.disconnect_all(prop_id=1)
+  bdg.disconnectDpdencies(dent_id)
+  bdg.disconnectDpdencies(dent_id)
+  bdg.disconnectAll(prop_id=1)
   bdg.__str__()
   bdg.__len__()
 

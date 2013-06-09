@@ -239,7 +239,5 @@ def shedskin_PipelineEvaluatorFunctum(context_lo, pline, prop, args_mngr):
   #pe.animate(pline, prop_id)
   #pe.__evalProperty(pline, prop_id, prop)
 
-if __name__ == "__main__":
-  import ftest
 
 

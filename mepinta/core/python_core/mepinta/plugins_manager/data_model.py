@@ -23,40 +23,6 @@ from mepinta.abstract.MepintaError import MepintaError
 from mepinta.pipeline.lo.pipeline_data.data_model import Pipeline
 from common.abstract.decorators.context_singleton import context_singleton
 
-@context_singleton
-class LibraryGraph(FrameworkObject):
-  def __init__(self, backend_name):
-    self.backend_name = backend_name
-    self.graph = Pipeline(name=self.__class__.__name__)
-    self.all_libraries = dict() #id:library
-    self.__library_id_count = 0
-
-  def __getNewLibraryId(self):
-    self.__library_id_count += 1
-    return self.__library_id_count
-
-  def addLibray(self, library):
-    library_id = self.__getNewLibraryId()
-    self.all_libraries[library_id] = library
-
-class Library(FrameworkObject):
-  def __init__(self, name, path):
-    self.name = name
-    self.path = path
-    self.dpdencies = []
-
-  def setId(self, library_id):
-    def cannotSetId(library_id):
-      raise MepintaError('You cannot change a library id once is has been set')
-    self.__library_id = library_id
-    self.setId = cannotSetId
-  @property
-  def library_id(self):
-    return self.__library_id
-
-class PluginLibrary(Library):
-  pass
-
 class PluginMetadata(FrameworkObject):
   def __init__(self):
     #TODO: passing all data in initialization

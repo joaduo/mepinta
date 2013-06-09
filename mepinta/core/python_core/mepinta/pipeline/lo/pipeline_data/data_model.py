@@ -117,7 +117,7 @@ class Topology(object):
       self.copyFrom(copied)
   def __initValues(self):
     self.properties = set() #id
-    self.connections = TopologyConnections()#ConditionalBDGraph() #Id:Id tables Topologies Tables
+    self.connections = TopologyConnections() # Id:Id tables
     self.cached = set() #id
   def copyFrom(self, copied_topo):
     #Deepcopies
@@ -127,27 +127,27 @@ class Topology(object):
   def connect(self, dent_id, dency_id):
     self.connections.connect(dent_id, dency_id)
     self.changed_primary.add(dent_id)
-  def connect_dency(self, dent_id, dency_id):
-    self.connections.connect_dency(dent_id, dency_id)
+  def connectDency(self, dent_id, dency_id):
+    self.connections.connectDency(dent_id, dency_id)
     #there is no change, since there is no propagation of changes
-  def connect_dent(self, dent_id, dency_id):
-    self.connections.connect_dent(dent_id, dency_id)
+  def connectDent(self, dent_id, dency_id):
+    self.connections.connectDent(dent_id, dency_id)
     self.changed_primary.add(dent_id)
   def disconnect(self, dent_id, dency_id):
     self.connections.disconnect(dent_id, dency_id)
     self.changed_primary.add(dent_id)
-  def disconnect_all(self, prop_id):
-    self.changed_primary.update(set(self.connections.disconnect_all(prop_id)))
-  def disconnect_dpdencies(self, dent_id):
-    self.connections.disconnect_dpdencies(dent_id)
+  def disconnectAll(self, prop_id):
+    self.changed_primary.update(set(self.connections.disconnectAll(prop_id)))
+  def disconnectDpdencies(self, dent_id):
+    self.connections.disconnectDpdencies(dent_id)
     self.changed_primary.add(dent_id)
-  def addProperty(self, prop_id):
+  def addElementId(self, prop_id):
     self.properties.add(prop_id)
     self.changed_primary.add(prop_id)
-  def remove_property(self, prop_id):
+  def removeElementId(self, prop_id):
     if prop_id in self.properties: #Needs to check here because Pipeline won't check
       self.properties.remove(prop_id)
-      self.connections.disconnect_all(prop_id)
+      self.connections.disconnectAll(prop_id)
       self.__removeFromSet(prop_id, self.cached)
       self.__removeFromSet(prop_id, self.changed_primary)
   def __removeFromSet(self, prop_id, set_):
@@ -222,7 +222,7 @@ class Pipeline(object):
   def deleteProperty(self, prop_id):
     prop = self.all_properties.pop(prop_id)
     for topo in self.topologies.values():
-      topo.remove_property(prop_id)
+      topo.removeElementId(prop_id)
     self.cached_link.__delitem__(prop_id)
     if prop_id in self.marked_outputs:
       self.marked_outputs.remove(prop_id)
@@ -264,13 +264,13 @@ def shedskin_pipeline_data_model():
   topo = Topology()
   topo = Topology(copied=topo)
   topo.copyFrom(copied_topo=topo)
-  topo.addProperty(prop_id=1)
-  topo.addProperty(prop_id=2)
+  topo.addElementId(prop_id=1)
+  topo.addElementId(prop_id=2)
   topo.connect(dent_id=1, dency_id=2)
   topo.disconnect(dent_id=1, dency_id=2)
-  topo.disconnect_all(prop_id=1)
-  topo.disconnect_dpdencies(dent_id=1)
-  topo.remove_property(prop_id=1)
+  topo.disconnectAll(prop_id=1)
+  topo.disconnectDpdencies(dent_id=1)
+  topo.removeElementId(prop_id=1)
   topo.__str__()
 
   pline.startTopologyChangeSet()

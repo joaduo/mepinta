@@ -26,10 +26,10 @@ class ConditionalBDGraph:
   def __init__(self):
     self.dpdencies = DirectedGraph()
     self.dpdents = DirectedGraph()
-  def connect_dency(self,dent_id, dency_id):
+  def connectDency(self,dent_id, dency_id):
     if not self.dpdencies.has(dent_id, dency_id):
       self.dpdencies.add(dent_id, dency_id)
-  def connect_dent(self,dent_id, dency_id):
+  def connectDent(self,dent_id, dency_id):
     if not self.dpdents.has(dency_id, dent_id):
       self.dpdents.add(dency_id, dent_id)
   def connect(self, dent_id, dency_id):
@@ -42,17 +42,17 @@ class ConditionalBDGraph:
       self.dpdencies.remove(dent_id, dency_id)
     if self.dpdents.has(dency_id, dent_id):
       self.dpdents.remove(dency_id, dent_id)
-  def disconnect_all(self, prop_id):
-    self.disconnect_dpdencies(prop_id)
+  def disconnectAll(self, prop_id):
+    self.disconnectDpdencies(prop_id)
     #return changed ids
-    return self.disconnect_dpdents(prop_id)
-  def disconnect_dpdencies(self, dent_id):
+    return self.disconnectDpdents(prop_id)
+  def disconnectDpdencies(self, dent_id):
     log_debug('Disconnecting property: %s'%dent_id)
     for dency_id in self.dpdencies[dent_id]: #for each dependency we delete the dency_id:dent_id relations
       if self.dpdents.has(dency_id, dent_id):
         self.dpdents.remove(dency_id,dent_id)
     self.dpdencies.__delitem__(dent_id) #we delete the dent_id:dency_id relations
-  def disconnect_dpdents(self, dency_id):
+  def disconnectDpdents(self, dency_id):
     dents_ids = self.dpdents[dency_id]
     log_debug('Disconnecting property: %s'%dency_id)
     for dent_id in dents_ids: #for each dependency we delete the dent_id:dency_id relations
@@ -70,13 +70,13 @@ def shedskin_ConditionalBDGraph():
   cbdg = ConditionalBDGraph()
   dent_id=1
   dency_id=2
-  cbdg.connect_dency(dent_id, dency_id)
-  cbdg.connect_dent(dent_id, dency_id)
+  cbdg.connectDency(dent_id, dency_id)
+  cbdg.connectDent(dent_id, dency_id)
   cbdg.connect(dent_id, dency_id)
   cbdg.disconnect(dent_id, dency_id)
-  cbdg.disconnect_dpdencies(dent_id)
-  cbdg.disconnect_dpdencies(dent_id)
-  cbdg.disconnect_all(prop_id=1)
+  cbdg.disconnectDpdencies(dent_id)
+  cbdg.disconnectDpdencies(dent_id)
+  cbdg.disconnectAll(prop_id=1)
   cbdg.__str__()
   cbdg.__len__()
 

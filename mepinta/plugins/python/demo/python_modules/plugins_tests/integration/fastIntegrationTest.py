@@ -25,8 +25,8 @@ def fastIntegrationTestPython(context=None):
     context = getDefaultContext()
   from mepinta.testing.plugins_testing.PluginTestAutoTester import PluginTestAutoTester
   import plugins_tests.python.processors.actiontree.UndoableGraph.generator.EmptyGraph.EmptyGraph__0001 as test_module
-  #PluginTestAutoTester(context).shallowTest(gui=False, test_module=test_module)
-  PluginTestAutoTester(context).shallowTest(gui=True, test_module=test_module)
+  PluginTestAutoTester(context).shallowTest(gui=False, test_module=test_module)
+  #PluginTestAutoTester(context).shallowTest(gui=True, test_module=test_module)
 
 def test_module():
   fastIntegrationTestPython()

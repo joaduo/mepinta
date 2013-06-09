@@ -26,10 +26,10 @@ class TopologyManager(object):
     pass
   def add_properties(self, topo, prop_ids):
     for prop_id in prop_ids:
-      topo.addProperty(prop_id)
+      topo.addElementId(prop_id)
   def remove_properties(self, topo, prop_ids):
     for prop_id in prop_ids:
-      topo.remove_property(prop_id)
+      topo.removeElementId(prop_id)
   def connect_properties(self, topo, prop_dent_ids, prop_dency_ids):
     log_debug('Connecting properties dpdents=%s dpdencies=%s'%(prop_dent_ids,prop_dency_ids))
     for index,dent_id in enumerate(prop_dent_ids):
@@ -40,15 +40,15 @@ class TopologyManager(object):
   def connect_props_dencies(self, topo, prop_dent_ids, prop_dency_ids):
     for index,dent_id in enumerate(prop_dent_ids):
       dency_id = prop_dency_ids[index]
-      topo.connect_dency(dent_id, dency_id)
+      topo.connectDency(dent_id, dency_id)
   def connect_props_dents(self, topo, prop_dent_ids, prop_dency_ids):
     for index,dent_id in enumerate(prop_dent_ids):
       dency_id = prop_dency_ids[index]
-      topo.connect_dent(dent_id, dency_id)
+      topo.connectDent(dent_id, dency_id)
   def disconnect_properties(self, topo, prop_dent_ids, prop_dency_ids=[]):
     if len(prop_dency_ids) == 0: #disconnect from all its dpdencies
       for dent_id in prop_dent_ids:
-        topo.disconnect_dpdencies(dent_id)
+        topo.disconnectDpdencies(dent_id)
     else: #disconnect specific sources
       for index,dent_id in enumerate(prop_dent_ids):
         dency_id = prop_dency_ids[index]
