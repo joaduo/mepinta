@@ -48,6 +48,7 @@ class DataTypeAliasManager(FrameworkBase):
                   'actiontree.Processor':'python.builtin.str',
                   'actiontree.NodesSelection':'python.builtin.list',
                   'functum':'mepinta.functum',
+                  #'internal_any':'mepinta.internal_any', #TODO review
                   }
     return alias_dict
 

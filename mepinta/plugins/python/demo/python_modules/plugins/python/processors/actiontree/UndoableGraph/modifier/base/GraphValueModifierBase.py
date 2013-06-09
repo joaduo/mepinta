@@ -25,13 +25,15 @@ class GraphValueModifierBase(PluginManifestBase):
   def _superClassDefine(self, inputs, internals, functions, outputs):
     #inputs
     inputs.graph = 'actiontree.UndoableGraph'
+    inputs.context_name = 'str'
     #outputs
     outputs.graph = 'actiontree.UndoableGraph'
     #functions
     functions.changeGraphValues = FunctionProperty()
     #Set dependencies
     #Set modifier related topology ids
-    functions.changeGraphValues.dpdencies += inputs.graph
+    functions.changeGraphValues.dpdencies += (inputs.graph,
+                                              inputs.context_name,)
     outputs.graph.dpdencies += functions.changeGraphValues
 
     self.nonCached(outputs.graph)

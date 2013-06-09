@@ -54,7 +54,19 @@ def demuxSignal(args):
   changeGraphValues.function_ptr(changeGraphValues.args)
 
 def changeGraphValues(args):
-  pass
+  from mepinta.pipelineview.actiontree.undoable_graph.UndoableGraphManager import UndoableGraphManager
+  from mepinta.context.MepintaContext import MepintaContext
+  from mepinta_python_sdk.props import get_prop_value
+  context_name = get_prop_value(args, 'inputs', 'context_name')
+  node_name = get_prop_value(args, 'inputs', 'node_name')
+  graph = get_prop_value(args, 'outputs', 'graph')
+  context = MepintaContext(context_name)
+
+  if len(graph.created_nodes) == 1:
+    node = graph.created_nodes[0]
+    node.name = node_name
+  else:
+    context.log.e('There shouldn\'t be more than one node created by this plugin. Nodes: %r.' % graph.created_nodes)
 
 def changeGraphTopology(args):
   from mepinta.pipelineview.actiontree.undoable_graph.UndoableGraphManager import UndoableGraphManager
@@ -74,4 +86,5 @@ def test_module():
   #PluginManifestAutoTester(getDefaultContext()).test(manifest, gui=False)
 
 if __name__ == "__main__":
-  test_module()
+  #test_module()
+  import ftest

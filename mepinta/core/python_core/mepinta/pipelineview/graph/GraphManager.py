@@ -100,7 +100,7 @@ class GraphManager(FrameworkBase):
                                   , getattr(dent_node.inputs, name)
                                   , getattr(dency_node.outputs, name))
 
-#  def syncNode(self, graph, node): #TODO: what is this used for?
+#  def syncNode(self, graph, node): #TODO: what is this used for? for node reloading?
 #    #update the new data types to be loaded
 #    self.plugins_mngr.processor_plugins_manager.load_processors_data_types(node)
 #    #Set the new data types property_id to the node

@@ -62,7 +62,7 @@ class Graph(FrameworkObject):
     self.pline = pline
     self.__node_count = 0
     self.topology_changed = False
-    self.all_nodes = dict()#NodesDictionary(self.context)
+    self.all_nodes = dict()#id:Node
 
   def addNode(self, node):
     node_id = self.__newNodeId()

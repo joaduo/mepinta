@@ -65,14 +65,20 @@ class UndoableGraphManager(FrameworkBase):
     '''
     pass
 
+  def getValue(self, u_graph, prop):
+    return self.value_manager.getValue(u_graph.pline, prop)
+
   def setValue(self, u_graph, prop, value):
     old_value = self.value_manager.getValue(u_graph.pline, prop)
     u_graph.old_properties[unwrap_lo(prop)] = old_value
     self.value_manager.setValue(u_graph.pline, prop, value)
 
-  def undoPropertiesChanges(self, u_graph):
+  def undoValuesChanges(self, u_graph):
     for prop_id, old_value in u_graph.old_properties:
       self.value_manager.setValue(u_graph.pline, prop_id, old_value)
+
+  def getNodeById(self, u_graph, node_id):
+    return u_graph.all_nodes[node_id]
 
 def test_module():
   from getDefaultContext import getDefaultContext

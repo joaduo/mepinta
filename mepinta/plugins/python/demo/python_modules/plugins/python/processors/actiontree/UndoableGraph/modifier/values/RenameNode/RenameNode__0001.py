@@ -18,15 +18,27 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with Mepinta. If not, see <http://www.gnu.org/licenses/>.
 '''
-from mepinta_python_sdk.props import get_prop_value
-from plugins.python.processors.actiontree.Graph.modifier.base.GraphValueModifierBase import GraphValueModifierBase
+
+from plugins.python.processors.actiontree.UndoableGraph.modifier.base.GraphValueModifierBase import GraphValueModifierBase
 
 class manifest(GraphValueModifierBase):
   def define(self, inputs, internals, functions, outputs, changeGraphValues):
     inputs.node_id = 'int'
-    inputs.new_name = 'str'
+    inputs.node_name = 'str'
 
-    changeGraphValues.dpdencies += inputs.node_id, inputs.new_name
+    changeGraphValues.dpdencies += (inputs.node_id, inputs.new_name)
+
+def changeGraphValues(args):
+  from mepinta.pipelineview.actiontree.undoable_graph.UndoableGraphManager import UndoableGraphManager
+  from mepinta.context.MepintaContext import MepintaContext
+  from mepinta_python_sdk.props import get_prop_value
+  context_name = get_prop_value(args, 'inputs', 'context_name')
+  node_id = get_prop_value(args, 'inputs', 'node_id')
+  node_name = get_prop_value(args, 'inputs', 'node_name')
+  graph = get_prop_value(args, 'outputs', 'graph')
+  graph_manager = UndoableGraphManager(MepintaContext(context_name))
+  node = graph_manager.getNodeById(graph, node_id)
+  node.name = node_name
 
 if __name__ == "__main__":
   from getDefaultContext import getDefaultContext

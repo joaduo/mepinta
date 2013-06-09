@@ -25,7 +25,7 @@ class UndoableGraph(FrameworkObject):
   def __init__(self):
     self.__graph = None
     self.topology_changed = False
-    self.created_nodes = set() #(node)
+    self.__created_nodes = list() #(node)
     self.old_properties = dict() #prop_id:value
     self.topology_id = NULL_UID #graph.growTopologies()
 
@@ -43,27 +43,29 @@ class UndoableGraph(FrameworkObject):
     pline.setCurrentTopologyId(self.topology_id)
 
   def addNode(self, node):
-    self.created_nodes.add(node)
+    self.__created_nodes.append(node)
     self.__graph.addNode(node)
 
   def deleteNode(self, node):
-    if node in self.created_nodes and \
+    if node in self.__created_nodes and \
        node in self.__graph.all_nodes:
-      self.created_nodes.remove(node)
+      self.__created_nodes.remove(node)
       self.__graph.all_nodes.removeNode(node)
     raise KeyError('Node %r seems not to be consistent in the __graph' % node)
 
   @property
   def all_nodes(self):
     return self.__graph.all_nodes
-
   @property
   def pline(self):
     return self.__graph.pline
-
   @property
   def graph(self):
     return self.__graph
+  @property
+  def created_nodes(self):
+    return self.__created_nodes
+
 
   def setGraph(self, graph):
     if self.__graph == None:
