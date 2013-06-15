@@ -32,7 +32,7 @@ class MepintaSimpleDemos(FrameworkBase):
   Each public method represents a available demo.
   '''
   def visualizeGraphXdot(self):
-    ''' Mepinta GUI demo. Shows Pipeline in as a dot graph. '''
+    ''' Mepinta GUI demo. Shows Pipeline in as a dot graph. (you need the xdot command in the path "apt-get install xdot" in ubuntu/debian)'''
     test_pline = self.__getTestPipeline()
     graphviz_translator = PipelineGraphvizTranslator(self.context)
     graphviz_str = graphviz_translator.translate(test_pline.getPipeline())
@@ -42,12 +42,12 @@ class MepintaSimpleDemos(FrameworkBase):
     os.remove(path)
 
   def evaluatePipelineAndPrint(self):
-    ''' Mepinta Pipeline demo. Output only to console.'''
+    ''' Simplest Mepinta Pipeline demo. Outputs to console.'''
     test_pline = self.__getTestPipeline()
     test_pline.evaluateProp()
 
   def nodeboxInteractivePipeline(self):
-    ''' Mepinta interactive GUI demo. Shows Pipeline and lets the user change properties values.'''
+    ''' Mepinta interactive GUI demo. Shows Pipeline and lets the user change properties values. (you need nodebox-gl installed in your python path to run this http://www.cityinabottle.org/nodebox/).'''
     from mepinta.testing.plugins_testing.gui.SimpleTestPipelineGui import SimpleTestPipelineGui
     self.context.nodebox_gui = True
     gui = SimpleTestPipelineGui(self.context, test_pline=self.__getTestPipeline())

@@ -24,17 +24,14 @@ from common.abstract.FrameworkObject import FrameworkObject
 
 class TestDiscoveryManager(FrameworkObject): #Cannot be FrameworkBase because contexts are init in tests
   def __getPluginsTestDir(self):
-    #import plugins_tests.python.processors.demov1.Geometry2D.modifier.DeformationExpression as package
     import plugins_tests.python as package
     return package.__path__[0]
   def runAllTests(self):
-#    test_suite = TestLoader().discover('plugins_tests')
     test_suite = TestLoader().discover(start_dir=self.__getPluginsTestDir(), pattern='*.py', top_level_dir=self.__getPluginsTestDir())
     TextTestRunner().run(test_suite)
 
 
 def test_module():
-  from getDefaultContext import getDefaultContext
   TestDiscoveryManager().runAllTests()
 
 if __name__ == "__main__":
