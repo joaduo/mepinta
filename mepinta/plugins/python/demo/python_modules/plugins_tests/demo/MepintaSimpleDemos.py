@@ -48,10 +48,19 @@ class MepintaSimpleDemos(FrameworkBase):
 
   def nodeboxInteractivePipeline(self):
     ''' Mepinta interactive GUI demo. Shows Pipeline and lets the user change properties values. (you need nodebox-gl installed in your python path to run this http://www.cityinabottle.org/nodebox/).'''
+    try:
+      import nodebox
+    except:
+      self.log.error('You have not nodebox gl installed. Check the mepinta INSTALL file for further instructions.')
+      return
     from mepinta.testing.plugins_testing.gui.SimpleTestPipelineGui import SimpleTestPipelineGui
     self.context.nodebox_gui = True
     gui = SimpleTestPipelineGui(self.context, test_pline=self.__getTestPipeline())
-    gui.run()
+    try:
+      gui.run()
+    except Exception as e:
+      self.log.error('Exception %r ocurred.' % e)
+      self.log.error('This may mean that you have the wrong nodebox gl library installed. Check the mepinta INSTALL file for further instructions.')
 
   def __getTestPipeline(self):
     test_pline = InotifySimpleTestPipeline(self.context)

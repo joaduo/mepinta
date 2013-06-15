@@ -6,7 +6,7 @@ if [ -a "deploy.py" ] ; then
   exit 0
 fi
 
-$DEPLOY_DIR="../../mepinta_deployment"
+DEPLOY_DIR="../../mepinta_deployment"
 
 #download nodebox gl (optional
 wget http://mepinta.googlecode.com/files/nodebox-gl-1.6-mepinta.tar.gz
@@ -21,5 +21,5 @@ deploy.py $DEPLOY_DIR
 cd $DEPLOY_DIR
 
 #Lists the demos
-export PYTHONPATH="$PYTHONPATH:../nodebox-gl-1.6-mepinta.tar"
+export PYTHONPATH="$PYTHONPATH:../nodebox-gl-1.6-mepinta"
 ./mepinta_demo.py     
