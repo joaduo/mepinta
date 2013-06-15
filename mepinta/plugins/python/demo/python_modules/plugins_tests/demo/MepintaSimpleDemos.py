@@ -51,7 +51,7 @@ class MepintaSimpleDemos(FrameworkBase):
     try:
       import nodebox
     except:
-      self.log.error('You have not nodebox gl installed. Check the mepinta INSTALL file for further instructions.')
+      self.log.error('\n You have not nodebox gl installed or is not in the PYTHONPATH. Check the mepinta INSTALL file for further instructions. \n')
       return
     from mepinta.testing.plugins_testing.gui.SimpleTestPipelineGui import SimpleTestPipelineGui
     self.context.nodebox_gui = True
@@ -60,7 +60,7 @@ class MepintaSimpleDemos(FrameworkBase):
       gui.run()
     except Exception as e:
       self.log.error('Exception %r ocurred.' % e)
-      self.log.error('This may mean that you have the wrong nodebox gl library installed. Check the mepinta INSTALL file for further instructions.')
+      self.log.error('\n This may mean that you have the wrong nodebox gl library installed. Check the mepinta INSTALL file for further instructions. \n')
 
   def __getTestPipeline(self):
     test_pline = InotifySimpleTestPipeline(self.context)
