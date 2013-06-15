@@ -260,7 +260,7 @@ def shedskin_pipeline_data_model():
 
   pline = Pipeline(name='actiontree')
   pline.addProperty(prop)
-  topo_id = 0
+  topo_id = 1
   pline.setCurrentTopologyId(topo_id)
 
   topo = Topology()

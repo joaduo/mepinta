@@ -18,11 +18,7 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with Mepinta. If not, see <http://www.gnu.org/licenses/>.
 '''
-'''
-Created on Feb 28, 2012
 
-@author: jduo
-'''
 from common.abstract.FrameworkBase import FrameworkBase
 
 class LibraryManager(FrameworkBase):

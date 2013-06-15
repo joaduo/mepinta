@@ -23,6 +23,26 @@ from mepinta.abstract.MepintaError import MepintaError
 from common.abstract.decorators.context_singleton import context_singleton
 from mepinta.pipeline.lo.pipeline_data.data_model import Topology
 
+class LibraryManager(object):
+  def loadLibray(self, library, force_reload=False):
+    #librería dice en qué datos depende
+    #en que otras librerías
+    #en qué processors
+    #inputs.function = Function(loadFrom=ManifestBase)
+    #inputs.function = Function().loadFrom('demov1.Geometry2D.modifier.GroovyMove').requiresLibrary('demov1.commonlib')
+    #self.requiresLibrary('demov1.commonlib')
+    pass
+  def unloadLibrary(self, library_id):
+    pass
+
+class LibraryManifestBase(object):
+  pass
+
+class manifest(LibraryManifestBase):
+  def define(self):
+    self.requiresLibrary('demov1.SomeOtherLib')
+    self.requiresOsLibrary('libc6')
+
 @context_singleton
 class LibraryGraph(FrameworkObject):
   def __init__(self, backend_name):
@@ -38,6 +58,7 @@ class LibraryGraph(FrameworkObject):
   def addLibray(self, library):
     library_id = self.__getNewLibraryId()
     self.all_libraries[library_id] = library
+    self.topology.addElementId(library_id)
 
 class LibraryMetadata(FrameworkObject):
   def __init__(self, name, path):

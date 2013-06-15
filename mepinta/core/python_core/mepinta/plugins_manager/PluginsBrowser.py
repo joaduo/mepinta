@@ -19,25 +19,11 @@ You should have received a copy of the GNU General Public License
 along with Mepinta. If not, see <http://www.gnu.org/licenses/>.
 '''
 from common.abstract.FrameworkBase import FrameworkBase
-from mepinta.context.MepintaContext import MepintaContext
-import os
 
+#TODO: WIP
 class PluginsBrowser(FrameworkBase):
-#  def __post_init__(self):
-#    pass
-  def plugins_path(self):
-    plugins_path = (__file__.split(os.sep))[:-2]+['plugins']
-    return plugins_path
-  def import_packmod(self, packmod_path):
-    packmod_path = 'plugins.%s'%packmod_path
-    try:  
-      module = __import__( packmod_path, fromlist="dummy")
-      return module
-    except Exception as e:
-      self.log.last_exception() #TODO: add a config for this printing
-      self.log.debug('Couldnt import %r. Exception: %r'%(packmod_path,e))
-      return None
-        
-if __name__ == "__main__":
-  context = MepintaContext('python')
-  pb = PluginsBrowser(context=context)
+  '''
+  This class should give provide interfaces to navigate installed plugins.
+  This is used by the UI to offer available plugins
+  '''
+  pass

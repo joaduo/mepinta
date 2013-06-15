@@ -82,9 +82,10 @@ def changeGraphTopology(args):
 def test_module():
   from getDefaultContext import getDefaultContext
   from mepinta.testing.plugins_testing.PluginManifestAutoTester import PluginManifestAutoTester
-  PluginManifestAutoTester(getDefaultContext()).test(manifest)#, gui=True)
+  #PluginManifestAutoTester(getDefaultContext()).test(manifest)#, gui=True)
+  PluginManifestAutoTester(getDefaultContext()).visualizeXdot(manifest)#, gui=True)
   #PluginManifestAutoTester(getDefaultContext()).test(manifest, gui=False)
 
 if __name__ == "__main__":
-  #test_module()
-  import ftest
+  test_module()
+  #import ftest

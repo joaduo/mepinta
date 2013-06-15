@@ -19,14 +19,25 @@ You should have received a copy of the GNU General Public License
 along with Mepinta. If not, see <http://www.gnu.org/licenses/>.
 '''
 
-def fastIntegrationTestPython(context=None):
+def getTestModules():
+  test_modules = []
+  import plugins_tests.python.processors.actiontree.UndoableGraph.generator.EmptyGraph.EmptyGraph__0001 as test_module
+  test_modules.append(test_module)
+  import plugins_tests.python.processors.demov1.Geometry2D.modifier.DeformationExpression.DeformationExpression__0001 as test_module
+  test_modules.append(test_module)
+  return test_modules
+
+def fastIntegrationTestPython(context=None, gui=False):
   from getDefaultContext import getDefaultContext
   if not context:
     context = getDefaultContext()
   from mepinta.testing.plugins_testing.PluginTestAutoTester import PluginTestAutoTester
-  import plugins_tests.python.processors.actiontree.UndoableGraph.generator.EmptyGraph.EmptyGraph__0001 as test_module
-  PluginTestAutoTester(context).shallowTest(gui=False, test_module=test_module)
-  #PluginTestAutoTester(context).shallowTest(gui=True, test_module=test_module)
+  test_modules = getTestModules()
+  if gui:
+    PluginTestAutoTester(context).shallowTest(gui=gui, test_module=test_modules[0])
+  else:
+    for test_module in test_modules:
+      PluginTestAutoTester(context).shallowTest(gui=gui, test_module=test_module)
 
 def test_module():
   fastIntegrationTestPython()
