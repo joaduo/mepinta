@@ -2,12 +2,31 @@ Installing
 ==========
 Works on linux only by now.
 
-Running the demos.
+Easy install
+  Download http://mepinta.googlecode.com/git/mepinta/easy_install.sh and run it
+    wget http://mepinta.googlecode.com/git/mepinta/easy_install.sh
+    . ./easy_install.sh #so that in configures your PYTHONPATH
+    #You will be in the deployment dir
+    ./mepinta_demo.py     #lists the demos
+    ./mepinta_demo.py 0   #run the first one
+    ./mepinta_tests.py    #run all the tests (not too many right now :-)
+
+A bit more complex install (similar to what the script does)
+  #download nodebox gl (optional)
+  wget http://mepinta.googlecode.com/files/nodebox-gl-1.6-mepinta.tar.gz
+  tar -xzf nodebox-gl-1.6-mepinta.tar.gz
+  
+  #download mepinta
   git clone https://code.google.com/p/mepinta/
   cd mepinta/mepinta
+  
   #deploy it
   deploy.py ../../mepinta_deployment
   cd ../../mepinta_deployment
+  
+  #Add the nodebox gl (if downloaded)
+  export PYTHONPATH="$PYTHONPATH:../nodebox-gl-1.6-mepinta"
+  
   #Test it
   ./mepinta_demo.py     #lists the demos
   ./mepinta_demo.py 0   #run the first one
@@ -18,9 +37,5 @@ For running some of the Python demos you need installed:
     Download it, extract it, and add the extracted folder to the PYTHONPATH 
   -xdot command ("apt-get install xdot" in ubuntu or debian)
 
-About
-=====
-
-Mepinta is a Python, C and C++ project.
 
 
