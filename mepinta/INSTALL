@@ -20,7 +20,6 @@ A bit more complex install (similar to what the script does)
   
   #download mepinta
   git clone https://code.google.com/p/mepinta/
-  cd mepinta/mepinta
   
   #deploy it
   python ./mepinta/mepinta/deploy.py ./mepinta_deployment
