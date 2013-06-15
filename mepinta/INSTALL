@@ -6,7 +6,7 @@ Easy Mepinta install
   Download http://mepinta.googlecode.com/git/mepinta/easy_install.sh and run it
     #Create a directory where you want mepinta in, and run inside it
     wget http://mepinta.googlecode.com/git/mepinta/easy_mepinta_install.sh
-    ./easy_mepinta_install.sh
+    bash ./easy_mepinta_install.sh
     
     #When it finish You will be in the deployment dir, you can run
     ./mepinta_demo.py     #lists the demos
