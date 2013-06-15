@@ -15,7 +15,7 @@ Running the demos.
 
 For running some of the Python demos you need installed:
   -Nodebox Opengl library (right now a modified version is needed. http://mepinta.googlecode.com/files/nodebox-gl-1.6-mepinta.tar.gz)
-    Download it, extract it, and add the extracted folder to the PYTHON_PATH 
+    Download it, extract it, and add the extracted folder to the PYTHONPATH 
   -xdot command ("apt-get install xdot" in ubuntu or debian)
 
 About
