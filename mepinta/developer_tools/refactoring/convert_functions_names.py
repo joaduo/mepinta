@@ -9,7 +9,7 @@ def getNewName(name):
   count = 0
   for part in split_name:
     if part != '':
-      continue
+      break
     count += 1
   name_start = '_' * count
   name_end = split_name[count]

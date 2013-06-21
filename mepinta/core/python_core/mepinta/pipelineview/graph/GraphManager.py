@@ -23,23 +23,19 @@ from common.abstract.FrameworkBase import FrameworkBase
 from mepinta.pipelineview.graph.NodeManager import NodeManager
 from mepinta.pipelineview.graph.GraphTopologyManager import GraphTopologyManager
 from mepinta.plugins_manager.PluginsManager import PluginsManager
-from types import MethodType
 
-class topology_changed(object):
-  def __init__(self, method):
-    self.method = method
-  def __call__(self, *args, **kwargs):
+def topology_changed(method):
+  def newMethod(*args, **kwargs):
     if len(args) > 2 and hasattr(args[1], 'topology_changed'):
       graph = args[1]
     elif 'graph' in kwargs:
       graph = kwargs['graph']
     else:
-      raise TypeError('You should provide an graph to the method %r. args:(%r,%r)' % (self.method, args, kwargs))
-    return_value = self.method(*args, **kwargs)
+      raise TypeError('You should provide an graph to the method %r. args:(%r,%r)' % (method, args, kwargs))
+    return_value = method(*args, **kwargs)
     graph.topology_changed = True
     return return_value
-  def __get__(self, obj, objtype=None):
-    return MethodType(self, obj, objtype)
+  return newMethod
 
 #TODO
 #deleteCustomProperty

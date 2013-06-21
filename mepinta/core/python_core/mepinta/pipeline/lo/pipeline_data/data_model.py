@@ -109,6 +109,9 @@ class Property(object):
     return self.name
 
 class Topology(object):
+  #TODO: invariant: nodes should exist in the pipeline
+  #TODO: invariant connection rules?
+  #TODO: invariant, check how shedskin deals with them
   def __init__(self, copied=None):
     self.changed_primary = set() #id
     if copied == None: #In order to avoid copied whe copying

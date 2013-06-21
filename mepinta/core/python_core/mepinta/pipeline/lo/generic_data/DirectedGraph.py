@@ -37,6 +37,7 @@ class DirectedGraphShedSkinIterator(object):
       return (NULL_UID, 0)
 
 class DirectedGraph(object):
+  #TODO: rename to Adjacency List?
   def __init__(self):
     self.keys = []
     self.values = []
