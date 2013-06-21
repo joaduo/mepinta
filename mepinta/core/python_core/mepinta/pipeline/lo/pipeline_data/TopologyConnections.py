@@ -31,7 +31,7 @@ class TopologyConnections:
   connection, for navigation through the graph.
   '''
   def __init__(self):
-    #TODO: invariants: navigation, dpdencies, dpdents should be read-only from outside
+    #TODO: invariants: dpdencies, dpdents should be read-only from outside
     #For navigation purposes (in some cases you may lack the information to navigate in both ways
     self.navigation = BiDirectedGraph()
     #dent_id : dency_id Graph
@@ -81,7 +81,7 @@ class TopologyConnections:
   def __str__(self):
     return '%s: Dents %s | Dencies %s' % (self.__class__.__name__, self.dpdencies, self.dpdents)
   def __len__(self):
-    return len(self.dpdencies)
+    return len(self.navigation)
 
 
 def shedskin_TopologyConnections():

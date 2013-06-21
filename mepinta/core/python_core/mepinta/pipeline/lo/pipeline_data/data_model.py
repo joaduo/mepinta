@@ -27,6 +27,7 @@ from mepinta.pipeline.lo.constants import FUNCTION_PROPERTY_FLAG, \
   MEPINTA_C_NAMESPACE_PREFIX, NULL_UID
 from mepinta.pipeline.lo.generic_data.DirectedGraph import DirectedGraph
 from mepinta.pipeline.lo.pipeline_data.TopologyConnections import TopologyConnections
+from mepinta.pipeline.lo.exceptions.MepintaLoError import MepintaLoError
 
 class DataType(object):
   def __init__(self, name, lib_handle):
@@ -43,8 +44,8 @@ class DataType(object):
       self.symbols[name] = self.solve_symbol(name)
   def solve_symbol(self, name):
     return solve_symbol(self.lib_handle, '%s%s_' % (MEPINTA_C_NAMESPACE_PREFIX, self.name), name)
-  def __repr__(self):
-    return repr(self.__str__())
+#  def __repr__(self): #TODO: remove
+#    return repr(self.__str__())
   def __str__(self):
     return self.name
 
@@ -58,7 +59,7 @@ class ProcessorFunction(object):
     self.func_pointer = func_pointer
 
 class PropertyValuePointer(object):
-  #Remove count
+  #TODO:Remove count?
   def __init__(self, value=None):
     self.count = 0
     self.value = value
@@ -69,7 +70,9 @@ class PropertyValuePointer(object):
   def free_value(self, func_ptr_del):
     if self.value != None:
       if self.function_caller.call_func(func_ptr_del, self.value) != None:
-        log_critical('Couldn\'t free pipeline for %s. This may mean a memory leak.' % self)
+        msg = 'Couldn\'t free pipeline value for %s. This may mean a memory leak.' % self
+        log_critical(msg)
+        raise MepintaLoError(msg)
   def get_value(self):
     return self.value
   def increment_reference_count(self):
@@ -103,8 +106,8 @@ class Property(object):
       self.value_ptr = value_ptr
       self.value_ptr.increment_reference_count()
       old_value_ptr.decrement_reference_count(func_ptr_del)
-  def __repr__(self):
-    return repr(self.__str__())
+#  def __repr__(self): #TODO: remove
+#    return repr(self.__str__())
   def __str__(self):
     return self.name
 
@@ -176,8 +179,8 @@ class Pipeline(object):
     self.changed_track = set() #properties marked as changed
     self.changed_primary = set() #general changed_primary before propagation (the  sum of all changed_primary in the topologies)
     #TODO: check if a dict is better below
-    #Its uses DirectedGraph for performance reasons, although it could be an dictionary
-    self.cached_link = DirectedGraph() #id_dst_prop:id_src_prop #Here because it may change according to the current topology??
+    #Its uses DirectedGraph for simplicity reasons, although it could be a dictionary
+    self.cached_link = DirectedGraph() #id_dst_prop:id_src_prop #Here because it wont change according to the current topology?? (or it may?) #TODO: review
     self.__initTopo()
   def __initTopo(self):
     self.current_topolgy_id = self.__newTopologyId()
@@ -196,7 +199,6 @@ class Pipeline(object):
     self.current_topolgy_id = self.__newTopologyId()
     self.topologies[self.current_topolgy_id] = Topology(copied=base_topo)
     return self.current_topolgy_id
-#    return NULL_UID
   def pendingChanges(self):
     return 0 != len(self.getTopology().changed_primary)
   def popTopology(self, topo_id):
@@ -211,7 +213,7 @@ class Pipeline(object):
       return self.topologies[self.current_topolgy_id]
     else:
       return self.topologies[topo_id]
-  #  def set_current_topology(self, topo_id): #TODO. provide a list of visited topologies
+  #  def set_current_topology(self, topo_id): #TODO. provide a list of visited topologies #TODO: remove
   #    self.current_topolgy_id = topo_id
   def setCurrentTopologyId(self, topo_id):
     self.current_topolgy_id = topo_id

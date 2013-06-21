@@ -18,87 +18,84 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with Mepinta. If not, see <http://www.gnu.org/licenses/>.
 '''
-
 from mepinta.pipeline.lo.constants import NULL_UID
 
-#Rename: DirectedGraphIterator
-class DirectedGraphShedSkinIterator(object):
+class DirectedGraphIterator(object):
   def __init__(self, keys, values):
     self.current = 0
-    self.keys = keys
-    self.values = values
+    self.__keys = keys
+    self.__values = values
   def next(self):
-    #TODO: rename next
-    if self.current < len(self.keys):
-      ids = (self.keys[self.current], self.values[self.current])
+    if self.current < len(self.__keys):
+      ids = (self.__keys[self.current], self.__values[self.current])
       self.current += 1
       return ids
     else:
-      return (NULL_UID, 0)
+      return (NULL_UID, NULL_UID)
 
 class DirectedGraph(object):
   #TODO: rename to Adjacency List?
   def __init__(self):
-    self.keys = []
-    self.values = []
+    self.__keys = []
+    self.__values = []
   def __delitem__(self, item_id):
     '''  Deletes Values for a specific id  '''
-    index_lo, index_hi = self.bisect_left_right(self.keys, item_id)
+    index_lo, index_hi = self.bisect_left_right(self.__keys, item_id)
     if index_lo != index_hi: #Ok, we do have the item, and is not an empty list
-      del self.keys[index_lo:index_hi] #TODO: Fix for shedkin?
-      del self.values[index_lo:index_hi]
+      del self.__keys[index_lo:index_hi] #TODO: Fix for shedkin?
+      del self.__values[index_lo:index_hi]
   def __delslice__(self, id_1, id_2):
     if id_1 > id_2:
       return
-    index_lo = self.bisect_left(self.keys, id_1)
-    index_hi = self.bisect_right(self.keys, id_2)
+    index_lo = self.bisect_left(self.__keys, id_1)
+    index_hi = self.bisect_right(self.__keys, id_2)
     if index_lo != index_hi: #Ok is not an empty list
-      if self.keys[index_lo] == id_1 and self.keys[index_hi - 1] == id_2:
-        del self.keys[index_lo:index_hi]
-        del self.values[index_lo:index_hi]
+      if self.__keys[index_lo] == id_1 and self.__keys[index_hi - 1] == id_2:
+        del self.__keys[index_lo:index_hi]
+        del self.__values[index_lo:index_hi]
   def __getitem__(self, item_id): #TODO
-    index_lo, index_hi = self.bisect_left_right(self.keys, item_id)
+    index_lo, index_hi = self.bisect_left_right(self.__keys, item_id)
     if index_lo != index_hi:
-      return self.values[index_lo:index_hi]
+      return self.__values[index_lo:index_hi]
     else:
       return []
   def get_first(self, item_id):
     #DEBUG, should check if items exist first? I guess this is not needed
-    index = self.bisect_left(self.keys, item_id)
-    return self.values[index]
+    index = self.bisect_left(self.__keys, item_id)
+    return self.__values[index]
   def __getslice__(self, id_1, id_2): #TODO
     if id_1 > id_2:
       return []
-    index_lo = self.bisect_left(self.keys, id_1)
-    index_hi = self.bisect_right(self.keys, id_2)
+    index_lo = self.bisect_left(self.__keys, id_1)
+    index_hi = self.bisect_right(self.__keys, id_2)
     if index_lo != index_hi: #Ok is not an empty list
-      if self.keys[index_lo] == id_1 and self.keys[index_hi - 1] == id_2:
-        return self.values[index_lo:index_hi]
+      if self.__keys[index_lo] == id_1 and self.__keys[index_hi - 1] == id_2:
+        return self.__values[index_lo:index_hi]
       else:
         return []
   def __slice__(self, id_1, id_2):
     return self.__getslice__(id_1, id_2)
   def __len__(self):
-    return len(self.keys)
+    return len(self.__keys)
   def __setitem__(self, item_id, value):
-    lo, hi = self.bisect_left_right(self.keys, item_id)
-    index = self.bisect_left(self.values, value, lo, hi)
-    self.keys.insert(index, item_id)
-    self.values.insert(index, value)
+    lo, hi = self.bisect_left_right(self.__keys, item_id)
+    index = self.bisect_left(self.__values, value, lo, hi)
+    self.__keys.insert(index, item_id)
+    self.__values.insert(index, value)
   def add(self, item_id, value):
     #TODO: should it check that it already has it?
     #When is it not convenient?
     return self.__setitem__(item_id, value)
   def remove(self, item_id, value):
     #TODO: here we are not checking boundaries correctly?
-    lo, hi = self.bisect_left_right(self.keys, item_id)
+    lo, hi = self.bisect_left_right(self.__keys, item_id)
     if lo != hi: #Ok is not an empty list
-      index = self.bisect_left(self.values, value, lo, hi)
-      if self.keys[index] == item_id and self.values[index] == value:
-        self.keys.__delitem__(index)
-        self.values.__delitem__(index)
+      index = self.bisect_left(self.__values, value, lo, hi)
+      if self.__keys[index] == item_id and self.__values[index] == value:
+        self.__keys.__delitem__(index)
+        self.__values.__delitem__(index)
   def count(self, item_id):
-    index_lo, index_hi = self.bisect_left_right(self.keys, item_id)
+    index_lo, index_hi = self.bisect_left_right(self.__keys, item_id)
     return index_hi - index_lo
 #  def extend(self, directed_graph): #TODO
 #    raise RuntimeError('Not Implemented Yet!')
@@ -107,41 +104,31 @@ class DirectedGraph(object):
   def get_ss_iterator(self):
     #BEWARE this method supposes you will never get a 0 in the table
     #So you should stop when you get such a value NULL_UID (0)
-    return DirectedGraphShedSkinIterator(self.keys, self.values)
+    return DirectedGraphIterator(self.__keys, self.__values)
   def __contains__(self, item_id):
-    index = self.bisect_left(self.keys, item_id)
-    if len(self.keys) == index:
+    index = self.bisect_left(self.__keys, item_id)
+    if len(self.__keys) == index:
       return False
-    elif self.keys[index] == item_id:
+    elif self.__keys[index] == item_id:
       return True
     else:
       return False
   def has(self, item_id, value):
     #TODO: here we are not checking boundaries correctly?
-    lo, hi = self.bisect_left_right(self.keys, item_id)
-    index = self.bisect_left(self.values, value, lo, hi)
-    if lo != hi and len(self.keys) != index: #Ok is not an empty list
-      if self.keys[index] == item_id and self.values[index] == value:
+    lo, hi = self.bisect_left_right(self.__keys, item_id)
+    index = self.bisect_left(self.__values, value, lo, hi)
+    if lo != hi and len(self.__keys) != index: #Ok is not an empty list
+      if self.__keys[index] == item_id and self.__values[index] == value:
         return True
     return False
   def index(self, item_id):
-    index = self.bisect_left(self.keys, item_id)
-    if self.keys[index] == item_id:
+    index = self.bisect_left(self.__keys, item_id)
+    if self.__keys[index] == item_id:
       return index
     else:
       raise ValueError('%.index(x): x not in table' % self.__class__.__name__)
   def bisect_left_right(self, a, x, lo=0, hi= -1):
-      """Return the index where to insert item x in list a, assuming a is sorted.
-
-      The return value i is such that all e in a[:i] have e < x, and all e in
-      a[i:] have e >= x.  So if x already appears in the list, a.insert(x) will
-      insert just before the leftmost x already there.
-
-      Optional args lo (default 0) and hi (default len(a)) bound the
-      slice of a to be searched.
-
-      Replaced def bisect_left(self,a, x, lo=0, hi=None): to hi=-1
-        So that there is no type warnings on ShedSkin
+      """
       """
 
       if lo < 0:
@@ -169,17 +156,7 @@ class DirectedGraph(object):
           lo = self.bisect_left(a, x, lo, mid)
       return lo, hi
   def bisect_right(self, a, x, lo=0, hi= -1):
-      """Return the index where to insert item x in list a, assuming a is sorted.
-
-      The return value i is such that all e in a[:i] have e <= x, and all e in
-      a[i:] have e > x.  So if x already appears in the list, a.insert(x) will
-      insert just after the rightmost x already there.
-
-      Optional args lo (default 0) and hi (default len(a)) bound the
-      slice of a to be searched.
-
-      Replaced def bisect_left(self,a, x, lo=0, hi=None): to hi=-1
-        So that there is no type warnings on ShedSkin
+      """
       """
 
       if lo < 0:
@@ -222,17 +199,17 @@ class DirectedGraph(object):
 #    pass
   def __str__(self):
     str_ = ''
-    for index, k in enumerate(self.keys):
-      str_ += '%s:%s ' % (k, self.values[index])
+    for index, k in enumerate(self.__keys):
+      str_ += '%s:%s ' % (k, self.__values[index])
     return str_
-#    return str(self.keys)+str(self.values)
+#    return str(self.__keys)+str(self.__values)
 
 def shedskin_DirectedGraph():
   a = [1, 2, 4, 5, 6, 6, 6, 8, 100, 3221]
   b = [1, 2, 4, 5, 6, 5, 9, 8, 100, 3221]
   tbl = DirectedGraph()
-  tbl.keys = a
-  tbl.values = b
+  tbl.__keys = a
+  tbl.__values = b
 
   del tbl[1]
   #doesnt work! #TODO report shedskin
@@ -266,8 +243,8 @@ def shedskin_test():
   a = [1, 2, 4, 5, 6, 6, 6, 8, 100, 3221]
   b = [1, 2, 4, 5, 6, 5, 9, 8, 100, 3221]
   id_indexed_table = DirectedGraph()
-  id_indexed_table.keys = a
-  id_indexed_table.values = b
+  id_indexed_table.__keys = a
+  id_indexed_table.__values = b
   print(id_indexed_table[1])
   print(id_indexed_table[6])
   id_indexed_table[1] = 20

@@ -22,20 +22,20 @@ along with Mepinta. If not, see <http://www.gnu.org/licenses/>.
 #from mepinta.pipeline.lo.pipeline_data.data_model import Topology
 
 class SimplePropagationManager(object):
-  ''' 
+  '''
     The properties affected by operations on the topo graph are registered on the
       "topo.changed_primary" set. (changing topology and changing properties' values)
     After registering all changes for operations on the topo graph we propagate
-      this changes to all the depedents affected by them. 
+      this changes to all the dependents affected by them.
       Then they are stored in the set "topo.changed_secondary"
     Now we can keep track of the properties affected by the set of operations on a first order topo.
-    These means that when we move on the second order topo (action tree), 
-      we know which Node have changed_primary after applying or undoing a set 
+    These means that when we move on the second order topo (action tree),
+      we know which Node have changed_primary after applying or undoing a set
       of operations. Those changes are stored in "topo.changed_track"
     When we evaluate properties, we check if the property is in "changed_track" set.
       Evaluating it and then removing it.
-    When we move on the second order pipeline, we add the changes on "topo.changed_secondary" to the 
-      "changed_track" from the node we go by. (supposing we are crossing severals nodes until we reach 
+    When we move on the second order pipeline, we add the changes on "topo.changed_primary" to the
+      "changed_track" from the node we go by. (supposing we are crossing severals nodes until we reach
       a new working node in the action tree).
   '''
   def __init__(self, pline_evaluator):
@@ -45,7 +45,7 @@ class SimplePropagationManager(object):
     #for prop_id in pline.changed_primary:
     if len(pline.changed_primary) > 0:
       self.__recursivePropagation(pline.getTopology(), pline.changed_primary, pline.changed_track)
-  def __recursivePropagation(self,topo, changed, changed_ppgation):
+  def __recursivePropagation(self, topo, changed, changed_ppgation):
     prop_id = changed.pop()
     affected_props = set()
     self.__allAffectedProps(topo, prop_id, affected_props)
@@ -53,7 +53,7 @@ class SimplePropagationManager(object):
     changed_ppgation.update(affected_props)
     if len(changed) > 0:
       self.__recursivePropagation(topo, changed, changed_ppgation)
-  def __allAffectedProps(self,topo, prop_id, affected_props):
+  def __allAffectedProps(self, topo, prop_id, affected_props):
     if prop_id in affected_props:
       return
     affected_props.add(prop_id)
@@ -77,4 +77,4 @@ def shedskin_SimplePropagationManager(pline, pline_evaluator):
 #  print(pline.changed_primary, pline.changed_secondary)
 #  spm.propagate_changes(pline)
 #  print(pline.changed_primary, pline.changed_secondary)
-  
+
