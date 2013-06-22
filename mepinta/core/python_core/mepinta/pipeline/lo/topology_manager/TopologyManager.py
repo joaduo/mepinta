@@ -26,10 +26,10 @@ class TopologyManager(object):
     pass
   def add_properties(self, topo, prop_ids):
     for prop_id in prop_ids:
-      topo.addElementId(prop_id)
+      topo.addPropId(prop_id)
   def remove_properties(self, topo, prop_ids):
     for prop_id in prop_ids:
-      topo.removeElementId(prop_id)
+      topo.removePropId(prop_id)
   def connect_properties(self, topo, prop_dent_ids, prop_dency_ids):
     log_debug('Connecting properties dpdents=%s dpdencies=%s'%(prop_dent_ids,prop_dency_ids))
     for index,dent_id in enumerate(prop_dent_ids):

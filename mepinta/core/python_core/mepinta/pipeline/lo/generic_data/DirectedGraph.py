@@ -208,8 +208,9 @@ def shedskin_DirectedGraph():
   a = [1, 2, 4, 5, 6, 6, 6, 8, 100, 3221]
   b = [1, 2, 4, 5, 6, 5, 9, 8, 100, 3221]
   tbl = DirectedGraph()
-  tbl.__keys = a
-  tbl.__values = b
+  #print dir(tbl)
+  tbl._DirectedGraph__keys = a
+  tbl._DirectedGraph__values = b
 
   del tbl[1]
   #doesnt work! #TODO report shedskin

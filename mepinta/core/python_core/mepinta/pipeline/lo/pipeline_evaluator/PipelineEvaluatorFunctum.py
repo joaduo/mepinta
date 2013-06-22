@@ -31,6 +31,7 @@ from mepinta.pipeline.lo.pipeline_evaluator.base import PipelineEvaluatorBase
 from mepinta.pipeline.lo.pipeline_data.data_model import PropertyValuePointer
 #from mepinta.pipeline.lo.reentrant.data_model import ProcessorContext
 
+#TODO: rename to PipelineEvaluator
 class PipelineEvaluatorFunctum(PipelineEvaluatorBase):
   '''
   Evaluates a Pipeline (from lo package) given a property.
@@ -121,7 +122,7 @@ class PipelineEvaluatorFunctum(PipelineEvaluatorBase):
       pline.changed_track.remove(out_id)
 
     if not has_flags(out_prop.type, FUNCTION_PROPERTY_FLAG):
-      self.p_value_mngr.init_prop_value(out_prop)
+      self.p_value_mngr.initPropValue(out_prop)
       args_mngr.append(out_id, out_prop, out_prop)
       args_mngr.unchanged_value() #Reset its output status
       args_mngr.next_prop() #Check if this is necessary or (append should increment the pointer?)
@@ -132,7 +133,7 @@ class PipelineEvaluatorFunctum(PipelineEvaluatorBase):
     input_id, input_prop = self.__evalProperty(pline, input_id, input_prop)
     if out_id in pline.getTopology().cached: #We are caching on this node, then we must copy values
       log_debug('Copying value for property:%r id=%r' % (out_prop.name, out_id))
-      self.p_value_mngr.copy_prop_value(out_prop, input_prop.get_value_ptr())
+      self.p_value_mngr.copyPropValue(out_prop, input_prop.get_value_ptr())
     else: #We can directly pass the value_pointer
       self.__stealInput(pline, out_id, out_prop, input_id, input_prop)
 
@@ -144,10 +145,10 @@ class PipelineEvaluatorFunctum(PipelineEvaluatorBase):
     #if not, we need to copy it as many time as the stealing needs
     log_debug('Non cached properties should be used in a restricted context.')
     log_debug('Stealing value for property:%r id=%r from property:%r id=%r' % (out_prop.name, out_id, input_prop.name, input_id))
-    self.p_value_mngr.set_prop_value(out_prop, input_prop.get_value_ptr()) #Need to do this first, if not the value will be freed
+    self.p_value_mngr.setPropValue(out_prop, input_prop.get_value_ptr()) #Need to do this first, if not the value will be freed
     log_debug('Detaching from previous property:%r id=%r' % (input_prop.name, input_id))
     vpointer_none = PropertyValuePointer() #Create a value pointer with None as value #TODO: relies on garbage collector
-    self.p_value_mngr.set_prop_value(input_prop, vpointer_none) #Ok, you do not own the previous value anymore.
+    self.p_value_mngr.setPropValue(input_prop, vpointer_none) #Ok, you do not own the previous value anymore.
     pline.getTopology().changed_primary.add(input_id) #input changed (we stole it's value and needs to propagate the change)
 
   def __evalFunctum(self, pline, prop_id, prop):
@@ -181,7 +182,7 @@ class PipelineEvaluatorFunctum(PipelineEvaluatorBase):
     if functum_prop.get_value() == None:
       func_ptr = self.context_lo.functions[functum_prop_value.func_id].get_func_pointer()
       functum_struct = get_functum_struct_voidp(func_ptr, args_mngr.get_args())
-      self.p_value_mngr.new_prop_value(functum_prop, functum_struct)
+      self.p_value_mngr.replacePropValue(functum_prop, functum_struct)
     #else:pass
     #TODO:IMPORTANT it's caching here beware! args should be ok, but func_ptr may change
     return prop_id, functum_prop
@@ -216,7 +217,7 @@ class PipelineEvaluatorFunctum(PipelineEvaluatorBase):
         else:
           log_warning("A common (in/out/internal) property shouldn't be connected to functions and other properties.For prop_id: %r " % prop_id)
     if changed: #It's a leaf property, the value may be uninitialized
-      self.p_value_mngr.init_prop_value(prop)
+      self.p_value_mngr.initPropValue(prop)
     return prop_id, prop
 
   def __evalProperty(self, pline, prop_id, prop):

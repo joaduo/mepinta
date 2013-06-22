@@ -18,9 +18,9 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with Mepinta. If not, see <http://www.gnu.org/licenses/>.
 '''
-from mepinta.context.getMepintaContext import getMepintaContext
 from mepinta.pipeline.hi.pipeline_evaluator.PipelineEvaluatorFunctum import PipelineEvaluatorFunctum
 from mepinta.pipelineview.actiontree.undoable_graph.data_model import UndoableGraph
+from mepinta.context.MepintaContext import MepintaContext
 
 data_type_description = {
 # 'plugin_url':'http://mepinta.joaquinduo.com.ar/plugins/',
@@ -44,10 +44,16 @@ def delete(u_graph):
 
 def copy_to(to_graph, from_graph):
   #create the obvious context
-  context = getMepintaContext(backend_name='python')
+  context = MepintaContext('python')
+  #Make sure to propagate changes (avoid inconsistencies)
   PipelineEvaluatorFunctum(context).propagateChanges(from_graph.pline)
   #pass the common data between undoable graphs
   to_graph.setGraph(from_graph.graph)
   #We start a topology change set, so we haven't done anything yet
   to_graph.topology_changed = False
+  #return the copy
+  return to_graph
+
+#def checkRepr(u_graph):
+#  return u_graph.checkRepr()
 

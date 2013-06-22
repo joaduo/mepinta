@@ -46,7 +46,7 @@ class PropertyManager(object):
     prop_ids = []
     for index, prop_name in enumerate(prop_names):
       prop = Property(FUNCTION_PROPERTY_FLAG, prop_name, dtype_id=NULL_UID)
-      self.p_value_mngr.new_prop_value(prop, any_ptr_to_voidp(FunctionPropertyValue(func_ptr_ids[index])))
+      self.p_value_mngr.replacePropValue(prop, any_ptr_to_voidp(FunctionPropertyValue(func_ptr_ids[index])))
       prop_ids.append(pline.addProperty(prop))
     return prop_ids
   def create_functum_properties(self, pline, prop_names, func_ptr_ids, dtype_ids, prop_flags):
@@ -55,7 +55,7 @@ class PropertyManager(object):
     for index, prop_name in enumerate(prop_names):
       prop = Property(FUNCTUM_PROPERTY_FLAG | prop_flags, prop_name, dtype_id=NULL_UID) #Contains the functum prop and  pointer to the function
       functum_prop = Property(FUNCTION_PROPERTY_FLAG, prop_name, dtype_id=dtype_ids[index])
-      self.p_value_mngr.new_prop_value(prop, any_ptr_to_voidp(FunctumPropertyValue(func_ptr_ids[index], functum_prop)))
+      self.p_value_mngr.replacePropValue(prop, any_ptr_to_voidp(FunctumPropertyValue(func_ptr_ids[index], functum_prop)))
       prop_ids.append(pline.addProperty(prop))
     return prop_ids
   def deleteProperties(self, pline, prop_ids):

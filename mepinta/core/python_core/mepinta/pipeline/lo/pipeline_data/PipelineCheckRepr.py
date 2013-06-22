@@ -18,30 +18,19 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with Mepinta. If not, see <http://www.gnu.org/licenses/>.
 '''
-
-from mepinta.pipeline.lo.FunctionCaller import FunctionCaller
-from mepinta.pipeline.lo.value_manager.PropertyValueManager import PropertyValueManager
-
-#TODO: remove
-class PipelineEvaluatorBase(object):
+class PipelineCheckRepr(object):
   def __init__(self, context_lo):
-    self.context_lo = context_lo
-    self.p_value_mngr = PropertyValueManager(context_lo)
-    self.func_caller = FunctionCaller()
-  def evaluateProp(self, pline, prop_id):
-    prop = pline.all_properties[prop_id]
-    return prop_id, prop
+    pass
+  def checkPipeline(self, pline):
+    #Check valid connections
+    #Check valid values in properties
+    #Check functions pointer existence (warn about them)
+    #Check topology consistency (properties id exist)
+    pass
 
-
-def shedskin_PipelineEvaluatorBase(context_lo, pline, prop):
-  pe = PipelineEvaluatorBase(context_lo)
-#  prop_id = 100
-#  pline.all_properties[prop_id] = prop
-#  pe.eval_function(pline, prop_id, prop)
-#  pe.eval(pline, prop_id, True)
-#  pe.animate(pline, prop_id)
-#  pe.eval_property(pline, prop_id, prop)
-  return pe
+def test_module():
+  from getDefaultContext import getDefaultContext
+  context = getDefaultContext()
 
 if __name__ == "__main__":
-  pass
+  test_module()

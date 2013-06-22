@@ -46,6 +46,17 @@ class FunctionCaller(object):
       log_error(msg)
       raise MepintaLoError(msg)
 
+  def callIntFuncVoidp(self, func_ptr, voidp):
+    '''Calls a function with the prototype "int func_name(void*)"
+    Since self.call_processor_func does the same it's reused
+    '''
+    if func_ptr != None:
+      return self.call_processor_func(func_ptr, voidp)
+    else:
+      msg = 'func_ptr is NULL. Couldn\'t call function with prototype "int func_name(void*)".'
+      log_error(msg)
+      raise MepintaLoError(msg)
+
   def call_processor_func(self, func_ptr, args):
     '''Calls a processor function with the prototype "int func_name(void*)" '''
     if func_ptr != None:
@@ -61,9 +72,12 @@ class FunctionCaller(object):
     #raise RuntimeError("Implement!")
     if func_ptr != None and to_ptr != None and from_ptr != None:
       casted_func_ptr = voidp_to_copy_to_func(func_ptr)
+      #import pdb; pdb.set_trace()
       to_ptr = casted_func_ptr(to_ptr, from_ptr)
-      if to_ptr != None:
-        log_error('copy_to function failed to copy values.')
+      if to_ptr == None:
+        msg = 'copy_to function failed to copy values.'
+        log_error(msg)
+        raise MepintaLoError(msg)
       return to_ptr
     else:
       msg = 'func_ptr, to_ptr o from_ptr is NULL. Couldn\'t call copy_to function with prototype "void* func_name(void*)".'

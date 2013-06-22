@@ -54,7 +54,7 @@ class ValueManager(object):
   def __setPropValue(self, pline, prop_id, value):
     '''Directly passing a void*, no need for casting and checking (checking must be done before)'''
     log_debug('Setting value to prop_id=%r' % prop_id)
-    self.p_value_mngr.new_prop_value(pline.all_properties[prop_id]
+    self.p_value_mngr.replacePropValue(pline.all_properties[prop_id]
                                      , value)
     #Add property to changed_primary
     pline.changed_primary.add(prop_id)

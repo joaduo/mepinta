@@ -56,6 +56,7 @@ from mepinta.pipeline.lo.pipeline_data.TopologyConnections import shedskin_Topol
 from mepinta.pipeline.lo.reentrant.data_model import shedskin_reentrant_data_model
 from mepinta.pipeline.lo.reentrant.reentrant import shedskin_reentrant
 from mepinta.pipeline.lo.exceptions.MepintaLoError import shedskin_MepintaLoError
+from mepinta.pipeline.lo.value_manager.DebugPropertyValueManager import shedskin_DebugPropertyValueManager
 #from mepinta.pipeline.lo.generic_data.ConditionalBDGraph import shedskin_ConditionalBDGraph
 
 class FactoryLo(object):
@@ -130,6 +131,7 @@ def shedskin_generation():
   shedskin_PluginLoader(context_lo)
   shedskin_ValueManager(context_lo, pline, prop_id)
   shedskin_PropertyValueManager(context_lo, prop)
+  shedskin_DebugPropertyValueManager(context_lo, prop)
 #  shedskin_PipelineEvaluator(context_lo, pline, prop)
   args_mngr = shedskin_ProcessorArgsManager(context_lo, func_prop_value, prop)
   shedskin_PipelineEvaluatorFunctum(context_lo, pline, prop, args_mngr)

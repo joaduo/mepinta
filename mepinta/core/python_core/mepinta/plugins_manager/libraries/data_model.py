@@ -58,7 +58,7 @@ class LibraryGraph(FrameworkObject):
   def addLibray(self, library):
     library_id = self.__getNewLibraryId()
     self.all_libraries[library_id] = library
-    self.topology.addElementId(library_id)
+    self.topology.addPropId(library_id)
 
 class LibraryMetadata(FrameworkObject):
   def __init__(self, name, path):

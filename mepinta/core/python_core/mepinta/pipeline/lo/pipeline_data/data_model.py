@@ -112,7 +112,7 @@ class Property(object):
     return self.name
 
 class Topology(object):
-  #TODO: invariant: nodes should exist in the pipeline
+  #TODO: invariant: prop_id should exist in the pipeline
   #TODO: invariant connection rules?
   #TODO: invariant, check how shedskin deals with them
   def __init__(self, copied=None):
@@ -147,10 +147,10 @@ class Topology(object):
   def disconnectDpdencies(self, dent_id):
     self.connections.disconnectDpdencies(dent_id)
     self.changed_primary.add(dent_id)
-  def addElementId(self, prop_id):
+  def addPropId(self, prop_id):
     self.properties.add(prop_id)
     self.changed_primary.add(prop_id)
-  def removeElementId(self, prop_id):
+  def removePropId(self, prop_id):
     if prop_id in self.properties: #Needs to check here because Pipeline won't check
       self.properties.remove(prop_id)
       self.connections.disconnectAll(prop_id)
@@ -227,7 +227,7 @@ class Pipeline(object):
   def deleteProperty(self, prop_id):
     prop = self.all_properties.pop(prop_id)
     for topo in self.topologies.values():
-      topo.removeElementId(prop_id)
+      topo.removePropId(prop_id)
     self.cached_link.__delitem__(prop_id)
     if prop_id in self.marked_outputs:
       self.marked_outputs.remove(prop_id)
@@ -271,13 +271,13 @@ def shedskin_pipeline_data_model():
   topo = Topology()
   topo = Topology(copied=topo)
   topo.copyFrom(copied_topo=topo)
-  topo.addElementId(prop_id=1)
-  topo.addElementId(prop_id=2)
+  topo.addPropId(prop_id=1)
+  topo.addPropId(prop_id=2)
   topo.connect(dent_id=1, dency_id=2)
   topo.disconnect(dent_id=1, dency_id=2)
   topo.disconnectAll(prop_id=1)
   topo.disconnectDpdencies(dent_id=1)
-  topo.removeElementId(prop_id=1)
+  topo.removePropId(prop_id=1)
   topo.__str__()
 
   pline.startTopologyChangeSet()
