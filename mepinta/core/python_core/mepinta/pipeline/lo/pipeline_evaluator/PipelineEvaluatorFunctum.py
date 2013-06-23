@@ -145,10 +145,10 @@ class PipelineEvaluatorFunctum(PipelineEvaluatorBase):
     #if not, we need to copy it as many time as the stealing needs
     log_debug('Non cached properties should be used in a restricted context.')
     log_debug('Stealing value for property:%r id=%r from property:%r id=%r' % (out_prop.name, out_id, input_prop.name, input_id))
-    self.p_value_mngr.setPropValue(out_prop, input_prop.get_value_ptr()) #Need to do this first, if not the value will be freed
+    self.p_value_mngr.setPropValuePointer(out_prop, input_prop.get_value_ptr()) #Need to do this first, if not the value will be freed
     log_debug('Detaching from previous property:%r id=%r' % (input_prop.name, input_id))
     vpointer_none = PropertyValuePointer() #Create a value pointer with None as value #TODO: relies on garbage collector
-    self.p_value_mngr.setPropValue(input_prop, vpointer_none) #Ok, you do not own the previous value anymore.
+    self.p_value_mngr.setPropValuePointer(input_prop, vpointer_none) #Ok, you do not own the previous value anymore.
     pline.getTopology().changed_primary.add(input_id) #input changed (we stole it's value and needs to propagate the change)
 
   def __evalFunctum(self, pline, prop_id, prop):

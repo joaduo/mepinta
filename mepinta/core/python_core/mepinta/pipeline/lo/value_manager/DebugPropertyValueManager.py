@@ -56,13 +56,13 @@ class DebugPropertyValueManager(object):
   def initPropValue(self, prop):
     self.prop_value_mngr.initPropValue(prop)
     self.__checkRepr(prop)
-  def setPropValue(self, prop, value_ptr):
+  def setPropValuePointer(self, prop, value_ptr):
     #TODO:
     #    if prop.type == FUNCTION_PROPERTY_FLAG: #Functions have data_type = 0
     #      log_warning('You shouldn\'t set a function property value pointer. Doing nothing.')
     #    else:
     self.__checkValueRepr(prop, value_ptr.get_value())
-    self.prop_value_mngr.setPropValue(prop, value_ptr)
+    self.prop_value_mngr.setPropValuePointer(prop, value_ptr)
   def copyPropValue(self, prop, value_ptr):
     self.__checkValueRepr(prop, value_ptr.get_value())
     self.prop_value_mngr.copyPropValue(prop, value_ptr)
@@ -80,7 +80,7 @@ def shedskin_DebugPropertyValueManager(context_lo, prop):
   pvm.replacePropValue(prop, value)
   pvm.initPropValue(prop)
   value_ptr = PropertyValuePointer()
-  pvm.setPropValue(prop, value_ptr)
+  pvm.setPropValuePointer(prop, value_ptr)
   pvm.copyPropValue(prop, value_ptr)
   pvm.deletePropsValues([prop])
 

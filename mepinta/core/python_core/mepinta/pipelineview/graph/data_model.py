@@ -51,6 +51,9 @@ class Node(FrameworkObject):
     self.marked_outputs = processor_proxy.marked_outputs
     self.getRequiredDataTypes = processor_proxy.getRequiredDataTypes
 
+  def getPropertiesIds(self):
+    pass #for container in self.containers.get_properties()
+
   def __str__(self):
     return 'Node(%r,%r)' % (self.name, self.processor)
 
@@ -65,6 +68,9 @@ class Graph(FrameworkObject):
     self.all_nodes = dict()#id:Node
 
   def addNode(self, node):
+    #Repr Check
+    assert node not in self.all_nodes.values(), 'node already in this graph'
+    #Add the new node
     node_id = self.__newNodeId()
     self.all_nodes[node_id] = node
     node.node_id = node_id

@@ -33,6 +33,7 @@ class DataType(object):
   def __init__(self, name, lib_handle):
     self.name = name
     self.lib_handle = lib_handle
+    #self.path = path
     self.symbols = {}
   def get_func_ptr(self, name):
     if name not in self.symbols:

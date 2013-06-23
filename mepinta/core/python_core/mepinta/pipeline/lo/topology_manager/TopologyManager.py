@@ -31,18 +31,18 @@ class TopologyManager(object):
     for prop_id in prop_ids:
       topo.removePropId(prop_id)
   def connect_properties(self, topo, prop_dent_ids, prop_dency_ids):
-    log_debug('Connecting properties dpdents=%s dpdencies=%s'%(prop_dent_ids,prop_dency_ids))
-    for index,dent_id in enumerate(prop_dent_ids):
+    log_debug('Connecting properties dpdents=%s dpdencies=%s' % (prop_dent_ids, prop_dency_ids))
+    for index, dent_id in enumerate(prop_dent_ids):
       dency_id = prop_dency_ids[index]
       topo.connect(dent_id, dency_id)
     #TODO: avoid connecting on normal property to more than one normal property
-    #but do this on the higher level! (    
+    #but do this on the higher level
   def connect_props_dencies(self, topo, prop_dent_ids, prop_dency_ids):
-    for index,dent_id in enumerate(prop_dent_ids):
+    for index, dent_id in enumerate(prop_dent_ids):
       dency_id = prop_dency_ids[index]
       topo.connectDency(dent_id, dency_id)
   def connect_props_dents(self, topo, prop_dent_ids, prop_dency_ids):
-    for index,dent_id in enumerate(prop_dent_ids):
+    for index, dent_id in enumerate(prop_dent_ids):
       dency_id = prop_dency_ids[index]
       topo.connectDent(dent_id, dency_id)
   def disconnect_properties(self, topo, prop_dent_ids, prop_dency_ids=[]):
@@ -50,9 +50,9 @@ class TopologyManager(object):
       for dent_id in prop_dent_ids:
         topo.disconnectDpdencies(dent_id)
     else: #disconnect specific sources
-      for index,dent_id in enumerate(prop_dent_ids):
+      for index, dent_id in enumerate(prop_dent_ids):
         dency_id = prop_dency_ids[index]
-        topo.disconnect(dent_id,dency_id)
+        topo.disconnect(dent_id, dency_id)
   def add_changed(self, topo, prop_changed_ids):
     for prop_changed_id in prop_changed_ids:
       topo.changed_primary.add(prop_changed_id)
@@ -60,24 +60,24 @@ class TopologyManager(object):
     for prop_changed_id in prop_changed_ids:
       topo.changed_primary.remove(prop_changed_id)
   def enable_cached(self, topo, cached_ids):
-    #TODO: enabling and disabling caching needs to notify linked dency 
+    #TODO: enabling and disabling caching needs to notify linked dency
     #and linked dency of changing to avoid problems
     #If we steal a value of an unchanged property, we will run into problems
     #fix that situation
-    log_debug('Enable caching on %r'%cached_ids)
+    log_debug('Enable caching on %r' % cached_ids)
     for prop_id in cached_ids:
       topo.cached.add(prop_id)
   def disable_cached(self, topo, cached_ids):
     #TODO: see previous method notes
     for prop_id in cached_ids:
-      if prop_id in topo.cached: 
+      if prop_id in topo.cached:
         topo.cached.remove(prop_id)
 
 
 
-def shedskin_TopologyManager(context_lo,topo):
+def shedskin_TopologyManager(context_lo, topo):
   pm = TopologyManager(context_lo)
-  prop_ids=[0]
+  prop_ids = [0]
   pm.add_changed(topo, prop_changed_ids=prop_ids)
   pm.add_properties(topo, prop_ids)
   pm.connect_properties(topo, prop_dent_ids=prop_ids, prop_dency_ids=prop_ids)
@@ -88,7 +88,7 @@ def shedskin_TopologyManager(context_lo,topo):
   pm.enable_cached(topo, cached_ids=prop_ids)
   pm.remove_changed(topo, prop_changed_ids=prop_ids)
   pm.remove_properties(topo, prop_ids)
-  
+
 
 if __name__ == '__main__':
   pass

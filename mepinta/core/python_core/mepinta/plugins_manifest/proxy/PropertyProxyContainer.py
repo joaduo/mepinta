@@ -21,7 +21,7 @@ along with Mepinta. If not, see <http://www.gnu.org/licenses/>.
 from common.abstract.FrameworkBase import FrameworkBase
 from mepinta.plugins_manifest.proxy.data_model import FunctionPropertyProxy, \
   InOutPropertyProxyBase, DataPropertyProxy, PropertyAndQualifierBase, \
-  FunctumPropertyProxy
+  FunctumPropertyProxy, QualifierBase
 from mepinta.plugins_manager.data_types.DataTypeAliasManager import DataTypeAliasManager
 
 class PropertyProxyContainer(FrameworkBase):
@@ -68,27 +68,21 @@ class PropertyProxyContainer(FrameworkBase):
         name.
         FunctionPropertyProxy if th
     '''
-    if len(types) == 0:
+    if not len(types):
       types = self.__getContainerTypes()
     properties = {}
     for prop_name, prop_proxy in self.__dict__.items():
-      if self.__inTypes(prop_proxy, types):
+      #Check if the property is of the type or the qualified is of the type
+      if isinstance(prop_proxy, types) or isinstance(prop_proxy, QualifierBase) and isinstance(prop_proxy.__qualified__(), types):
         properties[prop_name] = prop_proxy
     return properties
 
   def __getContainerTypes(self):
     '''Get the container's default type, based on container name'''
     if self.container_type == 'function':
-      return [FunctionPropertyProxy]
+      return FunctionPropertyProxy
     else:
-      return [InOutPropertyProxyBase]
-
-  def __inTypes(self, prop_proxy, types):
-    '''Checks if a PropertyProxy is in a list of types.'''
-    for tpe in types:
-      if isinstance(prop_proxy, tpe) and isinstance(tpe, type):
-        return True
-    return False
+      return InOutPropertyProxyBase
 
   def __setattr__(self, name, value):
     '''

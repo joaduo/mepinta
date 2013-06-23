@@ -28,7 +28,7 @@ def convert_pline_to_topo(method):
   def method_wrapper(self, *a, **ad):
     if method_name.startswith('_') and method_name.endswith('_safe'):
       if not ('topo' in ad and hasattr(ad['topo'], 'getTopology') \
-      or len(a) > 0 and hasattr(a[0], 'getTopology')):
+              or len(a) > 0 and hasattr(a[0], 'getTopology')):
         raise MepintaError("You should provide a Pipeline instead of a Topology to safe checking functions")
       return method(self, *a, **ad)
     else:

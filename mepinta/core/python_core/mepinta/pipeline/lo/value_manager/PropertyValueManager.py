@@ -55,13 +55,14 @@ class PropertyValueManager(object):
       value = self.func_caller.call_func_no_args(func_ptr_new)
       prop.get_value_ptr().replace_value(value, func_ptr_del)
 
-  def setPropValue(self, prop, value_ptr):
+  def setPropValuePointer(self, prop, value_ptr):
     log_debug('Setting value for prop %r.' % prop)
     #get the data type delete func_ptr
     data_type = self.context_lo.data_types[prop.dtype_id]
     func_ptr_del = data_type.get_func_ptr('delete')
     #We finally set the value
     prop.set_value_ptr(value_ptr, func_ptr_del)
+
   def copyPropValue(self, prop, value_ptr):
     log_debug('Copying value for prop %r.' % prop)
     #Get the function pointer
@@ -82,7 +83,8 @@ class PropertyValueManager(object):
       func_ptr_copy = data_type.get_func_ptr('copy')
       value_copy = self.func_caller.call_func(func_ptr_copy
                                               , value_ptr.get_value())
-      self.setPropValue(prop, PropertyValuePointer(value_copy))
+      self.setPropValuePointer(prop, PropertyValuePointer(value_copy))
+
   def deletePropsValues(self, props):
     for prop in props:
       log_debug('Deleting value for prop %r.' % prop)
@@ -103,7 +105,7 @@ class PropertyValueManager(object):
 #    '''
 #    log_debug('Init and set value for prop %r.' % prop)
 #    if prop.get_value_ptr() != value_ptr:
-#      self.setPropValue(prop, value_ptr)
+#      self.setPropValuePointer(prop, value_ptr)
 #
 #    self.initPropValue(prop)
 
@@ -114,6 +116,6 @@ def shedskin_PropertyValueManager(context_lo, prop):
   pvm.initPropValue(prop)
   value_ptr = PropertyValuePointer()
   #pvm.init_set_prop_value(prop, value_ptr)
-  pvm.setPropValue(prop, value_ptr)
+  pvm.setPropValuePointer(prop, value_ptr)
   pvm.copyPropValue(prop, value_ptr)
   pvm.deletePropsValues([prop])

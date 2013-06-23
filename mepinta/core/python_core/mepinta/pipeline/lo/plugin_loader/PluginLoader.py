@@ -38,6 +38,7 @@ class PluginLoader(object):
       log_info('Unloading data type library at %r with dtype_id=%r' % (path, dtype_id))
       unload_library(self.context_lo.data_types_paths[path])
       self.context_lo.data_types_paths.__delitem__(path)
+      self.context_lo.data_types[dtype_id].update_handle(None)
     else:
       log_debug('Data type library already unloaded.(at %r with dtype_id=%r)' % (path, dtype_id))
 
