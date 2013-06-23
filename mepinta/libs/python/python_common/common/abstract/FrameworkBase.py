@@ -31,7 +31,7 @@ class FrameworkBase(InitStrategyBase, SelfConfigBase):
 if __name__ == '__main__':
   class ExtendedBase(FrameworkBase):
     def __pre_init__(self, *a, **ad):
-      print('Pre init Extended Base')
+      debugPrint('Pre init Extended Base')
       pass
 
   class Foo(object):
@@ -40,10 +40,10 @@ if __name__ == '__main__':
   #class ConcreteClass(Foo, ExtendedBase):
   class ConcreteClass(ExtendedBase, Foo):
     def __pre_init__(self):
-      print('Pre init Concrete')
+      debugPrint('Pre init Concrete')
       self.pre_init_var = 10
     def __post_init__(self, value):
-      print('Post init concrete')
+      debugPrint('Post init concrete')
       self.post_init_var = value
 
   from common.context.Context import Context

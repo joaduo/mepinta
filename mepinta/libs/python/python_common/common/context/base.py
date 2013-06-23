@@ -46,26 +46,26 @@ def test_module():
 #  ctxp2 = Context('python')
 #  ctxp3 = Context('python')
 #  ctxc = Context('c_and_cpp')
-#  print (ctxp)
-#  print (ctxp2)
-#  print (ctxp3)
+#  debugPrint (ctxp)
+#  debugPrint (ctxp2)
+#  debugPrint (ctxp3)
 #  class Pototo:
 #    pass
 #  a = Pototo()
 #  from common.config.SelfConfigWrapper import SelfConfigWrapper
 #  cwrapper = SelfConfigWrapper(OwnerClass=a.__class__, context=ctxp)
 #  cwrapper.hola = 1
-#  print(cwrapper.hola)
+#  debugPrint(cwrapper.hola)
 #  try:
-#    print(cwrapper.hola1)
+#    debugPrint(cwrapper.hola1)
 #  except Exception as e:
-#    print(e)
-#  print (ctxp)
+#    debugPrint(e)
+#  debugPrint (ctxp)
 #  cwrapper = ContextWrapper(context=ctxp)
 #  cwrapper.hola = 1
 #  child = cwrapper.newChildConfig()
-#  print (ctxp)
-#  print (cwrapper.backend_name)
+#  debugPrint (ctxp)
+#  debugPrint (cwrapper.backend_name)
 
 
 if __name__ == "__main__":

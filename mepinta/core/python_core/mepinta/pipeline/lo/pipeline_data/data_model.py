@@ -299,4 +299,4 @@ def shedskin_pipeline_data_model():
 
 if __name__ == '__main__':
   shedskin_pipeline_data_model()
-  print("done")
+  debugPrint("done")

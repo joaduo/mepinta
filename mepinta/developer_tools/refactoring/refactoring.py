@@ -22,7 +22,7 @@ def replaceFunction(text):
   text = name_re.sub('from getDefaultContext import getDefaultContext', text)
 
 def filePrint(f_name):
-  print '  File "%s", line 1' % f_name
+  debugPrint '  File "%s", line 1' % f_name
 
 def refactorProject(files_names):
 

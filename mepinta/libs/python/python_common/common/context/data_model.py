@@ -99,28 +99,28 @@ class TreeContextStore(object):
                     owner.__name__)
     elif isinstance(owner, str):
       owner_str = "%s" % owner
-    else:#TODO: print warning!!
+    else:#TODO: debugPrint warning!!
       self.getConfig('log').w('owner (%r) should be a class or a string, type is %r' % (owner, type(owner)))
       owner_str = "%s" % owner
     return owner_str
 
 def test_module():
   def assertAndPrint(gc, name, owner, value):
-    print gc.getConfig(name, owner)
+    debugPrint(gc.getConfig(name, owner))
     assert(gc.getConfig(name, owner) == value)
   gc = TreeContextStore()
   gc.setConfig('hello', 10, owner='yo')
   gc.setConfig('hello2', 12, owner='yo')
-  print gc.getConfig('hello', owner='yo')
+  debugPrint(gc.getConfig('hello', owner='yo'))
   assert(gc.getConfig('hello', owner='yo') == 10)
   gc1 = gc.newChildConfig()
   gc1.setConfig('hello', 11, owner='yo')
-  print gc1.getConfig('hello', owner='yo')
+  debugPrint(gc1.getConfig('hello', owner='yo'))
   assert(gc1.getConfig('hello', owner='yo') == 11)
-  print gc.getConfig('hello', owner='yo')
-  print gc1.getConfig('hello2', owner='yo')
+  debugPrint(gc.getConfig('hello', owner='yo'))
+  debugPrint(gc1.getConfig('hello2', owner='yo'))
   gc.setConfig('hello3', 13, owner='yo')
-  print gc1.getConfig('hello3', owner='yo')
+  debugPrint(gc1.getConfig('hello3', owner='yo'))
 
 if __name__ == "__main__":
   test_module()

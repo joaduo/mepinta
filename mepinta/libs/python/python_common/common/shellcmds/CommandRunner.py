@@ -31,7 +31,7 @@ class CommandRunner(FrameworkBase):
 def test_module():
   from getDefaultContext import getDefaultContext
   context = getDefaultContext()
-  print CommandRunner(context).run('ls -alh')
+  debugPrint CommandRunner(context).run('ls -alh')
 
 if __name__ == "__main__":
   test_module()

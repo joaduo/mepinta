@@ -208,7 +208,7 @@ def shedskin_DirectedGraph():
   a = [1, 2, 4, 5, 6, 6, 6, 8, 100, 3221]
   b = [1, 2, 4, 5, 6, 5, 9, 8, 100, 3221]
   tbl = DirectedGraph()
-  #print dir(tbl)
+  #debugPrint dir(tbl)
   tbl._DirectedGraph__keys = a
   tbl._DirectedGraph__values = b
 
@@ -246,27 +246,27 @@ def shedskin_test():
   id_indexed_table = DirectedGraph()
   id_indexed_table.__keys = a
   id_indexed_table.__values = b
-  print(id_indexed_table[1])
-  print(id_indexed_table[6])
+  debugPrint(id_indexed_table[1])
+  debugPrint(id_indexed_table[6])
   id_indexed_table[1] = 20
-  print(id_indexed_table[1])
-  print(id_indexed_table)
+  debugPrint(id_indexed_table[1])
+  debugPrint(id_indexed_table)
   del id_indexed_table[1]
   id_indexed_table.__delslice__(2, 6) #TODO: why [:] doesnt work?
-  print(id_indexed_table)
-  print(id_indexed_table.__getslice__(8, 3221)) #TODO: why [:] doesnt work?
-  print(id_indexed_table.__slice__(8, 3221))  #TODO: why [:] doesnt work?
-  print(len(id_indexed_table))
+  debugPrint(id_indexed_table)
+  debugPrint(id_indexed_table.__getslice__(8, 3221)) #TODO: why [:] doesnt work?
+  debugPrint(id_indexed_table.__slice__(8, 3221))  #TODO: why [:] doesnt work?
+  debugPrint(len(id_indexed_table))
   id_indexed_table.add(4, 543)
   id_indexed_table.add(4, 45)
-  print(id_indexed_table.count(4))
-  print(id_indexed_table.index(4))
+  debugPrint(id_indexed_table.count(4))
+  debugPrint(id_indexed_table.index(4))
   id_indexed_table.add(8, 8)
   id_indexed_table.add(8, 20)
   id_indexed_table.remove(8, 8)
   id_indexed_table.remove(8, 20)
   id_indexed_table.add(203, 423123)
-  print(id_indexed_table)
+  debugPrint(id_indexed_table)
 
 if __name__ == '__main__':
   #import sys

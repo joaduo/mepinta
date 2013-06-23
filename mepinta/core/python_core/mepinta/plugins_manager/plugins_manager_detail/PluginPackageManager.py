@@ -65,7 +65,7 @@ class PluginPackageManager(FrameworkBase):
       PluginsManager can receive a package/module or a string.
       This functions gets whatever we don't have and returns both.
     '''
-#    print plugin
+#    debugPrint plugin
 #    import pdb;
 #    pdb.set_trace()
     if isinstance(plugin, (str, unicode)):  # We have the name, then we need to get the package

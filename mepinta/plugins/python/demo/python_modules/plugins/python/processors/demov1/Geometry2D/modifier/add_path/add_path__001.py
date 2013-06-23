@@ -58,4 +58,4 @@ def modifyGeometry(args):
 
 if __name__ == '__main__':
   pp = get_processor_proxy(None)
-  print( pp)
+  debugPrint( pp)

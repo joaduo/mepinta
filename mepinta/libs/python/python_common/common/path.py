@@ -89,6 +89,6 @@ def conditionalPathJoin(str_list, split=False): #TODO: remove this?
     return os.sep.join(str_list)
 
 if __name__ == "__main__":
-  print pathHead('/path/to/file')
-  print pathIsDir('/home/jduo')
-  print pathIsDir('/home/jduo/output.k3d')
+  debugPrint(pathHead('/path/to/file'))
+  debugPrint(pathIsDir('/home/jduo'))
+  debugPrint(pathIsDir('/home/jduo/output.k3d'))

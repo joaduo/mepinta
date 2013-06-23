@@ -274,4 +274,4 @@ if __name__ == '__main__':
   funcs.sort()
   funcs.reverse()
   for f in funcs:
-    print f
+    debugPrint f

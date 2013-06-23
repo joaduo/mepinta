@@ -47,13 +47,13 @@ def test_module():
       self.processors = {}
   ctx = Context('python')
   pm = FooTestPluginsManager(context=ctx)
-  print(pm.config)
+  debugPrint(pm.config)
   pm.config.hola = 'valor'
-  print(pm.config.hola)
+  debugPrint(pm.config.hola)
   try:
     pm.config.context = 'bla'
   except Exception as e:
-    print e
+    debugPrint(e)
 
 if __name__ == '__main__':
   test_module()

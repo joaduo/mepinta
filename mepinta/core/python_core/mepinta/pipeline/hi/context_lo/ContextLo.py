@@ -45,4 +45,4 @@ if __name__ == '__main__':
   from common.context.Context import Context
   ctxp = Context('python')
   ctxlo = ContextLo(context=ctxp)
-  print(ctxlo)
+  debugPrint(ctxlo)

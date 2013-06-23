@@ -43,6 +43,6 @@ class PackageCreator(FrameworkBase):
         self.module_creator.create(init_file)
 
 if __name__ == "__main__":
-  print FrameworkBase
+  debugPrint FrameworkBase
   context = MepintaContext('python')
   pc = PackageCreator(context=context)

@@ -37,7 +37,7 @@ from pipeline_backend.load_unload_library.load_unload_library import load_librar
 loaded_libraries = {}
 
 def local_log_info(msg):
-  print msg
+  sys.stdout.write(msg + '\n')
 
 def local_log_error(msg):
   sys.stderr.write(msg + '\n')

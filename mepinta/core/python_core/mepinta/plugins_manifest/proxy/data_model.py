@@ -371,7 +371,7 @@ if __name__ == '__main__':
   #    container.count = DataPropertyProxy('int')
   #    container.expression = DataPropertyProxy('charp')
   #    container.operation = FunctionPropertyProxy()
-  #    print (container.get_properties())
+  #    debugPrint (container.get_properties())
   #
   #  test()
   #
@@ -428,25 +428,25 @@ if __name__ == '__main__':
   #  def test_qualifiers():
   #    qualified = DirectionQualifier(pp.inputs.expression, '<')
   #    qualified1 = qualified
-  #    print qualified
+  #    debugPrint qualified
   #    #qualified = DataPropertyProxy('name')
-  #    print qualified.direction
-  #    print qualified.name
-  #    print qualified.data_type_name
-  #    print qualified.hasQualifier('direction')
+  #    debugPrint qualified.direction
+  #    debugPrint qualified.name
+  #    debugPrint qualified.data_type_name
+  #    debugPrint qualified.hasQualifier('direction')
   #    qualified = ValidationQualifier(qualified, '#prop > 1', 2)
-  #    print qualified.hasQualifier('Validation')
-  #    print qualified == pp.inputs.expression
-  #    print qualified == qualified1
-  #    print qualified == pp.inputs.scalar_number
+  #    debugPrint qualified.hasQualifier('Validation')
+  #    debugPrint qualified == pp.inputs.expression
+  #    debugPrint qualified == qualified1
+  #    debugPrint qualified == pp.inputs.scalar_number
   #    qualified2 = DirectionQualifier(pp.inputs.scalar_number, '<')
-  #    print qualified == qualified2
-  #    print qualified2 == pp.inputs.scalar_number
-  #    print pp.inputs.expression.directed('<')
-  #    print qualified == pp.inputs.expression.directed('<')
-  #    print qualified2 == pp.inputs.scalar_number.validateDefault('#prop < 1', 0).directed('<')
-  #    print qualified2 == directedReadable('<', pp.inputs.scalar_number.validateDefault('#prop < 1', 0))
-  #    print repr(qualified)
-  #    print repr(directedReadable('<', pp.inputs.scalar_number.validateDefault('#prop < 1', 0)))
+  #    debugPrint qualified == qualified2
+  #    debugPrint qualified2 == pp.inputs.scalar_number
+  #    debugPrint pp.inputs.expression.directed('<')
+  #    debugPrint qualified == pp.inputs.expression.directed('<')
+  #    debugPrint qualified2 == pp.inputs.scalar_number.validateDefault('#prop < 1', 0).directed('<')
+  #    debugPrint qualified2 == directedReadable('<', pp.inputs.scalar_number.validateDefault('#prop < 1', 0))
+  #    debugPrint repr(qualified)
+  #    debugPrint repr(directedReadable('<', pp.inputs.scalar_number.validateDefault('#prop < 1', 0)))
   #
   #  test_qualifiers()

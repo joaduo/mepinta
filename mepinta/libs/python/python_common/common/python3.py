@@ -17,4 +17,4 @@ def portableGetArgspec(func):
   return inspect.getargspec(func)
 
 if __name__ == "__main__":
-  print(on_python_3())
+  debugPrint(on_python_3())

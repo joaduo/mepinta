@@ -41,7 +41,7 @@ def render(args):
     if len(b_path) > 4:
       path.moveto(*geom2d.points[b_path[0]])
       for p_num in xrange((len(b_path) - 1) // 3):
-        #print b_path,p_num
+        #debugPrint b_path,p_num
         path.curveto(ps[b_path[p_num * 3 + 1]][0], ps[b_path[p_num * 3 + 1]][1]
                      , ps[b_path[p_num * 3 + 2]][0], ps[b_path[p_num * 3 + 2]][1]
                      , ps[b_path[p_num * 3 + 3]][0], ps[b_path[p_num * 3 + 3]][1]

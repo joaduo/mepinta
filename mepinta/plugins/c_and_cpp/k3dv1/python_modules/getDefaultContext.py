@@ -36,8 +36,8 @@ def getDefaultContext(log_level=LOG_INFO):
   return context
 
 if __name__ == "__main__":
-  print(getDefaultContext(LOG_DEBUG))
+  debugPrint(getDefaultContext(LOG_DEBUG))
   try:
-    print(getDefaultContext(LOG_INFO))
+    debugPrint(getDefaultContext(LOG_INFO))
   except MepintaError as me:
-    print(me)
+    debugPrint(me)

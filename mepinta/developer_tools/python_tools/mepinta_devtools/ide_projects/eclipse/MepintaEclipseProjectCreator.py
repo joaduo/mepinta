@@ -72,11 +72,11 @@ def test_module():
   from getDefaultContext import getDefaultContext
   context = getDefaultContext()
   mepc = MepintaEclipseProjectCreator(context)
-  #  print mepc.__class__.__module__
-  #  print "%r" % mepc.file_manager.__class__.__module__
-  #  print type(mepc.file_manager.__class__.__module__)
-  #  print mepc._getMepintaRoot()
-  #  print mepc._getAbsoluteSrcPath('core/python_core')
+  #  debugPrint mepc.__class__.__module__
+  #  debugPrint "%r" % mepc.file_manager.__class__.__module__
+  #  debugPrint type(mepc.file_manager.__class__.__module__)
+  #  debugPrint mepc._getMepintaRoot()
+  #  debugPrint mepc._getAbsoluteSrcPath('core/python_core')
   projects_dir = '/home/jduo/001-Mepinta/EclipseProjects_GitRepo/mepinta_test_folders/EclipseProjects'
   mepc.createMepintaCoreProject(projects_dir)
   mepc.createMepintaCommonProject(projects_dir)

@@ -25,9 +25,9 @@ def isiterable(instance):
     return True
   except TypeError as e:
     return False
-  
-        
+
+
 if __name__ == "__main__":
-  print isiterable([])
-  print isiterable("foo")
-  print isiterable(10)
+  debugPrint(isiterable([]))
+  debugPrint(isiterable("foo"))
+  debugPrint(isiterable(10))

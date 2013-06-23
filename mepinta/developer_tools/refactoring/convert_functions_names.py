@@ -60,7 +60,7 @@ def refactorProject(files_names):
     f = open(f_name, 'rw')
     text = f.read()
     text = replaceNames(name_list, replace_dict, text)
-    print 'done with %s' % f_name.split('/')[-1]
+    debugPrint 'done with %s' % f_name.split('/')[-1]
     #f.write(text)
     f.close()
 
@@ -69,7 +69,7 @@ if __name__ == '__main__':
   name_list = convert(functions_names)
   #name_list = [('unwrap_lo', 'unwrapLo')]
   text = "asldkmasdl unwrap_lo() lkamsdlkamsd "
-  #print replaceNames(name_list, createReplaceDict(name_list), text)
+  #debugPrint replaceNames(name_list, createReplaceDict(name_list), text)
   files_names = getFileNames()
   refactorProject(files_names)
 

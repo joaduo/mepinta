@@ -187,5 +187,5 @@ if __name__ == "__main__":
   context = MepintaContext('python')
   template = '< {FOO} > < {BAR}>'
   translation_dict = {'FOO':'value=10', 'BAR':'other="some"'}
-  print(DictionaryBasedTranslator(context, template=template, translation_dict=translation_dict))
+  debugPrint(DictionaryBasedTranslator(context, template=template, translation_dict=translation_dict))
 

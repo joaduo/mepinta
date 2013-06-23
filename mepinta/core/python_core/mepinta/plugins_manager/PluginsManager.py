@@ -52,6 +52,6 @@ if __name__ == '__main__':
   from mepinta.context.MepintaContext import MepintaContext
   context = MepintaContext('python')
   pm = PluginsManager(context=context)
-  print (pm)
+  debugPrint (pm)
   #pline = Pipeline(context=context)
   

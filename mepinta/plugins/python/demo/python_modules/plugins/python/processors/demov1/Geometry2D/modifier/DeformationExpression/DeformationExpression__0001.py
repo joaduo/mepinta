@@ -44,7 +44,7 @@ class manifest(PluginManifestBase):
 from mepinta_python_sdk.props import get_prop_value
 
 def evalExpression(expression, locals_dict):
-  #print locals_dict
+  #debugPrint locals_dict
   try:
     value = eval(expression, {"__builtins__":None}, locals_dict)
     return float(value)

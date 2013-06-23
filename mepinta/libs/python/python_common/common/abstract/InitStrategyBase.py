@@ -48,7 +48,7 @@ class InitStrategyBase(object): #TODO: only use PostInitStrategyBase
   def __getInitLists(self, class_, pres, posts, already_added):
     # TODO: check here when arriving to InitStrategyBase, if it doesn't, it
     # means there is multiple inheritance and it's not allowed
-    # print how to inherit correctly
+    # debugPrint how to inherit correctly
     if class_ == InitStrategyBase:
       return
     if issubclass(class_, InitStrategyBase):
@@ -81,5 +81,5 @@ if __name__ == '__main__':
   ctx = Context('python')
   cc = ConcreteClass()
   cc._initChildren([], dict(context=ctx, something=2312, value1=231, other_value=20, value=100, test=2))
-  print(cc.post_init_var, cc.pre_init_var, cc.post_init_var1)
+  debugPrint(cc.post_init_var, cc.pre_init_var, cc.post_init_var1)
 

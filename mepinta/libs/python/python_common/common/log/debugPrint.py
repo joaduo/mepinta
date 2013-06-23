@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 '''
 Mepinta
-Copyright (c) 2011-2012, Joaquin G. Duo, mepinta@joaquinduo.com.ar
+Copyright (c) 2011-2012, Joaquin G. Duo
 
 This file is part of Mepinta.
 
@@ -18,15 +18,16 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with Mepinta. If not, see <http://www.gnu.org/licenses/>.
 '''
-from mepinta.pipeline.hi.base import HiBase
+import sys
 
-class Pipeline(HiBase):
-  def __post_init__(self):
-    self.wrapped = self._getWrappedClass()()
+def debugPrint(msg):
+  if __debug__:
+    sys.stdout.write(str(msg) + '\n')
+  else:
+    raise Exception('You should only used this function in a debug or test environment')
 
-if __name__ == '__main__':
-  from getDefaultContext import getDefaultContext
-  from mepinta.pipeline.hi.FactoryLo import unwrap_lo
-  pline = Pipeline(context=getDefaultContext())
-  debugPrint(pline)
-  debugPrint(unwrap_lo(pline))
+def test_module():
+  debugPrint(object())
+
+if __name__ == "__main__":
+  test_module()

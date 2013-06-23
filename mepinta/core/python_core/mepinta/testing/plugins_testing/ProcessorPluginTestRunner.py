@@ -146,5 +146,5 @@ if __name__ == "__main__":
   from pipeline_backend.logging.logging import LOG_INFO#, LOG_DEBUG
   #ptr = ProcessorPluginTestRunner(getDefaultContext(LOG_DEBUG))
   ptr = ProcessorPluginTestRunner(getDefaultContext(LOG_INFO))
-  print (ptr)
+  debugPrint (ptr)
 

@@ -237,7 +237,7 @@ class InotifySimpleTestPipeline(ForkInotifyUtilsBase):
       for frame in frames:
         plugin_test.stressPipeline(self, frame * step)
         self.evaluateProp()
-        time.sleep(sleep) #TODO: improve waiting taking in count the time of evaluation and print fps too
+        time.sleep(sleep) #TODO: improve waiting taking in count the time of evaluation and debugPrint fps too
       plugin_test.stressStart(self, end)
     path = self._getModuleFilePath(test_module)
     path_action = PathAction(self.context, path=path, mask=IN_CLOSE_WRITE)
