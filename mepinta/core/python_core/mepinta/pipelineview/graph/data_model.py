@@ -52,7 +52,7 @@ class Node(FrameworkObject):
     self.getRequiredDataTypes = processor_proxy.getRequiredDataTypes
 
   def getPropertiesIds(self):
-    pass #for container in self.containers.getProperties()
+    pass #for container in self.containers.get_properties()
 
   def __str__(self):
     return 'Node(%r,%r)' % (self.name, self.processor)
@@ -64,15 +64,15 @@ class Graph(FrameworkObject):
   def __init__(self, pline):
     self.pline = pline
     self.__node_count = 0
-    self.topologyChanged = False
-    self.allNodes = dict()#id:Node
+    self.topology_changed = False
+    self.all_nodes = dict()#id:Node
 
   def addNode(self, node):
     #Repr Check
-    assert node not in self.allNodes.values(), 'node already in this graph'
+    assert node not in self.all_nodes.values(), 'node already in this graph'
     #Add the new node
     node_id = self.__newNodeId()
-    self.allNodes[node_id] = node
+    self.all_nodes[node_id] = node
     node.node_id = node_id
 
   def __newNodeId(self):

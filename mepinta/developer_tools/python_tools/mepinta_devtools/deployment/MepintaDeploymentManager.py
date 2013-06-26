@@ -47,8 +47,8 @@ class MepintaDeploymentManager(FrameworkBase):
     Create the plugins deployment
     Create the core deployment so libs
       backend_c and backend_cpp
-      Shedskin: build_shedskin_module.py <pipeline_lo_facade|loadLibraryStandAlone>
-        pipeline_lo_facade and loadLibraryStandAlone
+      Shedskin: build_shedskin_module.py <pipeline_lo_facade|load_library_stand_alone>
+        pipeline_lo_facade and load_library_stand_alone
     Create a run script that loads (should be taken in count automatically later, since the plugin should specify this?)
       "/usr/lib/libsigc-2.0.so",
       "/home/jduo/002-k3d/build/dependencies/boost_1_45_0/bin.v2/libs/test/build/gcc-4.4.3/release/threading-multi/libboost_unit_test_framework.so.1.45.0",
@@ -60,7 +60,7 @@ class MepintaDeploymentManager(FrameworkBase):
       developer_tools/python_tools
       libs/python/python_common
     Create Eclipse shedskin deployment for dev purposes ??
-      pipeline_lo_facade and loadLibraryStandAlone
+      pipeline_lo_facade and load_library_stand_alone
     Create the Plugins' QT or Eclipse deployment for dev purposes.
 
     Leave everything in its place to compile and run (mepinta and its tests)
@@ -71,9 +71,9 @@ class MepintaDeploymentManager(FrameworkBase):
   development. (headers and libraries (.so))
   '''
 
-def testModule():
+def test_module():
   from getDefaultContext import getDefaultContext
   context = getDefaultContext()
 
 if __name__ == "__main__":
-  testModule()
+  test_module()

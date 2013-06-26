@@ -32,7 +32,7 @@ class PipelineGraphvizTranslator(FrameworkBase):
   def __getConnectionsStr(self, pline):
     connections_str = ''
     topo = pline.getTopology()
-    dpdencies_iterator = topo.connections.dpdencies.getSsIterator()
+    dpdencies_iterator = topo.connections.dpdencies.get_ss_iterator()
     p_id_dent, p_id_dency = dpdencies_iterator.next()
     while p_id_dent != NULL_UID:
       connections_str += '  %s -> %s \n' % (p_id_dent, p_id_dency)
@@ -46,9 +46,9 @@ class PipelineGraphvizTranslator(FrameworkBase):
   def renderAscii(self, pline):
     pass
 
-def testModule():
+def test_module():
   from getDefaultContext import getDefaultContext
   context = getDefaultContext()
 
 if __name__ == "__main__":
-  testModule()
+  test_module()

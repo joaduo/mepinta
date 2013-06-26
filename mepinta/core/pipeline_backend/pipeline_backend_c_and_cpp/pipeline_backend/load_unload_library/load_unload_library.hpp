@@ -30,8 +30,8 @@ extern str *__name__;
 
 
 void __init();
-void *loadLibrary(str *path, str *symbol);
-__ss_int unloadLibrary(void *handle);
+void *load_library(str *path, str *symbol);
+__ss_int unload_library(void *handle);
 
 } // module namespace
 } // module namespace

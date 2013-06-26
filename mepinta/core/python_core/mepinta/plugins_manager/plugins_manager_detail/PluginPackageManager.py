@@ -34,10 +34,10 @@ class PluginPackageManager(FrameworkBase):
   '''
   def __post_init__(self, plugins_type):
     self.plugins_type = plugins_type
-  def buildPackageModuleName(self, version, short_name):  # TODO: remove?
+  def build_package_module_name(self, version, short_name):  # TODO: remove?
     name = '%s.%s.' % (self.prefixes[version], self.plugins_type)
     return name
-  def python2x3xImport(self, short_name):
+  def python2x_3x_import(self, short_name):
     # TODO: make choice by context/context name
     prefixes = []
     if self.context.backend_name == 'python':
@@ -57,10 +57,10 @@ class PluginPackageManager(FrameworkBase):
         module = __import__(name, fromlist="dummy")
         return module
       except Exception as e:
-        self.log.lastException()  # TODO: add an config for this printing
+        self.log.last_exception()  # TODO: add an config for this printing
         self.log.debug('Couldnt import %s. Exception: %s' % (name, e))
     raise RuntimeError('Couldn\'t load (%s).%s.%s plugin.' % ('|'.join(prefixes), self.plugins_type, short_name))
-  def getPackageAndName(self, plugin):
+  def get_package_and_name(self, plugin):
     '''
       PluginsManager can receive a package/module or a string.
       This functions gets whatever we don't have and returns both.
@@ -70,7 +70,7 @@ class PluginPackageManager(FrameworkBase):
 #    pdb.set_trace()
     if isinstance(plugin, (str, unicode)):  # We have the name, then we need to get the package
       plugin_name = plugin
-      plugin_package = self.python2x3xImport(plugin)
+      plugin_package = self.python2x_3x_import(plugin)
     elif isinstance(plugin, ProcessorMetadata) or isinstance(plugin, DataTypeMetadata):
       # Is a Processor or DataType object, build the name
       # The package is already there
@@ -82,7 +82,7 @@ class PluginPackageManager(FrameworkBase):
       plugin_name = '.'.join(plugin_package.__name__.split('.')[3:])
     self.log.debug('Name: %r, package: %s' % (plugin_name, plugin_package))
     return plugin_name, plugin_package
-  def getRevisionModules(self, plugin_package):
+  def get_revision_modules(self, plugin_package):
     '''
       Within a plugin package we can find several modules. Each for one build.
       Each build is a minor version.
@@ -128,12 +128,12 @@ class PluginPackageManager(FrameworkBase):
       sorted_names_list.insert(index, module_name)
     # TODO: review this
     return dict(names=sorted_names_list, versions=sorted_version_list)
-  def getRevisionModule(self, package_name, build_name):
+  def get_revision_module(self, package_name, build_name):
     '''
       Once we know which module we are interested in, we would like to access its contents.
       So let's load it and return it for later use.
     '''
-    build_module = self.python2x3xImport('%s.%s' % (package_name, build_name))
+    build_module = self.python2x_3x_import('%s.%s' % (package_name, build_name))
     # TODO: should we do a deep reload here? check also pipeline_backend/load_unload_library.py
     build_module = imp.reload(build_module)
     return build_module

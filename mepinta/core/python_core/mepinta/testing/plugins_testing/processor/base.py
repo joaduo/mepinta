@@ -70,7 +70,7 @@ class ProcessorPluginTestBase(FrameworkBase):
     return self.__time
 
   @property
-  def testedProcessors(self):
+  def tested_processors(self):
     '''List of processors (modules) target of this test case.'''
     return self.__tested_processors
 
@@ -83,9 +83,9 @@ class ProcessorPluginTestBase(FrameworkBase):
     When a processors is being watched means that it's implementation is being
     watched for changes (through Inotify in Linux)
     '''
-    if not len(self.testedProcessors):
+    if not len(self.tested_processors):
       raise MepintaError('You should set self.tested_processor on test __post_init__ method.')
-    return self.testedProcessors
+    return self.tested_processors
 
   define_once = True
   def definePipeline(self, test_pline):

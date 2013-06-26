@@ -21,10 +21,10 @@ along with Mepinta. If not, see <http://www.gnu.org/licenses/>.
 
 def getTestModules():
   test_modules = []
-  import plugins_tests.python.processors.actiontree.UndoableGraph.generator.EmptyGraph.EmptyGraph__0001 as testModule
-  test_modules.append(testModule)
-  import plugins_tests.python.processors.demov1.Geometry2D.modifier.DeformationExpression.DeformationExpression__0001 as testModule
-  test_modules.append(testModule)
+  import plugins_tests.python.processors.actiontree.UndoableGraph.generator.EmptyGraph.EmptyGraph__0001 as test_module
+  test_modules.append(test_module)
+  import plugins_tests.python.processors.demov1.Geometry2D.modifier.DeformationExpression.DeformationExpression__0001 as test_module
+  test_modules.append(test_module)
   return test_modules
 
 def fastIntegrationTestPython(context=None, gui=False):
@@ -34,13 +34,13 @@ def fastIntegrationTestPython(context=None, gui=False):
   from mepinta.testing.plugins_testing.PluginTestAutoTester import PluginTestAutoTester
   test_modules = getTestModules()
   if gui:
-    PluginTestAutoTester(context).shallowTest(gui=gui, testModule=test_modules[0])
+    PluginTestAutoTester(context).shallowTest(gui=gui, test_module=test_modules[0])
   else:
-    for testModule in test_modules:
-      PluginTestAutoTester(context).shallowTest(gui=gui, testModule=testModule)
+    for test_module in test_modules:
+      PluginTestAutoTester(context).shallowTest(gui=gui, test_module=test_module)
 
-def testModule():
+def test_module():
   fastIntegrationTestPython()
 
 if __name__ == "__main__":
-  testModule()
+  test_module()

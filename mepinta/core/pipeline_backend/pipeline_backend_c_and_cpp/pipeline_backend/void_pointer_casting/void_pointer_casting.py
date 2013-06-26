@@ -36,40 +36,40 @@ def copyToFunc(to_voidp, from_voidp):
   return None
 
 #Data
-def intToVoidp(int_v):#TODO: remove
+def int_to_voidp(int_v):#TODO: remove
   return None
 
-def doubleToVoidp(float_v):
+def double_to_voidp(float_v):
   return None
 
-def strToVoidp(str_):
+def str_to_voidp(str_):
   return None
 
-def strCharpToVoidp(str_):
+def str_charp_to_voidp(str_):
   return None
 
-def strStringToVoidp(str_):
+def str_string_to_voidp(str_):
   return None
 
-def anyPtrToVoidp(anything):
+def any_ptr_to_voidp(anything):
   return None
 
-def voidpToInt(voidp):
+def voidp_to_int(voidp):
   return 1
 
-def voidpToDouble(voidp):
+def voidp_to_double(voidp):
   return 1.1
 
-def voidpToStr(voidp):
+def voidp_to_str(voidp):
   return ''
 
-def voidpCharpToStr(voidp):
+def voidp_charp_to_str(voidp):
   return ''
 
-def voidpStringToStr(voidp):
+def voidp_string_to_str(voidp):
   return ''
 
-def voidpToListInt(voidp):
+def voidp_to_list_int(voidp):
   return [1]
 
 def voidp_to_FunctionPropertyValue(voidp):
@@ -79,39 +79,39 @@ def voidp_to_FunctumPropertyValue(voidp):
   return FunctumPropertyValue()
 
 #Functions pointers
-def voidpToFuncArgVoid(voidp):
+def voidp_to_func_arg_void(voidp):
   func_arg_void()
   return func_arg_void
 
-def voidpToFuncArgVoidp(voidp):
+def voidp_to_func_arg_voidp(voidp):
   func_arg_voidp(None)
   return func_arg_voidp
 
-def voidpToProcessorFunc(voidp):
+def voidp_to_processor_func(voidp):
   processor_func(None)
   return processor_func
 
-def voidpToCopyToFunc(voidp):
+def voidp_to_copy_to_func(voidp):
   copyToFunc(None, None)
   return copyToFunc
 
-def shedskin_void_pointer_casting():
+def shedskin_type_generation_voidp():
   voidp = None
-  voidpToFuncArgVoid(voidp)
-  voidpToFuncArgVoidp(voidp)
-  voidpToProcessorFunc(voidp)
-  voidpToCopyToFunc(voidp)
+  voidp_to_func_arg_void(voidp)
+  voidp_to_func_arg_voidp(voidp)
+  voidp_to_processor_func(voidp)
+  voidp_to_copy_to_func(voidp)
 
-  voidpToInt(voidp)
-  voidpToStr(voidp)
-  voidpToDouble(voidp)
-  voidpToListInt(voidp)
+  voidp_to_int(voidp)
+  voidp_to_str(voidp)
+  voidp_to_double(voidp)
+  voidp_to_list_int(voidp)
 
-  anyPtrToVoidp(voidp)
-  intToVoidp(1)
-  doubleToVoidp(10.0)
-  strToVoidp('')
+  any_ptr_to_voidp(voidp)
+  int_to_voidp(1)
+  double_to_voidp(10.0)
+  str_to_voidp('')
 
 if __name__ == '__main__':
-  shedskin_void_pointer_casting()
+  shedskin_type_generation_voidp()
 

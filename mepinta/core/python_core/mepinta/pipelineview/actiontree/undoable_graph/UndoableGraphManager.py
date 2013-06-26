@@ -21,7 +21,7 @@ along with Mepinta. If not, see <http://www.gnu.org/licenses/>.
 from common.abstract.FrameworkBase import FrameworkBase
 from mepinta.pipelineview.graph.GraphManager import GraphManager
 from mepinta.pipeline.hi.value_manager.AbstractValueManager import AbstractValueManager
-from mepinta.pipeline.hi.FactoryLo import unwrapLo
+from mepinta.pipeline.hi.FactoryLo import unwrap_lo
 from mepinta.plugins_manager.PluginsManager import PluginsManager
 from mepinta.plugins_manager.data_model import ProcessorMetadata
 from mepinta.pipelineview.graph.data_model import Graph
@@ -35,7 +35,7 @@ class UndoableGraphManager(FrameworkBase):
 
   def initGraph(self, u_graph):
     u_graph.setGraph(Graph(Pipeline(self.context)))
-    u_graph.topologyChanged = True
+    u_graph.topology_changed = True
 
   def connect(self, u_graph, dent_prop, dency_prop):
     return self.graph_manager.connect(u_graph, dent_prop, dency_prop)
@@ -47,11 +47,11 @@ class UndoableGraphManager(FrameworkBase):
     raise NotImplementedError()#return self.graph_manager.di
 
   def autoConnect(self, u_graph, dent_node, dency_node):
-    return self.graph_manager.autoConnect(u_graph, dent_node, dency_node)
+    return self.graph_manager.auto_connect(u_graph, dent_node, dency_node)
 
   def createNode(self, u_graph, processor, name=''):
     if not isinstance(processor, ProcessorMetadata):
-      processor = self._plugins_manager.loadProcessor(processor)
+      processor = self._plugins_manager.load_processor(processor)
     node = self.graph_manager.createNode(u_graph, processor)
     return node
 
@@ -60,7 +60,7 @@ class UndoableGraphManager(FrameworkBase):
 
   def resetTopology(self, u_graph):
     '''
-    When receiving a topologyChanged signal, we need to reset the topology.
+    When receiving a topology_changed signal, we need to reset the topology.
     :param u_graph:
     '''
     pass
@@ -70,7 +70,7 @@ class UndoableGraphManager(FrameworkBase):
 
   def setValue(self, u_graph, prop, value):
     old_value = self.value_manager.getValue(u_graph.pline, prop)
-    u_graph.old_properties[unwrapLo(prop)] = old_value
+    u_graph.old_properties[unwrap_lo(prop)] = old_value
     self.value_manager.setValue(u_graph.pline, prop, value)
 
   def undoValuesChanges(self, u_graph):
@@ -78,9 +78,9 @@ class UndoableGraphManager(FrameworkBase):
       self.value_manager.setValue(u_graph.pline, prop_id, old_value)
 
   def getNodeById(self, u_graph, node_id):
-    return u_graph.allNodes[node_id]
+    return u_graph.all_nodes[node_id]
 
-def testModule():
+def test_module():
   from getDefaultContext import getDefaultContext
   context = getDefaultContext()
   ugm = UndoableGraphManager(context)
@@ -92,4 +92,4 @@ def testModule():
 
 
 if __name__ == "__main__":
-  testModule()
+  test_module()

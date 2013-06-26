@@ -20,33 +20,33 @@ along with Mepinta. If not, see <http://www.gnu.org/licenses/>.
 '''
 from common.abstract.decorators.context_singleton import context_singleton
 from common.abstract.FrameworkBase import FrameworkBase
-from mepinta.pipeline.lo_cpp.load_library_stand_alone import loadLibraryStandAlone
+from mepinta.pipeline.lo_cpp.load_library_stand_alone import load_library_stand_alone
 import os
 from mepinta.abstract.MepintaError import MepintaError
 
-def unwrapLo(wrapper): #TODO: take this out of here?
+def unwrap_lo(wrapper): #TODO: take this out of here?
   if hasattr(wrapper, '__wrapped_lo__'):
     return wrapper.__wrapped_lo__()
   elif isinstance(wrapper, list):
-    return [unwrapLo(item) for item in wrapper]
+    return [unwrap_lo(item) for item in wrapper]
   else:
     return wrapper
 
 @context_singleton
 class FactoryLo(FrameworkBase):
   def __post_init__(self):
-    self.wrapped = self.getWrapped()()
-  def __loadLibmepintacore(self):
+    self.wrapped = self.get_wrapped()()
+  def __load_libmepintacore(self):
       sep = os.sep
       path = sep.join(__file__.split(sep)[:-3]) + "%slib%slibMepintaArgsApi.so" % (sep, sep)
       self.log.debug("Loading lib at %r." % path)
-      if not loadLibraryStandAlone(path, "global"):
+      if not load_library_stand_alone(path, "global"):
         raise MepintaError("Couldn't load mepinta_cpp core at %s." % path)
-  def getWrapped(self):
+  def get_wrapped(self):
     if self.context.backend_name == 'python':
       from mepinta.pipeline.lo.pipeline_lo_facade import FactoryLo as WrappedClass
     elif self.context.backend_name == 'c_and_cpp':
-      self.__loadLibmepintacore()
+      self.__load_libmepintacore()
       from mepinta.pipeline.lo_cpp.pipeline_lo_facade import FactoryLo as WrappedClass
     else:
       raise MepintaError("There is not such backend: %r" % self.context.backend_name)
@@ -58,7 +58,7 @@ class FactoryLo(FrameworkBase):
       raise RuntimeError("There is no factory for the: %r" % class_name)
     return factory_method
   def getInstance(self, class_name, context):
-    return self.get(class_name)(context_lo=unwrapLo(context.context_lo))
+    return self.get(class_name)(context_lo=unwrap_lo(context.context_lo))
 
 if __name__ == '__main__':
   from common.context.Context import Context

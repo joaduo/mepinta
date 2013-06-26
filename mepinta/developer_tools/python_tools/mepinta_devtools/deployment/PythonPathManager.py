@@ -49,9 +49,9 @@ class PythonPathManager(object):
     relative_paths = self.getPluginsRelativePathsDict()
     self.__appendPath(mepinta_source_path, relative_paths[plugins_set])
 
-def testModule():
+def test_module():
   from getDefaultContext import getDefaultContext
   context = getDefaultContext()
 
 if __name__ == "__main__":
-  testModule()
+  test_module()

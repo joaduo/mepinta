@@ -35,9 +35,9 @@ class DeploymentScriptsCopier(FrameworkBase):
       self.log.d('Copying %r to %r' % (joinPath(src_path, file_name), joinPath(deployment_path, file_name)))
       shutil.copy(joinPath(src_path, file_name), joinPath(deployment_path, file_name))
 
-def testModule():
+def test_module():
   from getDefaultContext import getDefaultContext
   context = getDefaultContext()
 
 if __name__ == "__main__":
-  testModule()
+  test_module()

@@ -24,10 +24,10 @@ from plugins_tests.base.K3dMeshPluginTest import K3dMeshPluginTest
 class SelectPointsExpression(K3dMeshPluginTest):
   def __post_init__(self):
     import plugins.c_and_cpp.processors.k3dv1.mesh.selection.points.SelectPointsExpression as select
-    self.testedProcessors.append(select)
+    self.tested_processors.append(select)
 
   def definePluginPipeline(self, test_pline):
-    select = self.testedProcessors[0]
+    select = self.tested_processors[0]
     select_node = test_pline.append(select)
     test_pline.setValue(select_node.inputs.weight_expression, 't')
     test_pline.setValue(select_node.inputs.time_name, 't')

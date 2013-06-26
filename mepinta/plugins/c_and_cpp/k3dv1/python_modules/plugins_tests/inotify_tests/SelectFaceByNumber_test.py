@@ -26,17 +26,17 @@ from plugins_tests.base.K3dMeshPluginTest import K3dMeshPluginTest
 class SelectFaceByNumber(K3dMeshPluginTest):
   def __post_init__(self):
     import plugins.c_and_cpp.processors.k3dv1.mesh.selection.bynumber.SelectFaceByNumber as select
-    self.testedProcessors.append(select)
+    self.tested_processors.append(select)
 
   def _createInputMesh(self, test_pline):
     import plugins.c_and_cpp.processors.k3dv1.mesh.input.file.OBJMeshReader as obj_rdr
     obj_node = test_pline.append(obj_rdr)
     test_pline.setValue(obj_node.inputs.file, '/home/jduo/output.obj')
-    test_pline.defaultMarked.append(obj_node.functions.loadMesh)
+    test_pline.default_marked.append(obj_node.functions.loadMesh)
     return obj_node
 
   def definePluginPipeline(self, test_pline):
-    select = self.testedProcessors[0]
+    select = self.tested_processors[0]
     n_sel = test_pline.append(select)
     import plugins.c_and_cpp.processors.k3dv1.mesh.modifiers.polyhedron.ExtrudeFaces as ext_fac
     n_ext = test_pline.append(ext_fac)

@@ -29,9 +29,9 @@ class TemplateCPPBase(TemplateLogicBase):
     # self.log('Using data type minor version from eclipse projects.') #TODO
     return required_data_types.keys()
 
-def testModule():
+def test_module():
   from getDefaultContext import getDefaultContext
   context = getDefaultContext()
 
 if __name__ == "__main__":
-  testModule()
+  test_module()

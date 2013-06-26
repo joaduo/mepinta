@@ -24,16 +24,16 @@ from mepinta.pipelineview.graph.NodeManager import NodeManager
 from mepinta.pipelineview.graph.GraphTopologyManager import GraphTopologyManager
 from mepinta.plugins_manager.PluginsManager import PluginsManager
 
-def topologyChanged(method):
+def topology_changed(method):
   def newMethod(*args, **kwargs):
-    if len(args) > 2 and hasattr(args[1], 'topologyChanged'):
+    if len(args) > 2 and hasattr(args[1], 'topology_changed'):
       graph = args[1]
     elif 'graph' in kwargs:
       graph = kwargs['graph']
     else:
       raise TypeError('You should provide an graph to the method %r. args:(%r,%r)' % (method, args, kwargs))
     return_value = method(*args, **kwargs)
-    graph.topologyChanged = True
+    graph.topology_changed = True
     return return_value
   return newMethod
 
@@ -49,7 +49,7 @@ class GraphManager(FrameworkBase):
     self.node_mngr = NodeManager(self.context)
     self.plugins_mngr = PluginsManager(self.context)
 
-  @topologyChanged
+  @topology_changed
   def createNode(self, graph, processor): #TODO: add support for debugging version
     #create the node proxy
     node = self.node_mngr.new(processor)
@@ -60,35 +60,35 @@ class GraphManager(FrameworkBase):
     #return new node
     return node
 
-  @topologyChanged
+  @topology_changed
   def deleteNode(self, graph, node):
     node_id = node.node_id
     raise NotImplementedError()
 
   def __syncNode(self, pline, node):
     #Create the properties on the pline
-    prop_ids = self.prop_mngr.createProperties(pline, node)
+    prop_ids = self.prop_mngr.create_properties(pline, node)
     #Connect dpdencies
-    self.topo_mngr.addProperties(pline, prop_ids)
+    self.topo_mngr.add_properties(pline, prop_ids)
     #Make intranode connections
-    self.topo_mngr.connectInternally(pline, node)
+    self.topo_mngr.connect_internally(pline, node)
     #Enable Caching
-    self.topo_mngr.enableCached(pline, node)
+    self.topo_mngr.enable_cached(pline, node)
     #Return the node
     return node
 
-  @topologyChanged
+  @topology_changed
   def connect(self, graph, dent_prop, dency_prop):
     return self.topo_mngr.connect(graph.pline, dent_prop, dency_prop)
 
-  @topologyChanged
+  @topology_changed
   def disconnect(self, graph, dent_prop, dency_prop=None):
     return self.topo_mngr.disconnect(graph.pline, dent_prop, dency_prop)
 
-  @topologyChanged
-  def autoConnect(self, graph, dent_node, dency_node):
-    inputs_names = dent_node.inputs.getProperties().keys()
-    outputs_names = dency_node.outputs.getProperties().keys()
+  @topology_changed
+  def auto_connect(self, graph, dent_node, dency_node):
+    inputs_names = dent_node.inputs.get_properties().keys()
+    outputs_names = dency_node.outputs.get_properties().keys()
     self.log.debug('Autoconnecting in:%s out:%s' % (inputs_names, outputs_names))
     for name in outputs_names:
       if name in inputs_names:
@@ -98,8 +98,8 @@ class GraphManager(FrameworkBase):
 
 #  def syncNode(self, graph, node): #TODO: what is this used for? for node reloading?
 #    #update the new data types to be loaded
-#    self.plugins_mngr.processor_plugins_manager.loadProcessorsDataTypes(node)
+#    self.plugins_mngr.processor_plugins_manager.load_processors_data_types(node)
 #    #Set the new data types property_id to the node
-#    self.plugins_mngr.processor_plugins_manager.setContainersDtypeId(node)
+#    self.plugins_mngr.processor_plugins_manager.set_containers_dtype_id(node)
 #    #Now we can sync the node as if it were a new one
 #    self.__syncNode(graph.pline, node)

@@ -29,9 +29,9 @@ from mepinta.plugins_manager.data_model import DataTypeMetadata
 class DataTypePluginsManager(PluginsManagerBase):
   '''
   '''  
-  def loadDataType(self,data_type,minor_version,reload_):
+  def load_data_type(self,data_type,minor_version,reload_):
     #Let's get the python package so we can list later it's module.
-    data_type_name, data_type_package = self.dtype_pkg_mngr.getPackageAndName(data_type)
+    data_type_name, data_type_package = self.dtype_pkg_mngr.get_package_and_name(data_type)
     
     #Let's check first if we need to do all this stuff.
     if data_type_name in self.data_types and self.data_types[data_type_name].version >= minor_version: #We have a newer minor_version loaded
@@ -39,7 +39,7 @@ class DataTypePluginsManager(PluginsManagerBase):
       return self.data_types[data_type_name]
 
     #Now we get the list of builds for this data type and their versions. 
-    build_modules = self.dtype_pkg_mngr.getRevisionModules(data_type_package)
+    build_modules = self.dtype_pkg_mngr.get_revision_modules(data_type_package)
     
     #Check we don't have an empty plugin
     if len(build_modules['versions']) == 0:
@@ -61,7 +61,7 @@ class DataTypePluginsManager(PluginsManagerBase):
     data_type.version = build_modules['versions'][module_index]
     data_type.package = data_type_package
     if self.context.backend_name == 'python': #On python description package is the same data type package
-      data_type.library_path = self.dtype_pkg_mngr.getRevisionModule(data_type, data_type.build_name)
+      data_type.library_path = self.dtype_pkg_mngr.get_revision_module(data_type, data_type.build_name)
     else: #then its cpp (shedskin)
       #OS:
       data_type.library_path = data_type_package.__path__[0] + '/%s.so.implementation'%data_type.build_name
@@ -69,33 +69,33 @@ class DataTypePluginsManager(PluginsManagerBase):
       #self.library_link_mgr.create_shared_lib_link(data_type.name, data_type.library_path)
 
     if data_type.name not in self.data_types: #The data type is not already loaded
-      self.loadDataTypeLibrary(data_type)
+      self.load_data_type_library(data_type)
     else: #Ok, its loaded. We need to reload_
       #save previous property_id
       data_type.property_id = self.data_types[data_type.name].property_id
       #Save unloaded processors before
       dependent_processors = copy.copy(self.data_types[data_type.name].processors)
       #Unload the data_type library #TODO: maybe later also data types could be dependents of other data types.
-      self.unloadDataTypeLibrary(self.data_types[data_type.name])
+      self.unload_data_type_library(self.data_types[data_type.name])
       #Reload the data type library
-      self.loadDataTypeLibrary(data_type)
+      self.load_data_type_library(data_type)
       #Ok, let's reload_ the dependent processors, so that they are available for later use
       for processor in dependent_processors:
-        self.loadProcessor(processor)
-  def loadDataTypeLibrary(self,data_type):
+        self.load_processor(processor)
+  def load_data_type_library(self,data_type):
     self.log.info('Loading %r,%r data type.'%(data_type.name,data_type.version))
     #Ask the lower lever C api to load this library, with global symbols, since they will be used by the processors
-    self.plugin_loader.loadDataTypeLibrary(data_type)
-    #data_type.name_in_backend = self.shared_library_loader.loadDataTypeLibrary(data_type) #TODO: comes from the backend
+    self.plugin_loader.load_data_type_library(data_type)
+    #data_type.name_in_backend = self.shared_library_loader.load_data_type_library(data_type) #TODO: comes from the backend
     #TODO: warn if there are equal names in backend?? (should be so for handling variable properties)
     #For future loading purposes
     self.data_types[data_type.name] = data_type
-  def unloadDataTypeLibrary(self,data_type):
+  def unload_data_type_library(self,data_type):
     #Unload processors depending on this data type (we need to reaload them later to use new API)
     for processor in data_type.processors:
-      self.unloadProcessorLibrary(processor)
+      self.unload_processor_library(processor)
     self.log.info('Unloading %r data type.'%(data_type.name))
     #Ask the lower lever C api to unload this library
-    self.plugin_loader.unloadDataTypeLibrary(data_type)
+    self.plugin_loader.unload_data_type_library(data_type)
     #Delete previous version data_type
     del self.data_types[data_type.name]

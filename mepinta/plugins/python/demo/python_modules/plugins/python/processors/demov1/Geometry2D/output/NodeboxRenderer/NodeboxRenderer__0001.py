@@ -19,7 +19,7 @@ You should have received a copy of the GNU General Public License
 along with Mepinta. If not, see <http://www.gnu.org/licenses/>.
 '''
 from mepinta.plugins_manifest import PluginManifestBase, FunctionProperty
-from mepinta_python_sdk.props import getPropValue
+from mepinta_python_sdk.props import get_prop_value
 
 class manifest(PluginManifestBase):
   def define(self, inputs, internals, functions, outputs):
@@ -29,7 +29,7 @@ class manifest(PluginManifestBase):
 
 def render(args):
   from nodebox.graphics import BezierPath, strokewidth, fill, directed, push, translate, rotate, pop, drawpath
-  geom2d = getPropValue(args, 'inputs', 'geometry')
+  geom2d = get_prop_value(args, 'inputs', 'geometry')
 
   #Do the drawing here!!
   path = BezierPath()

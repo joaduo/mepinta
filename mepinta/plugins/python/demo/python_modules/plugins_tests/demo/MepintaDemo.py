@@ -68,10 +68,10 @@ class MepintaDemo(FrameworkBase):
     parser.add_argument('--debug', action='store_true', help='Enable debug output.')
     return parser
 
-def testModule():
+def test_module():
   from getDefaultContext import getDefaultContext
   context = getDefaultContext()
   MepintaDemo(context).run()
 
 if __name__ == "__main__":
-  testModule()
+  test_module()

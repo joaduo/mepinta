@@ -53,9 +53,9 @@ class DeploymentConfigCreator(FrameworkBase):
     content = DictionaryBasedTranslator().getContent(template, translation_dict)
     self.file_manager.saveTextFile(file_path, content, overwrite)
 
-def testModule():
+def test_module():
   from getDefaultContext import getDefaultContext
   context = getDefaultContext()
 
 if __name__ == "__main__":
-  testModule()
+  test_module()

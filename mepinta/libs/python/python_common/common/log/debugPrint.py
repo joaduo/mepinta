@@ -26,8 +26,8 @@ def debugPrint(msg):
   else:
     raise Exception('You should only used this function in a debug or test environment')
 
-def testModule():
+def test_module():
   debugPrint(object())
 
 if __name__ == "__main__":
-  testModule()
+  test_module()

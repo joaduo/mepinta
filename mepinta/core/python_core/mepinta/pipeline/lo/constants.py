@@ -45,7 +45,7 @@ FUNCTION_PROPERTY_FLAG =     0b1000
 FUNCTUM_PROPERTY_FLAG =      0b10000
 CUSTOM_PROPERTY_FLAG =       0b100000000
 
-def hasFlags(prop_type, flags):
+def has_flags(prop_type, flags):
   return prop_type & flags != 0
 
 MEPINTA_C_NAMESPACE_PREFIX="MP_"

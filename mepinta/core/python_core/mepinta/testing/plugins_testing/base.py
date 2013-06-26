@@ -37,16 +37,16 @@ class ForkInotifyUtilsBase(FrameworkBase): #TODO: use composition
     #since the module won't be the same in the case of __main__ we need to redefine it on the caller
     return module
 
-  def _getTestInstance(self, testModule):
-    for class_ in testModule.__dict__.values():
+  def _getTestInstance(self, test_module):
+    for class_ in test_module.__dict__.values():
       if issubclass(class_, ProcessorPluginTestBase):
         return class_(self.context)
-    raise RuntimeError('There is no a test class in module: %s' % testModule)
-#    if hasattr(testModule, 'test') and issubclass(testModule.test, ProcessorPluginTestBase):
-#      testModule = self._reloadModule(testModule)
-#      return testModule.test(self.context)
+    raise RuntimeError('There is no a test class in module: %s' % test_module)
+#    if hasattr(test_module, 'test') and issubclass(test_module.test, ProcessorPluginTestBase):
+#      test_module = self._reloadModule(test_module)
+#      return test_module.test(self.context)
 #    else:
-#      raise RuntimeError('There is no a test class in module: %s' % testModule)
+#      raise RuntimeError('There is no a test class in module: %s' % test_module)
 
   def _getModuleFilePath(self, module):
     '''Get the .py file for a given module.
@@ -71,7 +71,7 @@ class ForkInotifyUtilsBase(FrameworkBase): #TODO: use composition
         function(*args, **kwargs)
         self.log.debug('Exiting fork process normally.')
       except Exception as exception:
-        self.log.lastException(level='error')
+        self.log.last_exception(level='error')
         self.log.error('Exiting unnormally with following exception: %s' % exception)
       sys.exit(0)
     else:

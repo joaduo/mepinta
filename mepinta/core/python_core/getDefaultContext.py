@@ -35,7 +35,7 @@ def getDefaultContext(log_level=LOG_INFO):
   else:
     called_once = True
   context = getMepintaContext('python')
-  context.log.setLevel(log_level)
+  context.log.set_level(log_level)
   setClassConfigs(context)
   return context
 

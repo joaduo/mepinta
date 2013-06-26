@@ -59,7 +59,7 @@ class PygletXlibEventLoop(BaseEventLoop):
                   break
           else:
               # None found; select on all file descriptors or timeout
-              iwtd = self.getSelectFiles()
+              iwtd = self.get_select_files()
               pending_displays, _, _ = self.select(iwtd, (), (), sleep_time)
 
           # Dispatch platform events
@@ -92,7 +92,7 @@ class PygletXlibEventLoop(BaseEventLoop):
 
       self.dispatch_event('on_exit')
 
-  def getSelectFiles(self):
+  def get_select_files(self):
       return list(displays)
 
 

@@ -68,7 +68,7 @@ class MepintaEclipseProjectCreator(FrameworkBase):
   def createPluginDataTypeIncludesProject(self, projects_dir):
     pass  # TOOD:
 
-def testModule():
+def test_module():
   from getDefaultContext import getDefaultContext
   context = getDefaultContext()
   mepc = MepintaEclipseProjectCreator(context)
@@ -84,4 +84,4 @@ def testModule():
   mepc.createMepintaArgsApiCPPProject(projects_dir)
 
 if __name__ == "__main__":
-  testModule()
+  test_module()

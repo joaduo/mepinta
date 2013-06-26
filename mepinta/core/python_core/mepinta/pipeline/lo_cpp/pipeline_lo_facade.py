@@ -35,9 +35,9 @@ from mepinta.pipeline.lo.value_manager.ValueManager import ValueManager,\
 from mepinta.pipeline.lo.property_manager.PropertyManager import PropertyManager,\
   shedskin_PropertyManager
 from mepinta.pipeline.lo.LogOutput import LogOutput, shedskin_LogOutput
-from pipeline_backend.logging.logging import shedskin_logging
-from pipeline_backend.args_management.args_management import shedskin_args_management
-from pipeline_backend.void_pointer_casting.void_pointer_casting import shedskin_void_pointer_casting
+from pipeline_backend.logging.logging import shedskin_type_generation_logging
+from pipeline_backend.args_management.args_management import shedskin_type_generation_argsm
+from pipeline_backend.void_pointer_casting.void_pointer_casting import shedskin_type_generation_voidp
 from mepinta.pipeline.lo.constants import INPUT_PROPERTY_FLAG
 from mepinta.pipeline.lo.generic_data.DirectedGraph import shedskin_DirectedGraph
 from mepinta.pipeline.lo.generic_data.BiDirectedGraph import shedskin_BiDirectedGraph
@@ -113,9 +113,9 @@ def shedskin_generation():
   #shedskin_ConditionalBDGraph()
   shedskin_TopologyConnections()
   
-  shedskin_logging()
-  shedskin_void_pointer_casting()
-  shedskin_args_management()
+  shedskin_type_generation_logging()
+  shedskin_type_generation_voidp()
+  shedskin_type_generation_argsm()
   shedskin_LogOutput()
   prop=Property(INPUT_PROPERTY_FLAG, 'name', dtype_id=0)
   func_prop_value = shedskin_hidden_data_types(prop)  
@@ -144,10 +144,10 @@ def shedskin_generation():
 
 if __name__ == '__main__':
   log = LogOutput()
-  log.setLevel(30)
+  log.set_level(30)
   log.info('Testing pipeline_lo_facade...')
-  log.setLevel(0)
+  log.set_level(0)
   shedskin_generation()
-  log.setLevel(30)
+  log.set_level(30)
   log.info('Done')
 

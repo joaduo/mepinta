@@ -55,7 +55,7 @@ class PipelineCopier(object):
       Needed when when copying from one node to the other on the Second Order Pipeline.
     We put this in a class, since we don't know how this will be handled later 
   '''
-  def copyPline(self, pline):
+  def copy_pline(self, pline):
     new_pline = pline.copy(Pipeline(init=False))
     return new_pline
 
@@ -72,23 +72,23 @@ class Pipeline2ndOrderManager(FrameworkBase):
     self.working_node = None
     #A 1st order (aka:"common") pline manager wrapped to manage the 2nd order pline
     self.wrapped_pline_mnger = TopologyManager(context=self.context)
-  def appendNodeToBranch(self, pline_2order, processor_name, processor_version=None):
+  def append_node_to_branch(self, pline_2order, processor_name, processor_version=None):
     #processor_name should have only one dot
     #We append FirstOrderPipeline_v_0_0_1
     #connect inputs.pline and outputs.pline
     node = None
     return node
-  def evalNode(self, pline_2order, node):
+  def eval_node(self, pline_2order, node):
     #The default property is always the 1st order pline
     pline_1order = None
     return pline_1order
-  def copyPline(self, pline_2order):
+  def copy_pline(self, pline_2order):
     #before copying we need to propagate changes!!
     pass
 #  def undo_redo_action(self, pline_2order, nodes_path):
 #    pline = None
 #    return pline
-  def addArbitraryNode(self, pline_2order, in_node,out_node):
+  def add_arbitrary_node(self, pline_2order, in_node,out_node):
     #"Massive" node re-evaluation? No needed
     pline = None
     return pline  

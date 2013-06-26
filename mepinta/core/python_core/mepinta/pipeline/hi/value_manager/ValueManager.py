@@ -19,7 +19,7 @@ You should have received a copy of the GNU General Public License
 along with Mepinta. If not, see <http://www.gnu.org/licenses/>.
 '''
 from mepinta.pipeline.hi.base import unwrap_decorator, \
- unwrapLo
+ unwrap_lo
 from mepinta.plugins_manifest.proxy.data_model import GenericEnumProxy
 from mepinta.pipeline.hi.FactoryLo import FactoryLo
 from common.abstract.FrameworkBase import FrameworkBase
@@ -50,20 +50,20 @@ class ValueManager(FrameworkBase): #TODO: rename to TypedValueManager
     self._value_manager_lo.markChangedProps(pline, [prop])
 
   def __getDispatchDict(self, prefix): #TODO: distinguish mutiple from mono values
-    dispatch_template = {'c.builtin.int':('Int', int),
-                         'c.builtin.double':('Double', float),
-                         'c.builtin.charp':('Charp', str),
-                         'cpp.std.string':('StdString', str),
+    dispatch_template = {'c.builtin.int':('int', int),
+                         'c.builtin.double':('double', float),
+                         'c.builtin.charp':('charp', str),
+                         'cpp.std.string':('std_string', str),
                         }
     dispatch_dict = {}
     for data_type_name, (data_type_nick, type_cast) in dispatch_template.items():
-      method = getattr(self._value_manager_lo, '%s%ss' % (prefix, data_type_nick))
+      method = getattr(self._value_manager_lo, '%s_%ss' % (prefix, data_type_nick))
       if prefix == 'set':
         def unwrapAndCast(pline, prop, value):
-          method(unwrapLo(pline), [unwrapLo(prop)], [type_cast(value)])
+          method(unwrap_lo(pline), [unwrap_lo(prop)], [type_cast(value)])
       elif prefix == 'get':
         def unwrapAndCast(pline, prop):
-          values = method(unwrapLo(pline), [unwrapLo(prop)])
+          values = method(unwrap_lo(pline), [unwrap_lo(prop)])
           if len(values) > 0:
             return values[0]
           else:
@@ -77,8 +77,8 @@ class ValueManager(FrameworkBase): #TODO: rename to TypedValueManager
     elif value not in prop.enum_dict.values():
       self.log.w('Setting default value for generic enum.')
       value = prop.default_value
-    self.__setInt(pline, prop, value)
+    self.__set_int(pline, prop, value)
 
   @unwrap_decorator
-  def __setInt(self, pline, prop, int_):
-    self._value_manager_lo.setInts(pline, [prop], [int(int_)])
+  def __set_int(self, pline, prop, int_):
+    self._value_manager_lo.set_ints(pline, [prop], [int(int_)])
