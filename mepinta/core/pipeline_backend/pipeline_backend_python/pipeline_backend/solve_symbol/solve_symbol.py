@@ -19,9 +19,9 @@ You should have received a copy of the GNU General Public License
 along with Mepinta. If not, see <http://www.gnu.org/licenses/>.
 '''
 
-from pipeline_backend.logging.logging import  log_warning
+from pipeline_backend.logging.logging import  logWarning
 
-def solve_symbol(handle, namespace, symbol):
+def solveSymbol(handle, namespace, symbol):
   '''
     On python this function looks for a variable "symbol" in the module "handle"
       We don't use the namespace on python
@@ -32,7 +32,7 @@ def solve_symbol(handle, namespace, symbol):
   if hasattr(handle, symbol):
     return getattr(handle, symbol)
   else:
-    log_warning('Symbol %r not found with lib handler %r for namescape %r'%(symbol,handle,namespace))
+    logWarning('Symbol %r not found with lib handler %r for namescape %r'%(symbol,handle,namespace))
     return None
 
 

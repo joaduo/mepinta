@@ -19,75 +19,75 @@ You should have received a copy of the GNU General Public License
 along with Mepinta. If not, see <http://www.gnu.org/licenses/>.
 '''
 
-def get_functum_struct_voidp(func_ptr, args):
+def getFunctumStructVoidp(func_ptr, args):
   return None
 
 args_per_thread={}
-def get_thread_args(in_size, out_size,thread_id):
+def getThreadArgs(in_size, out_size,thread_id):
   global args_per_thread
   if thread_id not in args_per_thread:
-    args = create_args(in_size, out_size)
+    args = createArgs(in_size, out_size)
     args_per_thread[thread_id] = args
   else:
     args = args_per_thread[thread_id]
-    args_set_capacity(args, 1, in_size)
-    args_set_capacity(args, 2, out_size)
-  args_set_thread_id(args, thread_id)
+    argsSetCapacity(args, 1, in_size)
+    argsSetCapacity(args, 2, out_size)
+  argsSetThreadId(args, thread_id)
   return args 
 
-def delete_args(args):
+def deleteArgs(args):
   return 0
 
-def create_args(in_size, out_size):
+def createArgs(in_size, out_size):
   return None 
 
-def args_set_thread_id(args,thread_id):
+def argsSetThreadId(args,thread_id):
   return 0
 
-def args_set_capacity(args, in_out_id, props_size):
+def argsSetCapacity(args, in_out_id, props_size):
   return 0
 
-def args_append_prop(args,in_out_id,index,prop_id,prop,prop_real,data_type):
+def argsAppendProp(args,in_out_id,index,prop_id,prop,prop_real,data_type):
   return 0    
 
-def args_set_changed(args, in_out_id, index):
+def argsSetChanged(args, in_out_id, index):
   return 0
 
-def args_set_unchanged(args, in_out_id, index):
+def argsSetUnchanged(args, in_out_id, index):
   return 0
 
-def args_build_changed_set(args, in_out_id, changed):
+def argsBuildChangedSet(args, in_out_id, changed):
   changed.add(10)
   return changed
 
-def shedskin_type_generation_argsm():
+def shedskin_args_management():
 #  args = None
 #  size = 0
 #  thread_id = 0
 #  in_out_id = 1
 #  index = 0
-#  delete_args(args)
-#  create_args(size, size)
-#  args_set_capacity(args, in_out_id, size)
-#  args_set_thread_id(args, thread_id)
-#  #args_append_prop(None, 0, 0, 0, prop, data_type)
-#  args_set_changed(args, in_out_id, index)
-#  args_set_unchanged(args, in_out_id, index)
-#  args_build_changed_set(args)
-  args = create_args(in_size=1, out_size=1)
-  delete_args(args)
-  args_set_capacity(args, in_out_id=1, props_size=1)
+#  deleteArgs(args)
+#  createArgs(size, size)
+#  argsSetCapacity(args, in_out_id, size)
+#  argsSetThreadId(args, thread_id)
+#  #argsAppendProp(None, 0, 0, 0, prop, data_type)
+#  argsSetChanged(args, in_out_id, index)
+#  argsSetUnchanged(args, in_out_id, index)
+#  argsBuildChangedSet(args)
+  args = createArgs(in_size=1, out_size=1)
+  deleteArgs(args)
+  argsSetCapacity(args, in_out_id=1, props_size=1)
 #  class Misc(object):
-#    def get_value_ptr(self): return None
+#    def getValuePtr(self): return None
 #  data_type = Misc(); data_type.lib_handle = None
 #  prop = Misc(); prop.name = 'bla'
-#  args_append_prop(args, in_out_id=INPUT_PROPS, index=0, prop_id=0, prop=prop, data_type=data_type)
-  args_set_changed(args, in_out_id=1, index=0)
-  args_set_unchanged(args, in_out_id=1, index=0)
+#  argsAppendProp(args, in_out_id=INPUT_PROPS, index=0, prop_id=0, prop=prop, data_type=data_type)
+  argsSetChanged(args, in_out_id=1, index=0)
+  argsSetUnchanged(args, in_out_id=1, index=0)
   changed = set()
   changed.add(0)
-  args_build_changed_set(args, in_out_id=1, changed=changed)
+  argsBuildChangedSet(args, in_out_id=1, changed=changed)
   
-  get_thread_args(in_size=1, out_size=1, thread_id=1)
+  getThreadArgs(in_size=1, out_size=1, thread_id=1)
   
 

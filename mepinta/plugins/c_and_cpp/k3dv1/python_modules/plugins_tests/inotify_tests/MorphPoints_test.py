@@ -26,7 +26,7 @@ from plugins_tests.base.K3dMeshPluginTest import K3dMeshPluginTest
 class SelectFaceByNumber(K3dMeshPluginTest):
   def __post_init__(self):
     import plugins.c_and_cpp.processors.k3dv1.mesh.modifiers.deformation.MorphPoints as morph
-    self.tested_processors.append(morph)
+    self.testedProcessors.append(morph)
 
   def _createInputMesh(self, test_pline):
     import plugins.c_and_cpp.processors.k3dv1.mesh.input.file.OBJMeshReader as obj_rdr
@@ -41,13 +41,13 @@ class SelectFaceByNumber(K3dMeshPluginTest):
     
     obj_node = test_pline.append(obj_rdr)
     test_pline.setValue(obj_node.inputs.file, '/home/jduo/output.obj')
-    test_pline.default_marked.append(obj_node.functions.loadMesh)
+    test_pline.defaultMarked.append(obj_node.functions.loadMesh)
      
     sel_node = test_pline.append(sel_exp)
     test_pline.setValue(sel_node.inputs.weight_expression,  "1")
 
   def definePluginPipeline(self, test_pline):
-    morph = self.tested_processors[0]
+    morph = self.testedProcessors[0]
     morph_node = test_pline.append(morph)
     
     test_pline.setValue(morph_node.inputs.target_amount, 0.5)

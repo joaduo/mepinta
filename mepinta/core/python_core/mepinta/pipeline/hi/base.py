@@ -20,7 +20,7 @@ along with Mepinta. If not, see <http://www.gnu.org/licenses/>.
 '''
 
 from common.abstract.FrameworkBase import FrameworkBase
-from mepinta.pipeline.hi.FactoryLo import FactoryLo, unwrap_lo
+from mepinta.pipeline.hi.FactoryLo import FactoryLo, unwrapLo
 from common.abstract.FrameworkObject import FrameworkObject
 from mepinta.abstract.MepintaError import MepintaError
 import inspect
@@ -33,12 +33,12 @@ class SafeCheckWrapper(FrameworkObject):
   def __call__(self, *a, **ad):
     checkings = self.function_safe(*a, **ad)
     if isinstance(checkings, dict):
-      for filter_func, list_ in checkings.items():
-        self.safeCheck(filter_func, list_)
+      for filterFunc, list_ in checkings.items():
+        self.safeCheck(filterFunc, list_)
     return self.function(*a, **ad)
-  def safeCheck(self, filter_func, list_):
-    if len(list(filter(filter_func, list_))) != 0:
-      raise MepintaError('Safe check function %r for function %r failed ' % (inspect.getsource(filter_func), self.function))
+  def safeCheck(self, filterFunc, list_):
+    if len(list(filter(filterFunc, list_))) != 0:
+      raise MepintaError('Safe check function %r for function %r failed ' % (inspect.getsource(filterFunc), self.function))
 
 class HiBase(FrameworkBase):
   '''
@@ -88,8 +88,8 @@ class LoAttrWrapper(object):
   def __init__(self, wrapped):
     self.wrapped = wrapped
   def __call__(self, *a, **ad):
-    args = [unwrap_lo(arg) for arg in a]
-    kwargs = dict((name, unwrap_lo(value)) for name, value in ad.items())
+    args = [unwrapLo(arg) for arg in a]
+    kwargs = dict((name, unwrapLo(value)) for name, value in ad.items())
     return self.wrapped(*args, **kwargs)
   def __getattr__(self, name):
     return getattr(self.wrapped, name)
@@ -100,15 +100,15 @@ class LoAttrWrapper(object):
 
 class HiAutoBase(HiBase):
   def __post_init__(self):
-    self.wrapped = self._getWrappedClass()(context_lo=unwrap_lo(self.context.context_lo))
+    self.wrapped = self._getWrappedClass()(context_lo=unwrapLo(self.context.context_lo))
 
-def unwrap_args_kwargs(a, ad):
-  args = [unwrap_lo(arg) for arg in a]
-  kwargs = dict((name, unwrap_lo(value)) for name, value in ad.items())
+def unwrapArgsKwargs(a, ad):
+  args = [unwrapLo(arg) for arg in a]
+  kwargs = dict((name, unwrapLo(value)) for name, value in ad.items())
   return args, kwargs
 
 def unwrap_decorator(method):
-  def method_wrapper(self, *a, **ad):
-    args, kwargs = unwrap_args_kwargs(a, ad)
+  def methodWrapper(self, *a, **ad):
+    args, kwargs = unwrapArgsKwargs(a, ad)
     return method(self, *args, **kwargs)
-  return method_wrapper
+  return methodWrapper

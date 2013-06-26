@@ -22,29 +22,36 @@ import sys
 import os
 
 class PythonPathManager(object):
+  def getPythonRelativePathsDict(self):
+    relative_paths = {'mepinta':'core/python_core',
+                  'mepinta_devtools':'developer_tools/python_tools',
+                  'common':'libs/python/python_common',
+                  'pipeline_backend': 'core/pipeline_backend/pipeline_backend_python',
+                  }
+    return relative_paths
+
+  def getPluginsRelativePathsDict(self):
+    relative_paths = {'demo':'plugins/python/demo/python_modules'}
+    return relative_paths
+
   def appendAll(self, mepinta_source_path):
     self.appendMepintaPaths(mepinta_source_path)
     self.appendPluginsPath(mepinta_source_path)
 
   def appendMepintaPaths(self, mepinta_source_path):
-    relative_paths = {'mepinta':'core/python_core',
-                      'mepinta_devtools':'developer_tools/python_tools',
-                      'common':'libs/python/python_common',
-                      'pipeline_backend': 'core/pipeline_backend/pipeline_backend_python',
-                      }
-    for path in relative_paths.values():
+    for path in self.getPythonRelativePathsDict().values():
       self.__appendPath(mepinta_source_path, path)
 
   def __appendPath(self, *args):
     sys.path.append(os.sep.join(args))
 
   def appendPluginsPath(self, mepinta_source_path, plugins_set='demo'):
-    relative_paths = {'demo':'plugins/python/demo/python_modules'}
+    relative_paths = self.getPluginsRelativePathsDict()
     self.__appendPath(mepinta_source_path, relative_paths[plugins_set])
 
-def test_module():
+def testModule():
   from getDefaultContext import getDefaultContext
   context = getDefaultContext()
 
 if __name__ == "__main__":
-  test_module()
+  testModule()

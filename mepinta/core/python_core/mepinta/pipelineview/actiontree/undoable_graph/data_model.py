@@ -24,7 +24,7 @@ from mepinta.pipeline.lo.constants import NULL_UID
 class UndoableGraph(FrameworkObject):
   def __init__(self):
     self.__graph = None
-    self.topology_changed = False
+    self.topologyChanged = False
     self.__created_nodes = list() #(node)
     self.old_properties = dict() #prop_id:value
     self.topology_id = NULL_UID #graph.growTopologies()
@@ -48,14 +48,14 @@ class UndoableGraph(FrameworkObject):
 
   def deleteNode(self, node):
     if node in self.__created_nodes and \
-       node in self.__graph.all_nodes:
+       node in self.__graph.allNodes:
       self.__created_nodes.remove(node)
-      self.__graph.all_nodes.removeNode(node)
+      self.__graph.allNodes.removeNode(node)
     raise KeyError('Node %r seems not to be consistent in the __graph' % node)
 
   @property
-  def all_nodes(self):
-    return self.__graph.all_nodes
+  def allNodes(self):
+    return self.__graph.allNodes
   @property
   def pline(self):
     return self.__graph.pline
@@ -63,7 +63,7 @@ class UndoableGraph(FrameworkObject):
   def graph(self):
     return self.__graph
   @property
-  def created_nodes(self):
+  def createdNodes(self):
     return self.__created_nodes
 
 
@@ -74,9 +74,9 @@ class UndoableGraph(FrameworkObject):
     elif self.__graph != graph:
       raise RuntimeError('Graph should always be the same')  #TODO: remove?
 
-def test_module():
+def testModule():
   from getDefaultContext import getDefaultContext
   context = getDefaultContext()
 
 if __name__ == "__main__":
-  test_module()
+  testModule()

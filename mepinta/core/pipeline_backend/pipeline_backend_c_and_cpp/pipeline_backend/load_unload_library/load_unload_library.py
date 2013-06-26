@@ -25,9 +25,9 @@ Created on Sep 28, 2011
 '''
 
 
-def load_library(path, symbol): #Symbol could be 'local' or 'global'
+def loadLibrary(path, symbol): #Symbol could be 'local' or 'global'
   handle = None
   return handle
 
-def unload_library(handle):
+def unloadLibrary(handle):
   return 0

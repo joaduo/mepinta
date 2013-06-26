@@ -19,7 +19,7 @@ You should have received a copy of the GNU General Public License
 along with Mepinta. If not, see <http://www.gnu.org/licenses/>.
 '''
 
-from mepinta.pipeline.lo_cpp.load_library_stand_alone import load_library_stand_alone
+from mepinta.pipeline.lo_cpp.load_library_stand_alone import loadLibraryStandAlone
 
 def getK3dList():
   #  k3d_libs = """libk3dsdk-expression.so
@@ -63,7 +63,7 @@ def load_k3d_libs():
   libs += ["/home/jduo/Projects/Informatica/Mepinta/EclipseProjects_Basic_Data_Types/Mepinta/MepintaArgsApiCpp/Debug/libMepintaArgsApiCpp.so"]
   
   for path in libs:
-    load_library_stand_alone(path, symbol="global")
+    loadLibraryStandAlone(path, symbol="global")
 
 if __name__ == "__main__":
   load_k3d_libs()

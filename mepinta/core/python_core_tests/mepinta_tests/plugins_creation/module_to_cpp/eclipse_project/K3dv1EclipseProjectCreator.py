@@ -32,12 +32,12 @@ class K3dv1EclipseProjectCreator_test(MepintaTestBase):
     test_instace.create(plugin_manifest, projects_root, translation_dict, overwrite)
     return True
 
-def test_module():
+def testModule():
   from getDefaultContext import getDefaultContext
   context = getDefaultContext()
   test = K3dv1EclipseProjectCreator_test(context=context)
   return test.run()
 
 if __name__ == "__main__":
-  test_module()
+  testModule()
 

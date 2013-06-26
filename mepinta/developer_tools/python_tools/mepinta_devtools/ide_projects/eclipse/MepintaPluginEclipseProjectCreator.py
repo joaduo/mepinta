@@ -32,9 +32,9 @@ class MepintaPluginEclipseProjectCreator(FrameworkBase):
     self.ep_creator.createCDT(projects_dir, project_name, config_dict=config_dict, templates_config=templates_config, template_set='cdt_k3dv1_plugin', create_src=False)
 
 
-def test_module():
+def testModule():
   from getDefaultContext import getDefaultContext
   context = getDefaultContext()
 
 if __name__ == "__main__":
-  test_module()
+  testModule()

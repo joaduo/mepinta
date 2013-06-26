@@ -50,9 +50,9 @@ class FileManager(FrameworkBase):
       target_file.write(content)
       target_file.close()
 
-def test_module():
+def testModule():
   from getDefaultContext import getDefaultContext
   context = getDefaultContext()
 
 if __name__ == "__main__":
-  test_module()
+  testModule()

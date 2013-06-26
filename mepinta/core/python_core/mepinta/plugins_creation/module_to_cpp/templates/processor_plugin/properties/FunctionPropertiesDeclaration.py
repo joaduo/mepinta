@@ -74,7 +74,7 @@ class FunctionPropertiesDeclaration(TemplateTranslatorBase):
   def __getDpdants(self):
     dpdants = {}
     for name,container in self.plugin_manifest.containers.items():
-      for name, prop in container.get_properties(DataProperty).items():
+      for name, prop in container.getProperties(DataProperty).items():
         for dpdency in prop.dpdencies:
           if self.proxy == dpdency:
             dpdants[name] = prop

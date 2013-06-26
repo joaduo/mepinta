@@ -31,7 +31,7 @@ class InotifyActionManager(FrameworkBase):
     self.__post_events_functions = []
     self.skip_post_functions = False
 
-  def get_fd(self):
+  def getFd(self):
     if not hasattr(self, '_fd'):
       self._fd = init()
     return self._fd
@@ -84,7 +84,7 @@ class InotifyActionManager(FrameworkBase):
     wd = self.__watchPath(action.path, action.mask)
     self.__wd_action[wd] = action
 
-  fd = property(get_fd, None, None, None)
+  fd = property(getFd, None, None, None)
 
   def __getEvents(self, timeout):
     if timeout == None:

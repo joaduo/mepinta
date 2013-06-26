@@ -32,11 +32,11 @@ class manifest(PluginManifestBase):
     outputs.graph.dpdencies += functions.changeGraphTopology
 
 def changeGraphTopology(args):
-  from mepinta_python_sdk.props import get_prop_value
+  from mepinta_python_sdk.props import getPropValue
   from mepinta.context.getMepintaContext import getMepintaContext
 
-  context_name = get_prop_value(args, 'inputs', 'context_name')
-  out_graph = get_prop_value(args, 'outputs', 'graph')
+  context_name = getPropValue(args, 'inputs', 'context_name')
+  out_graph = getPropValue(args, 'outputs', 'graph')
   context = getMepintaContext(context_name)
   UndoableGraphManager(context).initGraph(out_graph)
 

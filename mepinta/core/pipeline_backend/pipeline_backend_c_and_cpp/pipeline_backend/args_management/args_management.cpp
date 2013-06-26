@@ -31,17 +31,17 @@ namespace __args_management__ {
 str *__name__;
 dict<__ss_int, void *> *args_per_thread;
 
-void *get_functum_struct_voidp(void* func_ptr,void *args){
+void *getFunctumStructVoidp(void* func_ptr,void *args){
   //MANUALLY EDITED:
   GET_FUNCTUM_STRUCT;
 }
 
-void *get_thread_args(__ss_int in_size, __ss_int out_size, __ss_int thread_id) {
+void *getThreadArgs(__ss_int in_size, __ss_int out_size, __ss_int thread_id) {
     void *args;
 
-    log_error("Implement get_thread_args!!\n");
+    logError("Implement getThreadArgs!!\n");
 //    if ((!(args_per_thread)->__contains__(thread_id))) {
-//      args = create_args(in_size, out_size);
+//      args = createArgs(in_size, out_size);
 //      args_per_thread->__setitem__(thread_id, args);
 //    }
 //    else{
@@ -49,7 +49,7 @@ void *get_thread_args(__ss_int in_size, __ss_int out_size, __ss_int thread_id) {
 //      args_set_capacities(args,in_size,out_size);
 //      args_set_capacities(args,in_size,out_size);
 //    }
-//    args_set_thread_id(args, thread_id);
+//    argsSetThreadId(args, thread_id);
 
 //    //MANUALLY EDITED:
 //    RESET_SIZES;
@@ -57,49 +57,49 @@ void *get_thread_args(__ss_int in_size, __ss_int out_size, __ss_int thread_id) {
     return NULL;
 }
 
-__ss_int delete_args(void *args) {
+__ss_int deleteArgs(void *args) {
   //MANUALLY EDITED:
   DELETE_ARGS;
 }
 
-void *create_args(__ss_int in_size, __ss_int out_size) {
+void *createArgs(__ss_int in_size, __ss_int out_size) {
   //MANUALLY EDITED:
   CREATE_ARGS;
 }
 
-__ss_int args_set_thread_id(void *args, __ss_int thread_id) {
+__ss_int argsSetThreadId(void *args, __ss_int thread_id) {
   //MANUALLY EDITED:
   SET_THREAD_ID;
 }
 
-__ss_int args_set_capacity(void *args, __ss_int in_out_id, __ss_int props_size) {
+__ss_int argsSetCapacity(void *args, __ss_int in_out_id, __ss_int props_size) {
   //MANUALLY EDITED:
   SET_CAPACITY;
 }
 
-__ss_int args_append_prop(void *args, __ss_int in_out_id, __ss_int index, __ss_int prop_id, __mepinta__::__pipeline__::__lo__::__pipeline_data__::__data_model__::Property *prop, __mepinta__::__pipeline__::__lo__::__pipeline_data__::__data_model__::Property *prop_real, __mepinta__::__pipeline__::__lo__::__pipeline_data__::__data_model__::DataType *data_type) {
+__ss_int argsAppendProp(void *args, __ss_int in_out_id, __ss_int index, __ss_int prop_id, __mepinta__::__pipeline__::__lo__::__pipeline_data__::__data_model__::Property *prop, __mepinta__::__pipeline__::__lo__::__pipeline_data__::__data_model__::Property *prop_real, __mepinta__::__pipeline__::__lo__::__pipeline_data__::__data_model__::DataType *data_type) {
   //MANUALLY EDITED:
   APPEND_PROP;
 }
 
-__ss_int args_set_changed(void *args, __ss_int in_out_id, __ss_int index) {
+__ss_int argsSetChanged(void *args, __ss_int in_out_id, __ss_int index) {
   //MANUALLY EDITED:
   SET_PROP_CHANGED;
 }
 
-__ss_int args_set_unchanged(void *args, __ss_int in_out_id, __ss_int index) {
+__ss_int argsSetUnchanged(void *args, __ss_int in_out_id, __ss_int index) {
   //MANUALLY EDITED:
   SET_PROP_UNCHANGED;
 }
 
-set<__ss_int> *args_build_changed_set(void *args, __ss_int in_out_id, set<__ss_int> *changed) {
+set<__ss_int> *argsBuildChangedSet(void *args, __ss_int in_out_id, set<__ss_int> *changed) {
     //MANUALLY EDITED:
     BUILD_CHANGED_SET;
 
     return changed;
 }
 
-void *shedskin_type_generation_argsm() {
+void *shedskin_args_management() {
 
     return NULL;
 }

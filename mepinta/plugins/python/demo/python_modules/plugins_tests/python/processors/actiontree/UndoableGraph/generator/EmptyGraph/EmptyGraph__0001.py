@@ -24,11 +24,11 @@ import unittest
 class EmptyGraphTest(ProcessorPluginTestBase, unittest.TestCase):
   def __post_init__(self):
     import plugins.python.processors.actiontree.UndoableGraph.generator.EmptyGraph as empty_graph
-    self.tested_processors.append(empty_graph)
+    self.testedProcessors.append(empty_graph)
     self.context_name = 'python'
 
   def definePluginPipeline(self, test_pline):
-    empty_graph = self.tested_processors[0]
+    empty_graph = self.testedProcessors[0]
     empty_graph_node = test_pline.append(empty_graph)
     test_pline.setValue(empty_graph_node.inputs.context_name, self.context_name)
 
@@ -49,9 +49,9 @@ class EmptyGraphTest(ProcessorPluginTestBase, unittest.TestCase):
       import plugins.python.processors.actiontree.UndoableGraph.output.StdoutPrint as renderer
     output_node = test_pline.append(renderer)
     if gui:
-      test_pline.ui_default_evaluated.append(output_node.functions.render)
+      test_pline.uiDefaultEvaluated.append(output_node.functions.render)
     test_pline.setValue(output_node.inputs.context_name, self.context_name)
-    test_pline.default_evaluated.append(output_node.functions.render)
+    test_pline.defaultEvaluated.append(output_node.functions.render)
     return output_node
 
   def definePipeline(self, test_pline):
@@ -65,7 +65,7 @@ class EmptyGraphTest(ProcessorPluginTestBase, unittest.TestCase):
   def stressPipeline(self, test_pline, time):
     pass
 
-def test_module():
+def testModule():
   from mepinta.testing.plugins_testing.PluginTestAutoTester import PluginTestAutoTester
   from getDefaultContext import getDefaultContext
   tester = PluginTestAutoTester(context=getDefaultContext())
@@ -73,6 +73,6 @@ def test_module():
   #tester.simpleTest(gui=False)
 
 if __name__ == "__main__":
-  test_module()
+  testModule()
   #unittest.main()
 

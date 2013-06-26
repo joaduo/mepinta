@@ -49,17 +49,17 @@ extern dict<__ss_int, void *> *args_per_thread;
 
 
 void __init();
-void *get_functum_struct_voidp(void* func_ptr,void *args);
-void *get_thread_args(__ss_int in_size, __ss_int out_size, __ss_int thread_id);
-__ss_int delete_args(void *args);
-void *create_args(__ss_int in_size, __ss_int out_size);
-__ss_int args_set_thread_id(void *args, __ss_int thread_id);
-__ss_int args_set_capacity(void *args, __ss_int in_out_id, __ss_int props_size);
-__ss_int args_append_prop(void *args, __ss_int in_out_id, __ss_int index, __ss_int prop_id, __mepinta__::__pipeline__::__lo__::__pipeline_data__::__data_model__::Property *prop, __mepinta__::__pipeline__::__lo__::__pipeline_data__::__data_model__::Property *prop_real, __mepinta__::__pipeline__::__lo__::__pipeline_data__::__data_model__::DataType *data_type);
-__ss_int args_set_changed(void *args, __ss_int in_out_id, __ss_int index);
-__ss_int args_set_unchanged(void *args, __ss_int in_out_id, __ss_int index);
-set<__ss_int> *args_build_changed_set(void *args, __ss_int in_out_id, set<__ss_int> *changed);
-void *shedskin_type_generation_argsm();
+void *getFunctumStructVoidp(void* func_ptr,void *args);
+void *getThreadArgs(__ss_int in_size, __ss_int out_size, __ss_int thread_id);
+__ss_int deleteArgs(void *args);
+void *createArgs(__ss_int in_size, __ss_int out_size);
+__ss_int argsSetThreadId(void *args, __ss_int thread_id);
+__ss_int argsSetCapacity(void *args, __ss_int in_out_id, __ss_int props_size);
+__ss_int argsAppendProp(void *args, __ss_int in_out_id, __ss_int index, __ss_int prop_id, __mepinta__::__pipeline__::__lo__::__pipeline_data__::__data_model__::Property *prop, __mepinta__::__pipeline__::__lo__::__pipeline_data__::__data_model__::Property *prop_real, __mepinta__::__pipeline__::__lo__::__pipeline_data__::__data_model__::DataType *data_type);
+__ss_int argsSetChanged(void *args, __ss_int in_out_id, __ss_int index);
+__ss_int argsSetUnchanged(void *args, __ss_int in_out_id, __ss_int index);
+set<__ss_int> *argsBuildChangedSet(void *args, __ss_int in_out_id, set<__ss_int> *changed);
+void *shedskin_args_management();
 
 } // module namespace
 } // module namespace

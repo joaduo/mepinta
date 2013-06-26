@@ -20,30 +20,30 @@ along with Mepinta. If not, see <http://www.gnu.org/licenses/>.
 '''
 from nodebox.graphics.context import canvas, background, translate
 
-def on_mouse_enter(self, mouse):
+def onMouseEnter(self, mouse):
   if self.fps == "pause":
     if hasattr(self, "prior_fps"):
       self.fps = self.prior_fps
     else:
       self.fps = None
-def on_mouse_leave(self, mouse):
+def onMouseLeave(self, mouse):
   self.prior_fps = self.fps
   self.fps = "pause"
-def on_mouse_motion(self, mouse):
+def onMouseMotion(self, mouse):
   self.moving = True
   if self.fps == "pause":
     self.fps = 10
-def on_mouse_press(self, mouse):
+def onMousePress(self, mouse):
   self.moving = True
   if self.fps == "pause":
     self.fps = 10
 
 canvas.moving = False
 
-#canvas.on_mouse_motion = on_mouse_motion
-canvas.on_mouse_press = on_mouse_press
-canvas.on_mouse_enter = on_mouse_enter
-canvas.on_mouse_leave = on_mouse_leave
+#canvas.onMouseMotion = onMouseMotion
+canvas.onMousePress = onMousePress
+canvas.onMouseEnter = onMouseEnter
+canvas.onMouseLeave = onMouseLeave
 
 class NodeboxBase(object): #TODO: remove?
   pass
