@@ -18,17 +18,14 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with Mepinta. If not, see <http://www.gnu.org/licenses/>.
 '''
-from common.abstract.FrameworkObject import FrameworkObject
-from string import Template
+from common.abstract.FrameworkBase import FrameworkBase
 
-class DictionaryBasedTranslator(FrameworkObject):
-  ''' '''
-  def getContent(self, template, translation_dict):
-    return Template(template).safe_substitute(translation_dict)
+class EclipseShedskinProjectCreator(FrameworkBase):
+  pass
 
-def test_module():
+def testModule():
   from getDefaultContext import getDefaultContext
   context = getDefaultContext()
 
 if __name__ == "__main__":
-  test_module()
+  testModule()

@@ -30,11 +30,11 @@ class MepintaDemo(FrameworkBase):
     parser = self.__getParser()
     args = parser.parse_args()
     demos_dict = self.__getDemosDict()
-    if len(args.demo_numbers) == 0:
+    if len(args.demo_number) == 0:
       parser.print_help()
       self.__printDemosList(demos_dict)
     else:
-      self.__runDemos(args.demo_numbers, demos_dict)
+      self.__runDemos(args.demo_number, demos_dict)
 
   def __runDemos(self, demo_numbers, demos_dict):
     for number in demo_numbers:
@@ -64,7 +64,7 @@ class MepintaDemo(FrameworkBase):
 
   def __getParser(self):
     parser = argparse.ArgumentParser(description='Mepinta demos.')
-    parser.add_argument('demo_numbers', type=int, nargs='*', help='Specify the demo number(s) you would like to run.')
+    parser.add_argument('demo_number', type=int, nargs='*', help='Specify the demo number(s) you would like to run.')
     parser.add_argument('--debug', action='store_true', help='Enable debug output.')
     return parser
 
