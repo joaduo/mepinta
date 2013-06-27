@@ -20,6 +20,8 @@ along with Mepinta. If not, see <http://www.gnu.org/licenses/>.
 '''
 from common.abstract.FrameworkBase import FrameworkBase
 import os
+import shutil
+from common.path import joinPath
 
 class FileManager(FrameworkBase):
   def listDir(self, path):
@@ -49,6 +51,17 @@ class FileManager(FrameworkBase):
       target_file = open(path, 'w')
       target_file.write(content)
       target_file.close()
+  def loadTextFile(self, path):
+    fr = open(path, 'r')
+    text = fr.read()
+    fr.close()
+    return text
+  def copy(self, src, dst):
+    shutil.copy(src, dst)
+  def copyFiles(self, src_path, dst_path, file_names):
+    for file_name in file_names:
+      self.log.d('Copying %r to %r' % (joinPath(src_path, file_name), joinPath(dst_path, file_name)))
+      self.copy(joinPath(src_path, file_name), joinPath(dst_path, file_name))
 
 def test_module():
   from getDefaultContext import getDefaultContext

@@ -20,42 +20,36 @@ along with Mepinta. If not, see <http://www.gnu.org/licenses/>.
 '''
 from common.abstract.FrameworkBase import FrameworkBase
 from mepinta_devtools.ide_projects.FileManager import FileManager
-from common.path import joinPath
 from mepinta_devtools.templates.DictionaryBasedTranslator import DictionaryBasedTranslator
+from common.path import joinPath
+import os
 
-default_template = '''# -*- coding: utf-8 -*-
-class deployment_config(object):
-  mepinta_source_path = '${mepinta_source_path}'
-  eclipse_projects_path = '${eclipse_projects_path}'
-  qt_projects_path = '${qt_projects_path}'
-  libk3dsdk_path = '${libk3dsdk_path}'
-  libgsigc2_path = '${libgsigc2_path}'
-  libboost_unit_test_framework_path = '${libboost_unit_test_framework_path}'
-
-def configurePythonPaths(create_context=True):
-  import sys
-  config = deployment_config()
-  sys.path.append(config.mepinta_source_path + '/developer_tools/python_tools')
-  from mepinta_devtools.deployment.PythonPathManager import PythonPathManager
-  PythonPathManager().appendAll(config.mepinta_source_path)
-  from getDefaultContext import getDefaultContext
-  if create_context:
-    return getDefaultContext()
-
-'''
-
-class DeploymentConfigCreator(FrameworkBase):
+class DeploymentManager(FrameworkBase):
   def __post_init__(self):
     self.file_manager = FileManager(self.context)
 
-  def createDeploymentConfig(self, deployment_path, translation_dict, template=default_template, overwrite=False):
+  def __getConfigTemplate(self, template_name):
+    template_path = joinPath(self.__getScriptsRepoPath(), template_name)
+    template = self.file_manager.loadTextFile(template_path)
+    return template
+
+  def createDeploymentConfig(self, deployment_path, translation_dict, template_name='deployment_config.py', overwrite=False):
     file_path = joinPath(deployment_path, 'deployment_config.py')
-    content = DictionaryBasedTranslator().getContent(template, translation_dict)
+    content = DictionaryBasedTranslator().getContent(self.__getConfigTemplate(template_name), translation_dict)
     self.file_manager.saveTextFile(file_path, content, overwrite)
 
-def test_module():
+  def __getScriptsRepoPath(self):
+    return joinPath(os.path.dirname(__file__), 'scripts_repository')
+
+  def copyScriptsTo(self, deployment_path):
+    scripts_names = ['mepinta_demo.py', 'mepinta_tests.py']
+    repo_path = self.__getScriptsRepoPath()
+    self.file_manager.copyFiles(repo_path, deployment_path, scripts_names)
+
+
+def testModule():
   from getDefaultContext import getDefaultContext
   context = getDefaultContext()
 
 if __name__ == "__main__":
-  test_module()
+  testModule()

@@ -19,25 +19,14 @@ You should have received a copy of the GNU General Public License
 along with Mepinta. If not, see <http://www.gnu.org/licenses/>.
 '''
 from common.abstract.FrameworkBase import FrameworkBase
-import shutil
-import os
-from common.path import joinPath
 
-class DeploymentScriptsCopier(FrameworkBase):
-  def _getSrcPath(self):
-    return joinPath(os.path.dirname(os.path.realpath(__file__)), 'scripts_repository')
+class DevManagerCli(FrameworkBase):
+  def createShedskinProject(self):
+    pass
 
-  def copyScriptsTo(self, deployment_path):
-    scripts = ['demo', 'tests']
-    src_path = self._getSrcPath()
-    for s in scripts:
-      file_name = 'mepinta_%s.py' % s
-      self.log.d('Copying %r to %r' % (joinPath(src_path, file_name), joinPath(deployment_path, file_name)))
-      shutil.copy(joinPath(src_path, file_name), joinPath(deployment_path, file_name))
-
-def test_module():
+def testModule():
   from getDefaultContext import getDefaultContext
   context = getDefaultContext()
 
 if __name__ == "__main__":
-  test_module()
+  testModule()

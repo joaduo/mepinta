@@ -29,8 +29,7 @@ class Deployment(object):
   This way code and installation are split to simplify maintenance.
   '''
   def __fake_post_init__(self, debug):
-    from mepinta_devtools.deployment.DeploymentScriptsCopier import DeploymentScriptsCopier
-    from mepinta_devtools.deployment.DeploymentConfigCreator import DeploymentConfigCreator
+    from mepinta_devtools.deployment.DeploymentManager import DeploymentManager
     from mepinta_devtools.ide_projects.FileManager import FileManager
     from pipeline_backend.logging.logging import LOG_INFO, LOG_DEBUG
     from getDefaultContext import getDefaultContext
@@ -40,8 +39,7 @@ class Deployment(object):
       self.context = getDefaultContext(LOG_INFO)
     self.log = self.context.log
     self.file_mananger = FileManager(self.context)
-    self.deployment_config_creator = DeploymentConfigCreator(self.context)
-    self.deployment_scripts_copier = DeploymentScriptsCopier(self.context)
+    self.deployment_manager = DeploymentManager(self.context)
 
   def run(self):
     parser = self._getArgsParser()
@@ -84,8 +82,8 @@ class Deployment(object):
         self.log.debug('Creating deployment path %r' % deployment_path)
         os.makedirs(deployment_path)
       self.log('Deploying mepinta to %r.' % deployment_path)
-      self.deployment_config_creator.createDeploymentConfig(deployment_path, self._getTranslationDict(), overwrite=force)
-      self.deployment_scripts_copier.copyScriptsTo(deployment_path)
+      self.deployment_manager.createDeploymentConfig(deployment_path, self._getTranslationDict(), overwrite=force)
+      self.deployment_manager.copyScriptsTo(deployment_path)
     else:
       self.log.warning('Deployment is not empty use the --force flag to overwrite it.')
       self._getArgsParser().print_help()

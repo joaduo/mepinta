@@ -22,7 +22,7 @@ from common.abstract.FrameworkBase import FrameworkBase
 from mepinta_devtools.python_project.PackageCreator import PackageCreator
 from mepinta_devtools.ide_projects.FileManager import FileManager
 from common.path import joinPath
-from mepinta_devtools.templates.mappers.FileToFileMap import FileToFileMap
+import os
 
 class ShedskinProjectCreator(FrameworkBase):
   def __post_init__(self):
@@ -33,23 +33,22 @@ class ShedskinProjectCreator(FrameworkBase):
     pass
 
   def __linkPipelineAndPipelineLoFacade(self, mepinta_package_path):
-    pass
+    joinPath(mepinta_package_path,)
+    #self.file_manager.symlink(src, dst, force)
 
-#  def __getProjectTemplates(self):
-#    templates_config = [
-#      FileToFileMap('build_pipeline_lo_facade.py', 'build_pipeline_lo_facade.py',),
-#      FileToFileMap('clean_shedskin_cpp_code.py', 'clean_shedskin_cpp_code.py',),
-#      #FileToFileMap('test_modules.py', 'test_modules.py',),
-#    ]
-#    return templates_config
+  def __copyScripts(self, project_path):
+    repo_path = joinPath(os.path.dirname(__file__), 'scripts_repository')
+    scripts_names = ['build_pipeline_lo_facade.py', 'clean_shedskin_code.py']
+    self.file_manager.copyFiles(repo_path, project_path, scripts_names)
 
-  def createShedskinProject(self, project_src_path):
+  def createShedskinProject(self, project_path):
     #Create the mepinta package
-    mepinta_package_path = joinPath(project_src_path, 'mepinta')
+    mepinta_package_path = joinPath(project_path, 'mepinta')
     self.package_creator.create(mepinta_package_path)
     #Link pipeline package and pipeline_lo_facade module
     self.__linkPipelineAndPipelineLoFacade(mepinta_package_path)
     #create mepinta folder
+    self.__copyScripts(project_path)
     #link pipeline folder and pipeline_lo_facade
     #linkear pipeline_backend/implementation/files_to_link
     #hacer .gitignore
