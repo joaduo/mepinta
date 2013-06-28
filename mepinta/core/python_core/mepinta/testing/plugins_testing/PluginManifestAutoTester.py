@@ -36,7 +36,7 @@ class PluginManifestAutoTester(ModuleAutoTesterBase):
     graph.pline.startTopologyChangeSet()
     plinmngr = PluginsManager(context=self.context)
     plugin_package, minor_version = self._getPackageAndMinorVersion(plugin_manifest)
-    processor_metadata = plinmngr.loadProcessor(plugin_package, minor_version)
+    processor_metadata = plinmngr.load_processor(plugin_package, minor_version)
     gm = GraphManager(context=self.context)
     node = gm.createNode(graph, processor_metadata)
     self.logPline(graph.pline)

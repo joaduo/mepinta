@@ -23,10 +23,10 @@ from mepinta.context.MepintaContext import MepintaContext
 def getMepintaContext(backend_name='python'):
   return MepintaContext(backend_name)
 
-def testModule():
+def test_module():
   debugPrint(getMepintaContext())
   debugPrint(getMepintaContext('python'))
   debugPrint(getMepintaContext('c_and_cpp'))
 
 if __name__ == "__main__":
-  testModule()
+  test_module()

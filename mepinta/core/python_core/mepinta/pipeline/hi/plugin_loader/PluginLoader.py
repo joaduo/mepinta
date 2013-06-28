@@ -31,41 +31,41 @@ class PluginLoader(HiAutoBase):
     self.last_func_id = 0
     self.last_dtype_id = 0
     
-  def getNewFuncId(self):
+  def get_new_func_id(self):
     self.last_func_id += 1
     return self.last_func_id
   
-  def getNewDtypeId(self):
+  def get_new_dtype_id(self):
     self.last_dtype_id += 1
     return self.last_dtype_id
   
-  def unloadDataTypeLibrary(self, data_type):
-    self.wrapped.unloadDataTypeLibrary(data_type.library_path, data_type.property_id)
+  def unload_data_type_library(self, data_type):
+    self.wrapped.unload_data_type_library(data_type.library_path, data_type.property_id)
     
-  def loadDataTypeLibrary(self, data_type):
+  def load_data_type_library(self, data_type):
     if data_type.property_id == None: 
-      data_type.property_id = self.getNewDtypeId()
-    self.wrapped.loadDataTypeLibrary(data_type.library_path, data_type.c_namespace, data_type.property_id)
+      data_type.property_id = self.get_new_dtype_id()
+    self.wrapped.load_data_type_library(data_type.library_path, data_type.c_namespace, data_type.property_id)
 
   def dataTypeIsLoaded(self, data_type):
     return self.wrapped.dataTypeIsLoaded(data_type.library_path)
   
-  def unloadProcessorLibrary(self, processor):
-    self.wrapped.unloadProcessorLibrary(processor.library_path, processor.functions.values())
+  def unload_processor_library(self, processor):
+    self.wrapped.unload_processor_library(processor.library_path, processor.functions.values())
     
-  def loadProcessorLibrary(self, processor):
+  def load_processor_library(self, processor):
     if processor.functions == None: #first time we are loading this library
       func_dict = {}
       #Iterate over the functions to register
-      for func_name in processor.proxy.getFunctionsDict().keys():
-        func_id = self.getNewFuncId()
+      for func_name in processor.proxy.get_functions_dict().keys():
+        func_id = self.get_new_func_id()
         func_dict[func_name] = func_id
       #let's save it for using when reloading the library
       processor.functions = func_dict
     else: #we are reloading this library, then use old ids
       func_dict = processor.functions    
     #finally load the library
-    self.wrapped.loadProcessorLibrary(processor.library_path, func_dict)
+    self.wrapped.load_processor_library(processor.library_path, func_dict)
 
   def processorIsLoaded(self, processor):
     return self.wrapped.processorIsLoaded(processor.library_path)

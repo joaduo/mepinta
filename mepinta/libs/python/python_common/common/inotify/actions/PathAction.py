@@ -83,19 +83,19 @@ class PathAction(FrameworkBase):
   def getRealPath(self):
     return realPath(self.__path)
 
-  def getPath(self):
+  def get_path(self):
     if self.__watch_head:
       return pathHead(self.getRealPath())
     else:
       return self.getRealPath()
 
-  def getMask(self):
+  def get_mask(self):
     if self.__watch_head:
       return IN_CREATE|IN_MOVED_TO#|IN_ALL_EVENTS
     else:
       return self.__mask
-  path = property(getPath, None, None, None)
-  mask = property(getMask, None, None, None)
+  path = property(get_path, None, None, None)
+  mask = property(get_mask, None, None, None)
 
 if __name__ == "__main__":
   from getDefaultContext import getDefaultContext

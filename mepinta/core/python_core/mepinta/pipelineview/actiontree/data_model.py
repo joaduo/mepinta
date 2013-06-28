@@ -47,10 +47,10 @@ class ActionTree(FrameworkBase):
   def appendActionNode(self, graph_node):
     self.current_node = self.current_node.newChild(graph_node)
 
-def testModule():
+def test_module():
   from getDefaultContext import getDefaultContext
   context = getDefaultContext()
   context.log(ActionTree(context))
 
 if __name__ == "__main__":
-  testModule()
+  test_module()

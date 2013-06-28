@@ -19,7 +19,7 @@ You should have received a copy of the GNU General Public License
 along with Mepinta. If not, see <http://www.gnu.org/licenses/>.
 '''
 
-from mepinta.pipeline.hi.base import unwrapLo
+from mepinta.pipeline.hi.base import unwrap_lo
 from mepinta.pipeline.hi.topology_manager.TopologyManager import TopologyManager
 from common.abstract.FrameworkBase import FrameworkBase
 from mepinta.plugins_manifest.proxy.data_model import FunctionPropertyProxy, \
@@ -28,51 +28,51 @@ from mepinta.plugins_manifest.proxy.data_model import FunctionPropertyProxy, \
 class GraphTopologyManager(FrameworkBase):
   def __post_init__(self, *a, **ad):
     self.topo_mngr = TopologyManager(context=self.context)
-  def addProperties(self, pline, prop_ids):
-    self.topo_mngr.addProperties(pline, prop_ids)
+  def add_properties(self, pline, prop_ids):
+    self.topo_mngr.add_properties(pline, prop_ids)
   def connect(self, pline, dpdent, dency):
     self.topo_mngr.connect(pline, dpdent, dency)
   def disconnect(self, pline, dpdent, dency=None):
     return self.topo_mngr.disconnect(pline, dpdent, dency)
-  def connectInternally(self, pline, node):
-    dpdents, dpdencies = self.__getDpdentsDpdencies(node, direction='<>')
-    self.topo_mngr.connectProperties(pline, dpdents, dpdencies)
-    dpdents, dpdencies = self.__getDpdentsDpdencies(node, direction='<')
-    self.topo_mngr.connectPropsDents(pline, dpdents, dpdencies)
-    dpdents, dpdencies = self.__getDpdentsDpdencies(node, direction='>')
-    self.topo_mngr.connectPropsDencies(pline, dpdents, dpdencies)
-  def __getDpdentsDpdencies(self, node, direction):
+  def connect_internally(self, pline, node):
+    dpdents, dpdencies = self.__get_dpdents_dpdencies(node, direction='<>')
+    self.topo_mngr.connect_properties(pline, dpdents, dpdencies)
+    dpdents, dpdencies = self.__get_dpdents_dpdencies(node, direction='<')
+    self.topo_mngr.connect_props_dents(pline, dpdents, dpdencies)
+    dpdents, dpdencies = self.__get_dpdents_dpdencies(node, direction='>')
+    self.topo_mngr.connect_props_dencies(pline, dpdents, dpdencies)
+  def __get_dpdents_dpdencies(self, node, direction):
     dpdents = []; dpdencies = []
-    self.__dpdentsDpdencies(node.inputs, dpdents, dpdencies, direction)
-    self.__dpdentsDpdencies(node.internals, dpdents, dpdencies, direction)
-    self.__dpdentsDpdencies(node.outputs, dpdents, dpdencies, direction)
-    self.__dpdentsDpdencies(node.functions, dpdents, dpdencies, direction, type_=FunctionPropertyProxy)
+    self.__dpdents_dpdencies(node.inputs, dpdents, dpdencies, direction)
+    self.__dpdents_dpdencies(node.internals, dpdents, dpdencies, direction)
+    self.__dpdents_dpdencies(node.outputs, dpdents, dpdencies, direction)
+    self.__dpdents_dpdencies(node.functions, dpdents, dpdencies, direction, type_=FunctionPropertyProxy)
     return dpdents, dpdencies
-  def __dpdentsDpdencies(self, container, dpdents, dpdencies , direction, type_=InOutPropertyProxyBase):
-    for prop in container.getProperties(type_).values():
+  def __dpdents_dpdencies(self, container, dpdents, dpdencies , direction, type_=InOutPropertyProxyBase):
+    for prop in container.get_properties(type_).values():
       for dency in prop.dpdencies:
         if dency.direction == direction:
           dpdents.append(prop)
           dpdencies.append(dency)
-  def removeNode(self, pline, node):
-    #prop_ids = [ prop.id for prop in node.inputs.getProperties() ]
+  def remove_node(self, pline, node):
+    #prop_ids = [ prop.id for prop in node.inputs.get_properties() ]
     raise NotImplementedError("Implement!") #TODO
-  def enableCached(self, pline, node):
+  def enable_cached(self, pline, node):
     if not self.config.non_cached: #We may want to force non-caching on some node (since it does nothing to the data)
       dst_src_non_cached = node.non_cached_capable
       if len(dst_src_non_cached) == 0:
         return
       prop_dst_ids = []
       for dst_prop, _ in dst_src_non_cached:
-        prop_dst_ids.append(unwrapLo(dst_prop))
+        prop_dst_ids.append(unwrap_lo(dst_prop))
       #finally enabling them
-      self.topo_mngr.enableCached(pline, prop_dst_ids)
+      self.topo_mngr.enable_cached(pline, prop_dst_ids)
 
-def testModule():
+def test_module():
   from getDefaultContext import getDefaultContext
   context = getDefaultContext()
   context.log(GraphTopologyManager(context))
 
 if __name__ == "__main__":
-  testModule()
+  test_module()
 

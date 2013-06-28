@@ -54,11 +54,11 @@ class DataTypeMetadata(PluginMetadata):
       raise RuntimeError('Property: %s has no property_id defined' % self.name)
   def getShortName(self):
     return  self.name.split('.')[-1]
-  def getCNamespace(self):
+  def get_c_namespace(self):
     if self.name.startswith('c.') or self.name.startswith('mepinta.'):
       return self.getShortName()
     return self.name.replace('.', '_')
-  c_namespace = property(getCNamespace, None, None, None)
+  c_namespace = property(get_c_namespace, None, None, None)
 
 class ProcessorMetadata(PluginMetadata):
   def __init__(self):

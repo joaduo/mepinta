@@ -50,9 +50,9 @@ class UntypedValueManager(FrameworkBase):
   def setValues(self, pline, props, values):
     self._value_manager_lo.setUntypedPropsValues(pline, props, values)
 
-def testModule():
+def test_module():
   from getDefaultContext import getDefaultContext
   context = getDefaultContext()
 
 if __name__ == "__main__":
-  testModule()
+  test_module()

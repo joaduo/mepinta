@@ -19,10 +19,10 @@ You should have received a copy of the GNU General Public License
 along with Mepinta. If not, see <http://www.gnu.org/licenses/>.
 '''
 from mepinta.pipeline.lo.FunctionCaller import FunctionCaller
-from pipeline_backend.solve_symbol.solve_symbol import solveSymbol
+from pipeline_backend.solve_symbol.solve_symbol import solve_symbol
 from copy import deepcopy
-from pipeline_backend.logging.logging import logDebug, logWarning, \
-  logCritical
+from pipeline_backend.logging.logging import log_debug, log_warning, \
+  log_critical
 from mepinta.pipeline.lo.constants import FUNCTION_PROPERTY_FLAG, \
   MEPINTA_C_NAMESPACE_PREFIX, NULL_UID
 from mepinta.pipeline.lo.generic_data.DirectedGraph import DirectedGraph
@@ -35,16 +35,16 @@ class DataType(object):
     self.lib_handle = lib_handle
     #self.path = path
     self.symbols = {}
-  def getFuncPtr(self, name):
+  def get_func_ptr(self, name):
     if name not in self.symbols:
-      self.symbols[name] = self.solveSymbol(name)
+      self.symbols[name] = self.solve_symbol(name)
     return self.symbols[name]
-  def updateHandle(self, lib_handle): #TODO: should check we never get a null pointer?
+  def update_handle(self, lib_handle): #TODO: should check we never get a null pointer?
     self.lib_handle = lib_handle
     for name in self.symbols:
-      self.symbols[name] = self.solveSymbol(name)
-  def solveSymbol(self, name):
-    return solveSymbol(self.lib_handle, '%s%s_' % (MEPINTA_C_NAMESPACE_PREFIX, self.name), name)
+      self.symbols[name] = self.solve_symbol(name)
+  def solve_symbol(self, name):
+    return solve_symbol(self.lib_handle, '%s%s_' % (MEPINTA_C_NAMESPACE_PREFIX, self.name), name)
 #  def __repr__(self): #TODO: remove
 #    return repr(self.__str__())
   def __str__(self):
@@ -54,9 +54,9 @@ class ProcessorFunction(object):
   def __init__(self, name, func_pointer):
     self.name = name
     self.func_pointer = func_pointer
-  def getFuncPointer(self):
+  def get_func_pointer(self):
     return self.func_pointer
-  def updateFuncPointer(self, func_pointer):
+  def update_func_pointer(self, func_pointer):
     self.func_pointer = func_pointer
 
 class PropertyValuePointer(object):
@@ -65,27 +65,27 @@ class PropertyValuePointer(object):
     self.count = 0
     self.value = value
     self.function_caller = FunctionCaller()
-  def replaceValue(self, value, func_ptr_del):
-    self.freeValue(func_ptr_del)
+  def replace_value(self, value, func_ptr_del):
+    self.free_value(func_ptr_del)
     self.value = value
-  def freeValue(self, func_ptr_del):
+  def free_value(self, func_ptr_del):
     if self.value != None:
-      if self.function_caller.callFunc(func_ptr_del, self.value) != None:
+      if self.function_caller.call_func(func_ptr_del, self.value) != None:
         msg = 'Couldn\'t free pipeline value for %s. This may mean a memory leak.' % self
-        logCritical(msg)
+        log_critical(msg)
         raise MepintaLoError(msg)
-  def getValue(self):
+  def get_value(self):
     return self.value
-  def incrementReferenceCount(self):
+  def increment_reference_count(self):
     self.count += 1
-    logDebug('Reference count=%r for %r' % (self.count, self))
-  def decrementReferenceCount(self, func_ptr_del):
+    log_debug('Reference count=%r for %r' % (self.count, self))
+  def decrement_reference_count(self, func_ptr_del):
     #TODO: make it thread safe
     self.count -= 1
     #DEBUG:
     if self.count == 0:
-      self.freeValue(func_ptr_del)
-  def notReferenced(self):
+      self.free_value(func_ptr_del)
+  def not_referenced(self):
     return self.count == 0
 
 class Property(object):
@@ -94,19 +94,19 @@ class Property(object):
     self.name = name
     self.dtype_id = dtype_id #None #Need this for new,delete,copy
     self.value_ptr = PropertyValuePointer(value=None)
-    self.value_ptr.incrementReferenceCount()
-  def getValue(self):
-    return self.value_ptr.getValue()
-  def getValuePtr(self):
+    self.value_ptr.increment_reference_count()
+  def get_value(self):
+    return self.value_ptr.get_value()
+  def get_value_ptr(self):
     return self.value_ptr
-  def setValuePtr(self, value_ptr, func_ptr_del=None):
+  def set_value_ptr(self, value_ptr, func_ptr_del=None):
     #DEBUG: #SHEDSKIN:
     #if not isinstance(value_ptr, PropertyValuePointer): raise RuntimeError('PropertyValuePointer are only values allowed')
     if self.value_ptr != value_ptr:
       old_value_ptr = self.value_ptr
       self.value_ptr = value_ptr
-      self.value_ptr.incrementReferenceCount()
-      old_value_ptr.decrementReferenceCount(func_ptr_del)
+      self.value_ptr.increment_reference_count()
+      old_value_ptr.decrement_reference_count(func_ptr_del)
 #  def __repr__(self): #TODO: remove
 #    return repr(self.__str__())
   def __str__(self):
@@ -207,7 +207,7 @@ class Pipeline(object):
       #TODO: review if raises exception
       return self.topologies.pop(topo_id)
     else:
-      logWarning('You can\'t remove current topology ')
+      log_warning('You can\'t remove current topology ')
       return None
   def getTopology(self, topo_id=NULL_UID):
     if topo_id == NULL_UID:
@@ -240,28 +240,28 @@ def shedskin_pipeline_data_model():
   lib_handle = None
   name = 'name'
   dt = DataType(name, lib_handle)
-  dt.getFuncPtr('symbol searched')
-  dt.updateHandle(lib_handle)
+  dt.get_func_ptr('symbol searched')
+  dt.update_handle(lib_handle)
   dt.__repr__()
   func_pointer = None
   pf = ProcessorFunction(name, func_pointer)
-  pf.getFuncPointer()
-  pf.updateFuncPointer(func_pointer)
+  pf.get_func_pointer()
+  pf.update_func_pointer(func_pointer)
 
   pvp = PropertyValuePointer(value=None)
   func_ptr_del = func_pointer
-  pvp.replaceValue(value=None, func_ptr_del=func_ptr_del)
-  pvp.freeValue(func_ptr_del)
-  pvp.getValue()
-  pvp.incrementReferenceCount()
-  pvp.decrementReferenceCount(func_ptr_del)
-  pvp.notReferenced()
+  pvp.replace_value(value=None, func_ptr_del=func_ptr_del)
+  pvp.free_value(func_ptr_del)
+  pvp.get_value()
+  pvp.increment_reference_count()
+  pvp.decrement_reference_count(func_ptr_del)
+  pvp.not_referenced()
 
   dtype_id = 1
   prop = Property(FUNCTION_PROPERTY_FLAG, name, dtype_id)
-  prop.getValue()
-  prop.getValuePtr()
-  prop.setValuePtr(pvp, func_ptr_del)
+  prop.get_value()
+  prop.get_value_ptr()
+  prop.set_value_ptr(pvp, func_ptr_del)
   prop.__repr__()
 
   pline = Pipeline(name='actiontree')

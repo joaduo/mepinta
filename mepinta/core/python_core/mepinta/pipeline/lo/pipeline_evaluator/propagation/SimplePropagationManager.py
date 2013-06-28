@@ -39,7 +39,7 @@ class SimplePropagationManager(object):
   def __init__(self, pline_evaluator):
     pass
     #self.pline_evaluator = pline_evaluator
-  def propagateChanges(self, pline):
+  def propagate_changes(self, pline):
     if len(pline.changed_primary):
       self.__propagate(pline.getTopology(), pline.changed_primary, pline.changed_track)
   def __propagate(self, topo, changed, changed_ppgation):
@@ -59,5 +59,5 @@ class SimplePropagationManager(object):
 
 def shedskin_SimplePropagationManager(pline, pline_evaluator):
   spm = SimplePropagationManager(pline_evaluator)
-  spm.propagateChanges(pline)
+  spm.propagate_changes(pline)
 

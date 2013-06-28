@@ -27,9 +27,9 @@ class StrToFileMap(MapperBase):
     self.dst_path = dst_path
     self.overwrite = overwrite
 
-def testModule():
+def test_module():
   from getDefaultContext import getDefaultContext
   context = getDefaultContext()
 
 if __name__ == "__main__":
-  testModule()
+  test_module()

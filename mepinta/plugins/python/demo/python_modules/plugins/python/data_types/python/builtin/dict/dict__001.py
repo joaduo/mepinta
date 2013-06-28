@@ -39,7 +39,7 @@ def copy(dict_):
 def delete(dict_):
   pass
 
-def copyTo(to_dict, from_dict):
+def copy_to(to_dict, from_dict):
   to_dict.clear()
   to_dict.update(from_dict)
   return to_dict

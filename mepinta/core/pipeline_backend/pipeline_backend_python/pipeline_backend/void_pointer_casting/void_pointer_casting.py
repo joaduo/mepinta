@@ -20,40 +20,40 @@ along with Mepinta. If not, see <http://www.gnu.org/licenses/>.
 '''
 
 #Data
-def intToVoidp(int_v):#TODO: remove
+def int_to_voidp(int_v):#TODO: remove
   return int_v
 
-def doubleToVoidp(float_v):
+def double_to_voidp(float_v):
   return float_v
 
-def strToVoidp(str_):
+def str_to_voidp(str_):
   return str_
 
-def strCharpToVoidp(str_):
+def str_charp_to_voidp(str_):
   return str_
 
-def strStringToVoidp(str_):
+def str_string_to_voidp(str_):
   return str_
 
-def anyPtrToVoidp(anything):
+def any_ptr_to_voidp(anything):
   return anything
 
-def voidpToInt(voidp):
+def voidp_to_int(voidp):
   return voidp
 
-def voidpToDouble(voidp):
+def voidp_to_double(voidp):
   return voidp
 
-def voidpToStr(voidp):
+def voidp_to_str(voidp):
   return voidp
 
-def voidpCharpToStr(voidp):
+def voidp_charp_to_str(voidp):
   return voidp
 
-def voidpStringToStr(voidp):
+def voidp_string_to_str(voidp):
   return voidp
 
-def voidpToListInt(voidp):
+def voidp_to_list_int(voidp):
   return voidp
 
 def voidp_to_FunctionPropertyValue(voidp):
@@ -63,33 +63,33 @@ def voidp_to_FunctumPropertyValue(voidp):
   return voidp
 
 #Functions pointers
-def voidpToFuncArgVoid(voidp):
+def voidp_to_func_arg_void(voidp):
   return voidp
 
-def voidpToFuncArgVoidp(voidp):
+def voidp_to_func_arg_voidp(voidp):
   return voidp
 
-def voidpToProcessorFunc(voidp):
+def voidp_to_processor_func(voidp):
   return voidp
 
-def voidpToCopyToFunc(voidp):
+def voidp_to_copy_to_func(voidp):
   return voidp
 
-def shedskin_void_pointer_casting():
+def shedskin_type_generation_voidp():
   voidp = None
-  voidpToFuncArgVoid(voidp)
-  voidpToFuncArgVoidp(voidp)
+  voidp_to_func_arg_void(voidp)
+  voidp_to_func_arg_voidp(voidp)
 
-  voidpToInt(voidp)
-  voidpToStr(voidp)
-  voidpToDouble(voidp)
-  voidpToListInt(voidp)
+  voidp_to_int(voidp)
+  voidp_to_str(voidp)
+  voidp_to_double(voidp)
+  voidp_to_list_int(voidp)
 
-  anyPtrToVoidp(voidp)
-  intToVoidp(1)
-  doubleToVoidp(10.0)
-  strToVoidp('')
+  any_ptr_to_voidp(voidp)
+  int_to_voidp(1)
+  double_to_voidp(10.0)
+  str_to_voidp('')
 
 if __name__ == '__main__':
-  shedskin_void_pointer_casting()
+  shedskin_type_generation_voidp()
 

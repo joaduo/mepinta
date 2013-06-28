@@ -25,10 +25,10 @@ from mepinta.testing.plugins_testing.PluginTestAutoTester import PluginTestAutoT
 class MakeSDS(K3dMeshPluginTest):
   def __post_init__(self):
     import plugins.c_and_cpp.processors.k3dv1.mesh.modifiers.sds.MakeSDS as sds
-    self.testedProcessors.append(sds)
+    self.tested_processors.append(sds)
 
   def definePluginPipeline(self, test_pline):
-    sds = self.testedProcessors[0]
+    sds = self.tested_processors[0]
     test_pline.append(sds)
 
   def getTimeParameters(self):

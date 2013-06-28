@@ -24,10 +24,10 @@ from unittest import TestCase
 class DeformationExpression(Geometry2DPluginTest, TestCase):
   def __post_init__(self):
     import plugins.python.processors.demov1.Geometry2D.modifier.DeformationExpression as deformation_expression
-    self.testedProcessors.append(deformation_expression)
+    self.tested_processors.append(deformation_expression)
 
   def definePluginPipeline(self, test_pline):
-    deformation_expression = self.testedProcessors[0]
+    deformation_expression = self.tested_processors[0]
     deformation_node = test_pline.append(deformation_expression)
     test_pline.setValue(deformation_node.inputs.x_expression, 'x*t')
     test_pline.setValue(deformation_node.inputs.y_expression, 'y*t')

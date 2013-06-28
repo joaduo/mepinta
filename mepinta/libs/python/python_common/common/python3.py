@@ -9,7 +9,7 @@ import inspect
 
 mayor_version = sys.version[0]
 
-def onPython3():
+def on_python_3():
   return mayor_version == '3'
 
 def portableGetArgspec(func):
@@ -17,4 +17,4 @@ def portableGetArgspec(func):
   return inspect.getargspec(func)
 
 if __name__ == "__main__":
-  debugPrint(onPython3())
+  debugPrint(on_python_3())

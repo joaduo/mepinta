@@ -26,7 +26,7 @@ class DebugGraphManager(FrameworkBase):
     self.graph_mngr = GraphManager(self.context)
 
   def __checkRepr(self, graph, node):
-    assert node in graph.allNodes.keys()
+    assert node in graph.all_nodes.keys()
     #every prop has its id in the pipeline and in the topology
     #assert node.
   def createNode(self, graph, processor): #TODO: add support for debugging version
@@ -44,5 +44,5 @@ class DebugGraphManager(FrameworkBase):
   def disconnect(self, graph, dent_prop, dency_prop=None):
     return self.graph_mngr.disconnect(graph, dent_prop, dency_prop)
 
-  def autoConnect(self, graph, dent_node, dency_node):
-    return self.graph_mngr.autoConnect(graph, dent_node, dency_node)
+  def auto_connect(self, graph, dent_node, dency_node):
+    return self.graph_mngr.auto_connect(graph, dent_node, dency_node)

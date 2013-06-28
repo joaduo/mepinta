@@ -47,7 +47,7 @@ class PluginsBrowser(FrameworkBase):
             self.log.warning('Ignored module %r' % modname)
     return manifests
 
-def testModule():
+def test_module():
   from getDefaultContext import getDefaultContext
   context = getDefaultContext()
   psb = PluginsBrowser(context)
@@ -58,4 +58,4 @@ def testModule():
 
 
 if __name__ == "__main__":
-  testModule()
+  test_module()

@@ -37,30 +37,30 @@ class PropertyProxyContainer(FrameworkBase):
     self.__data_type_alias_manager = DataTypeAliasManager(self.context)
 
   @property
-  def containerType(self):
+  def container_type(self):
     return self.__container_type
 
-  def setContainerType(self, containerType):
+  def setContainerType(self, container_type):
     '''
-    Since the containerType property is read-only, this method is used to set
+    Since the container_type property is read-only, this method is used to set
       the container type. (done in the ProcessorProxy class)
-    :param containerType:
+    :param container_type:
     '''
-    self.__container_type = containerType
+    self.__container_type = container_type
 
   @property
-  def declarationOrder(self):
+  def declaration_order(self):
     return self.__declaration_order
 
-  def getProperties(self, *types):
+  def get_properties(self, *types):
     '''
       Get the properties in this container of a specific property type.
       Possible types: (with hierarchy)
         PropertyAndQualifierBase
           PropertyProxy
-            FunctionPropertyProxy    (functions declarationOrder)
-            InOutPropertyProxyBase   (declarationOrder carrying information)
-              FunctumPropertyProxy   (property carrying information and other declarationOrder: functum = function + datum)
+            FunctionPropertyProxy    (functions declaration_order)
+            InOutPropertyProxyBase   (declaration_order carrying information)
+              FunctumPropertyProxy   (property carrying information and other declaration_order: functum = function + datum)
               DataPropertyProxy      (pure data property)
                 InotifyPropertyProxy (The property receives signals from inotify, probably related to a File or Folder)
                 GenericEnumProxy     (data property implementing a generic enum data type)
@@ -79,7 +79,7 @@ class PropertyProxyContainer(FrameworkBase):
 
   def __getContainerTypes(self):
     '''Get the container's default type, based on container name'''
-    if self.containerType == 'function':
+    if self.container_type == 'function':
       return FunctionPropertyProxy
     else:
       return InOutPropertyProxyBase
@@ -113,24 +113,24 @@ class PropertyProxyContainer(FrameworkBase):
     :param value: the property object
     '''
     value.name = name
-    value.type = self.containerType
-    if name in self.declarationOrder:
+    value.type = self.container_type
+    if name in self.declaration_order:
       raise RuntimeError('Declaring property %r twice for this container.' % name)
-    self.declarationOrder.append(name)
+    self.declaration_order.append(name)
 
   def __delattr__(self, name):
     '''
       When deleting an attribute, make sure to delete it from the
-        declarationOrder list.
+        declaration_order list.
     '''
     prop = getattr(self, name)
     if isinstance(prop, PropertyAndQualifierBase):
-      self.declarationOrder.remove(prop.name)
+      self.declaration_order.remove(prop.name)
     return FrameworkBase.__delattr__(self, name)
 
-def testModule():
+def test_module():
   from getDefaultContext import getDefaultContext
   context = getDefaultContext()
 
 if __name__ == "__main__":
-  testModule()
+  test_module()

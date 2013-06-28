@@ -23,10 +23,10 @@ from plugins_tests.base.K3dMeshPluginTest import K3dMeshPluginTest
 class QSlim(K3dMeshPluginTest):
   def __post_init__(self):
     import plugins.c_and_cpp.processors.k3dv1.mesh.modifiers.polyhedron.QSlim as qslim
-    self.testedProcessors.append(qslim)
+    self.tested_processors.append(qslim)
 
   def definePluginPipeline(self, test_pline):
-    qslim = self.testedProcessors[0]
+    qslim = self.tested_processors[0]
     qslim_node = test_pline.append(qslim)
     test_pline.setValue(qslim_node.inputs.face_count, 10)
     test_pline.setValue(qslim_node.inputs.contraction_type, 0)

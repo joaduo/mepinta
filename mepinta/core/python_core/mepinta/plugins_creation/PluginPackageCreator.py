@@ -45,7 +45,7 @@ class PluginPackageCreator(PluginCreatorBase):
 if __name__ == "__main__":
   context = MepintaContext('python')
   logger = context.getConfig('log')
-  logger.setLevel(40)
+  logger.set_level(40)
   pc = PluginPackageCreator(context=context)
   #plugin_fdirs = PluginStorageConfig("DeformationExpression", "c_and_cpp", "processor", "Geometry2D.modifier", "deformation_expression", 1)
   #plugin_fdirs = PluginStorageConfig("Matrix4", "c_and_cpp", "data_types", "k3dv1", "k3dv1_Matrix4", 1)

@@ -70,7 +70,7 @@ class SimpleTestPipeline(FrameworkBase):
 
   def append(self, processor, connect=True):
     if processor not in self._processors_metadata:
-      self._processors_metadata[processor] = self._plugins_manager.loadProcessor(processor, reload_=True)
+      self._processors_metadata[processor] = self._plugins_manager.load_processor(processor, reload_=True)
     processor = self._processors_metadata[processor]
     node = self._graph_manager.createNode(self._graph, processor)
     if connect:
@@ -82,7 +82,7 @@ class SimpleTestPipeline(FrameworkBase):
 
   def _connectWithLastNode(self, dent_node):
     if self._last_node != None:
-      self._graph_manager.autoConnect(self._graph, dent_node, self._last_node)
+      self._graph_manager.auto_connect(self._graph, dent_node, self._last_node)
 
   def syncNode(self, node):
     self._graph_manager.syncNode(self._graph, node)
@@ -113,8 +113,8 @@ class SimpleTestPipeline(FrameworkBase):
     for node in nodes:
       ui_props = []
       ui_nodes_props.append((node, ui_props))
-      properties = node.inputs.getProperties()
-      for name in node.inputs.declarationOrder:
+      properties = node.inputs.get_properties()
+      for name in node.inputs.declaration_order:
         prop = properties[name]
         if prop.getDataTypeShortName() in interative_types:
           ui_props.append(prop)
@@ -143,12 +143,12 @@ class SimpleTestPipeline(FrameworkBase):
       nodes_dict[node.name] = node
     return nodes_dict
 
-def testModule():
+def test_module():
   from getDefaultContext import getDefaultContext
   context = getDefaultContext()
   itp = SimpleTestPipeline(context)
   context.log(itp)
 
 if __name__ == "__main__":
-  testModule()
+  test_module()
 

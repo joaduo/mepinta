@@ -21,11 +21,11 @@ along with Mepinta. If not, see <http://www.gnu.org/licenses/>.
 
 import imp
 
-def loadLibrary(path, symbol):
+def load_library(path, symbol):
   #We are on python, this means path is the module itself
   #TODO: Should we do a deep reload here?
   return path
 
-def unloadLibrary(handle):
+def unload_library(handle):
   #Nothing to do, we already reloaded the module
   pass

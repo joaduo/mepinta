@@ -42,7 +42,7 @@ def copy(u_graph):
 def delete(u_graph):
   pass
 
-def copyTo(to_graph, from_graph):
+def copy_to(to_graph, from_graph):
   #create the obvious context
   context = MepintaContext('python')
   #Make sure to propagate changes (avoid inconsistencies)
@@ -50,7 +50,7 @@ def copyTo(to_graph, from_graph):
   #pass the common data between undoable graphs
   to_graph.setGraph(from_graph.graph)
   #We start a topology change set, so we haven't done anything yet
-  to_graph.topologyChanged = False
+  to_graph.topology_changed = False
   #return the copy
   return to_graph
 

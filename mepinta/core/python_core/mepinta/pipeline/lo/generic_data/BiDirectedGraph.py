@@ -20,7 +20,7 @@ along with Mepinta. If not, see <http://www.gnu.org/licenses/>.
 '''
 
 from mepinta.pipeline.lo.generic_data.DirectedGraph import DirectedGraph
-from pipeline_backend.logging.logging import logDebug
+from pipeline_backend.logging.logging import log_debug
 
 class BiDirectedGraph(object):
   def __init__(self):
@@ -40,13 +40,13 @@ class BiDirectedGraph(object):
     #return changed ids
     return self.disconnectDpdents(prop_id)
   def disconnectDpdencies(self, dent_id):
-    logDebug('Disconnecting property: %s' % dent_id)
+    log_debug('Disconnecting property: %s' % dent_id)
     for dency_id in self.dpdencies[dent_id]: #for each dependency we delete the dency_id:dent_id relations
       self.dpdents.remove(dency_id, dent_id)
     self.dpdencies.__delitem__(dent_id) #we delete the dent_id:dency_id relations
   def disconnectDpdents(self, dency_id):
     dents_ids = self.dpdents[dency_id]
-    logDebug('Disconnecting property: %s' % dency_id)
+    log_debug('Disconnecting property: %s' % dency_id)
     for dent_id in dents_ids: #for each dependency we delete the dent_id:dency_id relations
       self.dpdencies.remove(dent_id, dency_id)
     self.dpdents.__delitem__(dency_id) #we delete the dency_id:dent_id relations

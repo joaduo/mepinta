@@ -42,10 +42,10 @@ class ProcessorProxy(FrameworkBase):
     self.marked_outputs = [] #a function property
     #self.marked_inputs = [] #a function property #TODO: is this ever used?
 
-  def __getContainer(self, containerType):
+  def __getContainer(self, container_type):
     container = PropertyProxyContainer(self.context)
-    container.setContainerType(containerType)
-    self.containers[containerType] = container
+    container.setContainerType(container_type)
+    self.containers[container_type] = container
     return container
 
   def getRequiredDataTypes(self, types_classes=[DataPropertyProxy]):
@@ -54,7 +54,7 @@ class ProcessorProxy(FrameworkBase):
     #return a dict like: {dt_name:{versions:[]}}
     data_types = {}
     for container in self.containers.values():
-      props = container.getProperties(*types_classes)
+      props = container.get_properties(*types_classes)
       for node_property in props.values():
         dt_name = node_property.data_type_name
         if dt_name not in data_types:
@@ -63,13 +63,13 @@ class ProcessorProxy(FrameworkBase):
           insort_left(data_types[dt_name], node_property.data_type_version) #create a sorted list, so latest version is at end
     return data_types
 
-  def getFunctionsDict(self):
+  def get_functions_dict(self):
     '''Get the Functions and Functums defined on this proxy'''
     #returns a dict like: {name:PropertyProxy instance}
     func_dict = {}
     for container in self.containers.values():
-      #filter declarationOrder from containers
-      container_funcs = container.getProperties(FunctionPropertyProxy, FunctumPropertyProxy)
+      #filter declaration_order from containers
+      container_funcs = container.get_properties(FunctionPropertyProxy, FunctumPropertyProxy)
       if set(container_funcs.keys()) & set(func_dict.keys()):
         #functions name should never repeat
         msg = 'You should\'t make functions or functums with the same name on the same plugin.'
@@ -78,16 +78,16 @@ class ProcessorProxy(FrameworkBase):
       func_dict.update(container_funcs)
     return func_dict
 
-  def setFunctionsId(self, func_dict_ids):
+  def set_functions_id(self, func_dict_ids):
     '''When a processor library was loaded, then set the id of the functions stored in ContextLo.'''
     for func_name, func_id in func_dict_ids.items():
-      getattr(self.getContainer(func_name), func_name).func_ptr_id = func_id
+      getattr(self.get_container(func_name), func_name).func_ptr_id = func_id
 
-  def getContainer(self, func_name): #TODO: rename to getFunctionContainer
+  def get_container(self, func_name): #TODO: rename to getFunctionContainer
     '''Get the container for a specific function name. Names of functions cannot be repeated across containers.'''
     containers = []
     for container in self.containers.values():
-      if func_name in container.getProperties():
+      if func_name in container.get_properties():
         containers.append(container)
     if len(containers) > 1:
         msg = 'You should\'t make functions or functums with the same name on the same plugin.'
@@ -99,9 +99,9 @@ class ProcessorProxy(FrameworkBase):
       msg = 'No container for func_name:%r' % func_name
       self.log.e(msg)
 
-def testModule():
+def test_module():
   from getDefaultContext import getDefaultContext
   context = getDefaultContext()
 
 if __name__ == "__main__":
-  testModule()
+  test_module()

@@ -29,48 +29,48 @@ class PluginTestAutoTester(ModuleAutoTesterBase):
     self.__fork_inotify_utils = ForkInotifyUtilsBase(self.context)
     self.__plugin_testr_unner = ProcessorPluginTestRunner(self.context)
 
-  def __getTestModule(self, testModule):
-    if not testModule:
+  def __getTestModule(self, test_module):
+    if not test_module:
       import __main__
       return __main__
     else:
-      return testModule
+      return test_module
 
   def __setGui(self, gui):
     self.context.nodebox_gui = gui
 
-  def deepTest(self, gui=True, testModule=None):
-    self.test(gui, testModule)
+  def deepTest(self, gui=True, test_module=None):
+    self.test(gui, test_module)
 
-  def test(self, gui=True, testModule=None): #TODO: rename to deepTest
+  def test(self, gui=True, test_module=None): #TODO: rename to deepTest
     self.__setGui(gui)
-    self.__plugin_testr_unner.blockListeningEvents(self.__getTestModule(testModule))
+    self.__plugin_testr_unner.blockListeningEvents(self.__getTestModule(test_module))
 
-  def __createPipeline(self, testModule):
-    test_instance = self.__fork_inotify_utils._getTestInstance(testModule)
+  def __createPipeline(self, test_module):
+    test_instance = self.__fork_inotify_utils._getTestInstance(test_module)
     test_pline = InotifySimpleTestPipeline(self.context)
     test_instance.definePipeline(test_pline)
     return test_pline
 
-  def simpleTest(self, gui=True, testModule=None):
+  def simpleTest(self, gui=True, test_module=None):
     self.__setGui(gui)
-    testModule = self.__getTestModule(testModule)
-    test_pline = self.__createPipeline(testModule)
-    test_pline.blockListeningEvents(testModule)
+    test_module = self.__getTestModule(test_module)
+    test_pline = self.__createPipeline(test_module)
+    test_pline.blockListeningEvents(test_module)
 
-  def shallowTest(self, gui=True, testModule=None):
+  def shallowTest(self, gui=True, test_module=None):
     self.__setGui(gui)
-    test_pline = self.__createPipeline(self.__getTestModule(testModule))
+    test_pline = self.__createPipeline(self.__getTestModule(test_module))
     if gui:
       SimpleTestPipelineGui(self.context, test_pline=test_pline).run()
     else:
-      test_instance = self.__fork_inotify_utils._getTestInstance(self.__getTestModule(testModule))
+      test_instance = self.__fork_inotify_utils._getTestInstance(self.__getTestModule(test_module))
       test_instance.stressPipeline(test_pline, time=0)
       test_pline.evaluateProp()
 
-  def smokeTest(self, gui=True, testModule=None):
+  def smokeTest(self, gui=True, test_module=None):
     self.__setGui(gui)
-    test_pline = self.__createPipeline(self.__getTestModule(testModule))
+    test_pline = self.__createPipeline(self.__getTestModule(test_module))
     if gui:
       from mepinta.testing.plugins_testing.nodebox.NodeBoxSimplePipelineOutput import NodeBoxSimplePipelineOutput
       NodeBoxSimplePipelineOutput(test_pline.getPipeline()).run()
