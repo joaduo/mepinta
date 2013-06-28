@@ -31,17 +31,17 @@ class manifest(PluginManifestBase):
     functions.render.dpdencies += [ inputs.geometry ]
 
 def render(args):
-  from mepinta_python_sdk.props import get_prop_value
-  from pipeline_backend.logging.logging import log_info
+  from mepinta_python_sdk.props import getPropValue
+  from pipeline_backend.logging.logging import logInfo
   #Inputs
-  geometry = get_prop_value(args, 'inputs', 'geometry')
+  geometry = getPropValue(args, 'inputs', 'geometry')
   stdout_str = ''
   stdout_str += 'points:%s ' % geometry.points
   stdout_str += 'bezier_paths:%s' % geometry.bezier_paths
   stdout_str += '\nSummary points:%s paths:%s ' % (len(geometry.points), len(geometry.bezier_paths))
   if len(geometry.bezier_paths):
     stdout_str += '\nFirst bezier path length:%s ' % len(geometry.bezier_paths[0])
-  log_info(stdout_str)
+  logInfo(stdout_str)
 
 if __name__ == "__main__":
   from getDefaultContext import getDefaultContext

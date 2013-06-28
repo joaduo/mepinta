@@ -26,9 +26,9 @@ Created on Sep 23, 2011
 from proxy.data_model import ProcessorProxy,\
   InOutPropertyProxy, FunctionPropertyProxy
 from plugins.python.data_types.Geometry2D_v1.gemoetry2dv1__001 import Path2D
-from plugins.python.sdk.props_utilities import get_prop_value
+from plugins.python.sdk.props_utilities import getPropValue
 
-def get_processor_proxy(context):
+def getProcessorProxy(context):
   pp = ProcessorProxy('Geometry2DAddPath')
   #Inputs
   pp.inputs.geometry_2d = InOutPropertyProxy('Geometry2D_v1',1)
@@ -48,14 +48,14 @@ def get_processor_proxy(context):
 
 def modifyGeometry(args):
   #Inputs
-  point_indexes = get_prop_value(args, 'inputs','point_indexes')
+  point_indexes = getPropValue(args, 'inputs','point_indexes')
   #Outputs
-  geom2d = get_prop_value(args, 'outputs','geometry_2d')
+  geom2d = getPropValue(args, 'outputs','geometry_2d')
   #Big deal!!
   max_point_index = len(geom2d.points)
   p_indexes_new = filter(lambda x: isinstance(x, int) and x < max_point_index and x >= 0, point_indexes)
   geom2d.bezier_paths.append(p_indexes_new)
 
 if __name__ == '__main__':
-  pp = get_processor_proxy(None)
+  pp = getProcessorProxy(None)
   debugPrint( pp)

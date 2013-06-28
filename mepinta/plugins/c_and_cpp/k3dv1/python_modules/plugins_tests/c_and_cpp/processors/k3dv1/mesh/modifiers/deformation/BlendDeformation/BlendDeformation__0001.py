@@ -24,14 +24,14 @@ from mepinta.plugins_manifest import DataProperty
 class BlendDeformation(K3dMeshPluginTest):
   def __post_init__(self):
     import plugins.c_and_cpp.processors.k3dv1.mesh.modifiers.deformation.BlendDeformation as blend
-    self.tested_processors.append(blend)
+    self.testedProcessors.append(blend)
 
   def definePluginPipeline(self, test_pline):
     import plugins.c_and_cpp.processors.k3dv1.mesh.modifiers.deformation.DeformationExpression as deform
     
     sphere_node = test_pline.getLastNode()
     deform_node = test_pline.append(deform) 
-    blend_node = test_pline.append(self.tested_processors[0], connect=False)
+    blend_node = test_pline.append(self.testedProcessors[0], connect=False)
     
     test_pline.connect(blend_node.inputs.original_mesh, sphere_node.outputs.mesh)
     test_pline.connect(blend_node.inputs.mesh, deform_node.outputs.mesh)

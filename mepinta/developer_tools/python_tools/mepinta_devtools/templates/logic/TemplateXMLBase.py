@@ -23,9 +23,9 @@ from mepinta_devtools.templates.logic.base import TemplateLogicBase
 class TemplateXMLBase(TemplateLogicBase):
   _file_ext = 'xml'
 
-def test_module():
+def testModule():
   from getDefaultContext import getDefaultContext
   context = getDefaultContext()
 
 if __name__ == "__main__":
-  test_module()
+  testModule()

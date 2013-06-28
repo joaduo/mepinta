@@ -30,7 +30,7 @@ from mepinta.abstract.MepintaError import MepintaError
 from common.type_checking.isiterable import isiterable
 from mepinta.testing.plugins_testing.test_pipeline.SimpleTestPipeline import SimpleTestPipeline
 import time
-from mepinta.pipeline.hi.FactoryLo import unwrap_lo
+from mepinta.pipeline.hi.FactoryLo import unwrapLo
 
 
 #TODO: Split into implementation classes
@@ -43,7 +43,7 @@ class InotifySimpleTestPipeline(ForkInotifyUtilsBase):
     -Processor library files (.so.implementation).
     -Test modules.
 
-  Providing a test_module to the 'blockListeningEvents'(*) this class will setup
+  Providing a testModule to the 'blockListeningEvents'(*) this class will setup
   the InotifyActionManager to watch those files, libraries and modules provided
   by the test module configuration.
   (*or previously registering the test module with 'registerTestModules' method)
@@ -55,15 +55,15 @@ class InotifySimpleTestPipeline(ForkInotifyUtilsBase):
   'ProcessorPluginTestRunner.blockListeningEvents' method as a first argument.)
   '''
   @property
-  def ui_default_evaluated(self):
+  def uiDefaultEvaluated(self):
     return self.__ui_default_evaluated
 
   @property
-  def default_evaluated(self):
+  def defaultEvaluated(self):
     return self.__default_evaluated
 
   @property
-  def default_marked(self):
+  def defaultMarked(self):
     return self.__default_marked
 
   def __post_init__(self):
@@ -123,11 +123,11 @@ class InotifySimpleTestPipeline(ForkInotifyUtilsBase):
   def registerTestModules(self, test_modules):
     if not isiterable(test_modules):
       test_modules = [test_modules]
-    for test_module in test_modules:
-      self._registerTestModule(test_module)
+    for testModule in test_modules:
+      self._registerTestModule(testModule)
 
-  def _registerTestModule(self, test_module):
-    plugin_test = self._getTestInstance(test_module)
+  def _registerTestModule(self, testModule):
+    plugin_test = self._getTestInstance(testModule)
     #Creates pipeline and creates input file watches
     plugin_test.definePipeline(self)
     #Only c and cpp plugins .so.implentation libraries will be watched
@@ -135,19 +135,19 @@ class InotifySimpleTestPipeline(ForkInotifyUtilsBase):
       #TODO: later this should be improved (watching python implementations)
       for processor in plugin_test.getWatchedProcessors():
         self.__watchProcessorLibrary(processor)
-    self.__watchTestModule(test_module)
+    self.__watchTestModule(testModule)
 
   def evaluateProp(self, prop=None):
     if prop:
       return self._test_pline.evaluateProp(prop)
     else:
-      if not len(self.default_evaluated):
+      if not len(self.defaultEvaluated):
         raise RuntimeError('You should be set a default property prior calling this method.')
-      for prop in self.default_evaluated:
+      for prop in self.defaultEvaluated:
         return self._test_pline.evaluateProp(prop)
 
   def evaluatePropForced(self, prop):
-    prop_id = unwrap_lo(prop)
+    prop_id = unwrapLo(prop)
     self._test_pline.getPipeline().changed_track.add(prop_id)
     self._test_pline.evaluateProp(prop)
 
@@ -188,7 +188,7 @@ class InotifySimpleTestPipeline(ForkInotifyUtilsBase):
   def __evalOnTestDefault(self, mark_default_prop=False, manager=None, *args):
     def evaluateProp():
       if mark_default_prop:
-        for prop in self.default_marked:
+        for prop in self.defaultMarked:
           self._test_pline.markChanged(prop)
       self.evaluateProp()
     self._callFunctionOnFork(evaluateProp)
@@ -205,12 +205,12 @@ class InotifySimpleTestPipeline(ForkInotifyUtilsBase):
       if not self._plugin_loader.processorIsLoaded(processor_metadata):
         if pathExists(realPath(processor_metadata.library_path)):
           self.log.debug('Reloading %s.' % processor_metadata)
-          self._plugin_loader.load_processor_library(processor_metadata)
+          self._plugin_loader.loadProcessorLibrary(processor_metadata)
     def processorUnloadFunction(event, action, manager):
       self.log.debug("processorUnloadFunction event %s." % event)
       manager.skip_post_functions = True
       self.log.debug('Unloading %s.' % processor_metadata)
-      self._plugin_loader.unload_processor_library(processor_metadata)
+      self._plugin_loader.unloadProcessorLibrary(processor_metadata)
     path_action = PathAction(self.context, path=processor_metadata.library_path)
     #path_action.appendFunction(processorLoadFunction, mask=IN_CLOSE|IN_MOVED_TO|IN_ATTRIB)#TODO: review this. has too many flags just in case.
     path_action.appendFunction(processorUnloadFunction, mask=IN_DELETE_SELF | IN_ATTRIB)
@@ -219,13 +219,13 @@ class InotifySimpleTestPipeline(ForkInotifyUtilsBase):
     self._inotify_mngr.appendPostEventsFunction(self.evalOnTest)
     self._inotify_mngr.registerAction(path_action)
 
-  def __watchTestModule(self, test_module):
-    if test_module in self._watched_test_modules:
-      self.log.warning('Test module already watched: %r' % test_module)
+  def __watchTestModule(self, testModule):
+    if testModule in self._watched_test_modules:
+      self.log.warning('Test module already watched: %r' % testModule)
       return
-    self._watched_test_modules.append(test_module)
+    self._watched_test_modules.append(testModule)
     def testModuleInotifyFunction():
-      module_reloaded = self._reloadModule(test_module)
+      module_reloaded = self._reloadModule(testModule)
       plugin_test = self._getTestInstance(module_reloaded) #module_reloaded.test(self.context)
       #timing values
       start, end, step, sleep = self.__getTimeParameters(plugin_test.getTimeParameters())
@@ -239,7 +239,7 @@ class InotifySimpleTestPipeline(ForkInotifyUtilsBase):
         self.evaluateProp()
         time.sleep(sleep) #TODO: improve waiting taking in count the time of evaluation and debugPrint fps too
       plugin_test.stressStart(self, end)
-    path = self._getModuleFilePath(test_module)
+    path = self._getModuleFilePath(testModule)
     path_action = PathAction(self.context, path=path, mask=IN_CLOSE_WRITE)
     self._inotify_mngr.registerAction(path_action)
     self.replaceEvalOnTest(testModuleInotifyFunction)
@@ -265,7 +265,7 @@ class InotifySimpleTestPipeline(ForkInotifyUtilsBase):
     def evalOnTest(mark_default_prop=False, manager=None, *args):
       def evaluateProp():
         if mark_default_prop:
-          for prop in self.default_marked:
+          for prop in self.defaultMarked:
             self._test_pline.markChanged(prop)
         test_function()
       self._callFunctionOnFork(evaluateProp)

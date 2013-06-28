@@ -104,7 +104,7 @@ class TreeContextStore(object):
       owner_str = "%s" % owner
     return owner_str
 
-def test_module():
+def testModule():
   def assertAndPrint(gc, name, owner, value):
     debugPrint(gc.getConfig(name, owner))
     assert(gc.getConfig(name, owner) == value)
@@ -123,4 +123,4 @@ def test_module():
   debugPrint(gc1.getConfig('hello3', owner='yo'))
 
 if __name__ == "__main__":
-  test_module()
+  testModule()

@@ -63,9 +63,9 @@ class FileManager(FrameworkBase):
       self.log.d('Copying %r to %r' % (joinPath(src_path, file_name), joinPath(dst_path, file_name)))
       self.copy(joinPath(src_path, file_name), joinPath(dst_path, file_name))
 
-def test_module():
+def testModule():
   from getDefaultContext import getDefaultContext
   context = getDefaultContext()
 
 if __name__ == "__main__":
-  test_module()
+  testModule()

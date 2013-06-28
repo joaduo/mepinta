@@ -32,7 +32,7 @@ class LibraryManager(object):
     #inputs.function = Function().loadFrom('demov1.Geometry2D.modifier.GroovyMove').requiresLibrary('demov1.commonlib')
     #self.requiresLibrary('demov1.commonlib')
     pass
-  def unloadLibrary(self, library_id):
+  def unloadLibrary(self, libraryId):
     pass
 
 class LibraryManifestBase(object):
@@ -56,9 +56,9 @@ class LibraryGraph(FrameworkObject):
     return self.__library_id_count
 
   def addLibray(self, library):
-    library_id = self.__getNewLibraryId()
-    self.all_libraries[library_id] = library
-    self.topology.addPropId(library_id)
+    libraryId = self.__getNewLibraryId()
+    self.all_libraries[libraryId] = library
+    self.topology.addPropId(libraryId)
 
 class LibraryMetadata(FrameworkObject):
   def __init__(self, name, path):
@@ -66,13 +66,13 @@ class LibraryMetadata(FrameworkObject):
     self.path = path
     self.dpdencies = []
 
-  def setId(self, library_id):
-    def cannotSetId(library_id):
+  def setId(self, libraryId):
+    def cannotSetId(libraryId):
       raise MepintaError('You cannot change a library id once is has been set')
-    self.__library_id = library_id
+    self.__library_id = libraryId
     self.setId = cannotSetId
   @property
-  def library_id(self):
+  def libraryId(self):
     return self.__library_id
 
 class PluginLibrary(LibraryMetadata):

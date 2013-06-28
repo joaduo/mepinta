@@ -80,9 +80,9 @@ This is the class Hierarchy for Qualifiers:
 The hierarchy of Properties Proxies:
   PropertyAndQualifierBase
     PropertyProxy
-      FunctionPropertyProxy    (functions declaration_order)
-      InOutPropertyProxyBase   (declaration_order carrying information)
-        FunctumPropertyProxy   (property carrying information and other declaration_order: functum = function + datum)
+      FunctionPropertyProxy    (functions declarationOrder)
+      InOutPropertyProxyBase   (declarationOrder carrying information)
+        FunctumPropertyProxy   (property carrying information and other declarationOrder: functum = function + datum)
         DataPropertyProxy      (pure data property)
           InotifyPropertyProxy (The property receives signals from inotify, probably related to a File or Folder)
           GenericEnumProxy     (data property implementing a generic enum data type)
@@ -122,7 +122,7 @@ class QualifierBase(PropertyAndQualifierBase):
       return PropertyProxy.__getattribute__(self.wrapped_prop, name)
   def __eq__(self, other):
     '''
-      When comparing (for declaration_order for example), use the real property without qualifications.
+      When comparing (for declarationOrder for example), use the real property without qualifications.
     '''
     return self.__qualified__() == other.__qualified__()
   def __str__(self):
@@ -212,7 +212,7 @@ class PropertyProxy(PropertyAndQualifierBase):
     self.property_id = None
     #by default the connection is bidirectional. This may be overrided by wrapping it in a Directed
     self.direction = '<>'
-    #TODO: check that a property is not added twice, or two declaration_order with the same name
+    #TODO: check that a property is not added twice, or two declarationOrder with the same name
     self.__dpdencies = PropertyDepedencies()
     self.name = None
     #self.parent = None #later we need to know who this property belongs to? #TODO: remove?
@@ -233,13 +233,13 @@ class PropertyProxy(PropertyAndQualifierBase):
     return '<%s %r %s>' % (self.__class__.__name__, self.name, FrameworkObject.__repr__(self))
 
   #Properties
-  def get_dpdencies(self):
-    '''You can get dpdencies, but never set it. Always add or remove declaration_order from the list.'''
+  def getDpdencies(self):
+    '''You can get dpdencies, but never set it. Always add or remove declarationOrder from the list.'''
     return self.__dpdencies
-  def set_dpdencies(self, value):
+  def setDpdencies(self, value):
     if self.__dpdencies != value:
       raise RuntimeError('Trying to change %r property\'s dpdencies object. You should use the += operator instead.' % str(self))
-  dpdencies = property(get_dpdencies, set_dpdencies, None, None)
+  dpdencies = property(getDpdencies, setDpdencies, None, None)
 
 class InOutPropertyProxyBase(PropertyProxy):
   def __init__(self, data_type_alias, data_type_version=1):
@@ -332,13 +332,13 @@ class GenericEnumProxy(DataPropertyProxy):
       raise RuntimeError('Default value %r was not defined for this enum %r' % (value, self.enum_dict))
     return self
   #Properties
-  def get_enum_id(self):
+  def getEnumId(self):
     if self.__enum_id == None:
       raise RuntimeError('A enum property_id must be set from the PropertyProxyContainer class.')
     return self.__enum_id
-  def set_enum_id(self, value):
+  def setEnumId(self, value):
     self.__enum_id = value
-  enum_id = property(get_enum_id, set_enum_id, None, None)
+  enum_id = property(getEnumId, setEnumId, None, None)
 
 class FunctumPropertyProxy(InOutPropertyProxyBase):
   '''
@@ -367,15 +367,15 @@ if __name__ == '__main__':
   #    prop2 = DataPropertyProxy('charp', 1)
   #    fprop1 = FunctionPropertyProxy()
   #    container = PropertyProxyContainer()
-  #    container.container_type = 'input'
+  #    container.containerType = 'input'
   #    container.count = DataPropertyProxy('int')
   #    container.expression = DataPropertyProxy('charp')
   #    container.operation = FunctionPropertyProxy()
-  #    debugPrint (container.get_properties())
+  #    debugPrint (container.getProperties())
   #
   #  test()
   #
-  #  def get_processor_proxy(context):
+  #  def getProcessorProxy(context):
   #    pp = ProcessorProxy('ScalarExpression')
   #    #Inputs
   #    pp.inputs.expression = DataPropertyProxy('charp', 1)
@@ -409,13 +409,13 @@ if __name__ == '__main__':
   #
   #    return pp
   #
-  #  pp = get_processor_proxy(context)
+  #  pp = getProcessorProxy(context)
   #
   #  def print_processor_definition(context, pp):
   #    for cont_name, props in pp.containers.items():
   #      context.log.info("Container %r" % cont_name)
-  #      props_dict = props.get_properties()
-  #      for name in props.declaration_order:
+  #      props_dict = props.getProperties()
+  #      for name in props.declarationOrder:
   #        if name in props_dict:
   #          prop = props_dict[name]
   #          if isinstance(prop, InOutPropertyProxyBase):

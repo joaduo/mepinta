@@ -31,8 +31,8 @@ class TestDiscoveryManager(FrameworkObject): #Cannot be FrameworkBase because co
     TextTestRunner().run(test_suite)
 
 
-def test_module():
+def testModule():
   TestDiscoveryManager().runAllTests()
 
 if __name__ == "__main__":
-  test_module()
+  testModule()
