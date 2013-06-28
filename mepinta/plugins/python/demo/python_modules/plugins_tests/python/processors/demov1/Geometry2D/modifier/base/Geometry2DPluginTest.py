@@ -39,8 +39,8 @@ class Geometry2DPluginTest(ProcessorPluginTestBase):
       import plugins.python.processors.demov1.Geometry2D.output.StdoutPrint as renderer
     output_node = test_pline.append(renderer)
     if gui:
-      test_pline.ui_default_evaluated.append(output_node.functions.render)
-    test_pline.default_evaluated.append(output_node.functions.render)
+      test_pline.uiDefaultEvaluated.append(output_node.functions.render)
+    test_pline.defaultEvaluated.append(output_node.functions.render)
     return output_node
 
   def definePipeline(self, test_pline):

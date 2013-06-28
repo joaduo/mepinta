@@ -34,7 +34,7 @@ class ContextBase(TreeContextStore):
       config_tree_node = arg
       TreeContextStore.__init__(self, config_tree_node)
 
-def test_module():
+def testModule():
   pass
   #TODO: clean?
 #  from common.decorator.args_singleton import args_singleton
@@ -69,4 +69,4 @@ def test_module():
 
 
 if __name__ == "__main__":
-  test_module()
+  testModule()

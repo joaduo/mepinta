@@ -23,9 +23,9 @@ from mepinta.testing.plugins_testing.base import ModuleAutoTesterBase
 class ModuleAutoTesterUtil(ModuleAutoTesterBase):
   pass
 
-def test_module():
+def testModule():
   from getDefaultContext import getDefaultContext
   context = getDefaultContext()
 
 if __name__ == "__main__":
-  test_module()
+  testModule()

@@ -19,9 +19,9 @@ You should have received a copy of the GNU General Public License
 along with Mepinta. If not, see <http://www.gnu.org/licenses/>.
 '''
 from mepinta.pipeline.lo.pipeline_data.data_model import DataType, ProcessorFunction
-from pipeline_backend.logging.logging import log_info, log_debug
+from pipeline_backend.logging.logging import logInfo, logDebug
 from pipeline_backend.solve_symbol.solve_symbol import solve_symbol
-from pipeline_backend.load_unload_library.load_unload_library import unload_library, load_library
+from pipeline_backend.load_unload_library.load_unload_library import unloadLibrary, loadLibrary
 
 class PluginLoader(object):
   '''
@@ -33,47 +33,47 @@ class PluginLoader(object):
   def __init__(self, context_lo):
     self.context_lo = context_lo
 
-  def unload_data_type_library(self, path, dtype_id):
+  def unloadDataTypeLibrary(self, path, dtype_id):
     if path in self.context_lo.data_types_paths:#unload library
-      log_info('Unloading data type library at %r with dtype_id=%r' % (path, dtype_id))
-      unload_library(self.context_lo.data_types_paths[path])
+      logInfo('Unloading data type library at %r with dtype_id=%r' % (path, dtype_id))
+      unloadLibrary(self.context_lo.data_types_paths[path])
       self.context_lo.data_types_paths.__delitem__(path)
-      self.context_lo.data_types[dtype_id].update_handle(None)
+      self.context_lo.data_types[dtype_id].updateHandle(None)
     else:
-      log_debug('Data type library already unloaded.(at %r with dtype_id=%r)' % (path, dtype_id))
+      logDebug('Data type library already unloaded.(at %r with dtype_id=%r)' % (path, dtype_id))
 
-  def load_data_type_library(self, path, data_type_name, dtype_id):
+  def loadDataTypeLibrary(self, path, data_type_name, dtype_id):
     if path not in self.context_lo.data_types_paths: #Ok, the library isnt loaded
-      log_info('Loading data type library at %r with data_type_name=%r and dtype_id=%r' % (path, data_type_name, dtype_id))
+      logInfo('Loading data type library at %r with data_type_name=%r and dtype_id=%r' % (path, data_type_name, dtype_id))
       #TODO: get real name set it and return it!
-      handle = load_library(path, symbol='global')
+      handle = loadLibrary(path, symbol='global')
       self.context_lo.data_types_paths[path] = handle
       if dtype_id not in self.context_lo.data_types:
         self.context_lo.data_types[dtype_id] = DataType(data_type_name, handle)
       else:
-        self.context_lo.data_types[dtype_id].update_handle(handle)
+        self.context_lo.data_types[dtype_id].updateHandle(handle)
     else:
-      log_debug('Loading data type library already loaded. At %r with data_type_name=%r and dtype_id=%r' % (path, data_type_name, dtype_id))
+      logDebug('Loading data type library already loaded. At %r with data_type_name=%r and dtype_id=%r' % (path, data_type_name, dtype_id))
 
   def dataTypeIsLoaded(self, path):
     return self.context_lo.data_types_paths.__contains__(path)
 
-  def unload_processor_library(self, path, func_ids):
+  def unloadProcessorLibrary(self, path, func_ids):
     if path in self.context_lo.processors_paths:#unload library
-      log_info('Unloading processor library at %r with func_ids=%r' % (path, func_ids))
-      unload_library(self.context_lo.processors_paths[path])
+      logInfo('Unloading processor library at %r with func_ids=%r' % (path, func_ids))
+      unloadLibrary(self.context_lo.processors_paths[path])
       #Unregister functions
       for f_id in func_ids:
-        self.context_lo.functions[f_id].update_func_pointer(None)
+        self.context_lo.functions[f_id].updateFuncPointer(None)
       #delete the unloaded library (to avoid uncorrect lib handle lookup)
       self.context_lo.processors_paths.__delitem__(path)
     else:
-      log_debug('Processor library already unloaded. (at %r with func_ids=%r)' % (path, func_ids))
+      logDebug('Processor library already unloaded. (at %r with func_ids=%r)' % (path, func_ids))
 
-  def load_processor_library(self, path, func_dict):
+  def loadProcessorLibrary(self, path, func_dict):
     if path not in self.context_lo.processors_paths: #Ok, the library isn't loaded
-      log_info('Loading processor library at %r with func_dict=%r ' % (path, func_dict))
-      handle = load_library(path, symbol='local')
+      logInfo('Loading processor library at %r with func_dict=%r ' % (path, func_dict))
+      handle = loadLibrary(path, symbol='local')
       self.context_lo.processors_paths[path] = handle
       #Register functions:
       for func_name in func_dict:
@@ -82,21 +82,21 @@ class PluginLoader(object):
         func_ptr = solve_symbol(handle, '', func_name)
         #func_ptr = self.function_loader.load(handle, func_name)
         if func_id in self.context_lo.functions:
-          self.context_lo.functions[func_id].update_func_pointer(func_ptr)
+          self.context_lo.functions[func_id].updateFuncPointer(func_ptr)
         else:
           self.context_lo.functions[func_id] = ProcessorFunction(func_name, func_ptr)
     else:
-      log_debug('Processor library already loaded. (at %r with func_dict=%r)' % (path, func_dict))
+      logDebug('Processor library already loaded. (at %r with func_dict=%r)' % (path, func_dict))
 
   def processorIsLoaded(self, path):
     return self.context_lo.processors_paths.__contains__(path)
 
 def shedskin_PluginLoader(context_lo):
   soll = PluginLoader(context_lo)
-  soll.load_data_type_library('/path/to.so', 'Data Type Name', 1)
-  soll.unload_data_type_library('/path/to.so', 1)
-  soll.load_processor_library('/path/to.so', {'Func Name':1})
-  soll.unload_processor_library('/path/to.so', [1])
+  soll.loadDataTypeLibrary('/path/to.so', 'Data Type Name', 1)
+  soll.unloadDataTypeLibrary('/path/to.so', 1)
+  soll.loadProcessorLibrary('/path/to.so', {'Func Name':1})
+  soll.unloadProcessorLibrary('/path/to.so', [1])
   soll.processorIsLoaded('/path/to.so')
   soll.dataTypeIsLoaded('/path/to.so')
 

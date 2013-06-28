@@ -68,10 +68,10 @@ class MepintaSimpleDemos(FrameworkBase):
     deformation_expression_test.definePipeline(test_pline)
     return test_pline
 
-def test_module():
+def testModule():
   from getDefaultContext import getDefaultContext
   context = getDefaultContext()
   MepintaSimpleDemos(context).evaluatePipelineAndPrint()
 
 if __name__ == "__main__":
-  test_module()
+  testModule()

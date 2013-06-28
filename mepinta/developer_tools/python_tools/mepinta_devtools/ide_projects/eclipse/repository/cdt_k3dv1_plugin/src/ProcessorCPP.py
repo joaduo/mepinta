@@ -51,7 +51,7 @@ int ${functionName}(MP_args* args){
   ${inputsDeclaration}
   ${outputsDeclaration}
 
-  log_info("Printing from ${functionName}.\\\\n");
+  logInfo("Printing from ${functionName}.\\\\n");
 
   return EXIT_NORMAL;
 }
@@ -65,7 +65,7 @@ class ProcessorCPP(TemplateCPPBase):
   def genericEnums(self):
     cpp_string = ''
     for container in self.plugin_manifest.containers.values():
-      for name, prop in container.get_properties(GenericEnumProxy).items():
+      for name, prop in container.getProperties(GenericEnumProxy).items():
         cpp_string += '//Generic enum %s_t\n' % name
         cpp_string += 'typedef enum \n{\n'
         cpp_list = []
@@ -93,7 +93,7 @@ class ProcessorCPP(TemplateCPPBase):
   @on_template
   def processorFunctions(self):
     content = ''
-    for name, proxy in self.plugin_manifest.get_functions_dict().items():
+    for name, proxy in self.plugin_manifest.getFunctionsDict().items():
       self.log.debug('Processing function %s template' % name)
       props_declaration = FunctionPropertiesDeclaration(proxy=proxy, plugin_manifest=self.plugin_manifest)
       # translation_dict = {'functionName':name,

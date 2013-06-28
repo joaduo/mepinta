@@ -24,13 +24,13 @@ from mepinta.testing.plugins_testing.PluginTestAutoTester import PluginTestAutoT
 class FlipOrientation(K3dMeshPluginTest):
   def __post_init__(self):
     import plugins.c_and_cpp.processors.k3dv1.mesh.modifiers.FlipOrientation as flip
-    self.tested_processors.append(flip)
+    self.testedProcessors.append(flip)
 
   def definePluginPipeline(self, test_pline):
     #import plugins.c_and_cpp.processors.k3dv1.mesh.selection.faces.SelectFaceByNumber as select
     #test_pline.append(select)
     self._selectAllInputVertexs(test_pline)
-    flip = self.tested_processors[0]
+    flip = self.testedProcessors[0]
     test_pline.append(flip)
 
   def getTimeParameters(self):

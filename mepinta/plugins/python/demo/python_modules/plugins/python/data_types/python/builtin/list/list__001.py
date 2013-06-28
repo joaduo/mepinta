@@ -39,7 +39,7 @@ def copy(list_):
 def delete(list_):
   pass
 
-def copy_to(to_list, from_list):
+def copyTo(to_list, from_list):
   del to_list[:]
   to_list += from_list
   return to_list

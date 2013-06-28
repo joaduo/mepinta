@@ -18,36 +18,36 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with Mepinta. If not, see <http://www.gnu.org/licenses/>.
 '''
-from pipeline_backend.logging.logging import log_critical, log_debug, log_error, \
-  log_info, log_warning, log_verbose, set_log_level
+from pipeline_backend.logging.logging import logCritical, logDebug, logError, \
+  logInfo, logWarning, logVerbose, setLogLevel
 
 class LogOutput(object):
   def critical(self, msg):
-    log_critical(msg)
+    logCritical(msg)
   def error(self, msg):
-    log_error(msg)
+    logError(msg)
   def warning(self, msg):
-    log_warning(msg)
+    logWarning(msg)
   def info(self, msg):
-    log_info(msg)
+    logInfo(msg)
   def debug(self, msg):
-    log_debug(msg)
+    logDebug(msg)
   def verbose(self, msg):
-    log_verbose(msg)
-  def set_level(self, level):
-    set_log_level(level)
+    logVerbose(msg)
+  def setLevel(self, level):
+    setLogLevel(level)
 #  def trace(self, msg):
-#    log_trace(msg)
+#    logTrace(msg)
 
 def shedskin_LogOutput():
   lo = LogOutput()
   msg = 'Log message'
-  lo.set_level(0)
+  lo.setLevel(0)
   lo.critical(msg)
   lo.debug(msg)
   lo.error(msg)
   lo.info(msg)
   lo.warning(msg)
   lo.verbose(msg)
-  lo.set_level(1)
+  lo.setLevel(1)
 

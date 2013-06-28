@@ -40,7 +40,7 @@ class DirectedGraph(object):
     self.__values = []
   def __delitem__(self, item_id):
     '''  Deletes Values for a specific id  '''
-    index_lo, index_hi = self.bisect_left_right(self.__keys, item_id)
+    index_lo, index_hi = self.bisectLeftRight(self.__keys, item_id)
     if index_lo != index_hi: #Ok, we do have the item, and is not an empty list
       del self.__keys[index_lo:index_hi] #TODO: Fix for shedkin?
       del self.__values[index_lo:index_hi]
@@ -48,18 +48,18 @@ class DirectedGraph(object):
     if id_1 > id_2:
       return
     index_lo = self.bisect_left(self.__keys, id_1)
-    index_hi = self.bisect_right(self.__keys, id_2)
+    index_hi = self.bisectRight(self.__keys, id_2)
     if index_lo != index_hi: #Ok is not an empty list
       if self.__keys[index_lo] == id_1 and self.__keys[index_hi - 1] == id_2:
         del self.__keys[index_lo:index_hi]
         del self.__values[index_lo:index_hi]
   def __getitem__(self, item_id): #TODO
-    index_lo, index_hi = self.bisect_left_right(self.__keys, item_id)
+    index_lo, index_hi = self.bisectLeftRight(self.__keys, item_id)
     if index_lo != index_hi:
       return self.__values[index_lo:index_hi]
     else:
       return []
-  def get_first(self, item_id):
+  def getFirst(self, item_id):
     #DEBUG, should check if items exist first? I guess this is not needed
     index = self.bisect_left(self.__keys, item_id)
     return self.__values[index]
@@ -67,7 +67,7 @@ class DirectedGraph(object):
     if id_1 > id_2:
       return []
     index_lo = self.bisect_left(self.__keys, id_1)
-    index_hi = self.bisect_right(self.__keys, id_2)
+    index_hi = self.bisectRight(self.__keys, id_2)
     if index_lo != index_hi: #Ok is not an empty list
       if self.__keys[index_lo] == id_1 and self.__keys[index_hi - 1] == id_2:
         return self.__values[index_lo:index_hi]
@@ -78,7 +78,7 @@ class DirectedGraph(object):
   def __len__(self):
     return len(self.__keys)
   def __setitem__(self, item_id, value):
-    lo, hi = self.bisect_left_right(self.__keys, item_id)
+    lo, hi = self.bisectLeftRight(self.__keys, item_id)
     index = self.bisect_left(self.__values, value, lo, hi)
     self.__keys.insert(index, item_id)
     self.__values.insert(index, value)
@@ -88,20 +88,20 @@ class DirectedGraph(object):
     return self.__setitem__(item_id, value)
   def remove(self, item_id, value):
     #TODO: here we are not checking boundaries correctly?
-    lo, hi = self.bisect_left_right(self.__keys, item_id)
+    lo, hi = self.bisectLeftRight(self.__keys, item_id)
     if lo != hi: #Ok is not an empty list
       index = self.bisect_left(self.__values, value, lo, hi)
       if self.__keys[index] == item_id and self.__values[index] == value:
         self.__keys.__delitem__(index)
         self.__values.__delitem__(index)
   def count(self, item_id):
-    index_lo, index_hi = self.bisect_left_right(self.__keys, item_id)
+    index_lo, index_hi = self.bisectLeftRight(self.__keys, item_id)
     return index_hi - index_lo
 #  def extend(self, directed_graph): #TODO
 #    raise RuntimeError('Not Implemented Yet!')
 #  def __iter__(self):
-#    raise RuntimeError('Not Supported by ShedSkin (as of 20110929) Use get_ss_iterator')
-  def get_ss_iterator(self):
+#    raise RuntimeError('Not Supported by ShedSkin (as of 20110929) Use getSsIterator')
+  def getSsIterator(self):
     #BEWARE this method supposes you will never get a 0 in the table
     #So you should stop when you get such a value NULL_UID (0)
     return DirectedGraphIterator(self.__keys, self.__values)
@@ -115,7 +115,7 @@ class DirectedGraph(object):
       return False
   def has(self, item_id, value):
     #TODO: here we are not checking boundaries correctly?
-    lo, hi = self.bisect_left_right(self.__keys, item_id)
+    lo, hi = self.bisectLeftRight(self.__keys, item_id)
     index = self.bisect_left(self.__values, value, lo, hi)
     if lo != hi and len(self.__keys) != index: #Ok is not an empty list
       if self.__keys[index] == item_id and self.__values[index] == value:
@@ -127,7 +127,7 @@ class DirectedGraph(object):
       return index
     else:
       raise ValueError('%.index(x): x not in table' % self.__class__.__name__)
-  def bisect_left_right(self, a, x, lo=0, hi= -1):
+  def bisectLeftRight(self, a, x, lo=0, hi= -1):
       """
       """
 
@@ -151,11 +151,11 @@ class DirectedGraph(object):
 
       if value == x: #We found the value, let's get its lo an hi indexes
         if a[hi - 1] != x:
-          hi = self.bisect_right(a, x, mid + 1, hi)
+          hi = self.bisectRight(a, x, mid + 1, hi)
         if a[lo] != x:
           lo = self.bisect_left(a, x, lo, mid)
       return lo, hi
-  def bisect_right(self, a, x, lo=0, hi= -1):
+  def bisectRight(self, a, x, lo=0, hi= -1):
       """
       """
 
@@ -217,7 +217,7 @@ def shedskin_DirectedGraph():
   #del tbl[2:5]
   tbl.__delslice__(2, 5)
   tbl[5]
-  tbl.get_first(6)
+  tbl.getFirst(6)
   tbl.__getslice__(6, 100)
   tbl.__slice__(6, 100)
   #Unsupported on python 3, it tries to get an item passing a slice
@@ -227,7 +227,7 @@ def shedskin_DirectedGraph():
   tbl.add(1, 11)
   tbl.remove(1, 10)
   tbl.count(6)
-  iterator = tbl.get_ss_iterator()
+  iterator = tbl.getSsIterator()
   e = iterator.next()
   while e[0] != 0:
     e = iterator.next()
