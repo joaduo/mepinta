@@ -32,7 +32,7 @@ def getDefaultContext(log_level=LOG_INFO):
     called_once = True
   load_k3d_libs()
   context = getMepintaContext('python')
-  context.log.setLevel(log_level)
+  context.log.set_level(log_level)
   return context
 
 if __name__ == "__main__":

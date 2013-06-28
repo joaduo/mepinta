@@ -40,7 +40,7 @@ class SelfConfigBase(ContextClientBase):
     self.config = SelfConfigWrapper(OwnerClass=self.__class__, context=self.context)
     self.log = self.context.log
 
-def testModule():
+def test_module():
   from common.context.Context import Context
   class FooTestPluginsManager(SelfConfigBase):
     def __post_init__(self):
@@ -56,4 +56,4 @@ def testModule():
     debugPrint(e)
 
 if __name__ == '__main__':
-  testModule()
+  test_module()

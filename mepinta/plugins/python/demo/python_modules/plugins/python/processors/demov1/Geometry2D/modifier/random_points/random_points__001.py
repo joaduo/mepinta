@@ -26,9 +26,9 @@ Created on Sep 23, 2011
 from proxy.data_model import ProcessorProxy,\
   InOutPropertyProxy, FunctionPropertyProxy
 import random
-from plugins.python.sdk.props_utilities import getPropValue
+from plugins.python.sdk.props_utilities import get_prop_value
 
-def getProcessorProxy(context):
+def get_processor_proxy(context):
   pp = ProcessorProxy('Geometry2DRandomPoints')
   #Inputs
   pp.inputs.geometry_2d = InOutPropertyProxy('Geometry2D_v1',1)
@@ -55,12 +55,12 @@ def getProcessorProxy(context):
 
 def modifyGeometry(args):
   #Inputs
-  amount = getPropValue(args, 'inputs','point_indexes')
-  x_limit = getPropValue(args, 'inputs','x_limit')
-  y_limit = getPropValue(args, 'inputs','y_limit')
-  seed = getPropValue(args, 'inputs','seed')
+  amount = get_prop_value(args, 'inputs','point_indexes')
+  x_limit = get_prop_value(args, 'inputs','x_limit')
+  y_limit = get_prop_value(args, 'inputs','y_limit')
+  seed = get_prop_value(args, 'inputs','seed')
   #Outputs
-  geom2d = getPropValue(args, 'outputs','geometry_2d')
+  geom2d = get_prop_value(args, 'outputs','geometry_2d')
   #Big deal!!
   random.seed(seed)
   for i in xrange(amount):
@@ -68,5 +68,5 @@ def modifyGeometry(args):
     geom2d.points.append([random.random()*x_limit-x_limit/2,random.random()*y_limit-y_limit/2])
 
 if __name__ == '__main__':
-  pp = getProcessorProxy(None)
+  pp = get_processor_proxy(None)
   debugPrint( pp)

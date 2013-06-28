@@ -36,11 +36,11 @@ class K3dv1EclipseProjectTemplates_test(MepintaTestBase):
       self.log("%r:%r" % (templ, dir_))
     return True
 
-def testModule():
+def test_module():
   from getDefaultContext import getDefaultContext
   context = getDefaultContext()
   test = K3dv1EclipseProjectTemplates_test(context=context)
   return test.run()
 
 if __name__ == "__main__":
-  testModule()
+  test_module()

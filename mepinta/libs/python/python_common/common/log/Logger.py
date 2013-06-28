@@ -26,40 +26,40 @@ class DefaultOutput(object):
   def __init__(self):
     self.__log_level = self.__levels['debug']
 
-  def setLevel(self, level):
+  def set_level(self, level):
     if level.lower() in self.__levels:
       self.__log_level = self.__levels[level.lower()]
     else:
       sys.stderr.write('Inexistent log level %s \n' % level)
 
   def critical(self, msg):
-    self.__printLog(msg, 'CRITICAL')
+    self.__print_log(msg, 'CRITICAL')
   def error(self, msg):
-    self.__printLog(msg, 'ERROR')
+    self.__print_log(msg, 'ERROR')
   def warning(self, msg):
-    self.__printLog(msg, 'WARNING')
+    self.__print_log(msg, 'WARNING')
   def info(self, msg):
-    self.__printLog(msg, 'INFO')
+    self.__print_log(msg, 'INFO')
   def verbose(self, msg):
-    self.__printLog(msg, 'VERBOSE')
+    self.__print_log(msg, 'VERBOSE')
   def debug(self, msg):
-    self.__printLog(msg, 'DEBUG')
+    self.__print_log(msg, 'DEBUG')
   def trace(self, msg):
-    self.__printLog(msg, 'DEBUG_TRACE')
+    self.__print_log(msg, 'DEBUG_TRACE')
 
-  def __printLog(self, msg, level):
+  def __print_log(self, msg, level):
     level = self.__levels[level.lower()]
     if self.__log_level >= self.__levels['debug_trace']:
       if level >= self.__levels['debug'] or self.__log_level >= self.__levels['all_trace']:
-        self.printTrace()
+        self.print_trace()
     if self.__log_level >= level:
       if level <= self.__levels['error']:
-        self.printTrace('stderr')
+        self.print_trace('stderr')
         sys.stderr.write(msg + '\n')
       else:
         sys.stdout.write(msg + '\n')
 
-  def printTrace(self, output=''):
+  def print_trace(self, output=''):
     if output == 'stderr':
       sys.stderr.write(''.join(traceback.format_stack()))
       if self.__log_level >= self.__levels['debug']:
@@ -74,9 +74,9 @@ class Logger(object):
     if not output:
       output = DefaultOutput()
     self.output = output
-  def getOutput(self):
+  def get_output(self):
     return self.__output
-  def setOutput(self, value):
+  def set_output(self, value):
     self.__output = value
   def critical(self, msg):
     self.output.critical(str(msg))
@@ -107,8 +107,8 @@ class Logger(object):
   def v(self, msg):
     self.verbose(msg)
 
-  def setLevel(self, level):
-    self.output.setLevel(level)
+  def set_level(self, level):
+    self.output.set_level(level)
   def __call__(self, msg):
     self.info(msg)
   def trace(self, output=''):
@@ -118,7 +118,7 @@ class Logger(object):
     else:
       sys.stdout.write(''.join(traceback.format_stack()))
       sys.stdout.flush()
-  def lastException(self, level='debug'):
+  def last_exception(self, level='debug'):
     tb_list = traceback.extract_tb(sys.exc_info()[2])
     tb_list = traceback.format_list(tb_list)
     msg = ''.join(tb_list)
@@ -128,7 +128,7 @@ class Logger(object):
       self.error(msg)
     else:
       self.info(msg)
-  output = property(getOutput, setOutput, None, None)
+  output = property(get_output, set_output, None, None)
 
 if __name__ == '__main__':
   logger = Logger()

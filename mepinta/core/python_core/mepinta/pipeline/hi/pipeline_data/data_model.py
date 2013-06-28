@@ -26,7 +26,7 @@ class Pipeline(HiBase):
 
 if __name__ == '__main__':
   from getDefaultContext import getDefaultContext
-  from mepinta.pipeline.hi.FactoryLo import unwrapLo
+  from mepinta.pipeline.hi.FactoryLo import unwrap_lo
   pline = Pipeline(context=getDefaultContext())
   debugPrint(pline)
-  debugPrint(unwrapLo(pline))
+  debugPrint(unwrap_lo(pline))

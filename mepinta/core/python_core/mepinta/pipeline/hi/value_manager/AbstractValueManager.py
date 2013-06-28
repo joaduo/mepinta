@@ -53,9 +53,9 @@ class AbstractValueManager(FrameworkBase):
     self.__checkProps(props)
     return self.__value_managers[self.context.backend_name].setValues(pline, props, values)
 
-def testModule():
+def test_module():
   from getDefaultContext import getDefaultContext
   context = getDefaultContext()
 
 if __name__ == "__main__":
-  testModule()
+  test_module()

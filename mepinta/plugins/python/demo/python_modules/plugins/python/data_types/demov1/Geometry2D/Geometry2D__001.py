@@ -31,6 +31,6 @@ def copy(geom2d):
 def delete(geom2d):
   pass
 
-#def copyTo():
+#def copy_to():
 #  pass
 

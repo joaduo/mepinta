@@ -30,7 +30,7 @@ extern str *__name__;
 
 
 void __init();
-void *solveSymbol(void *handle, str *__ss_namespace, str *symbol);
+void *solve_symbol(void *handle, str *__ss_namespace, str *symbol);
 
 } // module namespace
 } // module namespace

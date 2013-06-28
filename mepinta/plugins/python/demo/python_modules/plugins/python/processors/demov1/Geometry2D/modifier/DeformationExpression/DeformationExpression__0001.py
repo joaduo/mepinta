@@ -41,7 +41,7 @@ class manifest(PluginManifestBase):
     #We can work directly on the output
     self.nonCached(outputs.geometry)
 
-from mepinta_python_sdk.props import getPropValue
+from mepinta_python_sdk.props import get_prop_value
 
 def evalExpression(expression, locals_dict):
   #debugPrint locals_dict
@@ -66,11 +66,11 @@ functions_dict = getFunctionsDict()
 
 def modifyGeometry(args):
   #Inputs
-  x_expression = getPropValue(args, 'inputs', 'x_expression')
-  y_expression = getPropValue(args, 'inputs', 'y_expression')
-  time = getPropValue(args, 'inputs', 'time')
+  x_expression = get_prop_value(args, 'inputs', 'x_expression')
+  y_expression = get_prop_value(args, 'inputs', 'y_expression')
+  time = get_prop_value(args, 'inputs', 'time')
   #Outputs
-  geom2d = getPropValue(args, 'outputs', 'geometry')
+  geom2d = get_prop_value(args, 'outputs', 'geometry')
   #Big deal!!
   locals_dict = {}
   locals_dict.update(functions_dict)

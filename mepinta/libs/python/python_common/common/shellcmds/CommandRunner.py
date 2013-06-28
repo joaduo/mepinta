@@ -28,10 +28,10 @@ class CommandRunner(FrameworkBase):
     stdout, stdin = process_open.stdout.read(), process_open.stderr.read()
     return stdout, stdin
 
-def testModule():
+def test_module():
   from getDefaultContext import getDefaultContext
   context = getDefaultContext()
   debugPrint(CommandRunner(context).run('ls -alh'))
 
 if __name__ == "__main__":
-  testModule()
+  test_module()

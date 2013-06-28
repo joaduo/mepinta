@@ -28,17 +28,17 @@ class FunctumPropertyValue(FunctionPropertyValue):
   def __init__(self, func_id, functum_prop):
     FunctionPropertyValue.__init__(self,func_id)
     self.functum_prop = functum_prop
-  def setFunctumProp(self, functum_prop):
+  def set_functum_prop(self, functum_prop):
     self.functum_prop = functum_prop
-  def getFunctumProp(self):
+  def get_functum_prop(self):
     return self.functum_prop
   
 def shedskin_hidden_data_types(prop):
   func_id = 100
   fpv= FunctionPropertyValue(func_id)
   fumpv =FunctumPropertyValue(func_id, prop)
-  fumpv.setFunctumProp(functum_prop=prop)
-  fumpv.getFunctumProp()
+  fumpv.set_functum_prop(functum_prop=prop)
+  fumpv.get_functum_prop()
   return fpv
 
 if __name__ == "__main__":

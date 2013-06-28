@@ -27,7 +27,7 @@ class MepintaFunctum(object):
     self.function_ptr = function
     self.args = args
 
-def getFunctumStructVoidp(func_ptr, args):
+def get_functum_struct_voidp(func_ptr, args):
   return MepintaFunctum(func_ptr,args)
 
 class MepintaProps(object):
@@ -56,68 +56,68 @@ def getProps(args, in_out_id):
   else:
     return args.variable_outputs
 
-def deleteArgs(args):
+def delete_args(args):
   return C_EXIT_SUCCESS
 
-def createArgs(in_size, out_size):
+def create_args(in_size, out_size):
   args = MepintaArgs()
   return args
 
 #TODO: review if this is necessary? since there are args per function
 args_per_thread={}
-def getThreadArgs(in_size, out_size,thread_id):
+def get_thread_args(in_size, out_size,thread_id):
   global args_per_thread
   if thread_id not in args_per_thread:
-    args_per_thread[thread_id] = createArgs(in_size, out_size)
+    args_per_thread[thread_id] = create_args(in_size, out_size)
   args = args_per_thread[thread_id]
-  argsSetThreadId(args, thread_id)
+  args_set_thread_id(args, thread_id)
   return args 
 
-def argsSetThreadId(args,thread_id):
+def args_set_thread_id(args,thread_id):
   args.thread_id = thread_id
   return C_EXIT_SUCCESS
 
-def argsSetCapacity(args, in_out_id, props_size):
+def args_set_capacity(args, in_out_id, props_size):
   return C_EXIT_SUCCESS
 
-def argsAppendProp(args,in_out_id,index,prop_id,prop,prop_real,data_type):  
+def args_append_prop(args,in_out_id,index,prop_id,prop,prop_real,data_type):  
   props = getProps(args, in_out_id)
   if len(props.prop_ids) == index:
     props.prop_ids.append(prop_id)
     props.names.append(prop.name)
-    props.values.append(prop_real.getValuePtr())
+    props.values.append(prop_real.get_value_ptr())
     props.handles.append(data_type.lib_handle)
   else:
     props.prop_ids[index] = prop_id
     props.names[index] = prop.name
-    props.values[index] = prop_real.getValuePtr()
+    props.values[index] = prop_real.get_value_ptr()
     props.handles[index] = data_type.lib_handle
   return C_EXIT_SUCCESS
 
-def argsSetChanged(args, in_out_id, index):
+def args_set_changed(args, in_out_id, index):
   props = getProps(args, in_out_id)
   props.changed.add(props.prop_ids[index])
   return C_EXIT_SUCCESS
 
-def argsSetUnchanged(args, in_out_id, index):
+def args_set_unchanged(args, in_out_id, index):
   props = getProps(args, in_out_id)
   prop_id = props.prop_ids[index]
   if prop_id in props.changed:
     props.changed.remove(prop_id)
   return C_EXIT_SUCCESS
 
-def argsBuildChangedSet(args, in_out_id, changed):
+def args_build_changed_set(args, in_out_id, changed):
   return changed.union(args.outputs.changed)
 
-def shedskin_args_management():
-  args = createArgs(in_size=1, out_size=1)
-  deleteArgs(args)
-  argsSetCapacity(args, in_out_id=INPUT_PROPS, props_size=1)
+def shedskin_type_generation_argsm():
+  args = create_args(in_size=1, out_size=1)
+  delete_args(args)
+  args_set_capacity(args, in_out_id=INPUT_PROPS, props_size=1)
   class Misc(object):
-    def getValuePtr(self): return None
+    def get_value_ptr(self): return None
   data_type = Misc(); data_type.lib_handle = None
   prop = Misc(); prop.name = 'bla'
-  argsAppendProp(args, in_out_id=INPUT_PROPS, index=0, prop_id=0, prop=prop, prop_real=prop, data_type=data_type)
-  argsSetChanged(args, in_out_id=INPUT_PROPS, index=0)
-  argsSetUnchanged(args, in_out_id=INPUT_PROPS, index=0)
-  argsBuildChangedSet(args,in_out_id=INPUT_PROPS,changed=set())
+  args_append_prop(args, in_out_id=INPUT_PROPS, index=0, prop_id=0, prop=prop, prop_real=prop, data_type=data_type)
+  args_set_changed(args, in_out_id=INPUT_PROPS, index=0)
+  args_set_unchanged(args, in_out_id=INPUT_PROPS, index=0)
+  args_build_changed_set(args,in_out_id=INPUT_PROPS,changed=set())

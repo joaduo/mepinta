@@ -118,9 +118,9 @@ class PluginStorageConfig(object):
     return build_libs
   
   #Setters and getter for eclipse name and minor version
-  def getMinorVersion(self):
+  def get_minor_version(self):
     return self.__minor_version
-  def setMinorVersion(self, value):
+  def set_minor_version(self, value):
     if isinstance(value, int):
       value = self.minor_version_format%value
       self.__minor_version = value
@@ -129,15 +129,15 @@ class PluginStorageConfig(object):
     else:
       #TODO: automatically get the minor version
       raise RuntimeError("You should provide a minor version int or str value.")
-  def getEclipseName(self):
+  def get_eclipse_name(self):
     if self.__eclipse_name != None:
       return self.__eclipse_name
     else:
       return self.module_name_prefix
-  def setEclipseName(self, value):
+  def set_eclipse_name(self, value):
     self.__eclipse_name = value  
-  project_name = property(getEclipseName, setEclipseName, None, None)
-  minor_version = property(getMinorVersion, setMinorVersion, None, None)
+  project_name = property(get_eclipse_name, set_eclipse_name, None, None)
+  minor_version = property(get_minor_version, set_minor_version, None, None)
 
 if __name__ == "__main__":
   psc = PluginStorageConfig('PolyTorus', 'c_and_cpp', 'processor', 'k3dv1.Mesh.generator', 'PolyTorus', 1, minor_version_separator='##')

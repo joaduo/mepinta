@@ -51,9 +51,9 @@ class ProjectCreator(FrameworkBase):
       self.file_manager.saveTextFile(dst_path, content, overwrite | map_config.overwrite)
 
 
-def testModule():
+def test_module():
   from getDefaultContext import getDefaultContext
   context = getDefaultContext()
 
 if __name__ == "__main__":
-  testModule()
+  test_module()

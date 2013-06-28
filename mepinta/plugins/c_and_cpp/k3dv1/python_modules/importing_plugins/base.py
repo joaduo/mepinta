@@ -34,7 +34,7 @@ def addOption(config_options, name, value):
 def createPackageImport(name, type_, package, module_name, **config_dict):
   context = MepintaContext('python')  # TODO: use getDefaultContext or pass the context
   logger = context.get_config('log')
-  logger.setLevel(50)
+  logger.set_level(50)
 
   addOption(config_dict, "plugins_root", plugins_root)
   # TODO: minor_version = 1

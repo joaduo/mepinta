@@ -64,7 +64,7 @@ class SimpleTestPipelineGui(FrameworkBase):
     widget_list = []
 
     for node in self.test_pline.getNodesDict().values():
-      for prop in node.inputs.getProperties().values():
+      for prop in node.inputs.get_properties().values():
         widget = self.__createWidget(node, prop)
         if widget != None:
           self.__widgetid_value[self.__createWidgetId(node, prop)] = None
@@ -121,7 +121,7 @@ class SimpleTestPipelineGui(FrameworkBase):
     ui_runner.run()
 
   def __registerPipelineUIFunctions(self, ui_runner):
-    for prop in self.test_pline.uiDefaultEvaluated:
+    for prop in self.test_pline.ui_default_evaluated:
       ui_runner.appendDrawFunction(self.test_pline.evaluatePropForced, prop)
 
   def runWithInotify(self, inotify_mngr, canvas_x=700, canvas_y=600):

@@ -55,7 +55,7 @@ class K3dMeshPluginTest(ProcessorPluginTestBase):
     self._createInputMesh(test_pline)
     self.definePluginPipeline(test_pline)
     write_node = self._createOutputMesh(test_pline)
-    test_pline.defaultEvaluated.append(write_node.functions.writeMesh)
+    test_pline.default_evaluated.append(write_node.functions.writeMesh)
 
   def stressPipeline(self, test_pline, time):
     import math

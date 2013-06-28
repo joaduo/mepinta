@@ -33,10 +33,10 @@ class MepintaContext(ContextBase):
     context_lo = ContextLo(context=context)
     context.setConfig('context_lo', context_lo)
     logger = context.getConfig('log')
-    logger.setOutput(LogOutput(context=context))
+    logger.set_output(LogOutput(context=context))
 
-def testModule():
+def test_module():
   pass
 
 if __name__ == "__main__":
-  testModule()
+  test_module()

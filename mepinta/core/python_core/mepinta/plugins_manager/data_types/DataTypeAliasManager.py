@@ -109,9 +109,9 @@ class DataTypeAliasManager(FrameworkBase):
     else:
       return data_type_alias
 
-def testModule():
+def test_module():
   from getDefaultContext import getDefaultContext
   context = getDefaultContext()
 
 if __name__ == "__main__":
-  testModule()
+  test_module()

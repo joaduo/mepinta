@@ -26,10 +26,10 @@ class manifest(UndoableGraphRendererBase):
     render.dpdencies += internals.temp_data
 
 def render(args):
-  from mepinta_python_sdk.props import getPropValue
+  from mepinta_python_sdk.props import get_prop_value
   from mepinta.testing.plugins_testing.nodebox.NodeBoxSimplePipelineOutput import NodeBoxSimplePipelineOutput
-  graph = getPropValue(args, 'inputs', 'graph')
-  temp_data = getPropValue(args, 'inputs', 'temp_data')
+  graph = get_prop_value(args, 'inputs', 'graph')
+  temp_data = get_prop_value(args, 'inputs', 'temp_data')
   pline = graph.pline
   data_name = 'NodeBoxSimplePipelineOutput'
   if data_name not in temp_data:

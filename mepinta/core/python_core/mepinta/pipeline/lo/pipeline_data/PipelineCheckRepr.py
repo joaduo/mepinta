@@ -28,9 +28,9 @@ class PipelineCheckRepr(object):
     #Check topology consistency (properties id exist)
     pass
 
-def testModule():
+def test_module():
   from getDefaultContext import getDefaultContext
   context = getDefaultContext()
 
 if __name__ == "__main__":
-  testModule()
+  test_module()

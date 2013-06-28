@@ -37,45 +37,45 @@ LOG_DEBUG_TRACE=60
 LOG_ALL_TRACE=70
 
 log_level=LOG_DEBUG #default log level
-def setLogLevel(level):
+def set_log_level(level):
   global log_level
   log_level = level
 
-def logCritical(msg):
-  printLog(msg, LOG_CRITICAL)
+def log_critical(msg):
+  print_log(msg, LOG_CRITICAL)
 
-def logError(msg):
-  printLog(msg, LOG_ERROR)
+def log_error(msg):
+  print_log(msg, LOG_ERROR)
 
-def logWarning(msg):
-  printLog(msg, LOG_WARNING)
+def log_warning(msg):
+  print_log(msg, LOG_WARNING)
     
-def logInfo(msg):
-  printLog(msg, LOG_INFO)
+def log_info(msg):
+  print_log(msg, LOG_INFO)
 
-def logVerbose(msg):
-  printLog(msg, LOG_VERBOSE)
+def log_verbose(msg):
+  print_log(msg, LOG_VERBOSE)
 
-def logDebug(msg):
-  printLog(msg, LOG_DEBUG)
+def log_debug(msg):
+  print_log(msg, LOG_DEBUG)
 
-def logTrace(msg): #In fact this is 
-  printLog(msg, LOG_DEBUG_TRACE)
+def log_trace(msg): #In fact this is 
+  print_log(msg, LOG_DEBUG_TRACE)
 
-def printLog(msg,level):
+def print_log(msg,level):
   if log_level >= LOG_DEBUG_TRACE:
     if level >= LOG_DEBUG or log_level >= LOG_ALL_TRACE:
-      printTrace()
+      print_trace()
   if log_level >= level:
     if level <= LOG_ERROR: #TODO: change back
 #    if level <= LOG_WARNING:
-      printTrace('stderr')
+      print_trace('stderr')
       sys.stderr.write(msg+'\n')
     else:
       sys.stdout.write(msg+'\n')
 
 import traceback
-def printTrace(output=''):
+def print_trace(output=''):
   if output== 'stderr':
     sys.stderr.write(''.join(traceback.format_stack())) 
     if log_level >= LOG_DEBUG:
@@ -85,29 +85,29 @@ def printTrace(output=''):
     if log_level >= LOG_DEBUG:
       sys.stdout.flush()    
 
-def printFileAndLine(output=None):
+def print_file_and_line(output=None):
   sys.stdout.write(''.join(traceback.format_stack()[-2:-1]))
   if output:
     sys.stdout.write(output)  
 
-def shedskin_logging():
+def shedskin_type_generation_logging():
   msg = 'Something to log'
-  setLogLevel(0)
-  logCritical(msg)
-  logError(msg)
-  logWarning(msg)
-  logInfo(msg)
-  logVerbose(msg)
-  logDebug(msg)
-  setLogLevel(LOG_CRITICAL)
-#  logTrace(msg)
+  set_log_level(0)
+  log_critical(msg)
+  log_error(msg)
+  log_warning(msg)
+  log_info(msg)
+  log_verbose(msg)
+  log_debug(msg)
+  set_log_level(LOG_CRITICAL)
+#  log_trace(msg)
 
 if __name__ == '__main__':
-  shedskin_logging()
-#  logInfo('Info shouldn\'t be printed')
+  shedskin_type_generation_logging()
+#  log_info('Info shouldn\'t be printed')
 #  #log_level_dict = { 'critical':1,'error':10, 'warning':20,'info':30,'verbose':40,'debug':50,'debug_trace':60,'all_trace':70}
-#  setLogLevel(LOG_INFO)
-#  logInfo('Info should be printed')
-#  setLogLevel(LOG_ALL_TRACE)
-#  logInfo('REALLY VERBOSE')
+#  set_log_level(LOG_INFO)
+#  log_info('Info should be printed')
+#  set_log_level(LOG_ALL_TRACE)
+#  log_info('REALLY VERBOSE')
 

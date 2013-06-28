@@ -25,23 +25,23 @@ class PipelineEvaluatorFunctum(HiAutoBase):
     self.ppgation_mngr = self._getWrappedClass("SimplePropagationManager")(self.wrapped)
   @unwrap_decorator
   def propagateChanges(self, pline):
-    self.ppgation_mngr.propagateChanges(pline)
+    self.ppgation_mngr.propagate_changes(pline)
   @unwrap_decorator
   def evaluateProp(self, pline, prop_id):
     if prop_id in pline.getTopology().properties:
       #pline.startTopologyChangeSet() #TODO: review
-      self.ppgation_mngr.propagateChanges(pline)
+      self.ppgation_mngr.propagate_changes(pline)
       return self.wrapped.evaluateProp(pline, prop_id)
     else:
       self.log.warning('Property is not in the current topology. Not evaluating')
 
 
-def testModule():
+def test_module():
   from getDefaultContext import getDefaultContext
   context = getDefaultContext()
   pe = PipelineEvaluatorFunctum(context=context)
   context.log(pe)
 
 if __name__ == '__main__':
-  testModule()
+  test_module()
 
