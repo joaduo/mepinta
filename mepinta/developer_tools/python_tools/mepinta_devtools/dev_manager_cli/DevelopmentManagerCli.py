@@ -23,7 +23,7 @@ import argparse
 from mepinta_devtools.python_project.shedskin_project.ShedskinProjectCreator import ShedskinProjectCreator
 from common.path import joinPath
 
-class DevManagerCli(FrameworkBase):
+class DevelopmentManagerCli(FrameworkBase):
   def __post_init__(self):
     self.shedskin_project_creator = ShedskinProjectCreator(self.context)
 

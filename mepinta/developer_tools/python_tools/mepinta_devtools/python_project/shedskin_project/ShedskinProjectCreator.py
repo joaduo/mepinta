@@ -46,15 +46,20 @@ class ShedskinProjectCreator(FrameworkBase):
       self.file_manager.symlink(joinPath(external_lib_includes_src, basename), joinPath(external_lib_includes_dst, basename), force)
 
   def __linkPipelineAndPipelineLoFacade(self, mepinta_source_path, python_src_path, mepinta_package_path, force):
+    #Link the pipeline package
     pipeline_pkg_src = joinPath(mepinta_source_path, 'core/python_core/mepinta/pipeline')
     pipeline_pkg_dst = joinPath(mepinta_package_path, 'pipeline')
     self.file_manager.symlink(pipeline_pkg_src, pipeline_pkg_dst, force)
-    pipeline_lo_facade_src = 
+    #Link pipeline_lo_facade.py so that its in the
+    pipeline_lo_facade_src = joinPath(pipeline_pkg_dst, 'lo/pipeline_lo_facade.py')
+    pipeline_lo_facade_dst = joinPath(python_src_path, 'pipeline_lo_facade.py')
+    self.file_manager.symlink(pipeline_lo_facade_src, pipeline_lo_facade_dst, force)
 
-  def __copyScripts(self, project_path):
+  def __copyScripts(self, python_src_path):
+    #Copy scripts necessary for building the pipeline_lo_facade.so shedskin module
     repo_path = joinPath(os.path.dirname(__file__), 'scripts_repository')
-    scripts_names = ['build_pipeline_lo_facade.py', 'clean_shedskin_code.py']
-    self.file_manager.copyFiles(repo_path, project_path, scripts_names)
+    scripts_names = ['build_shedksin_module.py', 'clean_shedskin_code.py']
+    self.file_manager.copyFiles(repo_path, python_src_path, scripts_names)
 
   def createShedskinProject(self, mepinta_source_path, project_path, force=False):
     #Create the mepinta package
@@ -68,14 +73,11 @@ class ShedskinProjectCreator(FrameworkBase):
     self.__linkPipelineAndPipelineLoFacade(mepinta_package_path)
     #Link pipeline_backend stuff
     self.__linkPipelineBackend(mepinta_source_path, project_path, force)
-    #create mepinta folder
+    #Copy the scripts to generate the skedskin module
     self.__copyScripts(python_src_path)
-    #link pipeline folder and pipeline_lo_facade
-    pass
 
 def testModule():
-  from getDefaultContext import getDefaultContext
-  context = getDefaultContext()
+  pass
 
 if __name__ == "__main__":
   testModule()
