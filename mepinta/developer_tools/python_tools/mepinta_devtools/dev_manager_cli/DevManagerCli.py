@@ -19,10 +19,37 @@ You should have received a copy of the GNU General Public License
 along with Mepinta. If not, see <http://www.gnu.org/licenses/>.
 '''
 from common.abstract.FrameworkBase import FrameworkBase
+import argparse
+from mepinta_devtools.python_project.shedskin_project.ShedskinProjectCreator import ShedskinProjectCreator
+from common.path import joinPath
 
 class DevManagerCli(FrameworkBase):
-  def createShedskinProject(self):
+  def __post_init__(self):
+    self.shedskin_project_creator = ShedskinProjectCreator(self.context)
+
+  def createShedskinProject(self, proj):
     pass
+
+  def run(self, deployment_path):
+    dev_deployment_path = joinPath(deployment_path, 'dev')
+    self.deployDevelopmentProjects(dev_deployment_path)
+
+  def deployDevelopmentProjects(self, dev_deployment_path):
+    shedskin_project_path = joinPath(dev_deployment_path, 'build_shedksin_module')
+    self.shedskin_project_creator.createShedskinProject(shedskin_project_path)
+    #deploy shedskin
+    #mepinta libraries projects
+    #plugins projects
+    #create waf script for building
+    #deploy libargs load stand alone
+    #deploy mepinta project (with
+
+  def __getParser(self):
+    parser = argparse.ArgumentParser(description='Mepinta Development Manager Command Line Interface.')
+    parser.add_argument('command', type=str, help='Specify the dev command.')
+    #parser.add_argument('demo_number', type=int, nargs='*', help='Specify the demo number(s) you would like to run.')
+    parser.add_argument('--debug', action='store_true', help='Enable debug output.')
+    return parser
 
 def testModule():
   from getDefaultContext import getDefaultContext
