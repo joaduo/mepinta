@@ -36,7 +36,7 @@ namespace __solve_symbol__ {
 str *__name__;
 
 
-void *solve_symbol(void *handle, str *__ss_namespace, str *symbol) {
+void *solveSymbol(void *handle, str *__ss_namespace, str *symbol) {
     str *complete_symbol;
 
     complete_symbol = (__ss_namespace)->__add__(symbol);

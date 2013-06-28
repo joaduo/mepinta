@@ -29,34 +29,34 @@ from mepinta.pipeline.lo.constants import CUSTOM_PROPERTY_FLAG
 class GraphNodePropertyCreator(FrameworkBase):
   def __post_init__(self):
     self.prop_mngr = PropertyManager(context=self.context)
-  def create_properties(self, pline, node_proxy):
-    prop_ids  = self.__create_inout_props(pline, node_proxy.inputs)
-    prop_ids += self.__create_inout_props(pline, node_proxy.internals)
-    prop_ids += self.__create_inout_props(pline, node_proxy.outputs)
-    prop_ids += self.__create_functions_props(pline, node_proxy.functions)
-    self.__set_non_cached(pline, node_proxy)
-    self.__set_propagation_filter(pline, node_proxy)
+  def createProperties(self, pline, node_proxy):
+    prop_ids  = self.__createInoutProps(pline, node_proxy.inputs)
+    prop_ids += self.__createInoutProps(pline, node_proxy.internals)
+    prop_ids += self.__createInoutProps(pline, node_proxy.outputs)
+    prop_ids += self.__createFunctionsProps(pline, node_proxy.functions)
+    self.__setNonCached(pline, node_proxy)
+    self.__setPropagationFilter(pline, node_proxy)
     return prop_ids
   #TODO: def __create_containers_props(self, pline, containers)
-  def __set_props_ids(self, prop_dict, prop_names, prop_ids):
+  def __setPropsIds(self, prop_dict, prop_names, prop_ids):
     for index, name in enumerate(prop_names):
       prop_dict[name].property_id = prop_ids[index]
-  def __create_functions_props(self, pline, container):
-    prop_dict = container.get_properties(FunctionPropertyProxy)
+  def __createFunctionsProps(self, pline, container):
+    prop_dict = container.getProperties(FunctionPropertyProxy)
     prop_names = list(prop_dict.keys())
     prop_names.sort()
     func_ids = []
     for name in prop_names:
       func_ids.append(prop_dict[name].func_ptr_id)
-    prop_ids = self.prop_mngr.create_func_properties(pline, prop_names, func_ids)
-    self.__set_props_ids(prop_dict, prop_names, prop_ids)
+    prop_ids = self.prop_mngr.createFuncProperties(pline, prop_names, func_ids)
+    self.__setPropsIds(prop_dict, prop_names, prop_ids)
     return prop_ids
-  def __create_inout_props(self, pline, container):#TODO: take this out
-    prop_ids = self.__create_data_props(pline, container)
-    prop_ids += self.__create_functum_props(pline, container)
+  def __createInoutProps(self, pline, container):#TODO: take this out
+    prop_ids = self.__createDataProps(pline, container)
+    prop_ids += self.__createFunctumProps(pline, container)
     return prop_ids
   def __getContainerProps(self, container, class_):
-    prop_dict = container.get_properties(class_)
+    prop_dict = container.getProperties(class_)
     prop_names = list(prop_dict.keys())
     new_prop_names = []
     for name in prop_names:
@@ -68,30 +68,30 @@ class GraphNodePropertyCreator(FrameworkBase):
       prop_flags = CUSTOM_PROPERTY_FLAG
     new_prop_names.sort()
     return new_prop_names, prop_dict, prop_flags
-  def __create_data_props(self, pline, container):#TODO: take this out    
+  def __createDataProps(self, pline, container):#TODO: take this out    
     prop_names, prop_dict, prop_flags = self.__getContainerProps(container, DataPropertyProxy)
     dtype_ids = []
     for name in prop_names:
       dtype_ids.append(prop_dict[name].dtype_id)
-    prop_ids = self.prop_mngr.create_properties(pline, container.container_type, prop_names, dtype_ids, prop_flags)
-    self.__set_props_ids(prop_dict, prop_names, prop_ids)
+    prop_ids = self.prop_mngr.createProperties(pline, container.containerType, prop_names, dtype_ids, prop_flags)
+    self.__setPropsIds(prop_dict, prop_names, prop_ids)
     return prop_ids
-  def __create_functum_props(self, pline, container):#TODO: take this out    
+  def __createFunctumProps(self, pline, container):#TODO: take this out    
     prop_names, prop_dict, prop_flags = self.__getContainerProps(container, FunctumPropertyProxy)
     func_ids = []
     dtype_ids = []
     for name in prop_names:
       func_ids.append(prop_dict[name].func_ptr_id)
       dtype_ids.append(prop_dict[name].dtype_id)
-    prop_ids = self.prop_mngr.create_functum_properties(pline, prop_names, func_ids, dtype_ids, prop_flags)
-    self.__set_props_ids(prop_dict, prop_names, prop_ids)
+    prop_ids = self.prop_mngr.createFunctumProperties(pline, prop_names, func_ids, dtype_ids, prop_flags)
+    self.__setPropsIds(prop_dict, prop_names, prop_ids)
     return prop_ids    
-  def __set_propagation_filter(self, pline, node_proxy):
+  def __setPropagationFilter(self, pline, node_proxy):
     if len(node_proxy.processor.proxy.marked_outputs) == 0:
       return    
     prop_ids = [getattr(node_proxy.functions, prop_prxy.name).property_id for prop_prxy in node_proxy.processor.proxy.marked_outputs ]
-    self.prop_mngr.add_filters(pline,prop_ids)
-  def __set_non_cached(self, pline, node_proxy):
+    self.prop_mngr.addFilters(pline,prop_ids)
+  def __setNonCached(self, pline, node_proxy):
     prop_names = node_proxy.non_cached_capable
     if len(prop_names) == 0:
       return    
@@ -100,13 +100,13 @@ class GraphNodePropertyCreator(FrameworkBase):
     for dst_prop,src_prop in prop_names:
       prop_dst_ids.append(dst_prop)
       prop_src_ids.append(src_prop)
-    self.prop_mngr.add_non_cached(pline, prop_dst_ids, prop_src_ids)
+    self.prop_mngr.addNonCached(pline, prop_dst_ids, prop_src_ids)
 
 class GraphPropertyManager(FrameworkBase):
   def __post_init__(self):
     self.plugins_mngr = PluginsManager(self.context)
     self.prop_mngr = PropertyManager(self.context)
     self.node_prop_creator = GraphNodePropertyCreator(context=self.context)
-  def create_properties(self, pline, node_proxy): #TODO: add support for debugging version
-    return self.node_prop_creator.create_properties(pline, node_proxy)
+  def createProperties(self, pline, node_proxy): #TODO: add support for debugging version
+    return self.node_prop_creator.createProperties(pline, node_proxy)
   

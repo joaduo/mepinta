@@ -28,11 +28,11 @@ class manifest(PluginManifestBase):
     inputs.segments = 'int'
     #Outputs
     outputs.geometry = 'demov1.Geometry2D'
-    functions.create_geometry = FunctionProperty()
+    functions.createGeometry = FunctionProperty()
 
     #Set sinks & dpdencies
-    outputs.geometry.dpdencies += [functions.create_geometry]
-    functions.create_geometry.dpdencies += [ inputs.geometry,
+    outputs.geometry.dpdencies += [functions.createGeometry]
+    functions.createGeometry.dpdencies += [ inputs.geometry,
                                              inputs.radius,
                                              inputs.segments, ]
 
@@ -40,14 +40,14 @@ class manifest(PluginManifestBase):
     self.nonCached(outputs.geometry)
 
 import math
-from mepinta_python_sdk.props import get_prop_value
+from mepinta_python_sdk.props import getPropValue
 
-def create_geometry(args):
+def createGeometry(args):
   #Inputs
-  radius = get_prop_value(args, 'inputs', 'radius')
-  segments = get_prop_value(args, 'inputs', 'segments')
+  radius = getPropValue(args, 'inputs', 'radius')
+  segments = getPropValue(args, 'inputs', 'segments')
   #Outputs
-  geometry = get_prop_value(args, 'outputs', 'geometry')
+  geometry = getPropValue(args, 'outputs', 'geometry')
   #Big deal!!
   segments = int(segments)
   if segments < 2:

@@ -23,12 +23,12 @@ from plugins.python.processors.actiontree.UndoableGraph.output.base.UndoableGrap
 class manifest(UndoableGraphRendererBase):
   pass
 
-from mepinta_python_sdk.props import get_prop_value
+from mepinta_python_sdk.props import getPropValue
 def render(args):
-  from pipeline_backend.logging.logging import log_info
+  from pipeline_backend.logging.logging import logInfo
   #Inputs
-  graph = get_prop_value(args, 'inputs', 'graph')
-  log_info(str(graph))
+  graph = getPropValue(args, 'inputs', 'graph')
+  logInfo(str(graph))
 
 if __name__ == "__main__":
   from getDefaultContext import getDefaultContext

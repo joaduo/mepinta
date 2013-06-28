@@ -19,7 +19,7 @@ You should have received a copy of the GNU General Public License
 along with Mepinta. If not, see <http://www.gnu.org/licenses/>.
 '''
 from mepinta.pipeline.lo.pipeline_data.data_model import PropertyValuePointer
-from pipeline_backend.logging.logging import log_error
+from pipeline_backend.logging.logging import logError
 from mepinta.pipeline.lo.value_manager.PropertyValueManager import PropertyValueManager
 from mepinta.pipeline.lo.exceptions.MepintaLoError import MepintaLoError
 from mepinta.pipeline.lo.FunctionCaller import FunctionCaller
@@ -36,14 +36,14 @@ class DebugPropertyValueManager(object):
     self.func_caller = FunctionCaller()
   def __getCheckReprFunction(self, prop):
     data_type = self.context_lo.data_types[prop.dtype_id]
-    func_ptr_check_repr = data_type.get_func_ptr('checkRepr')
+    func_ptr_check_repr = data_type.getFuncPtr('checkRepr')
     if func_ptr_check_repr == None:
       msg = 'Cannot find checkRepr function for data_type:%r' % data_type
-      log_error(msg)
+      logError(msg)
       raise MepintaLoError(msg)
     return func_ptr_check_repr
   def __checkRepr(self, prop):
-    self.__checkRepr(prop, prop.get_value_ptr().get_value())
+    self.__checkRepr(prop, prop.getValuePtr().getValue())
   def __checkValueRepr(self, prop, value):
     func_ptr_check_repr = self.__getCheckReprFunction(prop)
     if not self.func_caller.callIntFuncVoidp(func_ptr_check_repr, value):
@@ -59,17 +59,17 @@ class DebugPropertyValueManager(object):
   def setPropValuePointer(self, prop, value_ptr):
     #TODO:
     #    if prop.type == FUNCTION_PROPERTY_FLAG: #Functions have data_type = 0
-    #      log_warning('You shouldn\'t set a function property value pointer. Doing nothing.')
+    #      logWarning('You shouldn\'t set a function property value pointer. Doing nothing.')
     #    else:
-    self.__checkValueRepr(prop, value_ptr.get_value())
+    self.__checkValueRepr(prop, value_ptr.getValue())
     self.prop_value_mngr.setPropValuePointer(prop, value_ptr)
   def copyPropValue(self, prop, value_ptr):
-    self.__checkValueRepr(prop, value_ptr.get_value())
+    self.__checkValueRepr(prop, value_ptr.getValue())
     self.prop_value_mngr.copyPropValue(prop, value_ptr)
     self.__checkRepr(prop)
   def deletePropsValues(self, props):
     for prop in props:
-      value = prop.get_value_ptr().get_value()
+      value = prop.getValuePtr().getValue()
       if value != None:
         self.__checkValueRepr(prop, value)
     self.prop_value_mngr.deletePropsValues(props)

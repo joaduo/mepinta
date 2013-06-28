@@ -26,9 +26,9 @@ class DictionaryBasedTranslator(FrameworkObject):
   def getContent(self, template, translation_dict):
     return Template(template).safe_substitute(translation_dict)
 
-def test_module():
+def testModule():
   from getDefaultContext import getDefaultContext
   context = getDefaultContext()
 
 if __name__ == "__main__":
-  test_module()
+  testModule()

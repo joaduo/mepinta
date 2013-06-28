@@ -19,78 +19,78 @@ You should have received a copy of the GNU General Public License
 along with Mepinta. If not, see <http://www.gnu.org/licenses/>.
 '''
 
-from pipeline_backend.void_pointer_casting.void_pointer_casting import voidp_to_func_arg_void, \
-  voidp_to_func_arg_voidp, voidp_to_processor_func, voidp_to_copy_to_func
-from pipeline_backend.logging.logging import log_error, log_warning
+from pipeline_backend.void_pointer_casting.void_pointer_casting import voidpToFuncArgVoid, \
+  voidpToFuncArgVoidp, voidpToProcessorFunc, voidpToCopyToFunc
+from pipeline_backend.logging.logging import logError, logWarning
 from mepinta.pipeline.lo.constants import PROCESSOR_FUNC_NULL
 from mepinta.pipeline.lo.exceptions.MepintaLoError import MepintaLoError
 
 class FunctionCaller(object):
-  def call_func_no_args(self, func_ptr):
+  def callFuncNoArgs(self, func_ptr):
     '''Calls a function with the prototype "void* func_name(void)" '''
     if func_ptr != None:
-      casted_func_ptr = voidp_to_func_arg_void(func_ptr)
+      casted_func_ptr = voidpToFuncArgVoid(func_ptr)
       return casted_func_ptr()
     else:
       msg = 'func_ptr is NULL. Couldn\'t call function with prototype "void* func_name(void)".'
-      log_error(msg)
+      logError(msg)
       raise MepintaLoError(msg)
 
-  def call_func(self, func_ptr, func_args):
+  def callFunc(self, func_ptr, func_args):
     '''Calls a function with the prototype "void* func_name(void*)" '''
     if func_ptr != None:
-      casted_func_ptr = voidp_to_func_arg_voidp(func_ptr)
+      casted_func_ptr = voidpToFuncArgVoidp(func_ptr)
       return casted_func_ptr(func_args)
     else:
       msg = 'func_ptr is NULL. Couldn\'t call function with prototype "void* func_name(void*)".'
-      log_error(msg)
+      logError(msg)
       raise MepintaLoError(msg)
 
   def callIntFuncVoidp(self, func_ptr, voidp):
     '''Calls a function with the prototype "int func_name(void*)"
-    Since self.call_processor_func does the same it's reused
+    Since self.callProcessorFunc does the same it's reused
     '''
     if func_ptr != None:
-      return self.call_processor_func(func_ptr, voidp)
+      return self.callProcessorFunc(func_ptr, voidp)
     else:
       msg = 'func_ptr is NULL. Couldn\'t call function with prototype "int func_name(void*)".'
-      log_error(msg)
+      logError(msg)
       raise MepintaLoError(msg)
 
-  def call_processor_func(self, func_ptr, args):
+  def callProcessorFunc(self, func_ptr, args):
     '''Calls a processor function with the prototype "int func_name(void*)" '''
     if func_ptr != None:
-      casted_func_ptr = voidp_to_processor_func(func_ptr)
+      casted_func_ptr = voidpToProcessorFunc(func_ptr)
       return casted_func_ptr(args)
     else:
       #A processor may be NULL since we can reload the processor
-      log_warning("func_ptr is NULL. Couldn't call processor function.")
+      logWarning("func_ptr is NULL. Couldn't call processor function.")
       return PROCESSOR_FUNC_NULL
 
-  def call_copy_to_func(self, func_ptr, to_ptr, from_ptr):
-    '''Calls a "copy_to" function with the prototype "void* func_name(void*,void*)" '''
+  def callCopyToFunc(self, func_ptr, to_ptr, from_ptr):
+    '''Calls a "copyTo" function with the prototype "void* func_name(void*,void*)" '''
     #raise RuntimeError("Implement!")
     if func_ptr != None and to_ptr != None and from_ptr != None:
-      casted_func_ptr = voidp_to_copy_to_func(func_ptr)
+      casted_func_ptr = voidpToCopyToFunc(func_ptr)
       #import pdb; pdb.set_trace()
       to_ptr = casted_func_ptr(to_ptr, from_ptr)
       if to_ptr == None:
-        msg = 'copy_to function failed to copy values.'
-        log_error(msg)
+        msg = 'copyTo function failed to copy values.'
+        logError(msg)
         raise MepintaLoError(msg)
       return to_ptr
     else:
-      msg = 'func_ptr, to_ptr o from_ptr is NULL. Couldn\'t call copy_to function with prototype "void* func_name(void*)".'
-      log_error(msg)
+      msg = 'func_ptr, to_ptr o from_ptr is NULL. Couldn\'t call copyTo function with prototype "void* func_name(void*)".'
+      logError(msg)
       raise MepintaLoError(msg)
 
-def shedskin_type_generation_fc():
+def shedskin_FunctionCaller():
   fc = FunctionCaller()
-  fc.call_func_no_args(None)
-  fc.call_func(None, None)
-  fc.call_processor_func(None, None)
+  fc.callFuncNoArgs(None)
+  fc.callFunc(None, None)
+  fc.callProcessorFunc(None, None)
 
 if __name__ == '__main__':
-  shedskin_type_generation_fc()
+  shedskin_FunctionCaller()
 
 

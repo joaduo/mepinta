@@ -23,50 +23,50 @@ Created on Mar 9, 2012
 
 @author: jduo
 '''
-from mepinta.pipeline.hi.base import HiAutoBase, unwrap_lo, unwrap_decorator
+from mepinta.pipeline.hi.base import HiAutoBase, unwrapLo, unwrap_decorator
 from mepinta.pipeline.lo.constants import INPUT_PROPERTY_FLAG, INTERNAL_PROPERTY_FLAG, \
   OUTPUT_PROPERTY_FLAG
 
 class PropertyManager(HiAutoBase):
   def __post_init__(self, non_cached_enabled=False):
     self.non_cached_enabled = non_cached_enabled
-  def _create_properties_safe(self, pline, prop_type, names, data_types, prop_flags=0):
-    #filter_func = lambda dtype: unwrap_lo(dtype) not in self.context.context_lo.data_types
-    def filter_func(dtype):
-      if unwrap_lo(dtype) not in self.context.context_lo.data_types:
+  def _createPropertiesSafe(self, pline, prop_type, names, data_types, prop_flags=0):
+    #filterFunc = lambda dtype: unwrapLo(dtype) not in self.context.context_lo.data_types
+    def filterFunc(dtype):
+      if unwrapLo(dtype) not in self.context.context_lo.data_types:
         self.log(dtype)
         self.log(self.context.context_lo.data_types)
         return False
       else:
         return False
-    return {filter_func:data_types}
+    return {filterFunc:data_types}
   @unwrap_decorator
-  def create_properties(self, pline, prop_type, names, data_types, prop_flags=0):
+  def createProperties(self, pline, prop_type, names, data_types, prop_flags=0):
     #better alias (was unwrapped)
     dtype_ids = data_types
     if prop_type == 'input':
-      prop_ids = self.wrapped.create_properties(pline, names, dtype_ids, INPUT_PROPERTY_FLAG | prop_flags)
+      prop_ids = self.wrapped.createProperties(pline, names, dtype_ids, INPUT_PROPERTY_FLAG | prop_flags)
     elif prop_type == 'internal':
-      prop_ids = self.wrapped.create_properties(pline, names, dtype_ids, INTERNAL_PROPERTY_FLAG | prop_flags)
+      prop_ids = self.wrapped.createProperties(pline, names, dtype_ids, INTERNAL_PROPERTY_FLAG | prop_flags)
     elif prop_type == 'output':
-      prop_ids = self.wrapped.create_properties(pline, names, dtype_ids, OUTPUT_PROPERTY_FLAG | prop_flags)
+      prop_ids = self.wrapped.createProperties(pline, names, dtype_ids, OUTPUT_PROPERTY_FLAG | prop_flags)
     else:
       raise RuntimeError('unsupported property type: %r' % type)
     return prop_ids
-  def _create_func_properties_safe(self, pline, names, func_ptr_ids):
-    filter_func = lambda function: unwrap_lo(function) not in self.context.context_lo.functions
-    return {filter_func:func_ptr_ids}
+  def _createFuncPropertiesSafe(self, pline, names, func_ptr_ids):
+    filterFunc = lambda function: unwrapLo(function) not in self.context.context_lo.functions
+    return {filterFunc:func_ptr_ids}
   @unwrap_decorator
-  def create_func_properties(self, pline, names, func_ptr_ids):
-    prop_ids = self.wrapped.create_func_properties(pline, names, func_ptr_ids)
+  def createFuncProperties(self, pline, names, func_ptr_ids):
+    prop_ids = self.wrapped.createFuncProperties(pline, names, func_ptr_ids)
     return prop_ids
-  def _create_functum_properties_safe(self, pline, names, func_ptr_ids, data_types, prop_flags=0):
-    filter_functions = lambda function: unwrap_lo(function) not in self.context.context_lo.functions
-    filter_dtype = lambda dtype: unwrap_lo(dtype) not in self.context.context_lo.data_types
+  def _createFunctumPropertiesSafe(self, pline, names, func_ptr_ids, data_types, prop_flags=0):
+    filter_functions = lambda function: unwrapLo(function) not in self.context.context_lo.functions
+    filter_dtype = lambda dtype: unwrapLo(dtype) not in self.context.context_lo.data_types
     return {filter_functions:func_ptr_ids, filter_dtype: data_types}
   @unwrap_decorator
-  def create_functum_properties(self, pline, names, func_ptr_ids, dtype_ids, prop_flags=0):
-    prop_ids = self.wrapped.create_functum_properties(pline, names, func_ptr_ids, dtype_ids, prop_flags)
+  def createFunctumProperties(self, pline, names, func_ptr_ids, dtype_ids, prop_flags=0):
+    prop_ids = self.wrapped.createFunctumProperties(pline, names, func_ptr_ids, dtype_ids, prop_flags)
     return prop_ids
 
 if __name__ == '__main__':
@@ -77,13 +77,13 @@ if __name__ == '__main__':
   pline.grow()
   debugPrint(pline.getTopology())
   propm = PropertyManager(context=context)
-  debugPrint(getattr(propm, 'create_properties'))
+  debugPrint(getattr(propm, 'createProperties'))
   debugPrint(propm)
   debugPrint(propm.context.context_lo.data_types)
-  propm.create_properties(pline, 'input', ['hello'], [0])
+  propm.createProperties(pline, 'input', ['hello'], [0])
   debugPrint(pline.all_properties)
-  propm.create_properties(pline, 'input', ['hello', 'bye'], [0, 0])
+  propm.createProperties(pline, 'input', ['hello', 'bye'], [0, 0])
   debugPrint(pline.all_properties)
-  propm.create_func_properties(pline, ['bla'], [0])
+  propm.createFuncProperties(pline, ['bla'], [0])
   debugPrint(pline.all_properties)
 

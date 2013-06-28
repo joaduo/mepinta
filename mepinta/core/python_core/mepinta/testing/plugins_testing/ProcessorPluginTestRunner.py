@@ -100,18 +100,18 @@ class ProcessorPluginTestRunner(ForkInotifyUtilsBase):
     if not isiterable(test_modules):
       test_modules = [test_modules]
     #regiter each provided module
-    for test_module in test_modules:
-      self._registerTestModule(test_module, test_pline)
+    for testModule in test_modules:
+      self._registerTestModule(testModule, test_pline)
 
-  def _registerTestModule(self, test_module, test_pline):
+  def _registerTestModule(self, testModule, test_pline):
     #Get the plugin test instance
-    plugin_test = self._getTestInstance(test_module)
+    plugin_test = self._getTestInstance(testModule)
     #Creates processors manifest files watchers
     for processor in plugin_test.getWatchedProcessors():
       #watch it's processor manifest for changes
-      self.__watchProcessorManifest(processor, test_module, test_pline)
+      self.__watchProcessorManifest(processor, testModule, test_pline)
 
-  def __watchProcessorManifest(self, processor, test_module, test_pline):
+  def __watchProcessorManifest(self, processor, testModule, test_pline):
     '''Defines the function to be call when the plugin's manifest changes.'''
     #define the function to call when the processor's manifest (.py) changes
     def manifestInotifyForked(event, action, manager):
@@ -127,13 +127,13 @@ class ProcessorPluginTestRunner(ForkInotifyUtilsBase):
         child_pid, status = os.waitpid(self._child_pid, 0)
         self.log.debug("Child process %s ended with status %s." % (child_pid, status))
       #Get the function to call when the manifest changed (means need to reload the whole pipeline)
-      manifestInotifyFunction = self.__getManifestInotifyFunction(test_module, test_pline)
+      manifestInotifyFunction = self.__getManifestInotifyFunction(testModule, test_pline)
       self._child_pid = self._callFunctionOnFork(manifestInotifyFunction, wait_child=False)
     #load the processor to get the manifest's module path
-    processor_metadata = self._plugins_mngr.load_processor(processor)
+    processor_metadata = self._plugins_mngr.loadProcessor(processor)
     path = self._getModuleFilePath(processor_metadata.module)
     #unload processor to release libraries (very important, if not the file won't be released when deleted)
-    self._plugins_mngr.unload_processor_library(processor_metadata)
+    self._plugins_mngr.unloadProcessorLibrary(processor_metadata)
     #Create the action for the file
     path_action = PathAction(self.context, path=path, mask=IN_CLOSE_WRITE)
     #append function on notification for the file

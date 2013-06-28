@@ -100,7 +100,7 @@ class PluginsDeploymentManager(FrameworkBase):
     pass  # TODO: need to have better data_types manifest
 
 
-def test_module():
+def testModule():
   from getDefaultContext import getDefaultContext
   from pipeline_backend.logging.logging import LOG_INFO
   from mepinta_devtools.plugins.PluginsBrowser import PluginsBrowser
@@ -116,4 +116,4 @@ def test_module():
 
 
 if __name__ == "__main__":
-  test_module()
+  testModule()

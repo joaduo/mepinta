@@ -35,17 +35,17 @@ def demuxSignal(args):
   call the appropriate functums.
   :param args: Opaque args to be used by the functions in mepinta_python_sdk.props
   '''
-  from mepinta_python_sdk.props import get_prop_value
+  from mepinta_python_sdk.props import getPropValue
   #Get the inputs
   #The graph to demux the signal from
-  in_graph = get_prop_value(args, 'inputs', 'graph')
+  in_graph = getPropValue(args, 'inputs', 'graph')
   #Get the functums to be initialized
-  changeGraphTopology = get_prop_value(args, 'inputs', 'changeGraphTopology')
-  changeGraphValues = get_prop_value(args, 'inputs', 'changeGraphValues')
+  changeGraphTopology = getPropValue(args, 'inputs', 'changeGraphTopology')
+  changeGraphValues = getPropValue(args, 'inputs', 'changeGraphValues')
   #output
-  out_graph = get_prop_value(args, 'outputs', 'graph')
+  out_graph = getPropValue(args, 'outputs', 'graph')
   #DemuxSignal
-  if in_graph.topology_changed:
+  if in_graph.topologyChanged:
     #We have a new topology, then start from this new topology
     out_graph.resetTopology(in_graph)
     #Modify the topology on the new given topology
@@ -56,30 +56,30 @@ def demuxSignal(args):
 def changeGraphValues(args):
   from mepinta.pipelineview.actiontree.undoable_graph.UndoableGraphManager import UndoableGraphManager
   from mepinta.context.MepintaContext import MepintaContext
-  from mepinta_python_sdk.props import get_prop_value
-  context_name = get_prop_value(args, 'inputs', 'context_name')
-  node_name = get_prop_value(args, 'inputs', 'node_name')
-  graph = get_prop_value(args, 'outputs', 'graph')
+  from mepinta_python_sdk.props import getPropValue
+  context_name = getPropValue(args, 'inputs', 'context_name')
+  node_name = getPropValue(args, 'inputs', 'node_name')
+  graph = getPropValue(args, 'outputs', 'graph')
   context = MepintaContext(context_name)
 
-  if len(graph.created_nodes) == 1:
-    node = graph.created_nodes[0]
+  if len(graph.createdNodes) == 1:
+    node = graph.createdNodes[0]
     node.name = node_name
   else:
-    context.log.e('There shouldn\'t be more than one node created by this plugin. Nodes: %r.' % graph.created_nodes)
+    context.log.e('There shouldn\'t be more than one node created by this plugin. Nodes: %r.' % graph.createdNodes)
 
 def changeGraphTopology(args):
   from mepinta.pipelineview.actiontree.undoable_graph.UndoableGraphManager import UndoableGraphManager
   from mepinta.context.MepintaContext import MepintaContext
-  from mepinta_python_sdk.props import get_prop_value
-  context_name = get_prop_value(args, 'inputs', 'context_name')
-  processor_name = get_prop_value(args, 'inputs', 'processor_name')
-  graph = get_prop_value(args, 'outputs', 'graph')
+  from mepinta_python_sdk.props import getPropValue
+  context_name = getPropValue(args, 'inputs', 'context_name')
+  processor_name = getPropValue(args, 'inputs', 'processor_name')
+  graph = getPropValue(args, 'outputs', 'graph')
   graph_manager = UndoableGraphManager(MepintaContext(context_name))
 
   graph_manager.createNode(graph, processor_name)
 
-def test_module():
+def testModule():
   from getDefaultContext import getDefaultContext
   from mepinta.testing.plugins_testing.PluginManifestAutoTester import PluginManifestAutoTester
   #PluginManifestAutoTester(getDefaultContext()).test(manifest)#, gui=True)
@@ -87,5 +87,5 @@ def test_module():
   #PluginManifestAutoTester(getDefaultContext()).test(manifest, gui=False)
 
 if __name__ == "__main__":
-  test_module()
+  testModule()
   #import ftest

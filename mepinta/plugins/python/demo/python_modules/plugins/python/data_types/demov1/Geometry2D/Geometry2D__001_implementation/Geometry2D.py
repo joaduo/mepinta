@@ -44,7 +44,7 @@ class Geometry2D(Base2D):
     self.bezier_paths = []
 
 
-def create_demo_data():
+def createDemoData():
   geom2d = Geometry2D()
   for i in xrange(50):
     #geom2d.points.append((float(i*100),float(i*100)))

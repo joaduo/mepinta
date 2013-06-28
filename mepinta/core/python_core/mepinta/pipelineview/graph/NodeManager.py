@@ -24,7 +24,7 @@ from common.abstract.FrameworkBase import FrameworkBase
 class NodeManager(FrameworkBase):
   def __post_init__(self):
     self.names_counter = {}
-  def new_name(self, processor_name):
+  def newName(self, processor_name):
     if processor_name not in self.names_counter:
       self.names_counter[processor_name] = 0
     self.names_counter[processor_name] += 1
@@ -36,7 +36,7 @@ class NodeManager(FrameworkBase):
     #and node (id)
     #adds properties to the context_lo_hi
     #
-    node_name = self.new_name(processor.proxy.name)
+    node_name = self.newName(processor.proxy.name)
     self.log.debug('Creating a new node %r of type %s' % (node_name, processor))
     node_proxy = Node(node_name, processor)
     return node_proxy

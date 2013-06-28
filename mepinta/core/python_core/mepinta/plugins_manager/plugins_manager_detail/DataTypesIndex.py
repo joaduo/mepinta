@@ -23,7 +23,7 @@ from common.abstract.FrameworkBase import FrameworkBase
 class DataTypesIndex(FrameworkBase):
   def __post_init__(self):
     pass
-  def generate_index(self):
+  def generateIndex(self):
     #for each group package or data type package list its internal modules
     #and packages
     #for importer, modname, ispkg in pkgutil .iter_modules(plugin_package.__path__, prefix):

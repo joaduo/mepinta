@@ -32,34 +32,34 @@ FrameworkException = RuntimeError
 class ProcessorPluginsManager(PluginsManagerBase):
   '''
   '''
-  def load_processor_library(self,processor):
+  def loadProcessorLibrary(self,processor):
     self.log.info('Loading processor %r shared library'%processor)
     #Ask the lower lever C api to load this library, with local symbols, since we only call functions with pointers
-    self.plugin_loader.load_processor_library(processor)
+    self.plugin_loader.loadProcessorLibrary(processor)
     #Add the processor as a dependant of the data_types
     for data_type_name in processor.data_types:
       self.data_types[data_type_name].processors.append(processor)
     #Add it to the loaded processors
     self.processors[processor.name][processor.version] = processor
-  def unload_processor_library(self,processor):
+  def unloadProcessorLibrary(self,processor):
     self.log.info('Unloading processor %r shared library'%processor)
     #Ask the lower lever C api to unload this library
-    self.plugin_loader.unload_processor_library(processor)
+    self.plugin_loader.unloadProcessorLibrary(processor)
     #Remove dependents from data types
     for data_type_name in processor.data_types:
       self.data_types[data_type_name].processors.remove(processor) #TODO: maybe later should use bisect_left
     #Processor is not loaded anymore
     del self.processors[processor.name][processor.version]
-  def load_processors_data_types(self, processor_proxy):
+  def loadProcessorsDataTypes(self, processor_proxy):
     types_classes=[DataPropertyProxy, FunctumPropertyProxy]
     for data_type_name,data_type_versions in processor_proxy.getRequiredDataTypes(types_classes).items():
       #get the biggest version of a required datatype
       version = data_type_versions[-1]
       #Lets load it
-      self.parent.load_data_type(data_type_name, version)
+      self.parent.loadDataType(data_type_name, version)
   def __getProcessorProxy(self,processor_module):
-    if hasattr(processor_module, 'get_processor_proxy'):
-      processor_proxy = processor_module.get_processor_proxy(self.context)
+    if hasattr(processor_module, 'getProcessorProxy'):
+      processor_proxy = processor_module.getProcessorProxy(self.context)
     elif hasattr(processor_module, 'plugin'):#TODO: delete this and above
       processor_proxy = processor_module.plugin(context=self.context).processor_proxy
     elif hasattr(processor_module, 'manifest'):
@@ -71,10 +71,10 @@ class ProcessorPluginsManager(PluginsManagerBase):
     else:
       raise FrameworkException('There is no definition on the module: %r.'%(processor_module))
     return processor_proxy
-  def load_processor(self,processor,minor_version,replace,replace_version,reload_):
+  def loadProcessor(self,processor,minor_version,replace,replace_version,reload_):
     self.log.debug('Loading processor: %r'%processor)
-    processor_name, processor_package = self.processor_pkg_mngr.get_package_and_name(processor)
-    build_modules = self.processor_pkg_mngr.get_revision_modules(processor_package)
+    processor_name, processor_package = self.processor_pkg_mngr.getPackageAndName(processor)
+    build_modules = self.processor_pkg_mngr.getRevisionModules(processor_package)
     
     #TODO: should exist a PluginLoadingPolicy class to apply policies??? vv
     #Or should i leave this like this, and just encapsulate from line 63 on?
@@ -98,7 +98,7 @@ class ProcessorPluginsManager(PluginsManagerBase):
     build_version = build_modules['versions'][module_index]
     if self.context.backend_name == 'python': 
       #On python the plugin module is the plugin itself #TODO: rename library_path to plugin_module
-      library_path = self.processor_pkg_mngr.get_revision_module(processor_name, build_name)
+      library_path = self.processor_pkg_mngr.getRevisionModule(processor_name, build_name)
     else: #then its shedskin. We still need to load the shared library
       library_path = processor_package.__path__[0] + '/%s.so.implementation'%build_name
     
@@ -116,7 +116,7 @@ class ProcessorPluginsManager(PluginsManagerBase):
       processor.name = processor_name
       processor.build_name = build_name
       processor.version = build_version
-      processor.module = self.processor_pkg_mngr.get_revision_module(processor_name, build_name)
+      processor.module = self.processor_pkg_mngr.getRevisionModule(processor_name, build_name)
       processor.proxy = self.__getProcessorProxy(processor.module)
       processor.library_path = library_path
       #TODO: data types can be a property, then it queries the proxy? (what?)
@@ -126,27 +126,27 @@ class ProcessorPluginsManager(PluginsManagerBase):
       #It's an existent one. This means we are reloading. 
       processor = self.processors[processor_name][build_version]
       #Let's unload before reloading.
-      self.unload_processor_library(processor)
+      self.unloadProcessorLibrary(processor)
       #reload manifest module too
-      processor.module = self.processor_pkg_mngr.get_revision_module(processor_name, build_name)
+      processor.module = self.processor_pkg_mngr.getRevisionModule(processor_name, build_name)
       processor.proxy = self.__getProcessorProxy(processor.module)
 
     #First load required data types or reload new versions.
-    self.load_processors_data_types(processor.proxy)
+    self.loadProcessorsDataTypes(processor.proxy)
       
     #Finally load the processor library
-    self.load_processor_library(processor)
+    self.loadProcessorLibrary(processor)
     
     #Now that we loaded the data types and processor we can update 
       #the ids of the proxy
-    self.set_processor_proxy_dtype_ids(processor)
+    self.setProcessorProxyDtypeIds(processor)
     return processor
-  def set_processor_proxy_dtype_ids(self, processor):
+  def setProcessorProxyDtypeIds(self, processor):
     #We need to re/set proxy's ids in a case of re/load
-    self.set_containers_dtype_id(processor.proxy)
-    processor.proxy.set_functions_id(processor.functions)
-  def set_containers_dtype_id(self, proxy):
+    self.setContainersDtypeId(processor.proxy)
+    processor.proxy.setFunctionsId(processor.functions)
+  def setContainersDtypeId(self, proxy):
     #For each processor's property set its data type property_id
     for props_container in proxy.containers.values():
-      for prop in props_container.get_properties(DataPropertyProxy,FunctumPropertyProxy).values():
+      for prop in props_container.getProperties(DataPropertyProxy,FunctumPropertyProxy).values():
         prop.dtype_id  = self.data_types[prop.data_type_name].property_id

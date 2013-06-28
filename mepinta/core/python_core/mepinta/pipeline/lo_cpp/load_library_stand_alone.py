@@ -32,27 +32,27 @@ g++ -D STAND_ALONE_LOAD_UNLOAD
 '''
 
 import sys
-from pipeline_backend.load_unload_library.load_unload_library import load_library
+from pipeline_backend.load_unload_library.load_unload_library import loadLibrary
 
 loaded_libraries = {}
 
-def local_log_info(msg):
+def localLogInfo(msg):
   sys.stdout.write(msg + '\n')
 
-def local_log_error(msg):
+def localLogError(msg):
   sys.stderr.write(msg + '\n')
 
 def load_library_stand_alone(path, symbol):
-  handle = load_library(path, symbol)
+  handle = loadLibrary(path, symbol)
   if handle == None:
-    local_log_error("ERROR: Couldn't load the library at %r with symbol %r" % (path, symbol))
+    localLogError("ERROR: Couldn't load the library at %r with symbol %r" % (path, symbol))
     return False
   loaded_libraries[path] = handle
-  local_log_info("Successfully loaded the library at %r with symbol %r" % (path, symbol))
+  localLogInfo("Successfully loaded the library at %r with symbol %r" % (path, symbol))
   return True
 
-def shedskin_type_generation():
+def shedskin_load_library_stand_alone():
   load_library_stand_alone("", "")
 
 if __name__ == "__main__":
-  shedskin_type_generation()
+  shedskin_load_library_stand_alone()

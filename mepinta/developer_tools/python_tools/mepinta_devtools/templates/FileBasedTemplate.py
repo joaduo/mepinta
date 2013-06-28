@@ -37,9 +37,9 @@ class FileBasedTemplate(FrameworkObject):
     '''Use the str operator to mimic a string.'''
     return self.getContent()
 
-def test_module():
+def testModule():
   from getDefaultContext import getDefaultContext
   context = getDefaultContext()
 
 if __name__ == "__main__":
-  test_module()
+  testModule()

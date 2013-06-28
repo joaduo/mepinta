@@ -24,8 +24,8 @@ Created on Sep 13, 2011
 @author: jduo
 '''
 
-def solve_symbol(handle, namespace, symbol):
-  complete_symbol = namespace+symbol
+def solveSymbol(handle, namespace, symbol):
+  complete_symbol = namespace + symbol
   #void *dlsym(void *handle, const char *symbol);
   return None
 

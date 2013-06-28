@@ -36,8 +36,8 @@ class MeshK3d(object):
     self.points = []
 
 
-def test_module():
+def testModule():
   pass
 
 if __name__ == "__main__":
-  test_module()
+  testModule()
