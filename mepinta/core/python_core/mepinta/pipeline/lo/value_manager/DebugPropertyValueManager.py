@@ -43,7 +43,7 @@ class DebugPropertyValueManager(object):
       raise MepintaLoError(msg)
     return func_ptr_check_repr
   def __checkRepr(self, prop):
-    self.__checkRepr(prop, prop.getValuePtr().getValue())
+    self.__checkValueRepr(prop, prop.getValuePtr().getValue())
   def __checkValueRepr(self, prop, value):
     func_ptr_check_repr = self.__getCheckReprFunction(prop)
     if not self.func_caller.callIntFuncVoidp(func_ptr_check_repr, value):

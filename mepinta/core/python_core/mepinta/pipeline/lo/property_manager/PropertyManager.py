@@ -68,7 +68,7 @@ class PropertyManager(object):
     props = []
     for p_id in prop_ids:
       props.append(pline.deleteProperty(p_id))
-    self.p_value_mngr.deletePropertiesValues(props)
+    self.p_value_mngr.deletePropsValues(props)
   def addFilters(self, pline, prop_ids):
     logDebug('Adding propagation filter properties %r' % prop_ids)
     for p_id in prop_ids:

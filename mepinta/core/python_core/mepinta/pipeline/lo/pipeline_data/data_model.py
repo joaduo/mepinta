@@ -19,7 +19,7 @@ You should have received a copy of the GNU General Public License
 along with Mepinta. If not, see <http://www.gnu.org/licenses/>.
 '''
 from mepinta.pipeline.lo.FunctionCaller import FunctionCaller
-from pipeline_backend.solve_symbol.solve_symbol import solve_symbol
+from pipeline_backend.solve_symbol.solve_symbol import solveSymbol
 from copy import deepcopy
 from pipeline_backend.logging.logging import logDebug, logWarning, \
   logCritical
@@ -37,16 +37,16 @@ class DataType(object):
     self.symbols = {}
   def getFuncPtr(self, name):
     if name not in self.symbols:
-      self.symbols[name] = self.solve_symbol(name)
+      self.symbols[name] = self.solveSymbol(name)
     return self.symbols[name]
   def updateHandle(self, lib_handle): #TODO: should check we never get a null pointer?
     self.lib_handle = lib_handle
     for name in self.symbols:
-      self.symbols[name] = self.solve_symbol(name)
-  def solve_symbol(self, name):
-    return solve_symbol(self.lib_handle, '%s%s_' % (MEPINTA_C_NAMESPACE_PREFIX, self.name), name)
-#  def __repr__(self): #TODO: remove
-#    return repr(self.__str__())
+      self.symbols[name] = self.solveSymbol(name)
+  def solveSymbol(self, name):
+    return solveSymbol(self.lib_handle, '%s%s_' % (MEPINTA_C_NAMESPACE_PREFIX, self.name), name)
+  def __repr__(self): #TODO: remove
+    return repr(self.__str__())
   def __str__(self):
     return self.name
 
@@ -107,8 +107,8 @@ class Property(object):
       self.value_ptr = value_ptr
       self.value_ptr.incrementReferenceCount()
       old_value_ptr.decrementReferenceCount(func_ptr_del)
-#  def __repr__(self): #TODO: remove
-#    return repr(self.__str__())
+  def __repr__(self): #TODO: remove
+    return repr(self.__str__())
   def __str__(self):
     return self.name
 
@@ -299,4 +299,4 @@ def shedskin_pipeline_data_model():
 
 if __name__ == '__main__':
   shedskin_pipeline_data_model()
-  debugPrint("done")
+  #debugPrint("done")

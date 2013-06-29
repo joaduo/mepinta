@@ -20,7 +20,7 @@ along with Mepinta. If not, see <http://www.gnu.org/licenses/>.
 '''
 from mepinta.pipeline.lo.pipeline_data.data_model import DataType, ProcessorFunction
 from pipeline_backend.logging.logging import logInfo, logDebug
-from pipeline_backend.solve_symbol.solve_symbol import solve_symbol
+from pipeline_backend.solve_symbol.solve_symbol import solveSymbol
 from pipeline_backend.load_unload_library.load_unload_library import unloadLibrary, loadLibrary
 
 class PluginLoader(object):
@@ -79,7 +79,7 @@ class PluginLoader(object):
       for func_name in func_dict:
         func_id = func_dict[func_name]
         #Here there is no need of namespace since symbols are not global
-        func_ptr = solve_symbol(handle, '', func_name)
+        func_ptr = solveSymbol(handle, '', func_name)
         #func_ptr = self.function_loader.load(handle, func_name)
         if func_id in self.context_lo.functions:
           self.context_lo.functions[func_id].updateFuncPointer(func_ptr)

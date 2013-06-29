@@ -41,35 +41,38 @@
 #define LOG_MEPINTA_FUNNY 200
 
 #ifndef PIPELINE_ABSLAYER_LOGGING
-#ifdef MEPINTA_DEBUG
-  #define PRINT_FORMAT(level,fmt) #level,level,__FILE__,__LINE__,fmt
-  #define log_critical(fmt, ...) MP_printLog(PRINT_FORMAT(LOG_MEPINTA_CRITICAL,fmt),##__VA_ARGS__)
-  #define log_error(fmt, ...) MP_printLog(PRINT_FORMAT(LOG_MEPINTA_ERROR,fmt),##__VA_ARGS__)
-  #define log_warning(fmt, ...) MP_printLog(PRINT_FORMAT(LOG_MEPINTA_WARNING,fmt),##__VA_ARGS__)
-  #define log_info(fmt, ...) MP_printLog(PRINT_FORMAT(LOG_MEPINTA_INFO,fmt),##__VA_ARGS__)
-  #define log_verbose(fmt, ...) MP_printLog(PRINT_FORMAT(LOG_MEPINTA_VERBOSE,fmt),##__VA_ARGS__)
-  #define log_debug(fmt, ...) MP_printLog(PRINT_FORMAT(LOG_MEPINTA_DEBUG,fmt),##__VA_ARGS__)
-  //TODO: print __FILE__ and __LINE__
-  #define log_trace(fmt, ...) MP_printLog(PRINT_FORMAT(LOG_MEPINTA_DEBUG_TRACE,fmt),##__VA_ARGS__)
-  //TODO: delete both functions below?
-  #define log_debug_verbose(fmt, ...) MP_printLog(PRINT_FORMAT(LOG_MEPINTA_DEBUG_VERBOSE,fmt),##__VA_ARGS__)
-  #define log_debug_warning(fmt, ...) MP_printLog(PRINT_FORMAT(LOG_MEPINTA_DEBUG_WARNING,fmt),##__VA_ARGS__)
-  #define log_funny(fmt, ...) MP_printLog(PRINT_FORMAT(LOG_MEPINTA_FUNNY,fmt),##__VA_ARGS__)
-#else
-//  #define log_critical(fmt, ...) MP_print_log(LOG_MEPINTA_CRITICAL,fmt,##__VA_ARGS__)
-//  #define log_error(fmt, ...) MP_print_log(LOG_MEPINTA_ERROR,fmt,##__VA_ARGS__)
-//  #define log_warning(fmt, ...) MP_print_log(LOG_MEPINTA_WARNING,fmt,##__VA_ARGS__)
-//  #define log_info(fmt, ...) MP_print_log(LOG_MEPINTA_INFO,fmt,##__VA_ARGS__)
-//  #define log_verbose(fmt, ...) MP_print_log(LOG_MEPINTA_VERBOSE,fmt,##__VA_ARGS__)
-//  #define log_debug(fmt, ...) MP_print_log(LOG_MEPINTA_DEBUG,fmt,##__VA_ARGS__)
-//  //TODO: print __FILE__ and __LINE__
-//  #define log_trace(fmt, ...) MP_print_log(LOG_MEPINTA_DEBUG_TRACE,fmt,##__VA_ARGS__)
-//  //TODO: delete both functions below?
-//  #define log_debug_verbose(fmt, ...) MP_print_log(LOG_MEPINTA_DEBUG_VERBOSE,fmt,##__VA_ARGS__)
-//  #define log_debug_warning(fmt, ...) MP_print_log(LOG_MEPINTA_DEBUG_WARNING,fmt,##__VA_ARGS__)
-//  #define log_funny(fmt, ...) MP_print_log(LOG_MEPINTA_FUNNY,fmt,##__VA_ARGS__)
+  #ifdef MEPINTA_DEBUG
+    #define PRINT_FORMAT(level,fmt) #level,level,__FILE__,__LINE__,fmt
+    #define log_critical(fmt, ...) MP_printLog(PRINT_FORMAT(LOG_MEPINTA_CRITICAL,fmt),##__VA_ARGS__)
+    #define log_error(fmt, ...) MP_printLog(PRINT_FORMAT(LOG_MEPINTA_ERROR,fmt),##__VA_ARGS__)
+    #define log_warning(fmt, ...) MP_printLog(PRINT_FORMAT(LOG_MEPINTA_WARNING,fmt),##__VA_ARGS__)
+    #define log_info(fmt, ...) MP_printLog(PRINT_FORMAT(LOG_MEPINTA_INFO,fmt),##__VA_ARGS__)
+    #define log_verbose(fmt, ...) MP_printLog(PRINT_FORMAT(LOG_MEPINTA_VERBOSE,fmt),##__VA_ARGS__)
+    #define log_debug(fmt, ...) MP_printLog(PRINT_FORMAT(LOG_MEPINTA_DEBUG,fmt),##__VA_ARGS__)
+    //TODO: print __FILE__ and __LINE__
+    #define log_trace(fmt, ...) MP_printLog(PRINT_FORMAT(LOG_MEPINTA_DEBUG_TRACE,fmt),##__VA_ARGS__)
+    //TODO: delete both functions below?
+    #define log_debug_verbose(fmt, ...) MP_printLog(PRINT_FORMAT(LOG_MEPINTA_DEBUG_VERBOSE,fmt),##__VA_ARGS__)
+    #define log_debug_warning(fmt, ...) MP_printLog(PRINT_FORMAT(LOG_MEPINTA_DEBUG_WARNING,fmt),##__VA_ARGS__)
+    #define log_funny(fmt, ...) MP_printLog(PRINT_FORMAT(LOG_MEPINTA_FUNNY,fmt),##__VA_ARGS__)
+  #else
+  //  #define log_critical(fmt, ...) MP_print_log(LOG_MEPINTA_CRITICAL,fmt,##__VA_ARGS__)
+  //  #define log_error(fmt, ...) MP_print_log(LOG_MEPINTA_ERROR,fmt,##__VA_ARGS__)
+  //  #define log_warning(fmt, ...) MP_print_log(LOG_MEPINTA_WARNING,fmt,##__VA_ARGS__)
+  //  #define log_info(fmt, ...) MP_print_log(LOG_MEPINTA_INFO,fmt,##__VA_ARGS__)
+  //  #define log_verbose(fmt, ...) MP_print_log(LOG_MEPINTA_VERBOSE,fmt,##__VA_ARGS__)
+  //  #define log_debug(fmt, ...) MP_print_log(LOG_MEPINTA_DEBUG,fmt,##__VA_ARGS__)
+  //  //TODO: print __FILE__ and __LINE__
+  //  #define log_trace(fmt, ...) MP_print_log(LOG_MEPINTA_DEBUG_TRACE,fmt,##__VA_ARGS__)
+  //  //TODO: delete both functions below?
+  //  #define log_debug_verbose(fmt, ...) MP_print_log(LOG_MEPINTA_DEBUG_VERBOSE,fmt,##__VA_ARGS__)
+  //  #define log_debug_warning(fmt, ...) MP_print_log(LOG_MEPINTA_DEBUG_WARNING,fmt,##__VA_ARGS__)
+  //  #define log_funny(fmt, ...) MP_print_log(LOG_MEPINTA_FUNNY,fmt,##__VA_ARGS__)
+  #endif
 #endif
-#endif
+
+//Aliases
+#define logError log_error
 
 #ifdef __cplusplus
 extern "C" {

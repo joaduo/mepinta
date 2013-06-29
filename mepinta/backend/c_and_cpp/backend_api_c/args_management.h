@@ -49,7 +49,7 @@
   #define APPEND_PROP \
     mepinta_props* props= MP_get_props((mepinta_args*)args,in_out_id); \
     ASSERT_DEBUG_RETURN(props!=NULL,EXIT_FAILURE); \
-    return mepinta_props_set(props,index,prop_id,(prop_name_t)prop->name->unit.c_str(),&prop_real->get_value_ptr()->value,data_type->lib_handle,0)
+    return mepinta_props_set(props,index,prop_id,(prop_name_t)prop->name->unit.c_str(),&prop_real->getValuePtr()->value,data_type->lib_handle,0)
 
   #define SET_PROP_CHANGED \
     return MP_set_changed_byindex((mepinta_args*)args,in_out_id,index)
@@ -85,7 +85,7 @@
       return (void*)mepinta_args_new(in_size,out_size)
 
   #define APPEND_PROP \
-    return mepinta_props_set(MP_get_props(args,in_out_id),index,prop_id,(prop_name_t)prop->name->unit.c_str(),&prop_real->get_value_ptr()->value,data_type->lib_handle,0)
+    return mepinta_props_set(MP_get_props(args,in_out_id),index,prop_id,(prop_name_t)prop->name->unit.c_str(),&prop_real->getValuePtr()->value,data_type->lib_handle,0)
 
   #define SET_PROP_CHANGED \
     get_props(args,in_out_id)->changed[index] = TRUE; \

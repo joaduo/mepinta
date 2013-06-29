@@ -28,6 +28,7 @@ private:
     this->properties.push_back(CAST_PROP_UNSAFE(prop_type,prop));
     names.push_back(prop_name);
     indexes.push_back(cur_index);
+    //TODO: Why is this warning here?
     #warning the function is not virtual!
   }
 
