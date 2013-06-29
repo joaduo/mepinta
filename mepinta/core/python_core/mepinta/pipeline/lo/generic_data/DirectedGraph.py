@@ -236,42 +236,42 @@ def shedskin_DirectedGraph():
   tbl.index(6)
   str(tbl)
 
-def shedskin_test():
-  id_indexed_table = DirectedGraph()
-  id_indexed_table.add(4, 543)
-  id_indexed_table.add(4, 45)
-
-  a = [1, 2, 4, 5, 6, 6, 6, 8, 100, 3221]
-  b = [1, 2, 4, 5, 6, 5, 9, 8, 100, 3221]
-  id_indexed_table = DirectedGraph()
-  id_indexed_table.__keys = a
-  id_indexed_table.__values = b
-  debugPrint(id_indexed_table[1])
-  debugPrint(id_indexed_table[6])
-  id_indexed_table[1] = 20
-  debugPrint(id_indexed_table[1])
-  debugPrint(id_indexed_table)
-  del id_indexed_table[1]
-  id_indexed_table.__delslice__(2, 6) #TODO: why [:] doesnt work?
-  debugPrint(id_indexed_table)
-  debugPrint(id_indexed_table.__getslice__(8, 3221)) #TODO: why [:] doesnt work?
-  debugPrint(id_indexed_table.__slice__(8, 3221))  #TODO: why [:] doesnt work?
-  debugPrint(len(id_indexed_table))
-  id_indexed_table.add(4, 543)
-  id_indexed_table.add(4, 45)
-  debugPrint(id_indexed_table.count(4))
-  debugPrint(id_indexed_table.index(4))
-  id_indexed_table.add(8, 8)
-  id_indexed_table.add(8, 20)
-  id_indexed_table.remove(8, 8)
-  id_indexed_table.remove(8, 20)
-  id_indexed_table.add(203, 423123)
-  debugPrint(id_indexed_table)
+#def shedskin_test():
+#  id_indexed_table = DirectedGraph()
+#  id_indexed_table.add(4, 543)
+#  id_indexed_table.add(4, 45)
+#
+#  a = [1, 2, 4, 5, 6, 6, 6, 8, 100, 3221]
+#  b = [1, 2, 4, 5, 6, 5, 9, 8, 100, 3221]
+#  id_indexed_table = DirectedGraph()
+#  id_indexed_table.__keys = a
+#  id_indexed_table.__values = b
+#  debugPrint(id_indexed_table[1])
+#  debugPrint(id_indexed_table[6])
+#  id_indexed_table[1] = 20
+#  debugPrint(id_indexed_table[1])
+#  debugPrint(id_indexed_table)
+#  del id_indexed_table[1]
+#  id_indexed_table.__delslice__(2, 6) #TODO: why [:] doesnt work?
+#  debugPrint(id_indexed_table)
+#  debugPrint(id_indexed_table.__getslice__(8, 3221)) #TODO: why [:] doesnt work?
+#  debugPrint(id_indexed_table.__slice__(8, 3221))  #TODO: why [:] doesnt work?
+#  debugPrint(len(id_indexed_table))
+#  id_indexed_table.add(4, 543)
+#  id_indexed_table.add(4, 45)
+#  debugPrint(id_indexed_table.count(4))
+#  debugPrint(id_indexed_table.index(4))
+#  id_indexed_table.add(8, 8)
+#  id_indexed_table.add(8, 20)
+#  id_indexed_table.remove(8, 8)
+#  id_indexed_table.remove(8, 20)
+#  id_indexed_table.add(203, 423123)
+#  debugPrint(id_indexed_table)
 
 if __name__ == '__main__':
   #import sys
 #  test(sys.argv)
 #  test(None)
   shedskin_DirectedGraph()
-  shedskin_test()
+#  shedskin_test()
 

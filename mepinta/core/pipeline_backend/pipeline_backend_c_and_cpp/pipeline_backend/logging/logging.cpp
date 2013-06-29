@@ -56,66 +56,66 @@ str *__name__;
 //void * default_0;
 
 
-void *set_log_level(__ss_int level) {
+void *setLogLevel(__ss_int level) {
 
   //MANUALLY EDITED:
   MP_set_log_level(level);
   return NULL;
 }
 
-void *print_log(__ss_int level, str *msg) {
+void *printLog(__ss_int level, str *msg) {
   //MANUALLY EDITED:
   MP_print_log(level,"%s\n",msg->unit.c_str());
 
   return NULL;
 }
 
-void *log_critical(str *msg) {
+void *logCritical(str *msg) {
     
-    print_log(LOG_CRITICAL, msg);
+    printLog(LOG_CRITICAL, msg);
     return NULL;
 }
 
-void *log_error(str *msg) {
+void *logError(str *msg) {
     
-    print_log(LOG_ERROR, msg);
+    printLog(LOG_ERROR, msg);
     return NULL;
 }
 
-void *log_warning(str *msg) {
+void *logWarning(str *msg) {
     
-    print_log(LOG_WARNING, msg);
+    printLog(LOG_WARNING, msg);
     return NULL;
 }
 
-void *log_info(str *msg) {
+void *logInfo(str *msg) {
     
-    print_log(LOG_INFO, msg);
+    printLog(LOG_INFO, msg);
     return NULL;
 }
 
-void *log_verbose(str *msg) {
+void *logVerbose(str *msg) {
     
-    print_log(LOG_VERBOSE, msg);
+    printLog(LOG_VERBOSE, msg);
     return NULL;
 }
 
-void *log_debug(str *msg) {
+void *logDebug(str *msg) {
     
-    print_log(LOG_DEBUG, msg);
+    printLog(LOG_DEBUG, msg);
     return NULL;
 }
 
-void *shedskin_type_generation_logging() {
+void *shedskin_logging() {
 //    str *msg;
 //
 //    msg = const_0;
-//    log_critical(msg);
-//    log_error(msg);
-//    log_warning(msg);
-//    log_info(msg);
-//    log_verbose(msg);
-//    log_debug(msg);
+//    logCritical(msg);
+//    logError(msg);
+//    logWarning(msg);
+//    logInfo(msg);
+//    logVerbose(msg);
+//    logDebug(msg);
     return NULL;
 }
 
@@ -138,12 +138,12 @@ void __init() {
 //    LOG_ALL_TRACE = 70;
 //    log_level = LOG_INFO;
 //    if (__eq(__name__, const_1)) {
-//        set_log_level(LOG_ERROR);
-//        log_info(const_2);
-//        set_log_level(LOG_INFO);
-//        log_info(const_3);
-//        set_log_level(LOG_ALL_TRACE);
-//        log_info(const_4);
+//        setLogLevel(LOG_ERROR);
+//        logInfo(const_2);
+//        setLogLevel(LOG_INFO);
+//        logInfo(const_3);
+//        setLogLevel(LOG_ALL_TRACE);
+//        logInfo(const_4);
 //    }
 }
 

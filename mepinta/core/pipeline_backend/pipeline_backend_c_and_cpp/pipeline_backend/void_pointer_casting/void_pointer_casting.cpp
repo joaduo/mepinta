@@ -47,7 +47,7 @@ str *__name__;
 
 //MANUALLY EDITED: START
 //Something -> voidp
-void *int_to_voidp(__ss_int int_v) {
+void *intToVoidp(__ss_int int_v) {
 #ifdef  MEPINTA_DEBUG_POINTERS
   if (sizeof(__ss_int) <= sizeof(void*)){
 #endif
@@ -55,14 +55,14 @@ void *int_to_voidp(__ss_int int_v) {
 #ifdef  MEPINTA_DEBUG_POINTERS
   }
   else{
-    log_error("Cannot convert int (size=%d) to void* (size=%d) on this platform.\n",
+    logError("Cannot convert int (size=%d) to void* (size=%d) on this platform.\n",
                                                            sizeof(__ss_int), sizeof(void*)    );
     return NULL;
   }
 #endif
 }
 
-void *double_to_voidp(double float_v) {
+void *doubleToVoidp(double float_v) {
 #ifdef  MEPINTA_DEBUG_POINTERS
   if (sizeof(double) == sizeof(void*)){
 #endif
@@ -70,7 +70,7 @@ void *double_to_voidp(double float_v) {
 #ifdef  MEPINTA_DEBUG_POINTERS
   }
   else{
-    log_error("Cannot convert double (size=%d) to void* (size=%d) on this platform.\n",
+    logError("Cannot convert double (size=%d) to void* (size=%d) on this platform.\n",
                                                               sizeof(double), sizeof(void*)    );
     return NULL;
   }
@@ -78,28 +78,28 @@ void *double_to_voidp(double float_v) {
 }
 
 //str is garbage collected by libgc
-void *str_to_voidp(str *_str_) {
+void *strToVoidp(str *_str_) {
     return (void*)_str_->unit.c_str();
 }
 
 //str is garbage collected by libgc
-void *str_charp_to_voidp(str *_str_) {
+void *strCharpToVoidp(str *_str_) {
     return (void*)_str_->unit.c_str();
 }
 
 //str is garbage collected by libgc
-void *str_string_to_voidp(str *_str_) {
+void *strStringToVoidp(str *_str_) {
     //return (void*) &_str_->unit; //WRONG HACK! (later will try to free a string allocated with GC Boehm)
     //TODO: create str_boehm_gc_string_to_voidp
     return (void*) new std::string(_str_->unit.c_str());
 }
 
-void *any_ptr_to_voidp(void *anything) {
+void *anyPtrToVoidp(void *anything) {
     return anything;
 }
 
 //voidp -> Something
-__ss_int voidp_to_int(void *voidp) {
+__ss_int voidpToInt(void *voidp) {
 #ifdef  MEPINTA_DEBUG_POINTERS
   if (sizeof(__ss_int) <= sizeof(void*)){
 #endif
@@ -107,14 +107,14 @@ __ss_int voidp_to_int(void *voidp) {
 #ifdef  MEPINTA_DEBUG_POINTERS
   }
   else{
-    log_error("Cannot convert int (size=%d) from void* (size=%d) on this platform.\n",
+    logError("Cannot convert int (size=%d) from void* (size=%d) on this platform.\n",
                                                            sizeof(__ss_int), sizeof(void*)    );
     return 0;
   }
 #endif
 }
 
-double voidp_to_double(void *voidp) {
+double voidpToDouble(void *voidp) {
 #ifdef  MEPINTA_DEBUG_POINTERS
   if (sizeof(double) == sizeof(void*)){
 #endif
@@ -122,7 +122,7 @@ double voidp_to_double(void *voidp) {
 #ifdef  MEPINTA_DEBUG_POINTERS
   }
   else{
-    log_error("Cannot convert double (size=%d) from void* (size=%d) on this platform.\n",
+    logError("Cannot convert double (size=%d) from void* (size=%d) on this platform.\n",
                                                               sizeof(double), sizeof(void*)    );
     return 0.;
   }
@@ -130,7 +130,7 @@ double voidp_to_double(void *voidp) {
 }
 
 //str is garbage collected by libgc
-str *voidp_to_str(void *voidp) {
+str *voidpToStr(void *voidp) {
     str * text;
     if(voidp != NULL){
       text = new str((char*)voidp);
@@ -142,7 +142,7 @@ str *voidp_to_str(void *voidp) {
 }
 
 //str is garbage collected by libgc
-str *voidp_charp_to_str(void *voidp) {
+str *voidpCharpToStr(void *voidp) {
     str * text;
     if(voidp != NULL){
       text = new str((char*)voidp);
@@ -154,7 +154,7 @@ str *voidp_charp_to_str(void *voidp) {
 }
 
 //str is garbage collected by libgc
-str *voidp_string_to_str(void *voidp) {
+str *voidpStringToStr(void *voidp) {
     str * text;
     if(voidp != NULL){
       __GC_STRING * unit = (__GC_STRING*)voidp;
@@ -166,7 +166,7 @@ str *voidp_string_to_str(void *voidp) {
     return text;
 }
 
-list<__ss_int> *voidp_to_list_int(void *voidp) {
+list<__ss_int> *voidpToListInt(void *voidp) {
     return (list<__ss_int> *) voidp;
 }
 
@@ -179,41 +179,41 @@ __mepinta__::__pipeline__::__lo__::__pipeline_data__::__hidden_data_types__::Fun
 }
 
 //voidp -> Functions
-lambda0 voidp_to_func_arg_void(void *voidp) {
+lambda0 voidpToFuncArgVoid(void *voidp) {
     //func_arg_void();
     return (lambda0)voidp;
 }
 
-lambda1 voidp_to_func_arg_voidp(void *voidp) {
+lambda1 voidpToFuncArgVoidp(void *voidp) {
     //func_arg_voidp(NULL);
     return (lambda1)voidp;
 }
 
-lambda2 voidp_to_processor_func(void *voidp) {
+lambda2 voidpToProcessorFunc(void *voidp) {
     return (lambda2)voidp;
 }
 
-lambda3 voidp_to_copy_to_func(void *voidp) {
+lambda3 voidpToCopyToFunc(void *voidp) {
     return (lambda3)voidp;
 }
 
 //MANUALLY EDITED: END
 
-void *shedskin_type_generation_voidp() {
+void *shedskin_void_pointer_casting() {
 //    void *voidp;
 //
 //    voidp = NULL;
-//    voidp_to_func_arg_void(voidp);
-//    voidp_to_func_arg_voidp(voidp);
-//    voidp_to_processor_func(voidp);
-//    voidp_to_int(voidp);
-//    voidp_to_str(voidp);
-//    voidp_to_double(voidp);
-//    voidp_to_list_int(voidp);
-//    any_ptr_to_voidp(((***ERROR***)(voidp)));
-//    int_to_voidp(1);
-//    double_to_voidp(10.0);
-//    str_to_voidp(const_0);
+//    voidpToFuncArgVoid(voidp);
+//    voidpToFuncArgVoidp(voidp);
+//    voidpToProcessorFunc(voidp);
+//    voidpToInt(voidp);
+//    voidpToStr(voidp);
+//    voidpToDouble(voidp);
+//    voidpToListInt(voidp);
+//    anyPtrToVoidp(((***ERROR***)(voidp)));
+//    intToVoidp(1);
+//    doubleToVoidp(10.0);
+//    strToVoidp(const_0);
     return NULL;
 }
 
@@ -224,7 +224,7 @@ void __init() {
     __name__ = new str("void_pointer_casting");
 
 //    if (__eq(__name__, const_1)) {
-//        shedskin_type_generation_voidp();
+//        shedskin_void_pointer_casting();
 //    }
 }
 

@@ -35,11 +35,11 @@ namespace __load_unload_library__ {
 
 str *__name__;
 
-void *load_library(str *path, str *symbol) {
+void *loadLibrary(str *path, str *symbol) {
   LOAD_LIBRARY;
 }
 
-__ss_int unload_library(void *handle) {
+__ss_int unloadLibrary(void *handle) {
   UNLOAD_LIBRARY;
 }
 

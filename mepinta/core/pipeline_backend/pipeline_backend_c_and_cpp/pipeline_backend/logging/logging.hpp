@@ -35,15 +35,15 @@ extern str *__name__;
 //extern void * default_0;
 
 void __init();
-void *set_log_level(__ss_int level);
-void *print_log(__ss_int level, str *msg);
-void *log_critical(str *msg);
-void *log_error(str *msg);
-void *log_warning(str *msg);
-void *log_info(str *msg);
-void *log_verbose(str *msg);
-void *log_debug(str *msg);
-void *shedskin_type_generation_logging();
+void *setLogLevel(__ss_int level);
+void *printLog(__ss_int level, str *msg);
+void *logCritical(str *msg);
+void *logError(str *msg);
+void *logWarning(str *msg);
+void *logInfo(str *msg);
+void *logVerbose(str *msg);
+void *logDebug(str *msg);
+void *shedskin_logging();
 
 } // module namespace
 } // module namespace
