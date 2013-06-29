@@ -22,7 +22,7 @@
 
 //MANUALLY EDITED:
 #define PIPELINE_ABSLAYER_LOGGING
-#include "pipeline_backend/implementation/log.h"
+#include "pipeline_backend_implementation/log.h"
 
 #define LOG_NO_OUTPUT LOG_MEPINTA_NO_OUTPUT
 #define LOG_CRITICAL LOG_MEPINTA_CRITICAL

@@ -1,16 +1,20 @@
 #!/usr/bin/python
-import shedskin
 import sys
 import subprocess
-from deployment_config import deployment_config
 import os
+
+try:
+  import shedskin
+except Exception as e:
+  sys.stderr.write('You need Shedskin installed in your Python path. Check http://code.google.com/p/shedskin/.\n')
+  raise e
 
 def generateCodeAndBuild():
   #===============================================================================
   # Parameters
   #===============================================================================
 
-  backend_path = os.path.join(deployment_config().mepinta_source_path, 'core/pipeline_backend/pipeline_backend_c_and_cpp')
+  backend_path = '../shedskin_builtin_lib'
   python_module = 'pipeline_lo_facade'
 
   # First generate the CPP code

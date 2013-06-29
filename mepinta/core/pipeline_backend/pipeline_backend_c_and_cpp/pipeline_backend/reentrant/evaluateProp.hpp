@@ -1,7 +1,7 @@
 #ifndef __PIPELINE_BACKEND_REENTRANT_EVALUATEPROP_HPP
 #define __PIPELINE_BACKEND_REENTRANT_EVALUATEPROP_HPP
 
-#include "pipeline_backend/implementation/config.h"
+#include "pipeline_backend_implementation/config.h"
 
 using namespace __shedskin__;
 

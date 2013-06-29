@@ -22,7 +22,7 @@
 #include "mepinta/pipeline/lo/pipeline_data/data_model.hpp"
 
 //MANUALLY EDITED:
-#include "pipeline_backend/implementation/args_management.h"
+#include "pipeline_backend_implementation/args_management.h"
 
 namespace __pipeline_backend__ {
 namespace __args_management__ {

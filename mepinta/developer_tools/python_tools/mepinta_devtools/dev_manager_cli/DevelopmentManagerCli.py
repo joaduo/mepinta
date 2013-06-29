@@ -30,13 +30,13 @@ class DevelopmentManagerCli(FrameworkBase):
   def createShedskinProject(self, proj):
     pass
 
-  def run(self, deployment_path):
-    dev_deployment_path = joinPath(deployment_path, 'dev')
-    self.deployDevelopmentProjects(dev_deployment_path)
+  def run(self, mepinta_source_path, deployment_path):
+    self.deployDevelopmentProjects(mepinta_source_path, deployment_path)
 
-  def deployDevelopmentProjects(self, dev_deployment_path):
+  def deployDevelopmentProjects(self, mepinta_source_path, deployment_path):
+    dev_deployment_path = joinPath(deployment_path, 'dev')
     shedskin_project_path = joinPath(dev_deployment_path, 'build_shedksin_module')
-    self.shedskin_project_creator.createShedskinProject(shedskin_project_path)
+    self.shedskin_project_creator.createShedskinProject(mepinta_source_path, deployment_path, shedskin_project_path)
     #deploy shedskin
     #mepinta libraries projects
     #plugins projects

@@ -22,7 +22,7 @@
 #include "mepinta/pipeline/lo/pipeline_data/hidden_data_types.hpp"
 
 //MANUALLY EDITED:
-#include "pipeline_backend/implementation/log.h"
+#include "pipeline_backend_implementation/log.h"
 
 #include <string>
 

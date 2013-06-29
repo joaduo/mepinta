@@ -42,7 +42,7 @@ class DeploymentManager(FrameworkBase):
     return joinPath(os.path.dirname(__file__), 'scripts_repository')
 
   def copyScriptsTo(self, deployment_path):
-    scripts_names = ['mepinta_demo.py', 'mepinta_tests.py']
+    scripts_names = ['mepinta_demo.py', 'mepinta_tests.py', 'mepinta_dev.py']
     repo_path = self.__getScriptsRepoPath()
     self.file_manager.copyFiles(repo_path, deployment_path, scripts_names)
 

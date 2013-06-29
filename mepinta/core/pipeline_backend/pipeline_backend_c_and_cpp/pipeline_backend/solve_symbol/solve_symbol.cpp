@@ -20,7 +20,7 @@
 #include "pipeline_backend/solve_symbol/solve_symbol.hpp"
 
 //MANUALLY EDITED:
-#include "pipeline_backend/implementation/solve_symbol.h"
+#include "pipeline_backend_implementation/solve_symbol.h"
 
 /**
 Created on Sep 13, 2011

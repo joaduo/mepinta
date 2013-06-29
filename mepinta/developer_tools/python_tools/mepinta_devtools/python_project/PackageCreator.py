@@ -27,9 +27,16 @@ from common.path import joinPath, splitPath
 class PackageCreator(FrameworkBase):
   def __post_init__(self):
     self.module_creator = ModuleCreator(context=self.context)
+
   def validatePackagePath(self, type_, package_path):
     pass
+
+  def createSimple(self, path):
+    os.makedirs(path)
+    self.module_creator.create(joinPath(path, '__init__.py'))
+
   def create(self, path):
+    #TODO: review, this code is ugly
     if isinstance(path, list):
       full_path = joinPath(path)
       split_path = path
@@ -39,8 +46,7 @@ class PackageCreator(FrameworkBase):
     self.log.verbose('Creating package in: %r' % full_path)
     os.makedirs(full_path)
     for index in range(len(split_path) - 1):
-      init_file = joinPath(split_path[:len(split_path) - index] +
-                              ['__init__.py'])
+      init_file = joinPath(split_path[:len(split_path) - index], '__init__.py')
       self.log.debug('Checking %r' % (init_file))
       if os.access(init_file, os.R_OK):
         break
