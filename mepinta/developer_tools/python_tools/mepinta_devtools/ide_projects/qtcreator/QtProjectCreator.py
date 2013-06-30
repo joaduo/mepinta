@@ -18,16 +18,15 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with Mepinta. If not, see <http://www.gnu.org/licenses/>.
 '''
-from mepinta.context.MepintaContext import MepintaContext
+from common.abstract.FrameworkBase import FrameworkBase
 
-def getMepintaContext(backend_name='python'):
-  return MepintaContext(backend_name)
+class QtProjectCreator(FrameworkBase):
+  def createLibProject(self, project_path, translation_dict):
+    pass
 
 def testModule():
-  from common.log.debugPrint import debugPrint
-  debugPrint(getMepintaContext())
-  debugPrint(getMepintaContext('python'))
-  debugPrint(getMepintaContext('c_and_cpp'))
+  from getDefaultContext import getDefaultContext
+  context = getDefaultContext()
 
 if __name__ == "__main__":
   testModule()

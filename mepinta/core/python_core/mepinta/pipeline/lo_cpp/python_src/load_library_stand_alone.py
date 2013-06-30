@@ -42,7 +42,7 @@ def localLogInfo(msg):
 def localLogError(msg):
   sys.stderr.write(msg + '\n')
 
-def load_library_stand_alone(path, symbol):
+def loadLibraryStandAlone(path, symbol):
   handle = loadLibrary(path, symbol)
   if handle == None:
     localLogError("ERROR: Couldn't load the library at %r with symbol %r" % (path, symbol))
@@ -52,7 +52,7 @@ def load_library_stand_alone(path, symbol):
   return True
 
 def shedskin_load_library_stand_alone():
-  load_library_stand_alone("", "")
+  loadLibraryStandAlone("", "")
 
 if __name__ == "__main__":
   shedskin_load_library_stand_alone()

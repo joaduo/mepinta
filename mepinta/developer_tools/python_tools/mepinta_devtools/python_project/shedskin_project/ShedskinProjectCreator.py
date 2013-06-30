@@ -45,42 +45,41 @@ class ShedskinProjectCreator(FrameworkBase):
     for basename in files_to_link.splitlines():
       self.file_manager.symlink(joinPath(external_lib_includes_src, basename), joinPath(external_lib_includes_dst, basename), force)
 
-  def __linkPipelineAndPipelineLoFacade(self, mepinta_source_path, python_src_path, mepinta_package_path, force):
+  def __linkPipelineAndPipelineLoFacade(self, mepinta_source_path, python_src_path, force):
+    #Create the mepinta package (alone)
+    mepinta_package_path = joinPath(python_src_path, 'mepinta')
+    self.package_creator.createSimple(mepinta_package_path)
     #Link the pipeline package
     pipeline_pkg_src = joinPath(mepinta_source_path, 'core/python_core/mepinta/pipeline')
     pipeline_pkg_dst = joinPath(mepinta_package_path, 'pipeline')
     self.file_manager.symlink(pipeline_pkg_src, pipeline_pkg_dst, force)
     #Link pipeline_lo_facade.py so that its in the
-    #pipeline_lo_facade_src = joinPath(pipeline_pkg_dst, 'lo/pipeline_lo_facade.py')
     pipeline_lo_facade_dst = joinPath(python_src_path, 'pipeline_lo_facade.py')
     self.file_manager.symlink('mepinta/pipeline/lo/pipeline_lo_facade.py', pipeline_lo_facade_dst, force)
+
+  def __linkLoadLibraryStandAlone(self, mepinta_source_path, python_src_path, force):
+    load_library_dst = joinPath(python_src_path, 'load_library_stand_alone.py')
+    self.file_manager.symlink('mepinta/pipeline/lo_cpp/python_src/load_library_stand_alone.py', load_library_dst, force)
 
   def __copyScripts(self, python_src_path):
     #Copy scripts necessary for building the pipeline_lo_facade.so shedskin module
     repo_path = joinPath(os.path.dirname(__file__), 'scripts_repository')
-    scripts_names = ['build_shedksin_module.py', 'clean_shedskin_code.py']
+    scripts_names = os.listdir(repo_path)
     self.file_manager.copyFiles(repo_path, python_src_path, scripts_names)
-
-  def __copyDeploymentConfig(self, deployment_path, python_src_path):
-    #need deployment config to run scripts
-    file_name = 'deployment_config.py'
-    self.file_manager.copy(joinPath(deployment_path, file_name), joinPath(python_src_path, file_name))
 
   def createShedskinProject(self, mepinta_source_path, deployment_path, project_path, force=False):
     #Create the mepinta package
     python_src_path = joinPath(project_path, 'src')
     #Where all the python code goes
     self.file_manager.makedirs(python_src_path)
-    #Create the mepinta package (alone)
-    mepinta_package_path = joinPath(python_src_path, 'mepinta')
-    self.package_creator.createSimple(mepinta_package_path)
     #Link pipeline package and pipeline_lo_facade module
-    self.__linkPipelineAndPipelineLoFacade(mepinta_source_path, python_src_path, mepinta_package_path, force)
+    self.__linkPipelineAndPipelineLoFacade(mepinta_source_path, python_src_path, force)
     #Link pipeline_backend stuff
     self.__linkPipelineBackend(mepinta_source_path, project_path, force)
-    #Copy the scripts to generate the skedskin module
+    #Link the load_library_stand_alone
+    self.__linkLoadLibraryStandAlone(mepinta_source_path, python_src_path, force)
+    #Copy the scripts to generate the skedskin modules
     self.__copyScripts(python_src_path)
-
 
 def testModule():
   pass

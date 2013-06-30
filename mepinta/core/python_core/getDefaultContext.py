@@ -28,7 +28,7 @@ def setClassConfigs(context):
 
 called_once = False
 def getDefaultContext(log_level=LOG_INFO):
-  '''Creates a default context to reduce verbosity on start.'''
+  '''Creates a default context to reduce code verbosity for starting.'''
   global called_once
   if called_once:
     raise RuntimeError('You should call the default context only once. (in the main script)')

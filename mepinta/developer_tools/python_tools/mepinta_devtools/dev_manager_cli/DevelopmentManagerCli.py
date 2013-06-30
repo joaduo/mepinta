@@ -22,10 +22,12 @@ from common.abstract.FrameworkBase import FrameworkBase
 import argparse
 from mepinta_devtools.python_project.shedskin_project.ShedskinProjectCreator import ShedskinProjectCreator
 from common.path import joinPath
+from mepinta_devtools.ide_projects.FileManager import FileManager
 
 class DevelopmentManagerCli(FrameworkBase):
   def __post_init__(self):
     self.shedskin_project_creator = ShedskinProjectCreator(self.context)
+    self.file_manager = FileManager(self.context)
 
   def createShedskinProject(self, proj):
     pass
@@ -34,8 +36,8 @@ class DevelopmentManagerCli(FrameworkBase):
     self.deployDevelopmentProjects(mepinta_source_path, deployment_path)
 
   def deployDevelopmentProjects(self, mepinta_source_path, deployment_path):
-    dev_deployment_path = joinPath(deployment_path, 'dev')
-    shedskin_project_path = joinPath(dev_deployment_path, 'build_shedksin_module')
+    dev_deployment_path = joinPath(deployment_path, 'build')
+    shedskin_project_path = joinPath(dev_deployment_path, 'build_shedksin_modules')
     self.shedskin_project_creator.createShedskinProject(mepinta_source_path, deployment_path, shedskin_project_path)
     #deploy shedskin
     #mepinta libraries projects
@@ -43,6 +45,17 @@ class DevelopmentManagerCli(FrameworkBase):
     #create waf script for building
     #deploy libargs load stand alone
     #deploy mepinta project (with
+
+  def __createQtProjects(self, dev_deployment_path):
+    qt_projects_path = joinPath(dev_deployment_path, 'QtProjects')
+    backend_c_path = joinPath(qt_projects_path, 'backend/backend_api_c')
+    backend_cpp_path = joinPath(qt_projects_path, 'backend/backend_api_cpp')
+    for path in [qt_projects_path, backend_c_path, backend_cpp_path]:
+      self.file_manager.makedirs(path)
+
+
+  def __createQtBackendProjects(self):
+    pass
 
   def __getParser(self):
     parser = argparse.ArgumentParser(description='Mepinta Development Manager Command Line Interface.')

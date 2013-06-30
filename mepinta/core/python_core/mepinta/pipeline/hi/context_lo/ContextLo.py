@@ -23,7 +23,7 @@ from mepinta.pipeline.hi.FactoryLo import FactoryLo
 
 class ContextLo(FrameworkBase):
   def __post_init__(self):
-    self.wrapped = FactoryLo(context=self.context).get('ContextLo')()
+    self.wrapped = FactoryLo(context=self.context).getClass('ContextLo')()
   def __getLo(self):
     return self.wrapped
   def __hasattr(self, instance, name):

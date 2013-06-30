@@ -51,7 +51,7 @@ class HiBase(FrameworkBase):
   def _getWrappedClass(self, class_name=None, *a, **ad):
     if class_name == None:
       class_name = self.__class__.__name__
-    return self.factory_lo.get(class_name)
+    return self.factory_lo.getClass(class_name)
   def _getLo(self):
     return self.wrapped
   def _hasattr(self, instance, name):
