@@ -1,11 +1,8 @@
 #!/usr/bin/python
-from build_common import generateShedskinCppCode, compileShedskinModuleAndCopy
+from build_common import buildShedskinModule
 
 def build():
-  python_module = 'pipeline_lo_facade'
-  makefile = 'PipelineLoFacadeMakefile'
-  generateShedskinCppCode(python_module, makefile, 'PIPELINE_LO_FACADE_FLAGS')
-  compileShedskinModuleAndCopy(python_module, makefile)
+  buildShedskinModule('pipeline_lo_facade')
 
 if __name__ == '__main__':
   build()

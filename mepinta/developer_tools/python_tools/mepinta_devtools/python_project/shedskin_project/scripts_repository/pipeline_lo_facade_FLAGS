@@ -1,0 +1,3 @@
+CC=g++
+CCFLAGS=-O2 -march=native -Wno-deprecated -Wint-to-pointer-cast $(CPPFLAGS)
+LFLAGS=-lgc -lpcre $(LDFLAGS)

@@ -37,30 +37,34 @@ def copyShedskinModule(python_module):
       os.remove(dst_module_lib)
     shutil.copy(module_lib, dst_module_lib)
 
-def generateShedskinCppCode(python_module, makefile, flags_file, cmd_args=[]):
+def getMakefileName(python_module):
+  return '%s_Makefile' % python_module
+
+def generateShedskinCppCode(python_module, cmd_args=[]):
   # First generate the CPP code
   sys.argv.append('-e')
+  makefile = getMakefileName(python_module)
   sys.argv.extend(['-m', makefile])
   sys.argv.extend(['-L', '../shedskin_builtin_lib'])
-  sys.argv.extend(['-f', flags_file])
+  flags_file = '%s_FLAGS' % python_module
+  if os.path.exists(flags_file):
+    sys.argv.extend(['-f', flags_file])
   sys.argv.extend(cmd_args)
   sys.argv.append(python_module)
 
   #Run type analysis
   shedskin.main()
 
-def compileShedskinModuleAndCopy(python_module, makefile):
+def compileShedskinModuleAndCopy(python_module):
   # Now compile calling make
-  compile_module = True
-  #compile_module = False
-  if compile_module:
-    make = subprocess.Popen(['make', '--makefile=%s' % makefile])
-    make.wait()
-    #make.stdout
-  copy_module = True
-  #copy_module = False
-  if copy_module:
-    copyShedskinModule(python_module)
+  makefile = getMakefileName(python_module)
+  make = subprocess.Popen(['make', '--makefile=%s' % makefile])
+  make.wait()
+
+def buildShedskinModule(python_module):
+  generateShedskinCppCode(python_module)
+  compileShedskinModuleAndCopy(python_module)
+  copyShedskinModule(python_module)
 
 def testModule():
   pass
