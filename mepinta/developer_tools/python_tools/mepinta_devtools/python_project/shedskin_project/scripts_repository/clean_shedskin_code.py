@@ -18,10 +18,9 @@ def cleanShedskinCode():
     debugPrint('Deleting *.%s ...' % ext)
     for path in findFiles(os.path.dirname(__file__), '*.%s' % ext):
       os.remove(path)
-  try:
-    os.remove('Makefile')
-  except:
-    pass
+  for basename in os.listdir(path):
+    if basename.endswith('Makefile'):
+      os.remove(basename)
   debugPrint('Done')
 
 if __name__ == '__main__':

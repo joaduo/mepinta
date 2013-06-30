@@ -24,10 +24,7 @@ namespace __pipeline_backend__ {
 namespace __load_unload_library__ {
 namespace __load_unload_library__ {
 
-
-
 extern str *__name__;
-
 
 void __init();
 void *loadLibrary(str *path, str *symbol);

@@ -37,22 +37,22 @@ class FactoryLo(FrameworkBase):
     self.wrapped = self.getWrapped()()
 
   def __loadLibBackendApiC(self):
-      #sep = os.sep
-      #path = sep.join(__file__.split(sep)[:-3]) + "%slib%slibMepintaArgsApi.so" % (sep, sep)
-      lib_backend_api_c_path = joinPath(self.context.deployment_config, 'libbackend_api_c.so')
-      self.log.debug("Loading lib at %r." % lib_backend_api_c_path)
-      #Import the shedskin module to load the backend_c_api library
-      #The rest of the libraries will be loaded by that library.
-      try:
-        from mepinta.pipeline.lo_cpp.load_library_stand_alone import loadLibraryStandAlone
-      except ImportError as e:
-        msg = 'There may not exist mepinta.pipeline.lo_cpp.load_library_stand_alone (shedskin cpp compiled) module. (check how to build it if not there)'
-        msg += '\n ImportError:%s' % e
-        self.log.e(msg)
-        raise MepintaError(msg)
-      #Ok, we can load the
-      if not loadLibraryStandAlone(lib_backend_api_c_path, "global"):
-        raise MepintaError("Couldn't load mepinta_cpp core at %s." % lib_backend_api_c_path)
+    #Import the shedskin module to load the backend_c_api library
+    #The rest of the libraries will be loaded by that library.
+    try:
+      from mepinta.pipeline.lo_cpp.load_library_stand_alone import loadLibraryStandAlone
+    except ImportError as e:
+      msg = 'There may not exist mepinta.pipeline.lo_cpp.load_library_stand_alone (shedskin cpp compiled) module. (check how to build it if not there)'
+      msg += '\n ImportError:%s' % e
+      self.log.e(msg)
+      raise MepintaError(msg)
+
+    #Ok, we can load the libbackend_c_api.so (that will load all the other .so)
+    lib_backend_api_c_path = joinPath(self.context.deployment_config.deployment_path, 'build/libs/backend/libbackend_api_c.so')
+    self.log.debug("Loading lib at %r." % lib_backend_api_c_path)
+    #Check if we could load it
+    if not loadLibraryStandAlone(lib_backend_api_c_path, "global"):
+      raise MepintaError("Couldn't load mepinta_cpp core at %s." % lib_backend_api_c_path)
 
   def getWrapped(self):
     if self.context.backend_name == 'python':

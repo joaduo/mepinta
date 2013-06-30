@@ -24,10 +24,7 @@ namespace __pipeline_backend__ {
 namespace __solve_symbol__ {
 namespace __solve_symbol__ {
 
-
-
 extern str *__name__;
-
 
 void __init();
 void *solveSymbol(void *handle, str *__ss_namespace, str *symbol);

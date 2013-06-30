@@ -37,23 +37,24 @@ def copyShedskinModule(python_module):
       os.remove(dst_module_lib)
     shutil.copy(module_lib, dst_module_lib)
 
-def generateShedskinCppCode(python_module, builtin_path=None):
+def generateShedskinCppCode(python_module, makefile, flags_file, cmd_args=[]):
   # First generate the CPP code
-  sys.argv.append("-e")  # It's an extension module
-  if builtin_path:
-    sys.argv.append("-L")  # Add the backend library path to the builtin modules
-    sys.argv.append(builtin_path)
+  sys.argv.append('-e')
+  sys.argv.extend(['-m', makefile])
+  sys.argv.extend(['-L', '../shedskin_builtin_lib'])
+  sys.argv.extend(['-f', flags_file])
+  sys.argv.extend(cmd_args)
   sys.argv.append(python_module)
 
   #Run type analysis
   shedskin.main()
 
-def compileShedskinModuleAndCopy(python_module):
+def compileShedskinModuleAndCopy(python_module, makefile):
   # Now compile calling make
   compile_module = True
   #compile_module = False
   if compile_module:
-    make = subprocess.Popen('make')#, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    make = subprocess.Popen(['make', '--makefile=%s' % makefile])
     make.wait()
     #make.stdout
   copy_module = True

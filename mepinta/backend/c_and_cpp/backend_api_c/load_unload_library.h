@@ -28,7 +28,7 @@
 
 #include "config.h"
 
-#ifndef STAND_ALONE_LOAD_UNLOAD
+#ifndef LOAD_LIBRARY_STAND_ALONE
 //Export symbols in case of the libmepintacore.so use
 #ifdef __cplusplus
 extern "C" {

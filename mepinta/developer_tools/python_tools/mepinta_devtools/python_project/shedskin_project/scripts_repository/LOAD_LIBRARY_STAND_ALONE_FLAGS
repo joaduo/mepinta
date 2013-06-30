@@ -1,0 +1,3 @@
+CC=g++
+CCFLAGS=-O2 -march=native -Wno-deprecated -DLOAD_LIBRARY_STAND_ALONE $(CPPFLAGS)
+LFLAGS=-lgc -lpcre $(LDFLAGS)

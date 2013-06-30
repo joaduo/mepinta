@@ -33,7 +33,7 @@
 //(this version is only used to load libmepintacore.so, then the load and
 //unload of libraries is done through the libmepintacore.so (who exports
 //its symbols))
-#ifndef STAND_ALONE_LOAD_UNLOAD
+#ifndef LOAD_LIBRARY_STAND_ALONE
 #include "log.h"
 #else
 #include <stdio.h>
