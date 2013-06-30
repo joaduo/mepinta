@@ -32,13 +32,13 @@ class DevelopmentManagerCli(FrameworkBase):
   def createShedskinProject(self, proj):
     pass
 
-  def run(self, mepinta_source_path, deployment_path):
-    self.deployDevelopmentProjects(mepinta_source_path, deployment_path)
+  def run(self):
+    self.deployDevelopmentProjects()
 
-  def deployDevelopmentProjects(self, mepinta_source_path, deployment_path):
-    dev_deployment_path = joinPath(deployment_path, 'build')
+  def deployDevelopmentProjects(self):
+    dev_deployment_path = joinPath(self.context.deployment_config.deployment_path, 'build')
     shedskin_project_path = joinPath(dev_deployment_path, 'build_shedksin_modules')
-    self.shedskin_project_creator.createShedskinProject(mepinta_source_path, deployment_path, shedskin_project_path)
+    self.shedskin_project_creator.createShedskinProject(shedskin_project_path)
     #deploy shedskin
     #mepinta libraries projects
     #plugins projects
@@ -46,7 +46,10 @@ class DevelopmentManagerCli(FrameworkBase):
     #deploy libargs load stand alone
     #deploy mepinta project (with
 
-  def __createQtProjects(self, dev_deployment_path):
+  def __createCAndCppPluginsProjects(self, dev_deployment_path, plugins_set):
+    pass
+
+  def __createBackendQtProjects(self, dev_deployment_path):
     qt_projects_path = joinPath(dev_deployment_path, 'QtProjects')
     backend_c_path = joinPath(qt_projects_path, 'backend/backend_api_c')
     backend_cpp_path = joinPath(qt_projects_path, 'backend/backend_api_cpp')

@@ -67,7 +67,9 @@ class ShedskinProjectCreator(FrameworkBase):
     scripts_names = os.listdir(repo_path)
     self.file_manager.copyFiles(repo_path, python_src_path, scripts_names)
 
-  def createShedskinProject(self, mepinta_source_path, deployment_path, project_path, force=False):
+  def createShedskinProject(self, project_path, force=False):
+    #Get the code source path
+    mepinta_source_path = self.context.deployment_config.mepinta_source_path
     #Create the mepinta package
     python_src_path = joinPath(project_path, 'src')
     #Where all the python code goes
