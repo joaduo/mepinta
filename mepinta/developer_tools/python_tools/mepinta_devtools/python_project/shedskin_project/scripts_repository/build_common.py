@@ -26,8 +26,8 @@ import shutil
 try:
   import shedskin
 except Exception as e:
-  sys.stderr.write('You need Shedskin installed in your Python path. Check http://code.google.com/p/shedskin/.\n')
-  raise e
+  msg = 'You need Shedskin installed in your Python path. Check http://code.google.com/p/shedskin/.\n'
+  raise ImportError('%s  ImportError:%s' % (msg, e))
 
 def copyShedskinModule(python_module):
   module_lib = '%s.so' % python_module
@@ -55,7 +55,7 @@ def generateShedskinCppCode(python_module, cmd_args=[]):
   #Run type analysis
   shedskin.main()
 
-def compileShedskinModuleAndCopy(python_module):
+def compileShedskinModule(python_module):
   # Now compile calling make
   makefile = getMakefileName(python_module)
   make = subprocess.Popen(['make', '--makefile=%s' % makefile])
@@ -63,7 +63,7 @@ def compileShedskinModuleAndCopy(python_module):
 
 def buildShedskinModule(python_module):
   generateShedskinCppCode(python_module)
-  compileShedskinModuleAndCopy(python_module)
+  compileShedskinModule(python_module)
   copyShedskinModule(python_module)
 
 def testModule():
