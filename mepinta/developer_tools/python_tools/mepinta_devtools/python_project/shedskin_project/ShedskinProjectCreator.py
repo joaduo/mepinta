@@ -63,7 +63,7 @@ class ShedskinProjectCreator(FrameworkBase):
 
   def __copyScripts(self, python_src_path):
     #Copy scripts necessary for building the pipeline_lo_facade.so shedskin module
-    repo_path = joinPath(os.path.dirname(__file__), 'scripts_repository')
+    repo_path = joinPath(os.path.dirname(__file__), 'templates_repository')
     scripts_names = os.listdir(repo_path)
     self.file_manager.copyFiles(repo_path, python_src_path, scripts_names)
 

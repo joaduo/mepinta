@@ -19,9 +19,15 @@ You should have received a copy of the GNU General Public License
 along with Mepinta. If not, see <http://www.gnu.org/licenses/>.
 '''
 from common.abstract.FrameworkBase import FrameworkBase
+from mepinta_devtools.ide_projects.qtcreator.QtTemplatesUtil import QtTemplatesUtil
 
-class QtProjectCreator(FrameworkBase):
-  def createLibProject(self, project_path, translation_dict):
+class QtLibProjectPro(FrameworkBase):
+  def __post_init__(self):
+    self.qt_templates_util = QtTemplatesUtil(self.context)
+
+  def _getBaseTranslationDict(self):
+    pass
+  def getContent(self, lib_name, dest_dir, includes_path, cxx_flags):
     pass
 
 def testModule():

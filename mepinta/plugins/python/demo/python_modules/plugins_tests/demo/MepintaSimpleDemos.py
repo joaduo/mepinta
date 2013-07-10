@@ -38,7 +38,11 @@ class MepintaSimpleDemos(FrameworkBase):
     graphviz_str = graphviz_translator.translate(test_pline.getPipeline())
     path = './pipeline.dot'
     FileManager(self.context).saveTextFile(path, graphviz_str, overwrite=True)
-    CommandRunner(self.context).run('xdot %s' % path)
+    try:
+      CommandRunner(self.context).run('xdot %s' % path)
+    except OSError as e:
+      msg = 'The xdot command may not be in the command path. OSError: %s' % e
+      self.log.e(msg)
     os.remove(path)
 
   def evaluatePipelineAndPrint(self):

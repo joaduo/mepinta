@@ -19,33 +19,30 @@ You should have received a copy of the GNU General Public License
 along with Mepinta. If not, see <http://www.gnu.org/licenses/>.
 '''
 from common.abstract.FrameworkBase import FrameworkBase
-from mepinta_devtools.ide_projects.FileManager import FileManager
-from mepinta_devtools.templates.DictionaryBasedTranslator import DictionaryBasedTranslator
 from common.path import joinPath
+from mepinta_devtools.ide_projects.FileManager import FileManager
 import os
 
-class DeploymentManager(FrameworkBase):
+class QtTemplatesUtil(FrameworkBase):
   def __post_init__(self):
     self.file_manager = FileManager(self.context)
-
-  def __getConfigTemplate(self, template_name):
-    template_path = joinPath(self._getTemplatesRepoPath(), template_name)
-    template = self.file_manager.loadTextFile(template_path)
-    return template
-
-  def createDeploymentConfig(self, deployment_path, translation_dict, template_name='deployment_config.py', overwrite=False):
-    file_path = joinPath(deployment_path, 'deployment_config.py')
-    content = DictionaryBasedTranslator().getContent(self.__getConfigTemplate(template_name), translation_dict)
-    self.file_manager.saveTextFile(file_path, content, overwrite)
 
   def _getTemplatesRepoPath(self):
     return joinPath(os.path.dirname(__file__), 'templates_repository')
 
-  def copyScriptsTo(self, deployment_path):
-    scripts_names = ['mepinta_demo.py', 'mepinta_tests.py', 'mepinta_dev.py']
-    repo_path = self._getTemplatesRepoPath()
-    self.file_manager.copyFiles(repo_path, deployment_path, scripts_names)
+  def _getTemplateInRepo(self, templates_set, template_name):
+    file_path = joinPath(self._getTemplatesRepoPath(), templates_set, template_name)
+    fr = open(file_path, 'r')
+    file_text = fr.read()
+    fr.close()
+    return file_text
 
+  def _copyTemplatesInRepo(self, templates_set, templates_names, dst_dir_path):
+    templates_set_path = joinPath(self._getTemplatesRepoPath(), templates_set)
+    self.file_manager.copyFiles(templates_set_path, dst_dir_path, templates_names)
+
+  def createLibProject(self, project_path, translation_dict):
+    pass
 
 def testModule():
   from getDefaultContext import getDefaultContext
