@@ -19,19 +19,21 @@ You should have received a copy of the GNU General Public License
 along with Mepinta. If not, see <http://www.gnu.org/licenses/>.
 '''
 from common.abstract.SelfConfigBase import SelfConfigBase
-from common.abstract.InitStrategyBase import InitStrategyBase
+from common.abstract.PostInitStrategyBase import PostInitStrategyBase
 
 
-class FrameworkBase(InitStrategyBase, SelfConfigBase):
+class FrameworkBase(PostInitStrategyBase, SelfConfigBase):
   def __init__(self, context, *a, **ad):
     SelfConfigBase.__init__(self, context=context)
-    InitStrategyBase.__init__(self)
-    InitStrategyBase._initChildren(self, a, ad)
+    PostInitStrategyBase.__init__(self, context)
+    PostInitStrategyBase._initChildren(self, a, ad)
 
-if __name__ == '__main__':
+
+def smokeTestModule():
+  from common.log.debugPrint import debugPrint
   class ExtendedBase(FrameworkBase):
-    def __pre_init__(self, *a, **ad):
-      debugPrint('Pre init Extended Base')
+    def __post_init__(self, *a, **ad):
+      debugPrint('Post init Extended Base')
       pass
 
   class Foo(object):
@@ -39,11 +41,8 @@ if __name__ == '__main__':
 
   #class ConcreteClass(Foo, ExtendedBase):
   class ConcreteClass(ExtendedBase, Foo):
-    def __pre_init__(self):
-      debugPrint('Pre init Concrete')
-      self.pre_init_var = 10
     def __post_init__(self, value):
-      debugPrint('Post init concrete')
+      debugPrint('Post init Concrete')
       self.post_init_var = value
 
   from common.context.Context import Context
@@ -51,3 +50,5 @@ if __name__ == '__main__':
   cc = FrameworkBase(context=ctx)
   cc = ConcreteClass(context=ctx, value=1)
 
+if __name__ == '__main__':
+  smokeTestModule()
