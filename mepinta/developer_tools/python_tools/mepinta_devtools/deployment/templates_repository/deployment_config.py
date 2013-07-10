@@ -1,11 +1,13 @@
 # -*- coding: utf-8 -*-
+import os
 class deployment_config(object):
-  mepinta_source_path = '${mepinta_source_path}'
+  mepinta_source_path = '/home/jduo/001-Mepinta/git/mepinta/mepinta'
   eclipse_projects_path = '${eclipse_projects_path}'
   qt_projects_path = '${qt_projects_path}'
   libk3dsdk_path = '${libk3dsdk_path}'
   libgsigc2_path = '${libgsigc2_path}'
   libboost_unit_test_framework_path = '${libboost_unit_test_framework_path}'
+  deployment_path = os.path.dirname(__file__)
 
 def configurePythonPaths(create_context=True):
   import sys
@@ -15,4 +17,6 @@ def configurePythonPaths(create_context=True):
   PythonPathManager().appendAll(config.mepinta_source_path)
   from getDefaultContext import getDefaultContext
   if create_context:
-    return getDefaultContext()
+    context = getDefaultContext()
+    context.deployment_config = config
+    return context
