@@ -34,15 +34,13 @@ def getObjectModulePath(instace):
     module = __import__(instace.__class__.__module__, fromlist="dummy")
   return module.__file__
 
-def realPath(path, retry=True):
-  try:
-    return os.path.realpath(path)
-  except Exception as e:
-    if retry:
-      time.sleep(0.1)
+def realPath(path, retries=1, sleep=0.1):
+  for _ in range(retries + 1):
+    try:
       return os.path.realpath(path)
-    else:
-      raise e
+    except Exception as e:
+      time.sleep(sleep)
+  raise e
 
 def pathIsDir(path):
   return os.path.isdir(path)
@@ -52,12 +50,9 @@ def pathHead(path):
 
 def pathExists(path, write=False):
   if write and os.access(path, os.W_OK):
-    # self.log.debug("Exists: %r (writable)"%path)
     return True
   elif os.access(path, os.R_OK):
-    # self.log.debug("Exists: %r  (readable)"%path)
     return True
-  # self.log.debug("Doesn't exist: %r"%path)
   return False
 
 def splitPath(path, *path_list):
@@ -66,29 +61,28 @@ def splitPath(path, *path_list):
     for p in path:
       split_path += splitPath(p)
   else:
-    split_path += str(path).split(os.sep)
+    split_path += os.path.split(path)
   if len(path_list) > 0:
     split_path += splitPath(path_list)
   return split_path
 
 def joinPath(path, *path_list):
   if isinstance(path, list) or isinstance(path, tuple):
-    joint_path = os.sep.join(map(joinPath, path))
+    joint_path = os.path.join(*map(joinPath, path))
   else:
     joint_path = path
-  if len(path_list) > 1:
-    joint_path = joinPath(joint_path, joinPath(path_list))
-  elif len(path_list) == 1:
-    joint_path = os.sep.join((joint_path, joinPath(path_list[0])))
+  if len(path_list):
+    joint_path = os.path.join(joint_path, joinPath(path_list))
   return joint_path
 
-def conditionalPathJoin(str_list, split=False): #TODO: remove this?
-  if split:
-    return str_list
-  else:
-    return os.sep.join(str_list)
-
-if __name__ == "__main__":
+def smokeTestModule():
+  from common.log.debugPrint import debugPrint
+  debugPrint(joinPath('/path/to/file', 'some_path', ['some', 'other', 'path']))
   debugPrint(pathHead('/path/to/file'))
   debugPrint(pathIsDir('/home/jduo'))
   debugPrint(pathIsDir('/home/jduo/output.k3d'))
+
+if __name__ == "__main__":
+  smokeTestModule()
+
+

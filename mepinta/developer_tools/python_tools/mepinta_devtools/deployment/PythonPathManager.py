@@ -19,7 +19,7 @@ You should have received a copy of the GNU General Public License
 along with Mepinta. If not, see <http://www.gnu.org/licenses/>.
 '''
 import sys
-import os
+from common.path import joinPath
 
 class PythonPathManager(object):
   def getPythonRelativePathsDict(self):
@@ -43,7 +43,7 @@ class PythonPathManager(object):
       self.__appendPath(mepinta_source_path, path)
 
   def __appendPath(self, *args):
-    sys.path.append(os.sep.join(args))
+    sys.path.append(joinPath(args))
 
   def appendPluginsPath(self, mepinta_source_path, plugins_set='demo'):
     relative_paths = self.getPluginsRelativePathsDict()

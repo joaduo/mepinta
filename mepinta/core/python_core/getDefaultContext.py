@@ -21,14 +21,19 @@ along with Mepinta. If not, see <http://www.gnu.org/licenses/>.
 from pipeline_backend.logging.logging import LOG_INFO, LOG_DEBUG
 from mepinta.context.getMepintaContext import getMepintaContext
 
-def setClassConfigs(context):
+def setConfigs(context):
   from mepinta.pipelineview.graph.GraphTopologyManager import GraphTopologyManager
   non_cached = False
   context.setConfig('non_cached', non_cached, GraphTopologyManager)
+  class deployment_config(object):
+    mepinta_source_path = '/home/jduo/001-Mepinta/git/mepinta/mepinta'
+    deployment_path = None
+  context.deployment_config = deployment_config()
 
 called_once = False
 def getDefaultContext(log_level=LOG_INFO):
   '''Creates a default context to reduce code verbosity for starting.'''
+
   global called_once
   if called_once:
     raise RuntimeError('You should call the default context only once. (in the main script)')
@@ -36,7 +41,7 @@ def getDefaultContext(log_level=LOG_INFO):
     called_once = True
   context = getMepintaContext('python')
   context.log.setLevel(log_level)
-  setClassConfigs(context)
+  setConfigs(context)
   return context
 
 if __name__ == "__main__":

@@ -22,6 +22,7 @@ from common.abstract.FrameworkBase import FrameworkBase
 import os
 import shutil
 from common.path import joinPath
+import re
 
 class FileManager(FrameworkBase):
   def listDir(self, path):
@@ -44,6 +45,7 @@ class FileManager(FrameworkBase):
       return True
     self.log.debug("Doesn't exist %r" % path)
     return False
+
   def saveTextFile(self, path, content, overwrite):
     ''' '''
     self.log.debug('Writing %r with overwrite %s' % (path, overwrite))
@@ -51,21 +53,49 @@ class FileManager(FrameworkBase):
       target_file = open(path, 'w')
       target_file.write(content)
       target_file.close()
+
   def loadTextFile(self, path):
     fr = open(path, 'r')
     text = fr.read()
     fr.close()
     return text
+
   def copy(self, src, dst):
     shutil.copy(src, dst)
+
   def copyFiles(self, src_path, dst_path, file_names):
     for file_name in file_names:
       self.log.d('Copying %r to %r' % (joinPath(src_path, file_name), joinPath(dst_path, file_name)))
       self.copy(joinPath(src_path, file_name), joinPath(dst_path, file_name))
 
+  def findFilesSplit(self, directory, pattern, followlinks=True):
+    if isinstance(pattern, str):
+      pattern = re.compile(pattern)
+    for root, _, files in os.walk(directory, followlinks=True):
+      for basename in files:
+        if pattern.match(basename):
+          yield root, basename
+
+  def findFilesRelative(self, directory, pattern, followlinks=True):
+    for root, basename in self.findFilesSplit(directory, pattern, followlinks):
+      root = os.path.relpath(root, directory)
+      if os.path.relpath(root) == os.path.relpath(os.path.curdir):
+        yield basename
+      else:
+        yield joinPath(root, basename)
+
+  def findFiles(self, directory, pattern, followlinks=True):
+    for root, basename in self.findFilesSplit(directory, pattern, followlinks):
+      yield joinPath(root, basename)
+
 def testModule():
+  from common.log.debugPrint import debugPrint
   from getDefaultContext import getDefaultContext
   context = getDefaultContext()
+  fm = FileManager(context)
+  fs = fm.findFilesRelative('./eclipse/', '.*\.py')
+  for f in fs:
+    debugPrint(f)
 
 if __name__ == "__main__":
   testModule()

@@ -23,14 +23,14 @@ import sys
 import os
 import argparse
 
-class Deployment(object):
+
+class DeploymentCommand(object):
   '''
   This class creates a new deployment of a Mepinta software.
   This way code and installation are split to simplify maintenance.
   '''
   def __fake_post_init__(self, debug):
     from mepinta_devtools.deployment.DeploymentManager import DeploymentManager
-    from mepinta_devtools.ide_projects.FileManager import FileManager
     from pipeline_backend.logging.logging import LOG_INFO, LOG_DEBUG
     from getDefaultContext import getDefaultContext
     if debug:
@@ -38,30 +38,39 @@ class Deployment(object):
     else:
       self.context = getDefaultContext(LOG_INFO)
     self.log = self.context.log
-    self.file_mananger = FileManager(self.context)
-    self.deployment_manager = DeploymentManager(self.context)
+    self.deployment_manager = DeploymentManager(self.context,
+                                                mepinta_source_path=
+                                                self._getMepintaSrcPath())
 
-  def run(self):
+  def run(self, argv=None):
+    #get the parser and parse the sys.argv arguments
     parser = self._getArgsParser()
-    args = parser.parse_args()
+    args = parser.parse_args(argv)
 
+    #Add mepinta python paths to python
     self._configurePythonPaths(self._getMepintaSrcPath())
     self.__fake_post_init__(args.debug)
     self.log.debug('Successfully configured python paths.')
-
-    self._deployTo(args.deployment_path, args.force)
+    #Do the actual deployment
+    self.deployment_manager.deployTo(parser, args.deployment_path, args.force)
 
   def _getArgsParser(self):
     parser = argparse.ArgumentParser(description='Mepinta deployment script.')
-    parser.add_argument('deployment_path', action='store', help='Specify the path for a new Mepinta deployment. (will be created if not existent)')
-    parser.add_argument('--force', action='store_true', help='Force the deployment to an existing non-empty path.')
-    parser.add_argument('--debug', action='store_true', help='Enable debug output.')
+    help = 'Specify the path for a new Mepinta deployment. (will be created ' \
+            'if not existent)'
+    parser.add_argument('deployment_path', action='store', help=help)
+    help = 'Force the deployment to an existing non-empty path.'
+    parser.add_argument('--force', action='store_true', help=help)
+    help = 'Enable debug output.'
+    parser.add_argument('--debug', action='store_true', help=help)
     return parser
 
   def _configurePythonPaths(self, mepinta_source_path):
     '''
-    Configures sys.path to include all Mepinta's python code necessary for the deployment.
-    :param mepinta_source_path: Path where Mepinta code's was downloaded/extracted
+    Configures sys.path to include all Mepinta's python code necessary for
+    the deployment.
+    :param mepinta_source_path: Path where Mepinta code's was downloaded/
+                              extracted
     '''
     sys.path.append(mepinta_source_path + '/developer_tools/python_tools')
     from mepinta_devtools.deployment.PythonPathManager import PythonPathManager
@@ -71,34 +80,5 @@ class Deployment(object):
     mepinta_source_path = os.path.dirname(os.path.realpath(__file__))
     return mepinta_source_path
 
-  def _deployTo(self, deployment_path, force=False):
-    #Check if the path specified is outside mepinta source path
-    if not self._outOfSourcePath(deployment_path):
-      self.log.warning('Deployment path %r is inside Mepinta source path %r. (deployment path must reside outside Mepinta source path)' % (deployment_path, self._getMepintaSrcPath()))
-      return
-    #Check if the deployment already exists
-    if self._emptyDeploy(deployment_path) or force:
-      if not self.file_mananger.pathExists(deployment_path):
-        self.log.debug('Creating deployment path %r' % deployment_path)
-        os.makedirs(deployment_path)
-      self.log('Deploying mepinta to %r.' % deployment_path)
-      self.deployment_manager.createDeploymentConfig(deployment_path, self._getTranslationDict(), overwrite=force)
-      self.deployment_manager.copyScriptsTo(deployment_path)
-    else:
-      self.log.warning('Deployment is not empty use the --force flag to overwrite it.')
-      self._getArgsParser().print_help()
-
-  def _getTranslationDict(self):
-    translation_dict = {'mepinta_source_path':self._getMepintaSrcPath(),
-                        }
-    return translation_dict
-
-  def _outOfSourcePath(self, deployment_path):
-    common_prefix = os.path.commonprefix([self._getMepintaSrcPath(), os.path.realpath(deployment_path)])
-    return common_prefix != self._getMepintaSrcPath()
-
-  def _emptyDeploy(self, deployment_path):
-    return not self.file_mananger.pathExists(deployment_path) or self.file_mananger.listDir(deployment_path) == []
-
 if __name__ == '__main__':
-  Deployment().run()
+  DeploymentCommand().run()

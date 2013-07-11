@@ -24,6 +24,7 @@ import sys
 import imp
 from mepinta.testing.plugins_testing.processor.base import ProcessorPluginTestBase
 from mepinta.abstract.MepintaError import MepintaError
+from common.path import splitPath
 
 class ForkInotifyUtilsBase(FrameworkBase): #TODO: use composition
   def _reloadModule(self, module):
@@ -104,9 +105,8 @@ class ModuleAutoTesterBase(FrameworkBase): #TODO remove and use util
   def _getPackageAndMinorVersion(self, plugin_manifest):
     if plugin_manifest.__class__.__module__ == '__main__':
       import __main__
-      import os
-      dir_list = __main__.__file__.split(os.sep)
-      #start_index = dir_list.index('plugins')
+      dir_list = splitPath(__main__.__file__)
+      #TODO: fix this mess!
       start_index = -list(reversed(dir_list)).index('plugins') - 1
       package_str = '.'.join(dir_list[start_index:-1])
       manifest_file = dir_list[-1]
