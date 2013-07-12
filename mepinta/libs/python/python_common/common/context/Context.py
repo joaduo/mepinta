@@ -31,9 +31,9 @@ class arg_singleton_and_wrap(object):
   __instances = {}
   def __init__(self, class_):
     self.class_ = class_
-  def __call__(self, name):
+  def __call__(self, name, *args):
     if name not in self.__instances:
-      self.__instances[name] = ContextWrapper(self.class_(name))
+      self.__instances[name] = ContextWrapper(self.class_(name, *args))
     return self.__instances[name]
   def getCurrentContexts(self):
     return self.__instances

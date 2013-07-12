@@ -22,8 +22,10 @@ from common.abstract.FrameworkBase import FrameworkBase
 from mepinta.pipeline.hi.FactoryLo import FactoryLo
 
 class ContextLo(FrameworkBase):
-  def __post_init__(self):
-    self.wrapped = FactoryLo(context=self.context).getClass('ContextLo')()
+  def __post_init__(self, deployment_path):
+    flo = FactoryLo(context=self.context, deployment_path=deployment_path)
+    self.wrapped = flo.getClass('ContextLo')()
+
   def __getLo(self):
     return self.wrapped
   def __hasattr(self, instance, name):
@@ -45,4 +47,5 @@ if __name__ == '__main__':
   from common.context.Context import Context
   ctxp = Context('python')
   ctxlo = ContextLo(context=ctxp)
+  from common.log.debugPrint import debugPrint
   debugPrint(ctxlo)

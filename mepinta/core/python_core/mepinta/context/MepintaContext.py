@@ -25,12 +25,12 @@ from common.context.base import ContextBase
 
 @arg_singleton_and_wrap
 class MepintaContext(ContextBase):
-  def __init__(self, backend_name):
+  def __init__(self, backend_name, deployment_path):
     ContextBase.__init__(self, backend_name)
-    self.__initConfig()
-  def __initConfig(self):
+    self.__initConfig(deployment_path)
+  def __initConfig(self, deployment_path):
     context = self
-    context_lo = ContextLo(context=context)
+    context_lo = ContextLo(context=context, deployment_path=deployment_path)
     context.setConfig('context_lo', context_lo)
     logger = context.getConfig('log')
     logger.setOutput(LogOutput(context=context))

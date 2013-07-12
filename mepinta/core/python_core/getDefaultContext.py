@@ -21,18 +21,19 @@ along with Mepinta. If not, see <http://www.gnu.org/licenses/>.
 from pipeline_backend.logging.logging import LOG_INFO, LOG_DEBUG
 from mepinta.context.getMepintaContext import getMepintaContext
 
-def setConfigs(context):
+def setConfigs(context, deployment_path):
   from mepinta.pipelineview.graph.GraphTopologyManager import GraphTopologyManager
   non_cached = False
   context.setConfig('non_cached', non_cached, GraphTopologyManager)
   context.log.w('Using artificial deployment config!')
   class deployment_config(object):
-    mepinta_source_path = '/home/jduo/001-Mepinta/git/mepinta/mepinta'
-    deployment_path = '/home/jduo/001-Mepinta/EclipseProjects_GitRepo/mepinta_test_folders/deployment'
+    def __init__(self):
+      self.mepinta_source_path = '/home/jduo/001-Mepinta/git/mepinta/mepinta'
+      self.deployment_path = deployment_path
   context.deployment_config = deployment_config()
 
 called_once = False
-def getDefaultContext(log_level=LOG_INFO):
+def getDefaultContext(log_level=LOG_INFO, name='python'):
   '''Creates a default context to reduce code verbosity for starting.'''
 
   global called_once
@@ -40,10 +41,17 @@ def getDefaultContext(log_level=LOG_INFO):
     raise RuntimeError('You should call the default context only once. (in the main script)')
   else:
     called_once = True
-  context = getMepintaContext('python')
+  deployment_path = '/home/jduo/001-Mepinta/EclipseProjects_GitRepo/mepinta_test_folders/deployment2'
+  context = getMepintaContext(name, deployment_path)
   context.log.setLevel(log_level)
-  setConfigs(context)
+  setConfigs(context, deployment_path)
   return context
 
+def smokeTestModule():
+#  from mepinta.pipeline.hi.FactoryLo import FactoryLo
+  ctxc = getDefaultContext(name='c_and_cpp')
+  #debugPrint(ctxc.deployment_config.deployment_path)
+#  flo = FactoryLo(context)
+
 if __name__ == "__main__":
-  pass
+  smokeTestModule()

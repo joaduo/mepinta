@@ -61,10 +61,12 @@ def compileShedskinModule(python_module):
   make = subprocess.Popen(['make', '--makefile=%s' % makefile])
   make.wait()
 
-def buildShedskinModule(python_module):
-  generateShedskinCppCode(python_module)
-  compileShedskinModule(python_module)
-  copyShedskinModule(python_module)
+def buildShedskinModule(python_module, generate=True, build=True):
+  if generate:
+    generateShedskinCppCode(python_module)
+  if build:
+    compileShedskinModule(python_module)
+    copyShedskinModule(python_module)
 
 def testModule():
   pass

@@ -23,6 +23,8 @@
 
 //MANUALLY EDITED:
 #include "pipeline_backend_implementation/log.h"
+//Aliases //TODO: review why we can/cant logging.logError
+#define logError log_error
 
 #include <string>
 

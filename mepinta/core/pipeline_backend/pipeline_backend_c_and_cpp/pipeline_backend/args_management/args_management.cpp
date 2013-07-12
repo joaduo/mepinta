@@ -23,6 +23,8 @@
 
 //MANUALLY EDITED:
 #include "pipeline_backend_implementation/args_management.h"
+//Aliases //TODO: review why we can/cant logging.logError
+#define logError log_error
 
 namespace __pipeline_backend__ {
 namespace __args_management__ {

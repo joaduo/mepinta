@@ -71,9 +71,6 @@
   #endif
 #endif
 
-//Aliases
-#define logError log_error
-
 #ifdef __cplusplus
 extern "C" {
 #endif

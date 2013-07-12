@@ -54,7 +54,7 @@ class ShedskinProjectCreator(FrameworkBase):
   def __linkPipelineAndPipelineLoFacade(self, mepinta_source_path, python_src_path, overwrite):
     #Create the mepinta package (alone)
     package_path = joinPath(python_src_path, 'mepinta')
-    self.package_creator.createSimple(package_path)
+    self.package_creator.createSimple(package_path, overwrite)
     #Link the pipeline package
     package_src = joinPath(mepinta_source_path, 'core', 'python_core',
                            'mepinta', 'pipeline')

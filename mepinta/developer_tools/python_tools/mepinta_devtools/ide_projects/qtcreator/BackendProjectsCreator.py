@@ -32,33 +32,57 @@ class BackendProjectsCreator(FrameworkBase):
     mepinta_src = self.context.deployment_config.mepinta_source_path
     return joinPath(mepinta_src, 'backend', 'c_and_cpp')
 
-  def _getSourcesPri(self, template_name, api):
-    backends_path = self.__getBackendsPath()
+  def getSourcesPath(self, api):
+    return joinPath(self.__getBackendsPath(), 'backend_api_%s' % api)
+
+  def _getSourcesPri(self, template_name, api, sdk_path):
     #Build where the sources are
-    files_path = joinPath(backends_path, 'backend_api_%s' % api)
-    src_path = 'src/'
-    sources_paths = self.file_manager.findFilesRel(files_path, '.*\.%s$' % api)
-    sources = ' \\\n'.join([src_path + f for f in sources_paths])
-    headers_paths = self.file_manager.findFilesRel(files_path, r'.*\.h$')
-    headers = ' \\\n'.join([src_path + f for f in headers_paths])
+    sources_path = self.getSourcesPath(api)
+    prj_src_path = 'src/'
+    sources_paths = self.file_manager.findFilesRel(sources_path, '.*\.%s$' % api)
+    sources = ' \\\n'.join([prj_src_path + f for f in sources_paths])
+    headers_paths = self.file_manager.findFilesRel(sources_path, r'.*\.h$')
+    headers = ' \\\n'.join([prj_src_path + f for f in headers_paths])
+    includes = ' \\\n'.join([prj_src_path, sdk_path])
     sources_pri = self.templates.getTemplate(template_name,
                                              SOURCES=sources,
                                              HEADERS=headers,
-                                             INCLUDEPATH=src_path)
+                                             INCLUDEPATH=includes)
     return sources_pri
 
-  def _createSourcesPri(self, project_path, api, overwrite):
+  def _createSourcesPri(self, project_path, api, sdk_path, overwrite):
     file_name = 'sources.pri'
-    sources_pri = self._getSourcesPri(file_name, api)
+    sources_pri = self._getSourcesPri(file_name, api, sdk_path)
     file_path = joinPath(project_path, file_name)
     self.file_manager.saveTextFile(file_path, sources_pri, overwrite)
 
-  def createProject(self, project_path, api, overwrite=False):
-    scripts_names = ['backend_api_%s.pro' % api]
-    repo_subpath = 'backend_api_%s' % api
-    self.templates.copyScripts(repo_subpath, project_path, scripts_names)
-    self._createSourcesPri(project_path, api, overwrite)
+  def _createDirsLinkLib(self, project_path, api, libs_path, overwrite):
+    #Create the src/ link
+    src = self.getSourcesPath(api)
+    dst = joinPath(project_path, 'src')
+    self.file_manager.symlink(src, dst, overwrite)
+    #create the built_objects/ dir
+    built_path = joinPath(project_path, 'built_objects')
+    self.file_manager.mkdir(built_path, overwrite)
 
+  def _createProjectPro(self, project_path, api, libs_path, overwrite):
+    target = 'backend_api_%s' % api
+    pro_text = self.templates.getTemplate('mepinta_lib.pro',
+                                          TARGET=target,
+                                          DESTDIR=libs_path)
+    path = joinPath(project_path, '%s.pro' % target)
+    self.file_manager.saveTextFile(path, pro_text, overwrite)
+    build_script = 'build_library.py'
+    build_text = self.templates.getTemplate(build_script,
+                                            TARGET=target)
+    script_path = joinPath(project_path, build_script)
+    self.file_manager.saveTextFile(script_path, build_text, overwrite)
+
+
+  def createProject(self, project_path, api, sdk_path, libs_path, overwrite=False):
+    self._createProjectPro(project_path, api, libs_path, overwrite)
+    self._createSourcesPri(project_path, api, sdk_path, overwrite)
+    self._createDirsLinkLib(project_path, api, libs_path, overwrite)
 
 def smokeTestModule():
   from common.log.debugPrint import debugPrint
@@ -68,7 +92,7 @@ def smokeTestModule():
 #  api = 'c'
   pc = BackendProjectsCreator(context)
 #  pc.createProject(project_path, api)
-  debugPrint(pc._getSourcesPri('sources.pri', 'cpp'))
+  debugPrint(pc._getSourcesPri('sources.pri', 'cpp', 'some/mepintasdk'))
 
 if __name__ == "__main__":
   smokeTestModule()

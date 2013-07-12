@@ -27,17 +27,21 @@ import re
 class FileManager(FrameworkBase):
   def listDir(self, path):
     return os.listdir(path)
+
   def symlink(self, src, dst, force=False):
     if self.pathExists(dst) and force:
       os.remove(dst)
     self.log.debug('linking %r to %r' % (dst, src))
     os.symlink(src, dst)
+
   def mkdir(self, path, ignore_existing=False):
     if not (ignore_existing and os.path.exists(path) and os.path.isdir(path)):
       os.mkdir(path)
+
   def makedirs(self, path, ignore_existing=False):
     if not (ignore_existing and os.path.exists(path) and os.path.isdir(path)):
       os.makedirs(path)
+
   def pathExists(self, path, package=False):
     if os.access(path, os.W_OK):
       if package and not os.access("%s/__init__.py" % path, os.W_OK):

@@ -20,22 +20,21 @@ along with Mepinta. If not, see <http://www.gnu.org/licenses/>.
 '''
 from common.abstract.FrameworkBase import FrameworkBase
 from mepinta_devtools.templates.DictionaryBasedTranslator import DictionaryBasedTranslator
+from mepinta_devtools.ide_projects.FileManager import FileManager
 
 class ModuleCreator(FrameworkBase):
-  def getContents(self, template, translation_dict):
+  def __post_init__(self):
+    self.file_manager = FileManager(self.context)
+
+  def getContent(self, template, translation_dict):
     if template != None:
       return DictionaryBasedTranslator(self.context).getContent(template, translation_dict)
     else:
       return ''
-  def create(self, path, template=None, translation_dict={}):
+
+  def create(self, path, template=None, translation_dict={}, overwrite=False):
     if not path.lower().endswith('.py'):
       path = '%s.py' % path
-    self.log.verbose('Creating module at %r' % (path))
-    file_contents = self.getContents(template, translation_dict)
-    f = open(path, "w")
-    if file_contents != "":
-      f.write(file_contents)
-    f.close()
-
-if __name__ == "__main__":
-  pass
+    self.log.d('Creating module at %r' % (path))
+    module_content = self.getContent(template, translation_dict)
+    self.file_manager.saveTextFile(path, module_content, overwrite)

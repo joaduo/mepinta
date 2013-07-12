@@ -33,32 +33,39 @@ def unwrapLo(wrapper): #TODO: take this out of here?
 
 @context_singleton
 class FactoryLo(FrameworkBase):
-  def __post_init__(self):
+  def __post_init__(self, deployment_path):
+    self.__deployment_path = deployment_path
     self.wrapped = self.getWrapped()()
 
-  def __loadLibBackendApiC(self):
+  def __getLoadLibraryStandAlone(self):
     #Import the shedskin module to load the backend_c_api library
     #The rest of the libraries will be loaded by that library.
     try:
       from mepinta.pipeline.lo_cpp.load_library_stand_alone import loadLibraryStandAlone
     except ImportError as e:
-      msg = 'There may not exist mepinta.pipeline.lo_cpp.load_library_stand_alone (shedskin cpp compiled) module. (check how to build it if not there)'
+      msg = 'There may not exist mepinta.pipeline.lo_cpp.load_library_stand_alone '\
+        '(shedskin cpp compiled) module. (check how to build it if not there)'
       msg += '\n ImportError:%s' % e
       self.log.e(msg)
       raise MepintaError(msg)
+    return loadLibraryStandAlone
 
+  def __loadLibsBackend(self):
+    load_library = self.__getLoadLibraryStandAlone()
     #Ok, we can load the libbackend_c_api.so (that will load all the other .so)
-    lib_backend_api_c_path = joinPath(self.context.deployment_config.deployment_path, 'build/libs/backend/libbackend_api_c.so')
-    self.log.debug("Loading lib at %r." % lib_backend_api_c_path)
-    #Check if we could load it
-    if not loadLibraryStandAlone(lib_backend_api_c_path, "global"):
-      raise MepintaError("Couldn't load mepinta_cpp core at %s." % lib_backend_api_c_path)
+    for api in ('c', 'cpp'):
+      lib_name = 'libbackend_api_%s.so' % api
+      lib_path = joinPath(self.__deployment_path, 'build', 'libs', lib_name)
+      self.log.debug("Loading lib at %r." % lib_path)
+      #Check if we could load it
+      if not load_library(lib_path, "global"):
+        raise MepintaError("Couldn't load mepinta_cpp core at %s." % lib_path)
 
   def getWrapped(self):
     if self.context.backend_name == 'python':
       from mepinta.pipeline.lo.pipeline_lo_facade import FactoryLo as WrappedClass
     elif self.context.backend_name == 'c_and_cpp':
-      self.__loadLibBackendApiC()
+      self.__loadLibsBackend()
       try:
         from mepinta.pipeline.lo_cpp.pipeline_lo_facade import FactoryLo as WrappedClass
       except ImportError as e:
@@ -81,13 +88,12 @@ class FactoryLo(FrameworkBase):
     return self.getClass(class_name)(context_lo=unwrapLo(context.context_lo))
 
 if __name__ == '__main__':
+  from getDefaultContext import getDefaultContext
   from common.log.debugPrint import debugPrint
-  from common.context.Context import Context
-  ctxp = Context('python')
-  ctxc = Context('c_and_cpp')
-  flo = FactoryLo(context=ctxp)
+  context = getDefaultContext(name='python')
+  flo = FactoryLo(context, deployment_path=None)
   pline = flo.getClass('Pipeline')
   debugPrint(pline())
   debugPrint(flo.context)
-  debugPrint(ctxp)
-  flo = FactoryLo(context=ctxc)
+  debugPrint(context)
+

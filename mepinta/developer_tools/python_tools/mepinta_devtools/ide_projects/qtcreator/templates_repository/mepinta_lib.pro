@@ -1,7 +1,4 @@
 #-------------------------------------------------
-#
-#
-#
 #-------------------------------------------------
 
 QT -= core gui
@@ -9,12 +6,11 @@ QT -= core gui
 TARGET = ${TARGET}
 TEMPLATE = lib
 
-OBJECTS_DIR = ${OBJECTS_DIR}
-DESTDIR = ${DESTDIR}
+OBJECTS_DIR=built_objects/
+DESTDIR=${DESTDIR}
 
-#HEADERS +=
+INCLUDEPATH += src/
 
-#INCLUDEPATH +=
- 
-#CXXFLAGS+=
+CFLAGS+=-c -fmessage-length=0 -fPIC -fvisibility=hidden -shared
 
+include( sources.pri )

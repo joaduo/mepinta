@@ -30,14 +30,15 @@ class PackageCreator(FrameworkBase):
     self.module_creator = ModuleCreator(context=self.context)
     self.file_manager = FileManager(self.context)
 
-  def validatePackagePath(self, type_, package_path):
-    pass
+#  def validatePackagePath(self, type_, package_path):
+#    pass
 
-  def createSimple(self, path):
-    self.file_manager.mkdir(path)
-    self.module_creator.create(joinPath(path, '__init__.py'))
+  def createSimple(self, path, overwrite=False):
+    self.file_manager.mkdir(path, overwrite)
+    self.module_creator.create(joinPath(path, '__init__.py'),
+                               overwrite=overwrite)
 
-  def create(self, path):
+  def create(self, path): #TODO overwrite=False
     #TODO: review, this code is ugly
     if isinstance(path, list):
       full_path = joinPath(path)
