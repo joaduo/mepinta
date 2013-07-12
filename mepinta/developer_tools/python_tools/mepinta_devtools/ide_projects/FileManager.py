@@ -32,10 +32,12 @@ class FileManager(FrameworkBase):
       os.remove(dst)
     self.log.debug('linking %r to %r' % (dst, src))
     os.symlink(src, dst)
-  def mkdir(self, path):
-    os.mkdir(path)
-  def makedirs(self, path):
-    os.makedirs(path)
+  def mkdir(self, path, ignore_existing=False):
+    if not (ignore_existing and os.path.exists(path) and os.path.isdir(path)):
+      os.mkdir(path)
+  def makedirs(self, path, ignore_existing=False):
+    if not (ignore_existing and os.path.exists(path) and os.path.isdir(path)):
+      os.makedirs(path)
   def pathExists(self, path, package=False):
     if os.access(path, os.W_OK):
       if package and not os.access("%s/__init__.py" % path, os.W_OK):
@@ -76,10 +78,10 @@ class FileManager(FrameworkBase):
         if pattern.match(basename):
           yield root, basename
 
-  def findFilesRelative(self, directory, pattern, followlinks=True):
+  def findFilesRel(self, directory, pattern, followlinks=True):
     for root, basename in self.findFilesSplit(directory, pattern, followlinks):
       root = os.path.relpath(root, directory)
-      if os.path.relpath(root) == os.path.relpath(os.path.curdir):
+      if os.path.realpath(root) == os.path.realpath(os.path.curdir):
         yield basename
       else:
         yield joinPath(root, basename)
@@ -93,7 +95,7 @@ def testModule():
   from getDefaultContext import getDefaultContext
   context = getDefaultContext()
   fm = FileManager(context)
-  fs = fm.findFilesRelative('./eclipse/', '.*\.py')
+  fs = fm.findFilesRel('./eclipse/', '.*\.py')
   for f in fs:
     debugPrint(f)
 

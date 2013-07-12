@@ -23,16 +23,18 @@ from common.abstract.FrameworkBase import FrameworkBase
 from ModuleCreator import ModuleCreator
 import os
 from common.path import joinPath, splitPath
+from mepinta_devtools.ide_projects.FileManager import FileManager
 
 class PackageCreator(FrameworkBase):
   def __post_init__(self):
     self.module_creator = ModuleCreator(context=self.context)
+    self.file_manager = FileManager(self.context)
 
   def validatePackagePath(self, type_, package_path):
     pass
 
   def createSimple(self, path):
-    os.makedirs(path)
+    self.file_manager.mkdir(path)
     self.module_creator.create(joinPath(path, '__init__.py'))
 
   def create(self, path):

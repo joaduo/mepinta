@@ -23,7 +23,7 @@ from mepinta_devtools.ide_projects.qtcreator.QtTemplateManager import QtTemplate
 from mepinta_devtools.ide_projects.FileManager import FileManager
 from common.path import joinPath
 
-class BackendCandCppCreator(FrameworkBase):
+class BackendProjectsCreator(FrameworkBase):
   def __post_init__(self):
     self.templates = QtTemplateManager(self.context)
     self.file_manager = FileManager(self.context)
@@ -37,14 +37,14 @@ class BackendCandCppCreator(FrameworkBase):
     #Build where the sources are
     files_path = joinPath(backends_path, 'backend_api_%s' % api)
     src_path = 'src/'
-    sources_paths = self.file_manager.findFiles(files_path, '.*\.%s$' % api)
-    sources = '\\\n'.join([src_path + f for f in sources_paths])
-    headers_paths = self.file_manager.findFiles(files_path, r'.*\.h$')
-    headers = '\\\n'.join([src_path + f for f in headers_paths])
+    sources_paths = self.file_manager.findFilesRel(files_path, '.*\.%s$' % api)
+    sources = ' \\\n'.join([src_path + f for f in sources_paths])
+    headers_paths = self.file_manager.findFilesRel(files_path, r'.*\.h$')
+    headers = ' \\\n'.join([src_path + f for f in headers_paths])
     sources_pri = self.templates.getTemplate(template_name,
                                              SOURCES=sources,
                                              HEADERS=headers,
-                                             INCLUDEPATH='')
+                                             INCLUDEPATH=src_path)
     return sources_pri
 
   def _createSourcesPri(self, project_path, api, overwrite):
@@ -53,7 +53,7 @@ class BackendCandCppCreator(FrameworkBase):
     file_path = joinPath(project_path, file_name)
     self.file_manager.saveTextFile(file_path, sources_pri, overwrite)
 
-  def createBackendProject(self, project_path, api, overwrite=False):
+  def createProject(self, project_path, api, overwrite=False):
     scripts_names = ['backend_api_%s.pro' % api]
     repo_subpath = 'backend_api_%s' % api
     self.templates.copyScripts(repo_subpath, project_path, scripts_names)
@@ -66,9 +66,9 @@ def smokeTestModule():
   context = getDefaultContext()
 #  project_path = '/home/jduo/001-Mepinta/EclipseProjects_GitRepo/mepinta_test_folders/deployment/build/backend'
 #  api = 'c'
-  pc = BackendCandCppCreator(context)
-#  pc.createBackendProject(project_path, api)
-  debugPrint(pc._getSourcesPri('sources.pri', 'c'))
+  pc = BackendProjectsCreator(context)
+#  pc.createProject(project_path, api)
+  debugPrint(pc._getSourcesPri('sources.pri', 'cpp'))
 
 if __name__ == "__main__":
   smokeTestModule()

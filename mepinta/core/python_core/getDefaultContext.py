@@ -25,9 +25,10 @@ def setConfigs(context):
   from mepinta.pipelineview.graph.GraphTopologyManager import GraphTopologyManager
   non_cached = False
   context.setConfig('non_cached', non_cached, GraphTopologyManager)
+  context.log.w('Using artificial deployment config!')
   class deployment_config(object):
     mepinta_source_path = '/home/jduo/001-Mepinta/git/mepinta/mepinta'
-    deployment_path = None
+    deployment_path = '/home/jduo/001-Mepinta/EclipseProjects_GitRepo/mepinta_test_folders/deployment'
   context.deployment_config = deployment_config()
 
 called_once = False
