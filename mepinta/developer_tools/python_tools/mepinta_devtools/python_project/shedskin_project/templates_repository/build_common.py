@@ -62,6 +62,7 @@ def compileShedskinModule(python_module):
   make.wait()
 
 def buildShedskinModule(python_module, generate=True, build=True):
+  os.chdir(os.path.dirname(__file__))
   if generate:
     generateShedskinCppCode(python_module)
   if build:

@@ -75,14 +75,17 @@ class BackendProjectsCreator(FrameworkBase):
     build_script = 'build_library.py'
     build_text = self.templates.getTemplate(build_script,
                                             TARGET=target)
-    script_path = joinPath(project_path, build_script)
-    self.file_manager.saveTextFile(script_path, build_text, overwrite)
+    build_script = joinPath(project_path, build_script)
+    self.file_manager.saveTextFile(build_script, build_text, overwrite)
+    return build_script
 
 
   def createProject(self, project_path, api, sdk_path, libs_path, overwrite=False):
-    self._createProjectPro(project_path, api, libs_path, overwrite)
+    build_script = self._createProjectPro(project_path, api, libs_path,
+                                          overwrite)
     self._createSourcesPri(project_path, api, sdk_path, overwrite)
     self._createDirsLinkLib(project_path, api, libs_path, overwrite)
+    return build_script
 
 def smokeTestModule():
   from common.log.debugPrint import debugPrint

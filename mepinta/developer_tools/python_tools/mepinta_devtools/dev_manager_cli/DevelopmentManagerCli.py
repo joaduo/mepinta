@@ -27,6 +27,7 @@ from mepinta.abstract.MepintaError import MepintaError
 import os
 import argparse
 from mepinta_devtools.ide_projects.generic.MepintaSdkCreator import MepintaSdkCreator
+from mepinta_devtools.templates.TemplateManager import TemplateManager
 
 class DevelopmentManagerCli(FrameworkBase):
   def __post_init__(self):
@@ -34,18 +35,24 @@ class DevelopmentManagerCli(FrameworkBase):
     self.backend_projects_creator = BackendProjectsCreator(self.context)
     self.mepinta_sdk_creator = MepintaSdkCreator(self.context)
     self.file_manager = FileManager(self.context)
+    self.templates = TemplateManager(self.context, path_ref=__file__)
 
   def _deployBackendProjects(self, sdk_path, libs_path, overwrite):
+    build_scripts = []
     projects_path = joinPath(self._getQtProjectsPath(), 'backend')
+    creator = self.backend_projects_creator
     for api in ('c', 'cpp'):
       backend_path = joinPath(projects_path, 'backend_api_%s' % api)
       self.file_manager.makedirs(backend_path, overwrite)
-      self.backend_projects_creator.createProject(backend_path, api, sdk_path,
-                                                  libs_path, overwrite)
+      script = creator.createProject(backend_path, api, sdk_path, libs_path,
+                                     overwrite)
+      build_scripts.append(script)
+    return build_scripts
 
   def _deployBuildShedskinModules(self, overwrite):
     project_path = joinPath(self._getDevPath(), 'build_shedksin_modules')
-    self.shedskin_project_creator.createShedskinProject(project_path, overwrite)
+    creator = self.shedskin_project_creator
+    return creator.createShedskinProject(project_path, overwrite)
 
   def _deploySdk(self, overwrite):
     sdk_path = joinPath(self._getDevPath(), 'sdk', 'c_and_cpp')
@@ -61,17 +68,36 @@ class DevelopmentManagerCli(FrameworkBase):
   def run(self):
     overwrite = True
 #    overwrite = False
+    build_scripts = []
     self._testDeploymentSanity(overwrite)
-    self._deployBuildShedskinModules(overwrite)
+    build_scripts += self._deployBuildShedskinModules(overwrite)
     sdk_path = self._deploySdk(overwrite)
     libs_path = self._delpoyLibsPath(overwrite)
-    self._deployBackendProjects(sdk_path, libs_path, overwrite)
+    build_scripts += self._deployBackendProjects(sdk_path, libs_path, overwrite)
+    self._createMakeFile(build_scripts, overwrite)
     #deploy shedskin
     #mepinta libraries projects
     #plugins projects
     #create waf script for building
     #deploy libargs load stand alone
     #deploy mepinta project (with
+
+  def _createMakeFile(self, build_scripts, overwrite):
+    dependencies = ''
+    build_str = ''
+    for i, script in enumerate(build_scripts):
+      if script.endswith('.py'):
+        build_str += 'script%s:\n\tpython %s\n\n' % (i, script)
+      else:
+        build_str += 'script%s:\n\t%s\n\n' % (i, script)
+      dependencies += 'script%s ' % i
+    file_name = 'Makefile'
+    content = self.templates.getTemplate(file_name,
+                                         DEPENDENCIES=dependencies,
+                                         BUILD_SCRIPTS=build_str)
+    path = joinPath(self._getDevPath(), file_name)
+    self.file_manager.saveTextFile(path, content, overwrite)
+
 
   def _testDeploymentSanity(self, overwrite):
     path = self.context.deployment_config.deployment_path

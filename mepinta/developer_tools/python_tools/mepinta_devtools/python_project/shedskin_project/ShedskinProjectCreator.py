@@ -76,6 +76,10 @@ class ShedskinProjectCreator(FrameworkBase):
     repo_path = joinPath(os.path.dirname(__file__), 'templates_repository')
     scripts_names = os.listdir(repo_path)
     self.file_manager.copyFiles(repo_path, python_src_path, scripts_names)
+    build_scripts = [s for s in scripts_names if 'build' in s and
+                                                  not 'common' in s]
+    build_scripts = [joinPath(python_src_path, s) for s in build_scripts]
+    return build_scripts
 
   def createShedskinProject(self, project_path, overwrite=False):
     #Get the code source path
@@ -91,7 +95,9 @@ class ShedskinProjectCreator(FrameworkBase):
     #Link the load_library_stand_alone
     self.__linkLoadLibraryStandAlone(mepinta_source_path, python_src_path, overwrite)
     #Copy the scripts to generate the skedskin modules
-    self.__copyScripts(python_src_path)
+    build_scripts = self.__copyScripts(python_src_path)
+    #return the build scripts
+    return build_scripts
 
 def testModule():
   pass
