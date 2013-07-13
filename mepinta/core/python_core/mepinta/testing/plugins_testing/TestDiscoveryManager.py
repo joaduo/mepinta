@@ -26,6 +26,7 @@ class TestDiscoveryManager(FrameworkObject): #Cannot be FrameworkBase because co
   def __getPluginsTestDir(self):
     import plugins_tests.python as package
     return package.__path__[0]
+
   def runAllTests(self):
     test_suite = TestLoader().discover(start_dir=self.__getPluginsTestDir(), pattern='*.py', top_level_dir=self.__getPluginsTestDir())
     TextTestRunner().run(test_suite)

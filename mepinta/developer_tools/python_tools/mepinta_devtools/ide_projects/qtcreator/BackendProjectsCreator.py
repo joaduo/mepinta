@@ -27,10 +27,11 @@ class BackendProjectsCreator(FrameworkBase):
   def __post_init__(self):
     self.templates = QtTemplateManager(self.context)
     self.file_manager = FileManager(self.context)
+    self.__backend = 'c_and_cpp'
 
   def __getBackendsPath(self):
     mepinta_src = self.context.deployment_config.mepinta_source_path
-    return joinPath(mepinta_src, 'backend', 'c_and_cpp')
+    return joinPath(mepinta_src, 'backend', self.__backend)
 
   def getSourcesPath(self, api):
     return joinPath(self.__getBackendsPath(), 'backend_api_%s' % api)
@@ -86,6 +87,18 @@ class BackendProjectsCreator(FrameworkBase):
     self._createSourcesPri(project_path, api, sdk_path, overwrite)
     self._createDirsLinkLib(project_path, api, libs_path, overwrite)
     return build_script
+
+  def deployProjects(self, qt_projects_path, sdk_path, libs_path,
+                             overwrite):
+    build_scripts = []
+    projects_path = joinPath(qt_projects_path, 'backend')
+    for api in ('c', 'cpp'):
+      backend_path = joinPath(projects_path, 'backend_api_%s' % api)
+      self.file_manager.makedirs(backend_path, overwrite)
+      script = self.createProject(backend_path, api, sdk_path, libs_path,
+                                     overwrite)
+      build_scripts.append(script)
+    return build_scripts
 
 def smokeTestModule():
   from common.log.debugPrint import debugPrint

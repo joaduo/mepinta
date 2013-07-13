@@ -23,20 +23,17 @@ from common.path import joinPath
 
 class PythonPathManager(object):
   def getPythonRelativePathsDict(self):
-    relative_paths = {'mepinta':'core/python_core',
-                  'mepinta_devtools':'developer_tools/python_tools',
-                  'common':'libs/python/python_common',
-                  'pipeline_backend': 'core/pipeline_backend/pipeline_backend_python',
-                  }
-    return relative_paths
-
-  def getPluginsRelativePathsDict(self):
-    relative_paths = {'demo':'plugins/python/demo/python_modules'}
-    return relative_paths
+    paths = {'mepinta': joinPath('core', 'python_core'),
+            'mepinta_devtools':joinPath('developer_tools', 'python_tools'),
+            'common':joinPath('libs', 'python', 'python_common'),
+            'pipeline_backend':
+            joinPath('core', 'pipeline_backend', 'pipeline_backend_python'),
+            }
+    return paths
 
   def appendAll(self, mepinta_source_path):
     self.appendMepintaPaths(mepinta_source_path)
-    self.appendPluginsPath(mepinta_source_path)
+    self.appendPlugins(mepinta_source_path)
 
   def appendMepintaPaths(self, mepinta_source_path):
     for path in self.getPythonRelativePathsDict().values():
@@ -45,13 +42,25 @@ class PythonPathManager(object):
   def __appendPath(self, *args):
     sys.path.append(joinPath(args))
 
-  def appendPluginsPath(self, mepinta_source_path, plugins_set='demo'):
-    relative_paths = self.getPluginsRelativePathsDict()
-    self.__appendPath(mepinta_source_path, relative_paths[plugins_set])
+  def __removePath(self, *args):
+    sys.path.remove(joinPath(args))
 
-def testModule():
-  from getDefaultContext import getDefaultContext
-  context = getDefaultContext()
+  def appendPlugins(self, mepinta_source_path, plugins_set='demo',
+                        backend='python'):
+    rel_path = joinPath('plugins', backend, plugins_set, 'python_modules')
+    self.__appendPath(mepinta_source_path, rel_path)
+
+  def removePlugins(self, mepinta_source_path, plugins_set='demo',
+                        backend='python'):
+    rel_path = joinPath('plugins', backend, plugins_set, 'python_modules')
+    self.__removePath(mepinta_source_path, rel_path)
+
+def smokeTestModule():
+  from common.log.debugPrint import debugPrint
+  PythonPathManager().appendAll('./')
+  import sys
+  debugPrint(sys.path)
+
 
 if __name__ == "__main__":
-  testModule()
+  smokeTestModule()

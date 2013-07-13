@@ -18,16 +18,15 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with Mepinta. If not, see <http://www.gnu.org/licenses/>.
 '''
+from mepinta_devtools.ide_projects.qtcreator.QtProjectPluginCreator import QtProjectPluginCreatorBase
 
-#def get_astyle(self):
-#  cfg_file = "/home/jduo/Projects/Informatica/Universidad/Rendir/Trabajo_Final/000-Presentacion_Trabajo_Final/Ejemplos_Codigo/Ugly_C/astyle"
-#  cmd_str = "astyle --options=%s"%cfg_file
-#  return Popen(shlex.split(cmd_str),stdin=PIPE, stdout=PIPE, stderr=PIPE)
-#(temp_code,error) = self.get_astyle.communicate(input=in_code)
-     
-if __name__ == "__main__":
-  #grep k3d::uuid -RHni ./ -A 1 | grep '"'
-  #grep k3d_data -RHni ./ 
-  #egrep -r "public.*>" -RHni ./
-  #egrep -r "^class\s+[A-Za-z_0-9]+\s*:" -RHni ./
+class PluginProjectCreator(QtProjectPluginCreatorBase):
   pass
+
+def smokeTestModule():
+#  from getDefaultContext import getDefaultContext
+#  context = getDefaultContext()
+  raise RuntimeWarning('No smoke test')
+
+if __name__ == "__main__":
+  smokeTestModule()
