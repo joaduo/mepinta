@@ -57,15 +57,21 @@ class QtProjectPluginCreatorBase(FrameworkBase):
 
   def _getIncludesList(self):
     includes = '''/usr/lib/glibmm-2.4/include
-    /usr/include/glibmm-2.4
-    /usr/lib/x86_64-linux-gnu/glib-2.0/include/
-    /usr/lib/glib-2.0/include
-    /usr/include/glib-2.0
-    /usr/include/sigc++-2.0
-    /usr/lib/sigc++-2.0/include
-    /home/jduo/Projects/Informatica/Mepinta/EclipseProjects_Basic_Data_Types/k3dv1/k3dv1_Libs/include
-    /home/jduo/Projects/Informatica/Mepinta/EclipseProjects_Basic_Data_Types/k3dv1/k3dv1_Libs/boost
-    /home/jduo/Projects/Informatica/Mepinta/EclipseProjects_Basic_Data_Types/k3dv1/k3dv1MPExtension'''
+/usr/include/glibmm-2.4
+/usr/lib/x86_64-linux-gnu/glib-2.0/include/
+/usr/lib/glib-2.0/include
+/usr/include/glib-2.0
+/usr/include/sigc++-2.0
+/usr/lib/sigc++-2.0/include
+/home/jduo/Projects/Informatica/Mepinta/EclipseProjects_Basic_Data_Types/k3dv1/k3dv1_Libs/include
+/home/jduo/Projects/Informatica/Mepinta/EclipseProjects_Basic_Data_Types/k3dv1/k3dv1_Libs/boost
+/home/jduo/Projects/Informatica/Mepinta/EclipseProjects_Basic_Data_Types/k3dv1/k3dv1MPExtension
+
+/home/jduo/Projects/Informatica/Mepinta/EclipseProjects_Basic_Data_Types/Mepinta/Mepinta_k3dv1_DataTypes_Includes
+/home/jduo/Projects/Informatica/Mepinta/EclipseProjects_Basic_Data_Types/k3dv1/k3dv1_Libs/include
+/home/jduo/Projects/Informatica/Mepinta/EclipseProjects_Basic_Data_Types/k3dv1/k3dv1_Libs/boost
+/home/jduo/Projects/Informatica/Mepinta/EclipseProjects_Basic_Data_Types/k3dv1/k3dv1MPExtension
+'''
     return includes.splitlines()
 
   def _getSourcesPri(self, template_name, sources_path, sdk_path):
@@ -118,7 +124,7 @@ class QtProjectPluginCreatorBase(FrameworkBase):
   def _getSourcesPath(self, manifest):
     #build the source path
     module = __import__(manifest.__module__, fromlist='dummy')
-    mod_name = module.__name__
+    mod_name = self._getTargetName(manifest)
     package_dir = os.path.dirname(module.__file__)
     sources_path = joinPath(package_dir, mod_name + '_code')
     return sources_path

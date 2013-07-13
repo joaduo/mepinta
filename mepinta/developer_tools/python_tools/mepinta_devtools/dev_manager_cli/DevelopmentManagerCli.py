@@ -24,13 +24,14 @@ from common.path import joinPath
 from mepinta_devtools.ide_projects.FileManager import FileManager
 from mepinta_devtools.ide_projects.qtcreator.BackendProjectsCreator import BackendProjectsCreator
 from mepinta.abstract.MepintaError import MepintaError
-import os
-import argparse
 from mepinta_devtools.ide_projects.generic.MepintaSdkCreator import MepintaSdkCreator
 from mepinta_devtools.templates.TemplateManager import TemplateManager
 from mepinta_devtools.deployment.PythonPathManager import PythonPathManager
 from common.PackageClassesInspector import PackageClassesInspector
 from mepinta.plugins_manifest import PluginManifestBase
+from inspect import isclass
+import os
+import argparse
 
 class DevelopmentManagerCli(FrameworkBase):
   def __post_init__(self):
@@ -43,7 +44,7 @@ class DevelopmentManagerCli(FrameworkBase):
     self.python_path = PythonPathManager()
 
   def _deployBuildShedskinModules(self, overwrite):
-    project_path = joinPath(self._getDevPath(), 'build_shedksin_modules')
+    project_path = joinPath(self._getDevPath(), 'shedksin_modules_build')
     creator = self.shedskin_project_creator
     return creator.createShedskinProject(project_path, overwrite)
 
@@ -91,20 +92,17 @@ class DevelopmentManagerCli(FrameworkBase):
 
   def _getPluginsManifests(self, backend):
     manifests = []
+    filter_func = lambda obj: isclass(obj) and \
+                              issubclass(obj, PluginManifestBase) and not \
+                              obj.__name__.endswith('Base')
     for plugin_t in ('data_types', 'processors'):
       package_str = 'plugins.{backend}.{plugin_t}'.format(**locals())
       plugins = __import__(package_str, fromlist='dummy')
       plugins = reload(plugins)
-      mod_dict = self.package_inspector.builDict(plugins, PluginManifestBase)
+      mod_dict = self.package_inspector.builDict(plugins, filter_func)
       manifests += mod_dict.values()
-#    for i in manifests:
-#      print i.__name__
-
-#    manifests = [ m for m in manifests if not m.__name__.endswith('Base')]
-    for i in sorted([i.__name__ for i in manifests]):
-      print i
-    raise RuntimeWarning()
-    #return manifests
+    manifests = [ m[0] for m in manifests if len(m)]
+    return manifests
 
   def _deployPluginSet(self, plugins_set, backend, sdk_path, overwrite):
     #Append the set to the python path
@@ -114,8 +112,9 @@ class DevelopmentManagerCli(FrameworkBase):
     build_scripts = []
     creator = self._getPluginProjectCreator(plugins_set, backend)
     plugins_path = joinPath(self._getDevPath(), 'plugins_build')
+    projects_path = joinPath(self._getQtProjectsPath(), plugins_set)
     for manifest in self._getPluginsManifests(backend):
-      s = creator.createProject(self._getQtProjectsPath(), plugins_path,
+      s = creator.createProject(projects_path, plugins_path,
                                  sdk_path, manifest, overwrite)
       build_scripts.extend(s)
     #remove the set to the python path
@@ -163,7 +162,7 @@ def smokeTestModule():
   from common.log.debugPrint import debugPrint
   from getDefaultContext import getDefaultContext
   context = getDefaultContext()
-  DevelopmentManagerCli(context).run(overwrite=True)
+  DevelopmentManagerCli(context).run()#overwrite=True)
 
 if __name__ == "__main__":
   smokeTestModule()

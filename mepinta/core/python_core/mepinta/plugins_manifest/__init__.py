@@ -204,5 +204,8 @@ class PluginManifestBase(FrameworkBase):
     '''
     pass
 
+class DataTypeManifestBase(PluginManifestBase):
+  pass
+
 if __name__ == "__main__":
   pass

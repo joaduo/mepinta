@@ -20,35 +20,48 @@ along with Mepinta. If not, see <http://www.gnu.org/licenses/>.
 '''
 from common.abstract.FrameworkBase import FrameworkBase
 import pkgutil
-from inspect import isclass
-
 
 class PackageClassesInspector(FrameworkBase):
   def getChildModules(self, package):
     return self._gatherModules(package)
 
-  def builDict(self, package, class_type, one_per_module=True):
+  def builDict(self, package, filter_func):
     modules = self._gatherModules(package)
     modules_dict = {}
     for module in modules:
-      classes = self._filterModule(module, class_type)
-      if one_per_module:
-        if len(classes):
-          modules_dict[module] = classes[0]
-#        else:
-#          print module
-      else:
-        modules_dict[module] = classes
+      filtered = self._filterModule(module, filter_func)
+      modules_dict[module] = filtered
     return modules_dict
 
-  def _filterModule(self, module, class_type):
+  def _filterModule(self, module, filter_func):
     classes = []
-    for class_ in module.__dict__.values():
-      if isclass(class_) and \
-      issubclass(class_, class_type):
-        classes.append(class_)
+    for obj in module.__dict__.values():
+      if filter_func(obj):
+        classes.append(obj)
     return classes
 
+#  def builDict(self, package, class_type, one_per_module=True):
+#    modules = self._gatherModules(package)
+#    modules_dict = {}
+#    for module in modules:
+#      classes = self._filterModule(module, class_type)
+#      if one_per_module:
+#        if len(classes):
+#          modules_dict[module] = classes[0]
+##        else:
+##          print module
+#      else:
+#        modules_dict[module] = classes
+#    return modules_dict
+
+#  def _filterModule(self, module, class_type):
+#    classes = []
+#    for class_ in module.__dict__.values():
+#      if isclass(class_) and \
+#      issubclass(class_, class_type):
+#        classes.append(class_)
+#    return classes
+#
   def _gatherModules(self, package):
     modules = []
     prefix = package.__name__ + "."
