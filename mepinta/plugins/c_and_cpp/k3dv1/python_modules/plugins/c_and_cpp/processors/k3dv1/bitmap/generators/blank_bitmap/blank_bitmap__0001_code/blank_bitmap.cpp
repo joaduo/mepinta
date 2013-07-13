@@ -7,7 +7,7 @@
 
 #include <mepintasdk/sdk.h>
 
-#include "k3dv1_Bitmap.h"
+#include <data_types/k3dv1/bitmap/bitmap.h>
 
 extern "C" EXPORTED_SYMBOL
 int create_blank_bitmap(MP_args_p args){

@@ -57,7 +57,7 @@ class PluginManifestBase(FrameworkBase):
 class DataTypeManifestBase(PluginManifestBase):
   pass
 
-class ProcessorManifestBase(FrameworkBase):
+class ProcessorManifestBase(PluginManifestBase):
   '''
     This is the root parent of all the Plugin Manifest classes.
     It inherits from FrameworkBase in order to provide support for the
@@ -74,6 +74,7 @@ class ProcessorManifestBase(FrameworkBase):
     self.processor_proxy = ProcessorProxy(self.context, name=self.getName())
     args, kwargs = self.__createDefineArguments()
     self.define(*args, **kwargs)
+
   def getName(self):
     if self.__class__.__module__ == '__main__':
       import __main__

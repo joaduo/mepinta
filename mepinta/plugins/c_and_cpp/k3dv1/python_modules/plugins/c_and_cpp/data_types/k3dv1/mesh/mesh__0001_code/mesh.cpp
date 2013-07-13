@@ -18,7 +18,7 @@
 
 #include <mepintasdk/sdk.h>
 #include <mepintasdk/log.h>
-#include <mepintasdk/cpp/demangle/demangleTypeName.h>
+#include <mepintasdk/cpp/type_checking/demangleTypeName.h>
 #include "mesh.h"
 
 //DECLARE_MEMORY_MNGMNT_FUNCTIONS();

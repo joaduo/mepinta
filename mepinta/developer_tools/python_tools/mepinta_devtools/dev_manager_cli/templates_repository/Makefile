@@ -4,5 +4,5 @@ all: ${DEPENDENCIES}
 	
 ${BUILD_SCRIPTS}
 
-clea:
+clean:
 	echo "No clean command yet. Go to each specific project"

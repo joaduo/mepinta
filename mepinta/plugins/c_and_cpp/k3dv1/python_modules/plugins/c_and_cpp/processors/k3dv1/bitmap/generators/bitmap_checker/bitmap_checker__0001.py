@@ -22,6 +22,7 @@ along with Mepinta. If not, see <http://www.gnu.org/licenses/>.
 from mepinta.plugins_manifest import ProcessorManifestBase, DataProperty, FunctionProperty
 
 class bitmap_checker(ProcessorManifestBase):
+  build = False
   def define(self, inputs, internals, functions, outputs):
     #inputs. = DataProperty('')
     #outputs. = DataProperty('')

@@ -90,7 +90,7 @@ class QtProjectPluginCreatorBase(FrameworkBase):
 
   def _createQtProject(self, qt_projects_path, sdk_path, manifest,
                        dest_dir, overwrite):
-    #make project dir
+    #mk_cmd project dir
     target = self._getTargetName(manifest)
     project_path = joinPath(qt_projects_path, target)
     self.file_manager.makedirs(project_path, overwrite)
@@ -109,12 +109,12 @@ class QtProjectPluginCreatorBase(FrameworkBase):
     pri_path = joinPath(project_path, pri_name)
     self.file_manager.saveTextFile(pri_path, pri_str, overwrite)
     #create build script
-    build_script = 'build_library.py'
-    build_text = self.templates.getTemplate(build_script,
+    mk_cmd = 'build_library.py'
+    build_text = self.templates.getTemplate(mk_cmd,
                                             TARGET=target)
-    build_script = joinPath(project_path, build_script)
-    self.file_manager.saveTextFile(build_script, build_text, overwrite)
-    return build_script
+    mk_cmd = joinPath(project_path, mk_cmd)
+    self.file_manager.saveTextFile(mk_cmd, build_text, overwrite)
+    return (target, mk_cmd)
 
   def _linkSources(self, project_path, sources_path, overwrite):
     #link sources to get them inside the project
@@ -135,17 +135,15 @@ class QtProjectPluginCreatorBase(FrameworkBase):
     rel_lib_dir = self._getRelLibDir(manifest)
     dest_dir = self._createLibDirectory(plugins_path, rel_lib_dir, overwrite)
     #create the Qt project .pro .pri and build_library.py
-    build_script = self._createQtProject(projects_path, sdk_path, manifest,
+    mk_target = self._createQtProject(projects_path, sdk_path, manifest,
                           dest_dir, overwrite)
     #return build script
-    return [build_script]
+    return [mk_target]
 
 
 def smokeTestModule():
 #  from getDefaultContext import getDefaultContext
 #  context = getDefaultContext()
-  from plugins.c_and_cpp.processors.k3dv1.mesh.modifiers.deformation.DeformationExpression.DeformationExpression__0001 import manifest
-  pass
   raise RuntimeWarning('No smoke test')
 
 if __name__ == "__main__":

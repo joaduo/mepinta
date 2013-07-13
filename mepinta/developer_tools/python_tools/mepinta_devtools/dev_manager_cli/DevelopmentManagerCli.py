@@ -61,21 +61,22 @@ class DevelopmentManagerCli(FrameworkBase):
 
   def _deployCandCppProjects(self, overwrite):
     backend = 'c_and_cpp'
-    build_scripts = self._deployBuildShedskinModules(overwrite)
+    make = {}
+    make['shedskin'] = self._deployBuildShedskinModules(overwrite)
     sdk_path = self._deploySdk(backend, overwrite)
     libs_path = self._createLibsPath(backend, overwrite)
     creator = self.backend_projects_creator
-    build_scripts += creator.deployProjects(self._getQtProjectsPath(),
-                                           sdk_path, libs_path, overwrite)
+    make['backend'] = creator.deployProjects(self._getQtProjectsPath(),
+                                             sdk_path, libs_path, overwrite)
     plugins_set = 'k3dv1'
-    build_scripts += self._deployPluginSet(plugins_set, backend, sdk_path,
-                                           overwrite)
-    return build_scripts
+    make['plugins'] = self._deployPluginSet(plugins_set, backend, sdk_path,
+                                            overwrite)
+    return make
 
   def run(self, overwrite=False):
     self._testDeploymentSanity(overwrite)
-    build_scripts = self._deployCandCppProjects(overwrite)
-    self._createMakeFile(build_scripts, overwrite)
+    make = self._deployCandCppProjects(overwrite)
+    self._createMakeFile(make, overwrite)
 
   def _getPluginProjectCreator(self, plugins_set, backend):
     class_str = 'PluginProjectCreator'
@@ -90,17 +91,16 @@ class DevelopmentManagerCli(FrameworkBase):
       msg = msg.format(locals())
       raise MepintaError(msg)
 
-  def _getPluginsManifests(self, backend):
+  def _getPluginsManifests(self, backend, plugin_type):
     manifests = []
-    filter_func = lambda obj: isclass(obj) and \
-                              issubclass(obj, PluginManifestBase) and not \
-                              obj.__name__.endswith('Base')
-    for plugin_t in ('data_types', 'processors'):
-      package_str = 'plugins.{backend}.{plugin_t}'.format(**locals())
-      plugins = __import__(package_str, fromlist='dummy')
-      plugins = reload(plugins)
-      mod_dict = self.package_inspector.builDict(plugins, filter_func)
-      manifests += mod_dict.values()
+    filter_func = lambda obj: isclass(obj) \
+                              and issubclass(obj, PluginManifestBase) \
+                              and not obj.__name__.endswith('Base')
+    pkg_str = 'plugins.{backend}.{plugin_type}'.format(**locals())
+    pkg = __import__(pkg_str, fromlist='dummy')
+    pkg = reload(pkg)
+    mod_dict = self.package_inspector.builDict(pkg, filter_func)
+    manifests += mod_dict.values()
     manifests = [ m[0] for m in manifests if len(m)]
     return manifests
 
@@ -112,28 +112,42 @@ class DevelopmentManagerCli(FrameworkBase):
     build_scripts = []
     creator = self._getPluginProjectCreator(plugins_set, backend)
     plugins_path = joinPath(self._getDevPath(), 'plugins_build')
-    projects_path = joinPath(self._getQtProjectsPath(), plugins_set)
-    for manifest in self._getPluginsManifests(backend):
-      s = creator.createProject(projects_path, plugins_path,
-                                 sdk_path, manifest, overwrite)
-      build_scripts.extend(s)
+    for plugin_type in ('data_types', 'processors'):
+      projects_path = joinPath(self._getQtProjectsPath(), plugins_set,
+                               plugin_type)
+      for manifest in self._getPluginsManifests(backend, plugin_type):
+        if not hasattr(manifest, 'build') or manifest.build:
+          s = creator.createProject(projects_path, plugins_path,
+                                     sdk_path, manifest, overwrite)
+          build_scripts.extend(s)
     #remove the set to the python path
     self.python_path.removePlugins(mepinta_source_path, plugins_set, backend)
     return build_scripts
 
-  def _createMakeFile(self, build_scripts, overwrite):
-    dependencies = ''
-    build_str = ''
-    for i, script in enumerate(build_scripts):
-      if script.endswith('.py'):
-        build_str += 'script%s:\n\tpython %s\n\n' % (i, script)
-      else:
-        build_str += 'script%s:\n\t%s\n\n' % (i, script)
-      dependencies += 'script%s ' % i
+  def __createSubMakefile(self, name, mk_targets):
+    dep_str = ' '
+    make_str = ''
+    for target, mk_cmd in sorted(mk_targets):
+      if mk_cmd.endswith('.py'):
+        mk_cmd = 'python %s' % mk_cmd
+      make_str += '%s:\n\t@%s\n\n' % (target, mk_cmd)
+      dep_str += '%s ' % target
+    return make_str, dep_str
+
+  def _createMakeFile(self, make, overwrite):
+    dep_str = ''
+    mk_str = ''
+    for name in sorted(make.keys()):
+      mk_targets = make[name]
+      #all dep
+      dep_str += '%s ' % name
+      mk, dep = self.__createSubMakefile(name, mk_targets)
+      mk_str += '%s: %s\n\n' % (name, dep)
+      mk_str += mk
     file_name = 'Makefile'
     content = self.templates.getTemplate(file_name,
-                                         DEPENDENCIES=dependencies,
-                                         BUILD_SCRIPTS=build_str)
+                                         DEPENDENCIES=dep_str,
+                                         BUILD_SCRIPTS=mk_str)
     path = joinPath(self._getDevPath(), file_name)
     self.file_manager.saveTextFile(path, content, overwrite)
 
@@ -162,7 +176,7 @@ def smokeTestModule():
   from common.log.debugPrint import debugPrint
   from getDefaultContext import getDefaultContext
   context = getDefaultContext()
-  DevelopmentManagerCli(context).run()#overwrite=True)
+  DevelopmentManagerCli(context).run(overwrite=True)
 
 if __name__ == "__main__":
   smokeTestModule()

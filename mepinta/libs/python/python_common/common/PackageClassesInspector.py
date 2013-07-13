@@ -40,28 +40,6 @@ class PackageClassesInspector(FrameworkBase):
         classes.append(obj)
     return classes
 
-#  def builDict(self, package, class_type, one_per_module=True):
-#    modules = self._gatherModules(package)
-#    modules_dict = {}
-#    for module in modules:
-#      classes = self._filterModule(module, class_type)
-#      if one_per_module:
-#        if len(classes):
-#          modules_dict[module] = classes[0]
-##        else:
-##          print module
-#      else:
-#        modules_dict[module] = classes
-#    return modules_dict
-
-#  def _filterModule(self, module, class_type):
-#    classes = []
-#    for class_ in module.__dict__.values():
-#      if isclass(class_) and \
-#      issubclass(class_, class_type):
-#        classes.append(class_)
-#    return classes
-#
   def _gatherModules(self, package):
     modules = []
     prefix = package.__name__ + "."

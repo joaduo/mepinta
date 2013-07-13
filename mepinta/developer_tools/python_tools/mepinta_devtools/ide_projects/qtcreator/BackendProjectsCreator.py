@@ -73,32 +73,31 @@ class BackendProjectsCreator(FrameworkBase):
                                           DESTDIR=libs_path)
     path = joinPath(project_path, '%s.pro' % target)
     self.file_manager.saveTextFile(path, pro_text, overwrite)
-    build_script = 'build_library.py'
-    build_text = self.templates.getTemplate(build_script,
-                                            TARGET=target)
-    build_script = joinPath(project_path, build_script)
-    self.file_manager.saveTextFile(build_script, build_text, overwrite)
-    return build_script
+    mk_cmd = 'build_library.py'
+    build_text = self.templates.getTemplate(mk_cmd, TARGET=target)
+    mk_cmd = joinPath(project_path, mk_cmd)
+    self.file_manager.saveTextFile(mk_cmd, build_text, overwrite)
+    return (target, mk_cmd)
 
 
   def createProject(self, project_path, api, sdk_path, libs_path, overwrite=False):
-    build_script = self._createProjectPro(project_path, api, libs_path,
+    make = self._createProjectPro(project_path, api, libs_path,
                                           overwrite)
     self._createSourcesPri(project_path, api, sdk_path, overwrite)
     self._createDirsLinkLib(project_path, api, libs_path, overwrite)
-    return build_script
+    return make
 
   def deployProjects(self, qt_projects_path, sdk_path, libs_path,
                              overwrite):
-    build_scripts = []
+    mk_targets = []
     projects_path = joinPath(qt_projects_path, 'backend')
     for api in ('c', 'cpp'):
       backend_path = joinPath(projects_path, 'backend_api_%s' % api)
       self.file_manager.makedirs(backend_path, overwrite)
-      script = self.createProject(backend_path, api, sdk_path, libs_path,
+      mk_target = self.createProject(backend_path, api, sdk_path, libs_path,
                                      overwrite)
-      build_scripts.append(script)
-    return build_scripts
+      mk_targets.append(mk_target)
+    return mk_targets
 
 def smokeTestModule():
   from common.log.debugPrint import debugPrint
