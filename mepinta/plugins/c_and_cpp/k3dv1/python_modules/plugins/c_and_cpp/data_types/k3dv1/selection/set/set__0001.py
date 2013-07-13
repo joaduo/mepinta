@@ -20,13 +20,11 @@ You should have received a copy of the GNU General Public License
 along with Mepinta. If not, see <http://www.gnu.org/licenses/>.
 '''
 
-data_type_description = {
- 'plugin_url':'http://',
- 'future_plugin_url':'http://',
- 'additional_urls':{},
- 'authors':'',
- 'description':'''.''',
- 'changes':'',
- 'api':'##api', #What kind of api is available for accessing this data
-}
+
+from mepinta.plugins_manifest import DataTypeManifestBase
+
+class manifest(DataTypeManifestBase):
+  pass
+
+    
 

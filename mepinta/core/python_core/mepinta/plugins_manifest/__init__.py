@@ -52,6 +52,9 @@ QualifierBase = QualifierBase
 InotifyPropertyBase = InotifyPropertyProxy
 
 class PluginManifestBase(FrameworkBase):
+  pass
+
+class ProcessorManifestBase(FrameworkBase):
   '''
     This is the root parent of all the Plugin Manifest classes.
     It inherits from FrameworkBase in order to provide support for the

@@ -22,16 +22,13 @@ from mepinta.pipeline.hi.pipeline_evaluator.PipelineEvaluatorFunctum import Pipe
 from mepinta.pipelineview.actiontree.undoable_graph.data_model import UndoableGraph
 from mepinta.context.MepintaContext import MepintaContext
 
-data_type_description = {
-# 'plugin_url':'http://mepinta.joaquinduo.com.ar/plugins/',
-# 'future_plugin_url':'http://mepinta.joaquinduo.com.ar/plugins/',
-# 'additional_urls':{},
-# 'authors':'Joaquín Duo',
-# 'description':'''Simple python float data type. In fact there is no real API for this, since it handles consistency easily''',
-# 'changes':'First writing',
-# 'api':'python', #What kind of api is available for accessing this data
-# 'python_module':None,
-}
+
+from mepinta.plugins_manifest import DataTypeManifestBase
+
+class manifest(DataTypeManifestBase):
+  pass
+
+    
 
 def new():
   return UndoableGraph()

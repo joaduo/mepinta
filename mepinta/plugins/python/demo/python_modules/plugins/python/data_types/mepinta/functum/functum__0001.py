@@ -20,6 +20,11 @@ You should have received a copy of the GNU General Public License
 along with Mepinta. If not, see <http://www.gnu.org/licenses/>.
 '''
 
-data_type_description = {
-}
+
+from mepinta.plugins_manifest import DataTypeManifestBase
+
+class manifest(DataTypeManifestBase):
+  pass
+
+    
 #All code is inside mepinta, this is just dummy module
