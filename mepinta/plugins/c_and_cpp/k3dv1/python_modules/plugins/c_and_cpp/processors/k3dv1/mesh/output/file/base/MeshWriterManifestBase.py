@@ -19,10 +19,10 @@ You should have received a copy of the GNU General Public License
 along with Mepinta. If not, see <http://www.gnu.org/licenses/>.
 '''
 
-from mepinta.plugins_manifest import PluginManifestBase, DataProperty, FunctionProperty
+from mepinta.plugins_manifest import ProcessorManifestBase, DataProperty, FunctionProperty
 from plugins.c_and_cpp.processors.k3dv1.base.properties.K3dOutputFile import K3dOutputFile
 
-class MeshWriterManifestBase(PluginManifestBase):
+class MeshWriterManifestBase(ProcessorManifestBase):
   def _superClassDefine(self, inputs, internals, functions, outputs):
     '''Creates the common topology for MeshSources.'''
     inputs.file = K3dOutputFile()

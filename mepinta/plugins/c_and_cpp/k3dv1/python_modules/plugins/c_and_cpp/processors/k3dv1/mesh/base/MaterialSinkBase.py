@@ -18,9 +18,9 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with Mepinta. If not, see <http://www.gnu.org/licenses/>.
 '''
-from mepinta.plugins_manifest import PluginManifestBase, DataProperty
+from mepinta.plugins_manifest import ProcessorManifestBase, DataProperty
 
-class MaterialSinkBase(PluginManifestBase):
+class MaterialSinkBase(ProcessorManifestBase):
   def _superClassDefine(self, inputs, internals, functions, outputs):
     '''Adds the material property to a node. '''
     inputs.material = DataProperty('k3d::imaterial')

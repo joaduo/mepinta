@@ -18,9 +18,9 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with Mepinta. If not, see <http://www.gnu.org/licenses/>.
 '''
-from mepinta.plugins_manifest import PluginManifestBase, FunctionProperty
+from mepinta.plugins_manifest import ProcessorManifestBase, FunctionProperty
 
-class manifest(PluginManifestBase):
+class manifest(ProcessorManifestBase):
   def define(self, inputs, internals, functions, outputs):
     #Inputs
     inputs.geometry = 'demov1.Geometry2D' #TODO: review if necessary for nonCached

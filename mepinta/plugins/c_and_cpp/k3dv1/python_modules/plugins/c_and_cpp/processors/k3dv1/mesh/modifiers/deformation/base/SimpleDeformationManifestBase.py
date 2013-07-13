@@ -19,10 +19,10 @@ You should have received a copy of the GNU General Public License
 along with Mepinta. If not, see <http://www.gnu.org/licenses/>.
 '''
 
-from mepinta.plugins_manifest import PluginManifestBase, DataProperty, FunctionProperty, \
+from mepinta.plugins_manifest import ProcessorManifestBase, DataProperty, FunctionProperty, \
   directed, Functum
 
-class SimpleDeformationManifestBase(PluginManifestBase):
+class SimpleDeformationManifestBase(ProcessorManifestBase):
   def _superClassDefine(self, inputs, internals, functions, outputs):
     '''Creates the common topology pipeline for SimpelMeshDeformation modifiers.'''
     inputs.mesh = DataProperty('k3d::mesh')

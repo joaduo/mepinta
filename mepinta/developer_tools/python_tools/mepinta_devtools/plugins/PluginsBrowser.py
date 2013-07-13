@@ -47,15 +47,15 @@ class PluginsBrowser(FrameworkBase):
             self.log.warning('Ignored module %r' % modname)
     return manifests
 
-def testModule():
-  from getDefaultContext import getDefaultContext
-  context = getDefaultContext()
-  psb = PluginsBrowser(context)
-#  import plugins.c_and_cpp.processors.k3dv1 as k3dv1
-  import plugins.c_and_cpp.processors as k3dv1
-  for manifest in psb.getAllManifests(k3dv1):
-    context.log(manifest.__name__)
-
-
-if __name__ == "__main__":
-  testModule()
+#def testModule():
+#  from getDefaultContext import getDefaultContext
+#  context = getDefaultContext()
+#  psb = PluginsBrowser(context)
+##  import plugins.c_and_cpp.processors.k3dv1 as k3dv1
+#  import plugins.c_and_cpp.processors as k3dv1
+#  for manifest in psb.getAllManifests(k3dv1):
+#    context.log(manifest.__name__)
+#
+#
+#if __name__ == "__main__":
+#  testModule()

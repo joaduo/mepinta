@@ -19,10 +19,10 @@ You should have received a copy of the GNU General Public License
 along with Mepinta. If not, see <http://www.gnu.org/licenses/>.
 '''
 
-from mepinta.plugins_manifest import PluginManifestBase, DataProperty, FunctionProperty, \
+from mepinta.plugins_manifest import ProcessorManifestBase, DataProperty, FunctionProperty, \
   directed, Functum
 
-class OgreRenderOutput(PluginManifestBase):
+class OgreRenderOutput(ProcessorManifestBase):
   def define(self, inputs, internals, functions, outputs):
     #Inputs
     inputs.opengl_context = DataProperty('mepinta::internal_any*')

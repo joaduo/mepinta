@@ -42,10 +42,10 @@ You should have received a copy of the GNU General Public License
 along with Mepinta. If not, see <http://www.gnu.org/licenses/>.
 '''
 
-from mepinta.plugins_manifest import PluginManifestBase, DataProperty, FunctionProperty, \\
+from mepinta.plugins_manifest import ProcessorManifestBase, DataProperty, FunctionProperty, \\
   directed, Functum
 
-class ${name}(PluginManifestBase):
+class manifest(ProcessorManifestBase):
   def define(self, inputs, internals, functions, outputs):
     #inputs. = DataProperty('')
     #outputs. = DataProperty('')
@@ -53,8 +53,6 @@ class ${name}(PluginManifestBase):
     pass
     #functions..dpdencies += [inputs.,]
     #outputs..dpdencies += [functions.]
-
-manifest = ${name}
 
 if __name__ == "__main__":
   from getDefaultContext import getDefaultContext
@@ -83,15 +81,10 @@ You should have received a copy of the GNU General Public License
 along with Mepinta. If not, see <http://www.gnu.org/licenses/>.
 '''
 
-data_type_description = {
- 'plugin_url':'http://',
- 'future_plugin_url':'http://',
- 'additional_urls':{},
- 'authors':'',
- 'description':'''.''',
- 'changes':'',
- 'api':'${api}', #What kind of api is available for accessing this data
-  }
+from mepinta.plugins_manifest import DataTypeManifestBase
+
+class manifest(DataTypeManifestBase):
+  pass
 
 """
   empty = ""

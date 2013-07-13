@@ -19,10 +19,10 @@ You should have received a copy of the GNU General Public License
 along with Mepinta. If not, see <http://www.gnu.org/licenses/>.
 '''
 
-from mepinta.plugins_manifest import PluginManifestBase, FunctionProperty, \
+from mepinta.plugins_manifest import ProcessorManifestBase, FunctionProperty, \
   directed, Functum, DataProperty
 
-class GenericPrototype(PluginManifestBase):
+class GenericPrototype(ProcessorManifestBase):
   def define(self, inputs, internals, functions, outputs):
     inputs.count = 'k3d::int32_t'
     inputs.phrase = 'k3d::string_t'

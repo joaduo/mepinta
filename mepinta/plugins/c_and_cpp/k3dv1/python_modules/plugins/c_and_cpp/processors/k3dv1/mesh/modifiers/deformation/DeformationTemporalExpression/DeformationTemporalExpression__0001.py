@@ -19,10 +19,10 @@ You should have received a copy of the GNU General Public License
 along with Mepinta. If not, see <http://www.gnu.org/licenses/>.
 '''
 
-from mepinta.plugins_manifest import PluginManifestBase, DataProperty, FunctionProperty,\
+from mepinta.plugins_manifest import ProcessorManifestBase, DataProperty, FunctionProperty,\
   directed, Functum
 
-class DeformationTemporalExpression(PluginManifestBase):
+class DeformationTemporalExpression(ProcessorManifestBase):
   '''
     When the evaluation starts (lets say frame 0)
     Should create vars x*,y*,z* (or whatever the are renamed to)

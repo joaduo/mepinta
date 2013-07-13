@@ -19,9 +19,9 @@ You should have received a copy of the GNU General Public License
 along with Mepinta. If not, see <http://www.gnu.org/licenses/>.
 '''
 
-from mepinta.plugins_manifest import PluginManifestBase, DataProperty, FunctionProperty
+from mepinta.plugins_manifest import ProcessorManifestBase, DataProperty, FunctionProperty
 
-class TransformPoints(PluginManifestBase):
+class TransformPoints(ProcessorManifestBase):
   def define(self, inputs, internals, functions, outputs):
     inputs.mesh = DataProperty('k3dv1_Mesh')
     inputs.matrix = DataProperty('k3dv1_Matrix4')

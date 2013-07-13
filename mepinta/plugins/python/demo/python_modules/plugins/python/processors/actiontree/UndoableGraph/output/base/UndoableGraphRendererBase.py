@@ -19,9 +19,9 @@ You should have received a copy of the GNU General Public License
 along with Mepinta. If not, see <http://www.gnu.org/licenses/>.
 '''
 
-from mepinta.plugins_manifest import PluginManifestBase, FunctionProperty
+from mepinta.plugins_manifest import ProcessorManifestBase, FunctionProperty
 
-class UndoableGraphRendererBase(PluginManifestBase):
+class UndoableGraphRendererBase(ProcessorManifestBase):
   def _superClassDefine(self, inputs, internals, functions, outputs):
     #Inputs
     inputs.graph = 'actiontree.UndoableGraph'

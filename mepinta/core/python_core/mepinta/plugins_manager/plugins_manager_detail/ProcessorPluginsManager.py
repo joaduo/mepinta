@@ -24,7 +24,7 @@ from mepinta.plugins_manifest.proxy.data_model import DataPropertyProxy,\
 from bisect import bisect_left
 from mepinta.plugins_manager.plugins_manager_detail.base import PluginsManagerBase
 from mepinta.plugins_manager.data_model import ProcessorMetadata
-from mepinta.plugins_manifest import PluginManifestBase
+from mepinta.plugins_manifest import ProcessorManifestBase
 
 #TODO: review this mess below
 FrameworkException = RuntimeError
@@ -64,10 +64,10 @@ class ProcessorPluginsManager(PluginsManagerBase):
       processor_proxy = processor_module.plugin(context=self.context).processor_proxy
     elif hasattr(processor_module, 'manifest'):
       manifest_class = processor_module.manifest
-      if issubclass(manifest_class, PluginManifestBase):
+      if issubclass(manifest_class, ProcessorManifestBase):
         processor_proxy = manifest_class(context=self.context).processor_proxy
       else:
-        raise RuntimeError('The manifest is not a subclass of PluginManifestBase. Instead it\'s %r'%manifest_class)
+        raise RuntimeError('The manifest is not a subclass of ProcessorManifestBase. Instead it\'s %r'%manifest_class)
     else:
       raise FrameworkException('There is no definition on the module: %r.'%(processor_module))
     return processor_proxy

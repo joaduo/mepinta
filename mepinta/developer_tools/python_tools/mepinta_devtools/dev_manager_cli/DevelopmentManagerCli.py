@@ -20,7 +20,6 @@ along with Mepinta. If not, see <http://www.gnu.org/licenses/>.
 '''
 from common.abstract.FrameworkBase import FrameworkBase
 from mepinta_devtools.python_project.shedskin_project.ShedskinProjectCreator import ShedskinProjectCreator
-from common.path import joinPath
 from mepinta_devtools.ide_projects.FileManager import FileManager
 from mepinta_devtools.ide_projects.qtcreator.BackendProjectsCreator import BackendProjectsCreator
 from mepinta.abstract.MepintaError import MepintaError
@@ -29,6 +28,7 @@ from mepinta_devtools.templates.TemplateManager import TemplateManager
 from mepinta_devtools.deployment.PythonPathManager import PythonPathManager
 from common.PackageClassesInspector import PackageClassesInspector
 from mepinta.plugins_manifest import PluginManifestBase
+from common.path import joinPath
 from inspect import isclass
 import os
 import argparse

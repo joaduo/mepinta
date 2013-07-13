@@ -18,9 +18,9 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with Mepinta. If not, see <http://www.gnu.org/licenses/>.
 '''
-from mepinta.plugins_manifest import PluginManifestBase, DataProperty, FunctionProperty
+from mepinta.plugins_manifest import ProcessorManifestBase, DataProperty, FunctionProperty
 
-class SimpleMeshModifierBase(PluginManifestBase):
+class SimpleMeshModifierBase(ProcessorManifestBase):
   def _superClassDefine(self, inputs, internals, functions, outputs):
     '''
       Creates a common topology pipeline for simple mesh modifiers. 

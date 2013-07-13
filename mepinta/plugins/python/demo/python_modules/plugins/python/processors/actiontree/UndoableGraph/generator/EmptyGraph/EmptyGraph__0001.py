@@ -19,10 +19,10 @@ You should have received a copy of the GNU General Public License
 along with Mepinta. If not, see <http://www.gnu.org/licenses/>.
 '''
 
-from mepinta.plugins_manifest import PluginManifestBase, FunctionProperty
+from mepinta.plugins_manifest import ProcessorManifestBase, FunctionProperty
 from mepinta.pipelineview.actiontree.undoable_graph.UndoableGraphManager import UndoableGraphManager
 
-class manifest(PluginManifestBase):
+class manifest(ProcessorManifestBase):
   def define(self, inputs, internals, functions, outputs):
     inputs.context_name = 'str'
     outputs.graph = 'actiontree.UndoableGraph'

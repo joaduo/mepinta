@@ -54,6 +54,9 @@ InotifyPropertyBase = InotifyPropertyProxy
 class PluginManifestBase(FrameworkBase):
   pass
 
+class DataTypeManifestBase(PluginManifestBase):
+  pass
+
 class ProcessorManifestBase(FrameworkBase):
   '''
     This is the root parent of all the Plugin Manifest classes.
@@ -206,9 +209,6 @@ class ProcessorManifestBase(FrameworkBase):
       but maybe here is not the right place)
     '''
     pass
-
-class DataTypeManifestBase(PluginManifestBase):
-  pass
 
 if __name__ == "__main__":
   pass

@@ -19,10 +19,10 @@ You should have received a copy of the GNU General Public License
 along with Mepinta. If not, see <http://www.gnu.org/licenses/>.
 '''
 
-from mepinta.plugins_manifest import PluginManifestBase, DataProperty, FunctionProperty, \
+from mepinta.plugins_manifest import ProcessorManifestBase, DataProperty, FunctionProperty, \
   GenericEnum
 
-class PluginManifestDummy(PluginManifestBase):
+class PluginManifestDummy(ProcessorManifestBase):
   def define(self, inputs, internals, functions, outputs):
     '''Adds the material property to a node. '''
     inputs.material = DataProperty('k3d::imaterial')

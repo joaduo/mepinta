@@ -19,9 +19,9 @@ You should have received a copy of the GNU General Public License
 along with Mepinta. If not, see <http://www.gnu.org/licenses/>.
 '''
 
-from mepinta.plugins_manifest import PluginManifestBase, DataProperty, FunctionProperty
+from mepinta.plugins_manifest import ProcessorManifestBase, DataProperty, FunctionProperty
 
-class bitmap_checker(PluginManifestBase):
+class bitmap_checker(ProcessorManifestBase):
   def define(self, inputs, internals, functions, outputs):
     #inputs. = DataProperty('')
     #outputs. = DataProperty('')
