@@ -23,7 +23,9 @@ along with Mepinta. If not, see <http://www.gnu.org/licenses/>.*/
 #include <mepintasdk/cpp/type_checking/demangleTypeName.h>
 
 #include "iTypedPropertiesCollector.h"
+
 #include <vector>
+#include <typeinfo>
 #include <string.h>
 
 //Collect properties of
@@ -68,7 +70,7 @@ public:
   TypedPropertiesCollector(void* lib_handle):m_lib_handle(lib_handle) {this->init();}
 
   ~TypedPropertiesCollector(){
-    free((void*)m_data_type_alias);
+    //free((void*)m_data_type_alias);
   }
 
   #define CAST_PROP_UNSAFE(data_type,value) (*(data_type*)value)

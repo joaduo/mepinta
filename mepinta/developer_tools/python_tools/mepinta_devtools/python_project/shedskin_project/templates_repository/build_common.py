@@ -22,12 +22,19 @@ import sys
 import subprocess
 import os
 import shutil
+import shlex
 
 try:
   import shedskin
 except Exception as e:
   msg = 'You need Shedskin installed in your Python path. Check http://code.google.com/p/shedskin/.\n'
   raise ImportError('%s  ImportError:%s' % (msg, e))
+
+def logInfo(msg):
+  print(msg)
+
+def logError(msg):
+  sys.stderr.write(msg + '\n')
 
 def copyShedskinModule(python_module):
   module_lib = '%s.so' % python_module
@@ -45,21 +52,35 @@ def generateShedskinCppCode(python_module, cmd_args=[]):
   sys.argv.append('-e')
   makefile = getMakefileName(python_module)
   sys.argv.extend(['-m', makefile])
-  sys.argv.extend(['-L', '../shedskin_builtin_lib'])
+  sys.argv.extend(['-n', '-L', '../shedskin_builtin_lib'])
   flags_file = '%s_FLAGS' % python_module
   if os.path.exists(flags_file):
     sys.argv.extend(['-f', flags_file])
   sys.argv.extend(cmd_args)
   sys.argv.append(python_module)
 
+  logInfo('Generating shedskin module %s ...' % python_module)
   #Run type analysis
   shedskin.main()
+  logInfo('Done generating %s.' % python_module)
 
 def compileShedskinModule(python_module):
   # Now compile calling make
   makefile = getMakefileName(python_module)
-  make = subprocess.Popen(['make', '--makefile=%s' % makefile])
-  make.wait()
+  logInfo('Building shedskin module %s ...' % python_module)
+  cmd = 'make --makefile=%s' % makefile
+  cmd_split = shlex.split(cmd)
+  p = subprocess.Popen(cmd_split, stdout=subprocess.PIPE,
+                       stderr=subprocess.PIPE)
+  r_value = p.wait()
+  stderr = p.stderr.read()
+  stdout = p.stdout.read()
+  if r_value != 0:
+    logError('There was an error building %s.so cmd=%r.' % (python_module, cmd))
+    logError(stderr)
+    logError(stdout)
+    sys.exit(r_value)
+  logInfo('Done building %s.' % python_module)
 
 def buildShedskinModule(python_module, generate=True, build=True):
   os.chdir(os.path.dirname(__file__))
@@ -69,8 +90,3 @@ def buildShedskinModule(python_module, generate=True, build=True):
     compileShedskinModule(python_module)
     copyShedskinModule(python_module)
 
-def testModule():
-  pass
-
-if __name__ == "__main__":
-  testModule()

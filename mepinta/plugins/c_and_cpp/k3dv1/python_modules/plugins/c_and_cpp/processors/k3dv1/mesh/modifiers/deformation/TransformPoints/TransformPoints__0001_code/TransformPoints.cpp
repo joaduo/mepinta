@@ -24,16 +24,16 @@
 */
 
 #include <mepintasdk/sdk.h>
-#include "k3dv1_Mesh.h"
-#include "k3dv1_Matrix4.h"
+#include <data_types/k3dv1/mesh/mesh.h>
+#include <data_types/k3dv1/matrix4/matrix4.h>
 
 //TODO: add selection weight
 EXPORTED_SYMBOL
 int on_deform_mesh(MP_args_p args){
   //Declare inputs
-  INPUT(k3dv1_Matrix4*,matrix,args);
+  INPUT(k3d::matrix4*,matrix,args);
   //Declare outputs
-  OUTPUT(k3dv1_Mesh*,mesh,args);
+  OUTPUT(k3d::mesh*,mesh,args);
 
   k3d::mesh::points_t& OutputPoints = mesh->points.writable();
 
