@@ -48,7 +48,7 @@ class DevelopmentManagerCli(FrameworkBase):
     '''
     project_path = joinPath(self._getBuildPath(), 'shedksin_modules_build')
     creator = self.shedskin_project_creator
-    return creator.createShedskinProject(project_path, overwrite)
+    return creator.createProject(project_path, overwrite)
 
   def _deploySdk(self, backend, overwrite):
     ''' Create the sdk path with the headers to include.
@@ -120,7 +120,6 @@ class DevelopmentManagerCli(FrameworkBase):
     except ImportError:
       return QtProjectPluginCreatorBase(self.context)
 
-
   def _deployPluginSet(self, plugins_set, backend, sdk_path, overwrite):
     '''Deploy all plugins projects for a certain plugins_set'''
     #select the plugin project creator
@@ -141,6 +140,14 @@ class DevelopmentManagerCli(FrameworkBase):
                                                     overwrite)
     return mk_cmds
 
+  def __createForceVersion(self, shedskin_mk_targets):
+    mk_targets = []
+    for name, mk_cmd in shedskin_mk_targets:
+      name = '%s_force' % name
+      mk_cmd = '%s -f' % mk_cmd
+      mk_targets.append((name, mk_cmd))
+    return mk_targets
+
   def __createSubMakefile(self, name, mk_targets):
     dep_str = ' '
     make_str = ''
@@ -160,11 +167,18 @@ class DevelopmentManagerCli(FrameworkBase):
     mk_str = ''
     for name in sorted(make.keys()):
       mk_targets = make[name]
-      #all dep
+      #all deps
       dep_str += '%s ' % name
-      mk, dep = self.__createSubMakefile(name, mk_targets)
-      mk_str += '%s: %s\n\n' % (name, dep)
+      mk, deps = self.__createSubMakefile(name, mk_targets)
+      mk_str += '%s: %s\n\n' % (name, deps)
       mk_str += mk
+    #force version of shedskin
+    mk_force = self.__createForceVersion(make['shedskin'])
+    name = 'shedskin_force'
+    mk, deps = self.__createSubMakefile(name, mk_force)
+    mk_str += '%s: %s\n\n' % (name, deps)
+    mk_str += mk
+    #Save the file
     file_name = 'Makefile'
     content = self.templates.getTemplate(file_name,
                                          DEPENDENCIES=dep_str,

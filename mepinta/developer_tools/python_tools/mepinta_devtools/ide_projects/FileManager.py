@@ -51,11 +51,12 @@ class FileManager(FrameworkBase):
   def pathExists(self, path, package=False):
     if os.path.exists(path):#os.access(path, os.W_OK):
       if package and not os.access("%s/__init__.py" % path, os.W_OK):
-        self.log.debug("The package path %r exist but there is no %r file." % (path, "%s/__init__.py" % path))
+        self.log.d("The package path %r exist but there is no %r file." % \
+                   (path, "%s/__init__.py" % path))
         return False
-      self.log.debug("Exists %r" % path)
+      self.log.d("Exists %r" % path)
       return True
-    self.log.debug("Doesn't exist %r" % path)
+    self.log.d("Doesn't exist %r" % path)
     return False
 
   def saveTextFile(self, path, content, overwrite):
@@ -77,7 +78,8 @@ class FileManager(FrameworkBase):
 
   def copyFiles(self, src_path, dst_path, file_names):
     for file_name in file_names:
-      self.log.d('Copying %r to %r' % (joinPath(src_path, file_name), joinPath(dst_path, file_name)))
+      self.log.d('Copying %r to %r' % (joinPath(src_path, file_name),
+                                       joinPath(dst_path, file_name)))
       self.copy(joinPath(src_path, file_name), joinPath(dst_path, file_name))
 
   def findFilesSplit(self, directory, pattern, followlinks=True):

@@ -84,7 +84,7 @@ class ShedskinProjectCreator(FrameworkBase):
     mk_targets = [(strip(s), joinPath(python_src_path, s)) for s in mk_cmds]
     return mk_targets
 
-  def createShedskinProject(self, project_path, overwrite=False):
+  def createProject(self, project_path, overwrite=False):
     #Get the code source path
     mepinta_source_path = self.context.deployment_config.mepinta_source_path
     #Create the mepinta package

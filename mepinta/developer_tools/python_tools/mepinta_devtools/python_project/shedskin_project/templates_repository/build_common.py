@@ -83,8 +83,7 @@ def compileShedskinModule(python_module):
     sys.exit(r_value)
   logInfo('Done building %s.' % python_module)
 
-def buildShedskinModule(python_module, generate=True, build=True):
-  os.chdir(os.path.dirname(__file__))
+def generateAndBuild(python_module, generate, build):
   if generate:
     #generate CPP code from python
     generateShedskinCppCode(python_module)
@@ -94,3 +93,9 @@ def buildShedskinModule(python_module, generate=True, build=True):
     #copy the module to the mepinta code to be used
     copyShedskinModule(python_module)
 
+def buildShedskinModule(python_module, generate=True, build=True):
+  os.chdir(os.path.dirname(__file__))
+  generate = not os.path.exists(getMakefileName(python_module)) or \
+            len(sys.argv) > 1 and sys.argv[1] == '-f'
+  build = True
+  generateAndBuild(python_module, generate, build)
