@@ -127,7 +127,7 @@ class DevelopmentManagerCli(FrameworkBase):
     mk_cmds = []
     creator = self._getPluginProjectCreator(plugins_set, backend)
     plugins_path = joinPath(self._getBuildPath(), 'plugins_build')
-    for plugin_type in ('data_types', 'processors'):
+    for plugin_type in ('data_types', 'processors', 'support_libs'):
       projects_path = joinPath(self._getQtProjectsPath(), plugins_set)
       manifests = self.plugins_browser.getManifests(plugins_set, backend,
                                                     plugin_type)
@@ -201,7 +201,7 @@ def smokeTestModule():
 #  from common.log.debugPrint import debugPrint
   from getDefaultContext import getDefaultContext
   context = getDefaultContext()
-  DevelopmentManagerCli(context).run(overwrite=False)
+  DevelopmentManagerCli(context).run(overwrite=True)
 
 if __name__ == "__main__":
   smokeTestModule()
