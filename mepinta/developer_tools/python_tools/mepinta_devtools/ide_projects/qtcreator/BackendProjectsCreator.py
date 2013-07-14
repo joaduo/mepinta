@@ -93,7 +93,7 @@ class BackendProjectsCreator(FrameworkBase):
     projects_path = joinPath(qt_projects_path, 'backend')
     for api in ('c', 'cpp'):
       backend_path = joinPath(projects_path, 'backend_api_%s' % api)
-      self.file_manager.makedirs(backend_path, overwrite)
+      self.file_manager.makedirs(backend_path)
       mk_target = self.createProject(backend_path, api, sdk_path, libs_path,
                                      overwrite)
       mk_targets.append(mk_target)

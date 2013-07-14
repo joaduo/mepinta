@@ -41,7 +41,7 @@ def getDefaultContext(log_level=LOG_INFO, name='python'):
     raise RuntimeError('You should call the default context only once. (in the main script)')
   else:
     called_once = True
-  deployment_path = '/home/jduo/001-Mepinta/EclipseProjects_GitRepo/mepinta_test_folders/deployment6'
+  deployment_path = '/home/jduo/001-Mepinta/EclipseProjects_GitRepo/mepinta_test_folders/deployment7'
   context = getMepintaContext(name, deployment_path)
   context.log.setLevel(log_level)
   setConfigs(context, deployment_path)

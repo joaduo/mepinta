@@ -34,16 +34,17 @@ class DeploymentCreator(FrameworkBase):
   '''
   def __post_init__(self):
     self.__templates = TemplateManager(self.context, path_ref=__file__)
+    self.file_manager = FileManager(self.context)
 
   def createConfig(self, deployment_path, translation_dict,
                    template_name='deployment_config.py', overwrite=False):
     file_path = joinPath(deployment_path, 'deployment_config.py')
-    content = self.__templates.getTemplate(template_name, translation_dict)
+    content = self.__templates.getTemplate(template_name, **translation_dict)
     self.file_manager.saveTextFile(file_path, content, overwrite)
 
   def copyScripts(self, deployment_path):
     scripts_names = ['mepinta_demo.py', 'mepinta_tests.py', 'mepinta_dev.py']
-    self.__templates.copyScripts(deployment_path, scripts_names)
+    self.__templates.copyScripts('', deployment_path, scripts_names)
 
 
 class DeploymentManager(FrameworkBase):
@@ -53,8 +54,8 @@ class DeploymentManager(FrameworkBase):
   This way code and installation are split to simplify maintenance.
   '''
   def __post_init__(self, mepinta_source_path):
-    self.file_mananger = FileManager(self.context)
-    self.deployment_manager = DeploymentCreator(self.context)
+    self.file_manager = FileManager(self.context)
+    self.deployment_creator = DeploymentCreator(self.context)
     self.mepinta_source_path = mepinta_source_path
 
   def _getSrcPath(self):
@@ -70,14 +71,14 @@ class DeploymentManager(FrameworkBase):
       return
     #Check if the deployment already exists
     if self._emptyDeploy(deployment_path) or force:
-      if not self.file_mananger.pathExists(deployment_path):
+      if not self.file_manager.pathExists(deployment_path):
         self.log.debug('Creating deployment path %r' % deployment_path)
         os.makedirs(deployment_path)
       self.log('Deploying mepinta to %r.' % deployment_path)
-      self.deployment_manager.createConfig(deployment_path,
+      self.deployment_creator.createConfig(deployment_path,
                                            self._getTranslationDict(),
                                            overwrite=force)
-      self.deployment_manager.copyScripts(deployment_path)
+      self.deployment_creator.copyScripts(deployment_path)
     else:
       msg = 'Deployment is not empty use the --force flag to overwrite it.'
       self.log.w(msg)
@@ -94,7 +95,7 @@ class DeploymentManager(FrameworkBase):
     return common_prefix != self._getSrcPath()
 
   def _emptyDeploy(self, deployment_path):
-    return not self.file_mananger.pathExists(deployment_path) or \
-            self.file_mananger.listDir(deployment_path) == []
+    return not self.file_manager.pathExists(deployment_path) or \
+            self.file_manager.listDir(deployment_path) == []
 
 

@@ -74,7 +74,7 @@ class DeploymentCommand(object):
     '''
     sys.path.append(mepinta_source_path + '/developer_tools/python_tools')
     from mepinta_devtools.deployment.PythonPathManager import PythonPathManager
-    PythonPathManager().appendAll(mepinta_source_path)
+    PythonPathManager().appendInitial(mepinta_source_path)
 
   def _getMepintaSrcPath(self):
     mepinta_source_path = os.path.dirname(os.path.realpath(__file__))

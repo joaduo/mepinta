@@ -41,7 +41,7 @@ class MepintaCppSdkCreator(FrameworkBase):
     latest_manifests = {}
     for m in manifests:
       m = m(self.context)
-      name, version = m.getModuleName().split(sep)
+      name, version = m.__module__.split(sep)
       if name not in latest_manifests:
         latest_manifests[name] = dict(version=version, manifest=m)
       if version > latest_manifests[name]['version']:
@@ -51,7 +51,7 @@ class MepintaCppSdkCreator(FrameworkBase):
   def createDataTypesInclude(self, project_path, plugins_set, overwrite=False):
     #create data_types include path
     dtypes_path = joinPath(project_path, 'data_types')
-    self.file_manager.makedirs(dtypes_path, overwrite)
+    self.file_manager.makedirs(dtypes_path)
     #add plugins path
     backend = 'c_and_cpp'
     self._linkIncludeFolders(project_path, plugins_set, backend, overwrite)
@@ -62,9 +62,11 @@ class MepintaCppSdkCreator(FrameworkBase):
       m = m['manifest']
       #create directories
       link_dir = joinPath(project_path, m.getIncludeDir())
-      self.file_manager.makedirs(link_dir, overwrite)
+      #Ignore, since it will be repeated
+      self.file_manager.makedirs(link_dir)
       #link src dir
       link_dst = joinPath(link_dir, m.getName())
+      #always force, since they are not removed
       self.file_manager.symlink(m.getSourcesPath(), link_dst, overwrite)
 
   def createProject(self, project_path, overwrite=False):

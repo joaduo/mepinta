@@ -118,6 +118,8 @@ private:
       point_weights->push_back(Vertex[3]);
     }
 
+#pragma GCC diagnostic ignored "-Wunused-parameter"
+
     void on_face(const k3d::mesh::indices_t& Points, const k3d::mesh::indices_t& TexturePoints, const k3d::mesh::indices_t& Normals)
     {
       if(!polyhedron)

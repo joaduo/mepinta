@@ -32,7 +32,7 @@ class ShedskinProjectCreator(FrameworkBase):
   def __linkPipelineBackend(self, mepinta_source_path, project_path, overwrite):
     #Create the new shedskin library path (external, cpp and hpp are fixed)
     external_path = joinPath(project_path, 'shedskin_builtin_lib')
-    self.file_manager.makedirs(external_path, overwrite)
+    self.file_manager.makedirs(external_path)
     #Link the library to the source folder
     backend_rel = ('core', 'pipeline_backend', 'pipeline_backend_c_and_cpp',
                    'pipeline_backend')
@@ -41,7 +41,7 @@ class ShedskinProjectCreator(FrameworkBase):
     self.file_manager.symlink(backend_src, backend_dst, overwrite)
     #Link the includes for external lib
     includes_dst = joinPath(external_path, 'pipeline_backend_implementation')
-    self.file_manager.makedirs(includes_dst, overwrite)
+    self.file_manager.makedirs(includes_dst)
     includes_src = joinPath(mepinta_source_path, 'backend',
                                          'c_and_cpp', 'backend_api_c')
     list_path = joinPath(backend_src, 'implementation', 'files_to_link')
@@ -90,7 +90,7 @@ class ShedskinProjectCreator(FrameworkBase):
     #Create the mepinta package
     python_src_path = joinPath(project_path, 'src')
     #Where all the python code goes
-    self.file_manager.makedirs(python_src_path, overwrite)
+    self.file_manager.makedirs(python_src_path)
     #Link pipeline package and pipeline_lo_facade module
     self.__linkPipelineAndPipelineLoFacade(mepinta_source_path, python_src_path, overwrite)
     #Link pipeline_backend stuff

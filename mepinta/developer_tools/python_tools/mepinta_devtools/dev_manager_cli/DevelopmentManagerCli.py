@@ -56,7 +56,7 @@ class DevelopmentManagerCli(FrameworkBase):
     basis.
     '''
     sdk_path = joinPath(self._getBuildPath(), 'sdk', backend)
-    self.file_manager.makedirs(sdk_path, overwrite)
+    self.file_manager.makedirs(sdk_path)
     self.mepinta_sdk_creator.createProject(sdk_path, overwrite)
     return sdk_path
 
@@ -66,7 +66,7 @@ class DevelopmentManagerCli(FrameworkBase):
     (but not support libs)
     '''
     libs_path = joinPath(self._getBuildPath(), 'libs', backend)
-    self.file_manager.makedirs(libs_path, overwrite)
+    self.file_manager.makedirs(libs_path)
     return libs_path
 
   def _deployCandCppProjects(self, overwrite):
@@ -201,7 +201,7 @@ def smokeTestModule():
 #  from common.log.debugPrint import debugPrint
   from getDefaultContext import getDefaultContext
   context = getDefaultContext()
-  DevelopmentManagerCli(context).run(overwrite=True)
+  DevelopmentManagerCli(context).run(overwrite=False)
 
 if __name__ == "__main__":
   smokeTestModule()

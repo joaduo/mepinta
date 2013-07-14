@@ -38,7 +38,7 @@ class QtProjectPluginCreatorBase(FrameworkBase):
   def _createLibDirectory(self, plugins_path, rel_lib_dir, overwrite):
     #Create the directory where the lib is going to be stored
     dest_dir = joinPath(plugins_path, self.__backend, rel_lib_dir)
-    self.file_manager.makedirs(dest_dir, overwrite)
+    self.file_manager.makedirs(dest_dir)
     return dest_dir
 
   def _getIncludesList(self):
@@ -77,7 +77,7 @@ class QtProjectPluginCreatorBase(FrameworkBase):
     target = manifest.getModuleName()
     project_path = joinPath(qt_projects_path, manifest.getRelDir(),
                             manifest.getName())
-    self.file_manager.makedirs(project_path, overwrite)
+    self.file_manager.makedirs(project_path)
     #create pro file
     pro_str = self.templates.getTemplate('k3dv1_plugin.pro',
                                          DESTDIR=dest_dir,

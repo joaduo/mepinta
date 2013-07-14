@@ -42,9 +42,11 @@ class FileManager(FrameworkBase):
     if not (ignore_existing and os.path.exists(path) and os.path.isdir(path)):
       os.mkdir(path)
 
-  def makedirs(self, path, ignore_existing=False):
-    if not (ignore_existing and os.path.exists(path) and os.path.isdir(path)):
+  def makedirs(self, path):
+    if not (os.path.exists(path) and os.path.isdir(path)):
       os.makedirs(path)
+    else:
+      self.log.d('Ignoring %s' % path)
 
   def pathExists(self, path, package=False):
     if os.path.exists(path):#os.access(path, os.W_OK):
