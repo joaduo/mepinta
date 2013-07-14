@@ -22,36 +22,49 @@ from common.abstract.FrameworkBase import FrameworkBase
 from mepinta.plugins_manifest import PluginManifestBase
 from common.PackageClassesInspector import PackageClassesInspector
 from inspect import isclass
-
 from importlib import import_module
+from common.path import joinPath
 
 class PluginsBrowser(FrameworkBase):
   def __post_init__(self):
     self.package_inspector = PackageClassesInspector(self.context)
 
-  def getManifests(self, backend, plugin_type,
-                           manifest_type=PluginManifestBase):
+  def getManifests(self, plugins_set, backend, plugin_type,
+                   manifest_type=PluginManifestBase):
     '''Get the list of all concrete plugin manifest for a plugins_set included
     in the python path.
     '''
     filter_func = lambda obj: isclass(obj) \
                               and issubclass(obj, manifest_type) \
                               and not obj.__name__.endswith('Base')
-    manifests = self._getManifests(filter_func, backend, plugin_type)
+    manifests = self._getManifests(plugins_set, backend, plugin_type, filter_func)
     return manifests
 
-  def _getManifests(self, filter_func, backend, plugin_type):
-    manifests = []
+  def _getPackage(self, backend, plugin_type, plugins_set):
+    '''Make sure the package is the one from the plugin set
+    '''
     pkg_str = 'plugins.{backend}.{plugin_type}'.format(**locals())
-    #pkg = #__import__(pkg_str, fromlist='dummy')
     pkg = import_module(pkg_str)
-    pkg = reload(pkg)
-    mod_dict = self.package_inspector.builDict(pkg, filter_func)
+    #Example path
+    #plugins/{backend}/{plugin_set}/python_modules/plugins/{backend}/{plugin_type}
+    root = self.context.deployment_config.mepinta_source_path
+    pkg_path = joinPath(root, 'plugins', backend, plugins_set, 'python_modules',
+                        'plugins', backend, plugin_type)
+    #replace path
+    pkg.__path__.pop()
+    pkg.__path__.append(pkg_path)
+    #pkg = reload(pkg)
+    return pkg
+
+  def _getManifests(self, plugins_set, backend, plugin_type, filter_func):
+    manifests = []
+    pkg = self._getPackage(backend, plugin_type, plugins_set)
+    mod_dict = self.package_inspector.builDict(pkg, filter_func, reload_=True)
     manifests += mod_dict.values()
     manifests = [ m[0] for m in manifests if len(m)]
     return manifests
 
-  def getBaseManifests(self, backend, plugin_type,
+  def getBaseManifests(self, plugins_set, backend, plugin_type,
                       manifest_type=PluginManifestBase):
     '''Get the list of all plugin manifest for a plugins_set included in the
     python path.
@@ -59,7 +72,7 @@ class PluginsBrowser(FrameworkBase):
     filter_func = lambda obj: isclass(obj) \
                               and issubclass(obj, PluginManifestBase)\
                               and obj.__name__.endswith('Base')
-    manifests = self._getManifests(filter_func, backend, plugin_type)
+    manifests = self._getManifests(backend, plugin_type, filter_func)
     return manifests
 
 

@@ -83,7 +83,7 @@ class PluginManifestBase(FrameworkBase):
     #plugins.c_and_cpp.processors.k3dv1.mesh.modifiers.deformation. \
     #BlendDeformation.BlendDeformation__0001
     #get rid of 'plugins' and 'BlendDeformation__0001'
-    mod_split = self.__module__.split('.')[1:-1]
+    mod_split = self.__module__.split('.')[2:-1]
     rel_lib_dir = joinPath(mod_split)
     return rel_lib_dir
 

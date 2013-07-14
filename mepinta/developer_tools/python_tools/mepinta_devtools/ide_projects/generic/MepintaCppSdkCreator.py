@@ -32,9 +32,10 @@ class MepintaCppSdkCreator(FrameworkBase):
     self.plugins_browser = PluginsBrowser(self.context)
     self.python_path = PythonPathManager()
 
-  def _getLatestDataTypesManifests(self, backend):
+  def _getLatestDataTypesManifests(self, plugins_set, backend):
     #get module manifests
-    manifests = self.plugins_browser.getManifests(backend, 'data_types')
+    manifests = self.plugins_browser.getManifests(plugins_set, backend,
+                                                  'data_types')
     #link to each code
     sep = self.context.minor_version_separator
     latest_manifests = {}
@@ -53,13 +54,10 @@ class MepintaCppSdkCreator(FrameworkBase):
     self.file_manager.makedirs(dtypes_path, overwrite)
     #add plugins path
     backend = 'c_and_cpp'
-    mepinta_source_path = self.context.deployment_config.mepinta_source_path
-    self.python_path.appendPlugins(mepinta_source_path, plugins_set, backend)
-    self._linkIncludeFolders(project_path, backend, overwrite)
-    self.python_path.removePlugins(mepinta_source_path, plugins_set, backend)
+    self._linkIncludeFolders(project_path, plugins_set, backend, overwrite)
 
-  def _linkIncludeFolders(self, project_path, backend, overwrite):
-    manifests = self._getLatestDataTypesManifests(backend)
+  def _linkIncludeFolders(self, project_path, plugins_set, backend, overwrite):
+    manifests = self._getLatestDataTypesManifests(plugins_set, backend)
     for m in manifests.values():
       m = m['manifest']
       #create directories

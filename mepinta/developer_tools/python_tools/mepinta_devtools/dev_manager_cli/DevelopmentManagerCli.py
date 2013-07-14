@@ -84,17 +84,15 @@ class DevelopmentManagerCli(FrameworkBase):
     creator = self.backend_projects_creator
     make['backend'] = creator.deployProjects(self._getQtProjectsPath(),
                                              sdk_path, libs_path, overwrite)
-    #Append the set to the python path
+    plugins_sets = ['k3dv1', 'basic']
     mepinta_source_path = self.context.deployment_config.mepinta_source_path
-    plugins_sets = ['extend_path', 'k3dv1', 'basic']
     for plugins_set in plugins_sets:
+      #Append the set to the python path
       self.python_path.appendPlugins(mepinta_source_path, plugins_set, backend)
-    for plugins_set in plugins_sets:#, 'basic']:
       target = 'plugins_' + plugins_set
       make[target] = self._deployPluginSet(plugins_set, backend, sdk_path,
-                                           overwrite)
-    #remove the set to the python path
-    for plugins_set in plugins_sets:
+                                         overwrite)
+      #remove the set to the python path
       self.python_path.removePlugins(mepinta_source_path, plugins_set, backend)
     return make
 
@@ -130,9 +128,9 @@ class DevelopmentManagerCli(FrameworkBase):
     creator = self._getPluginProjectCreator(plugins_set, backend)
     plugins_path = joinPath(self._getBuildPath(), 'plugins_build')
     for plugin_type in ('data_types', 'processors'):
-      projects_path = joinPath(self._getQtProjectsPath(), plugins_set,
-                               plugin_type)
-      manifests = self.plugins_browser.getManifests(backend, plugin_type)
+      projects_path = joinPath(self._getQtProjectsPath(), plugins_set)
+      manifests = self.plugins_browser.getManifests(plugins_set, backend,
+                                                    plugin_type)
       for manifest in manifests:
         manifest = manifest(self.context)
         if not hasattr(manifest, 'build') or manifest.build:

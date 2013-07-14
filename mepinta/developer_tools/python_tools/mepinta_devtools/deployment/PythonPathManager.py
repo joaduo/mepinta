@@ -19,7 +19,16 @@ You should have received a copy of the GNU General Public License
 along with Mepinta. If not, see <http://www.gnu.org/licenses/>.
 '''
 import sys
-from common.path import joinPath
+import os
+
+def joinPath(path, *path_list):
+  if isinstance(path, list) or isinstance(path, tuple):
+    joint_path = os.path.join(*map(joinPath, path))
+  else:
+    joint_path = path
+  if len(path_list):
+    joint_path = os.path.join(joint_path, joinPath(path_list))
+  return joint_path
 
 class PythonPathManager(object):
   def getPythonRelativePathsDict(self):
@@ -51,9 +60,20 @@ class PythonPathManager(object):
       sys.path.remove(path)
 
   def appendPlugins(self, mepinta_source_path, plugins_set='demo',
-                        backend='python'):
+                    backend='python'):
     rel_path = joinPath('plugins', backend, plugins_set, 'python_modules')
     self.__appendPath(mepinta_source_path, rel_path)
+    #there are multiple packages so beware
+#    plugins = self.__getPluginsPackage()
+#    plugins_path = joinPath(mepinta_source_path, rel_path, 'plugins')
+#    if plugins_path not in plugins.__path__:
+#      plugins.__path__.pop()
+#      plugins.__path__.append(plugins_path)
+#      print plugins.__path__
+#
+#  def __getPluginsPackage(self):
+#    import plugins
+#    return plugins
 
   def removePlugins(self, mepinta_source_path, plugins_set='demo',
                         backend='python'):
