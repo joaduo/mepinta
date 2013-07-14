@@ -18,12 +18,10 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with Mepinta. If not, see <http://www.gnu.org/licenses/>.
 '''
-from common.abstract.FrameworkBase import FrameworkBase
 
-#TODO: WIP
-class PluginsBrowser(FrameworkBase):
-  '''
-  This class should give provide interfaces to navigate installed plugins.
-  This is used by the UI to offer available plugins
-  '''
+from mepinta.plugins_manifest import SupportLibManifestBase
+
+class manifest(SupportLibManifestBase):
   pass
+
+

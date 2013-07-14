@@ -49,15 +49,16 @@ def getMakefileName(python_module):
 
 def generateShedskinCppCode(python_module, cmd_args=[]):
   # First generate the CPP code
-  sys.argv.append('-e')
+  sys.argv.append('-e') #create extension
+  sys.argv.append('-n') #silent
   makefile = getMakefileName(python_module)
-  sys.argv.extend(['-m', makefile])
-  sys.argv.extend(['-n', '-L', '../shedskin_builtin_lib'])
-  flags_file = '%s_FLAGS' % python_module
-  if os.path.exists(flags_file):
+  sys.argv.extend(['-m', makefile]) #output makefile name
+  sys.argv.extend(['-L', '../shedskin_builtin_lib']) #other builtin libs
+  flags_file = '%s_FLAGS' % python_module #compiler flags file
+  if os.path.exists(flags_file): #if the file exist use it
     sys.argv.extend(['-f', flags_file])
-  sys.argv.extend(cmd_args)
-  sys.argv.append(python_module)
+  sys.argv.extend(cmd_args) #add other args
+  sys.argv.append(python_module) #python module to convert
 
   logInfo('Generating shedskin module %s ...' % python_module)
   #Run type analysis
@@ -85,8 +86,11 @@ def compileShedskinModule(python_module):
 def buildShedskinModule(python_module, generate=True, build=True):
   os.chdir(os.path.dirname(__file__))
   if generate:
+    #generate CPP code from python
     generateShedskinCppCode(python_module)
   if build:
+    #compile the CPP code
     compileShedskinModule(python_module)
+    #copy the module to the mepinta code to be used
     copyShedskinModule(python_module)
 

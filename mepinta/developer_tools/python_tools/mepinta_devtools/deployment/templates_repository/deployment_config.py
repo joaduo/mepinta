@@ -1,9 +1,8 @@
 # -*- coding: utf-8 -*-
 import os
+
 class deployment_config(object):
   mepinta_source_path = '/home/jduo/001-Mepinta/git/mepinta/mepinta'
-  eclipse_projects_path = '${eclipse_projects_path}'
-  qt_projects_path = '${qt_projects_path}'
   libk3dsdk_path = '${libk3dsdk_path}'
   libgsigc2_path = '${libgsigc2_path}'
   libboost_unit_test_framework_path = '${libboost_unit_test_framework_path}'

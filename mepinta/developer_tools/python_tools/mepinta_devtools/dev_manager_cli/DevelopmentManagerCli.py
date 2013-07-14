@@ -23,43 +23,59 @@ from mepinta_devtools.python_project.shedskin_project.ShedskinProjectCreator imp
 from mepinta_devtools.ide_projects.FileManager import FileManager
 from mepinta_devtools.ide_projects.qtcreator.BackendProjectsCreator import BackendProjectsCreator
 from mepinta.abstract.MepintaError import MepintaError
-from mepinta_devtools.ide_projects.generic.MepintaSdkCreator import MepintaSdkCreator
+from mepinta_devtools.ide_projects.generic.MepintaCppSdkCreator import MepintaCppSdkCreator
 from mepinta_devtools.templates.TemplateManager import TemplateManager
 from mepinta_devtools.deployment.PythonPathManager import PythonPathManager
-from common.PackageClassesInspector import PackageClassesInspector
-from mepinta.plugins_manifest import PluginManifestBase
+from mepinta_devtools.plugins.PluginsBrowser import PluginsBrowser
 from common.path import joinPath
-from inspect import isclass
 import os
 import argparse
+from mepinta_devtools.ide_projects.qtcreator.QtProjectPluginCreator import QtProjectPluginCreatorBase
 
 class DevelopmentManagerCli(FrameworkBase):
   def __post_init__(self):
     self.shedskin_project_creator = ShedskinProjectCreator(self.context)
     self.backend_projects_creator = BackendProjectsCreator(self.context)
-    self.mepinta_sdk_creator = MepintaSdkCreator(self.context)
+    self.mepinta_sdk_creator = MepintaCppSdkCreator(self.context)
     self.file_manager = FileManager(self.context)
     self.templates = TemplateManager(self.context, path_ref=__file__)
-    self.package_inspector = PackageClassesInspector(self.context)
+    self.plugins_browser = PluginsBrowser(self.context)
     self.python_path = PythonPathManager()
 
   def _deployBuildShedskinModules(self, overwrite):
-    project_path = joinPath(self._getDevPath(), 'shedksin_modules_build')
+    ''' Deploy python projects to build shedskin modules
+    (pipeline_lo and load_library)
+    '''
+    project_path = joinPath(self._getBuildPath(), 'shedksin_modules_build')
     creator = self.shedskin_project_creator
     return creator.createShedskinProject(project_path, overwrite)
 
   def _deploySdk(self, backend, overwrite):
-    sdk_path = joinPath(self._getDevPath(), 'sdk', backend)
+    ''' Create the sdk path with the headers to include.
+    Algo in that folder go the data_types, but they are created by plugins_set
+    basis.
+    '''
+    sdk_path = joinPath(self._getBuildPath(), 'sdk', backend)
     self.file_manager.makedirs(sdk_path, overwrite)
     self.mepinta_sdk_creator.createProject(sdk_path, overwrite)
     return sdk_path
 
   def _createLibsPath(self, backend, overwrite):
-    libs_path = joinPath(self._getDevPath(), 'libs', backend)
+    '''Create the directory where the common libs will be stored.
+    Libs needed to start up mepinta. Mepinta core libs specially.
+    (but not support libs)
+    '''
+    libs_path = joinPath(self._getBuildPath(), 'libs', backend)
     self.file_manager.makedirs(libs_path, overwrite)
     return libs_path
 
   def _deployCandCppProjects(self, overwrite):
+    '''Deploy projects related with the c_and_cpp backend.
+        -shedskin modules
+        -backend core libraries (c and cpp)
+        -sdk path (link to sdk sources)
+        -all c_and_cpp plugins
+    '''
     backend = 'c_and_cpp'
     make = {}
     make['shedskin'] = self._deployBuildShedskinModules(overwrite)
@@ -68,9 +84,18 @@ class DevelopmentManagerCli(FrameworkBase):
     creator = self.backend_projects_creator
     make['backend'] = creator.deployProjects(self._getQtProjectsPath(),
                                              sdk_path, libs_path, overwrite)
-    plugins_set = 'k3dv1'
-    make['plugins'] = self._deployPluginSet(plugins_set, backend, sdk_path,
-                                            overwrite)
+    #Append the set to the python path
+    mepinta_source_path = self.context.deployment_config.mepinta_source_path
+    plugins_sets = ['extend_path', 'k3dv1', 'basic']
+    for plugins_set in plugins_sets:
+      self.python_path.appendPlugins(mepinta_source_path, plugins_set, backend)
+    for plugins_set in plugins_sets:#, 'basic']:
+      target = 'plugins_' + plugins_set
+      make[target] = self._deployPluginSet(plugins_set, backend, sdk_path,
+                                           overwrite)
+    #remove the set to the python path
+    for plugins_set in plugins_sets:
+      self.python_path.removePlugins(mepinta_source_path, plugins_set, backend)
     return make
 
   def run(self, overwrite=False):
@@ -79,50 +104,44 @@ class DevelopmentManagerCli(FrameworkBase):
     self._createMakeFile(make, overwrite)
 
   def _getPluginProjectCreator(self, plugins_set, backend):
+    '''Get the project creator for a plugins_set.
+    So each plugins_set can manage the building
+    '''
     class_str = 'PluginProjectCreator'
     mod_str = 'plugins.{backend}.devtools.{plugins_set}.qtcreator.{class_str}'
     mod_str = mod_str.format(**locals())
-    module = __import__(mod_str, fromlist='dummy')
-    if hasattr(module, class_str):
-      class_ = getattr(module, class_str)
-      return class_(self.context)
-    else:
-      msg = 'Could not find class {class_str} in module {mod_str}'
-      msg = msg.format(locals())
-      raise MepintaError(msg)
+    try:
+      module = __import__(mod_str, fromlist='dummy')
+      if hasattr(module, class_str):
+        class_ = getattr(module, class_str)
+        return class_(self.context)
+      else:
+        msg = 'Could not find class {class_str} in module {mod_str}'
+        msg = msg.format(**locals())
+        raise MepintaError(msg)
+    except ImportError:
+      return QtProjectPluginCreatorBase(self.context)
 
-  def _getPluginsManifests(self, backend, plugin_type):
-    manifests = []
-    filter_func = lambda obj: isclass(obj) \
-                              and issubclass(obj, PluginManifestBase) \
-                              and not obj.__name__.endswith('Base')
-    pkg_str = 'plugins.{backend}.{plugin_type}'.format(**locals())
-    pkg = __import__(pkg_str, fromlist='dummy')
-    pkg = reload(pkg)
-    mod_dict = self.package_inspector.builDict(pkg, filter_func)
-    manifests += mod_dict.values()
-    manifests = [ m[0] for m in manifests if len(m)]
-    return manifests
 
   def _deployPluginSet(self, plugins_set, backend, sdk_path, overwrite):
-    #Append the set to the python path
-    mepinta_source_path = self.context.deployment_config.mepinta_source_path
-    self.python_path.appendPlugins(mepinta_source_path, plugins_set, backend)
+    '''Deploy all plugins projects for a certain plugins_set'''
     #select the plugin project creator
-    build_scripts = []
+    mk_cmds = []
     creator = self._getPluginProjectCreator(plugins_set, backend)
-    plugins_path = joinPath(self._getDevPath(), 'plugins_build')
+    plugins_path = joinPath(self._getBuildPath(), 'plugins_build')
     for plugin_type in ('data_types', 'processors'):
       projects_path = joinPath(self._getQtProjectsPath(), plugins_set,
                                plugin_type)
-      for manifest in self._getPluginsManifests(backend, plugin_type):
+      manifests = self.plugins_browser.getManifests(backend, plugin_type)
+      for manifest in manifests:
+        manifest = manifest(self.context)
         if not hasattr(manifest, 'build') or manifest.build:
           s = creator.createProject(projects_path, plugins_path,
                                      sdk_path, manifest, overwrite)
-          build_scripts.extend(s)
-    #remove the set to the python path
-    self.python_path.removePlugins(mepinta_source_path, plugins_set, backend)
-    return build_scripts
+          mk_cmds.extend(s)
+    self.mepinta_sdk_creator.createDataTypesInclude(sdk_path, plugins_set,
+                                                    overwrite)
+    return mk_cmds
 
   def __createSubMakefile(self, name, mk_targets):
     dep_str = ' '
@@ -135,6 +154,10 @@ class DevelopmentManagerCli(FrameworkBase):
     return make_str, dep_str
 
   def _createMakeFile(self, make, overwrite):
+    '''Create the Makefile from the building scripts
+    :param make: dictionary of building scripts
+    :param overwrite: overwrite existing scripts
+    '''
     dep_str = ''
     mk_str = ''
     for name in sorted(make.keys()):
@@ -148,21 +171,25 @@ class DevelopmentManagerCli(FrameworkBase):
     content = self.templates.getTemplate(file_name,
                                          DEPENDENCIES=dep_str,
                                          BUILD_SCRIPTS=mk_str)
-    path = joinPath(self._getDevPath(), file_name)
+    path = joinPath(self._getBuildPath(), file_name)
     self.file_manager.saveTextFile(path, content, overwrite)
 
   def _testDeploymentSanity(self, overwrite):
+    '''Check that the deployment directory exists'''
     path = self.context.deployment_config.deployment_path
     if not os.path.exists(path) and not overwrite:
       raise MepintaError('Deployment path does not exist: %r' % path)
 
-  def _getDevPath(self):
+  def _getBuildPath(self):
+    '''Get the build path of all mepinta deployment'''
     return joinPath(self.context.deployment_config.deployment_path, 'build')
 
   def _getQtProjectsPath(self):
-    return joinPath(self._getDevPath(), 'QtProjects')
+    '''Get the Qt Projects of the deployment'''
+    return joinPath(self._getBuildPath(), 'QtProjects')
 
   def __getParser(self):
+    '''Get the command arguments parser of the CLI development manager'''
     description = 'Mepinta Development Manager Command Line Interface.'
     parser = argparse.ArgumentParser(description=description)
     parser.add_argument('command', type=str, help='Specify the dev command.')
@@ -173,7 +200,7 @@ class DevelopmentManagerCli(FrameworkBase):
     return parser
 
 def smokeTestModule():
-  from common.log.debugPrint import debugPrint
+#  from common.log.debugPrint import debugPrint
   from getDefaultContext import getDefaultContext
   context = getDefaultContext()
   DevelopmentManagerCli(context).run(overwrite=True)

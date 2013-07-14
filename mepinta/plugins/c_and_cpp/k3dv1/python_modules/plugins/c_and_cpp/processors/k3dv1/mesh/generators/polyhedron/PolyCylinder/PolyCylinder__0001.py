@@ -34,7 +34,7 @@ class PolyCylinder(MeshSourceManifestBase):
     inputs.u_power = DataProperty('k3d::double_t')
     inputs.top_segments = DataProperty('k3d::int32_t')
     inputs.bottom_segments = DataProperty('k3d::int32_t')
-    
+
     #updateMeshTopology.dpdencies += [inputs.u_segments,
     #                                 inputs.v_segments,
     #                                 inputs.top_cap,
@@ -54,8 +54,7 @@ class PolyCylinder(MeshSourceManifestBase):
                                      inputs.z_min,
                                      inputs.z_max,
                                      inputs.radius,
-                                     inputs.u_power,
-                                     inputs.material,]
+                                     inputs.u_power, ]
 
 
 manifest = PolyCylinder

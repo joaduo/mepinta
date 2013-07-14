@@ -88,6 +88,7 @@ class PluginPackageManager(FrameworkBase):
       Each build is a minor version.
       We need to list them and get them sorted by the versions.
     '''
+    #TODO: reuse the PluginsBrowser and make getName en el PluginManifest
     prefix = plugin_package.__name__ + "."
     other_modules = []
     modules_names = []

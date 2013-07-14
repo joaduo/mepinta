@@ -28,9 +28,9 @@ class PluginsManager(FrameworkBase):
   '''
     This class loads (and unloads) data types and processors plugins and keeps
   their dependencies in synch.
-    The main goal is to load a processor, but for this we need to load the data 
-  types used by it. Then this class takes care of the dependencies between 
-  processors and data types and having them synchronized. This means, loading 
+    The main goal is to load a processor, but for this we need to load the data
+  types used by it. Then this class takes care of the dependencies between
+  processors and data types and having them synchronized. This means, loading
   the correct versions of data types when changing a processor's version.
   '''
   def __post_init__(self):
@@ -40,18 +40,20 @@ class PluginsManager(FrameworkBase):
     #Let's instance each plugins manager
     self.data_type_plugins_manager = DataTypePluginsManager(data_types=self._data_types, processors=self.processors, parent=self, context=self.context)
     self.processor_plugins_manager = ProcessorPluginsManager(data_types=self._data_types, processors=self.processors, parent=self, context=self.context)
-  def loadDataType(self,data_type,minor_version=None,reload_=False):
+  def loadDataType(self, data_type, minor_version=None, reload_=False):
     return self.data_type_plugins_manager.loadDataType(data_type, minor_version, reload_)
-  def loadProcessor(self,processor,minor_version=None,replace=False,replace_version=None,reload_=False):
+  def loadProcessor(self, processor, minor_version=None, replace=False, replace_version=None, reload_=False):
     return self.processor_plugins_manager.loadProcessor(processor, minor_version, replace, replace_version, reload_)
-  def unloadProcessorLibrary(self,processor):
+  def unloadProcessorLibrary(self, processor):
     return self.processor_plugins_manager.unloadProcessorLibrary(processor)
 
-
-if __name__ == '__main__':
+def smokeTestModule():
+  from common.log.debugPrint import debugPrint
   from mepinta.context.MepintaContext import MepintaContext
   context = MepintaContext('python')
   pm = PluginsManager(context=context)
-  debugPrint (pm)
-  #pline = Pipeline(context=context)
-  
+  debugPrint(pm)
+
+
+if __name__ == "__main__":
+  smokeTestModule()

@@ -26,8 +26,9 @@ from mepinta.plugins_manifest.proxy.data_model import PropertyProxy, DataPropert
 from mepinta.abstract.MepintaError import MepintaError
 from common.type_checking.isiterable import isiterable
 from mepinta.plugins_manifest.proxy.ProcessorProxy import ProcessorProxy
-from common.path import splitPath
+from common.path import splitPath, joinPath
 import os
+import re
 
 __all__ = [
            'DataProperty',
@@ -52,9 +53,53 @@ QualifierBase = QualifierBase
 InotifyPropertyBase = InotifyPropertyProxy
 
 class PluginManifestBase(FrameworkBase):
-  pass
+  def getName(self):
+    if self.__class__.__module__ == '__main__':
+      import __main__
+      name = splitPath(__main__.__file__)[-2]
+    else:
+      name = self.__class__.__module__.split('.')[-2]
+    return name
+
+  def getModuleName(self):
+    if self.__class__.__module__ == '__main__':
+      import __main__
+      name = splitPath(__main__.__file__)[-1]
+      name = re.sub('(.*)\.(py|pyc)', r'\1', name)
+    else:
+      name = self.__class__.__module__.split('.')[-1]
+    return name
+
+  def getSourcesPath(self):
+    #build the source path
+    module = __import__(self.__module__, fromlist='dummy')
+    mod_name = self.getModuleName()
+    package_dir = os.path.dirname(module.__file__)
+    sources_path = joinPath(package_dir, mod_name + '_code')
+    return sources_path
+
+  def getRelDir(self):
+    #Example... of module
+    #plugins.c_and_cpp.processors.k3dv1.mesh.modifiers.deformation. \
+    #BlendDeformation.BlendDeformation__0001
+    #get rid of 'plugins' and 'BlendDeformation__0001'
+    mod_split = self.__module__.split('.')[1:-1]
+    rel_lib_dir = joinPath(mod_split)
+    return rel_lib_dir
+
+  def getMakeName(self):
+    return '.'.join(self.__module__.split('.')[2:])
 
 class DataTypeManifestBase(PluginManifestBase):
+  def getIncludeDir(self):
+    #Example... of module
+    #plugins.c_and_cpp.data_types.k3dv1.advanced.Integer.Integer__0001
+    #get rid of 'plugins.c_and_cpp' and 'Integer.Integer__0001'
+    mod_split = self.__module__.split('.')[2:-2]
+    rel_include_dir = joinPath(mod_split)
+    return rel_include_dir
+
+class SupportLibManifestBase(PluginManifestBase):
   pass
 
 class ProcessorManifestBase(PluginManifestBase):
@@ -75,19 +120,14 @@ class ProcessorManifestBase(PluginManifestBase):
     args, kwargs = self.__createDefineArguments()
     self.define(*args, **kwargs)
 
-  def getName(self):
-    if self.__class__.__module__ == '__main__':
-      import __main__
-      name = splitPath(__main__.__file__)[-2]
-    else:
-      name = self.__class__.__module__.split('.')[-2]
-    return name
   def __getBasicArguments(self):
     pp = self.processor_proxy
     return (pp.inputs, pp.internals, pp.functions, pp.outputs)
+
   def _superClassDefine(self, inputs, internals, functions, outputs):
     '''Reimplement this function in base classes to create a common pipeline topology. '''
     pass
+
   def __createDefineArguments(self):
     '''
       Calls all collected '_superClassDefine' methods.
@@ -210,6 +250,7 @@ class ProcessorManifestBase(PluginManifestBase):
       but maybe here is not the right place)
     '''
     pass
+
 
 if __name__ == "__main__":
   pass

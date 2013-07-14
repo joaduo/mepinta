@@ -40,10 +40,15 @@ class PythonPathManager(object):
       self.__appendPath(mepinta_source_path, path)
 
   def __appendPath(self, *args):
-    sys.path.append(joinPath(args))
+    #TODO: is this necessary?
+    path = joinPath(args)
+    if path not in sys.path:
+      sys.path.append(path)
 
   def __removePath(self, *args):
-    sys.path.remove(joinPath(args))
+    path = joinPath(args)
+    if path in sys.path:
+      sys.path.remove(path)
 
   def appendPlugins(self, mepinta_source_path, plugins_set='demo',
                         backend='python'):

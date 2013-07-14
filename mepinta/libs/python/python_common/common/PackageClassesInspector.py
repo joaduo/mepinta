@@ -25,8 +25,8 @@ class PackageClassesInspector(FrameworkBase):
   def getChildModules(self, package):
     return self._gatherModules(package)
 
-  def builDict(self, package, filter_func):
-    modules = self._gatherModules(package)
+  def builDict(self, package, filter_func, reload_=True):
+    modules = self._gatherModules(package, reload_)
     modules_dict = {}
     for module in modules:
       filtered = self._filterModule(module, filter_func)
@@ -40,16 +40,20 @@ class PackageClassesInspector(FrameworkBase):
         classes.append(obj)
     return classes
 
-  def _gatherModules(self, package):
+  def _gatherModules(self, package, reload_):
     modules = []
     prefix = package.__name__ + "."
     for _, modname, ispkg in pkgutil.iter_modules(package.__path__, prefix):
       if not ispkg:
         module = __import__(modname, fromlist="dummy")
+        if reload_:
+          module = reload(module)
         modules.append(module)
       else:
         package = __import__(modname, fromlist="dummy")
-        modules += self._gatherModules(package)
+        if reload_:
+          package = reload(package)
+        modules += self._gatherModules(package, reload_)
     return modules
 
 def smokeTestModule():

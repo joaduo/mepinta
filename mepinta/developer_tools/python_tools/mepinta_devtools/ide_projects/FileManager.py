@@ -32,7 +32,11 @@ class FileManager(FrameworkBase):
     if self.pathExists(dst) and force:
       os.remove(dst)
     self.log.debug('linking %r to %r' % (dst, src))
-    os.symlink(src, dst)
+    try:
+      os.symlink(src, dst)
+    except OSError as error:
+      msg = str(error) + '. Dst %r' % dst
+      raise OSError(msg)
 
   def mkdir(self, path, ignore_existing=False):
     if not (ignore_existing and os.path.exists(path) and os.path.isdir(path)):
@@ -43,7 +47,7 @@ class FileManager(FrameworkBase):
       os.makedirs(path)
 
   def pathExists(self, path, package=False):
-    if os.access(path, os.W_OK):
+    if os.path.exists(path):#os.access(path, os.W_OK):
       if package and not os.access("%s/__init__.py" % path, os.W_OK):
         self.log.debug("The package path %r exist but there is no %r file." % (path, "%s/__init__.py" % path))
         return False

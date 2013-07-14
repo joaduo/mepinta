@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 '''
 Mepinta
-Copyright (c) 2011-2012, Joaquin G. Duo, mepinta@joaquinduo.com.ar
+Copyright (c) 2011-2012, Joaquin G. Duo
 
 This file is part of Mepinta.
 
@@ -18,8 +18,7 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with Mepinta. If not, see <http://www.gnu.org/licenses/>.
 '''
-
-from mepinta.plugins_manifest.proxy.data_model import DataPropertyProxy,\
+from mepinta.plugins_manifest.proxy.data_model import DataPropertyProxy, \
   FunctumPropertyProxy
 from bisect import bisect_left
 from mepinta.plugins_manager.plugins_manager_detail.base import PluginsManagerBase
@@ -32,8 +31,8 @@ FrameworkException = RuntimeError
 class ProcessorPluginsManager(PluginsManagerBase):
   '''
   '''
-  def loadProcessorLibrary(self,processor):
-    self.log.info('Loading processor %r shared library'%processor)
+  def loadProcessorLibrary(self, processor):
+    self.log.info('Loading processor %r shared library' % processor)
     #Ask the lower lever C api to load this library, with local symbols, since we only call functions with pointers
     self.plugin_loader.loadProcessorLibrary(processor)
     #Add the processor as a dependant of the data_types
@@ -41,8 +40,8 @@ class ProcessorPluginsManager(PluginsManagerBase):
       self.data_types[data_type_name].processors.append(processor)
     #Add it to the loaded processors
     self.processors[processor.name][processor.version] = processor
-  def unloadProcessorLibrary(self,processor):
-    self.log.info('Unloading processor %r shared library'%processor)
+  def unloadProcessorLibrary(self, processor):
+    self.log.info('Unloading processor %r shared library' % processor)
     #Ask the lower lever C api to unload this library
     self.plugin_loader.unloadProcessorLibrary(processor)
     #Remove dependents from data types
@@ -51,13 +50,13 @@ class ProcessorPluginsManager(PluginsManagerBase):
     #Processor is not loaded anymore
     del self.processors[processor.name][processor.version]
   def loadProcessorsDataTypes(self, processor_proxy):
-    types_classes=[DataPropertyProxy, FunctumPropertyProxy]
-    for data_type_name,data_type_versions in processor_proxy.getRequiredDataTypes(types_classes).items():
+    types_classes = [DataPropertyProxy, FunctumPropertyProxy]
+    for data_type_name, data_type_versions in processor_proxy.getRequiredDataTypes(types_classes).items():
       #get the biggest version of a required datatype
       version = data_type_versions[-1]
       #Lets load it
       self.parent.loadDataType(data_type_name, version)
-  def __getProcessorProxy(self,processor_module):
+  def __getProcessorProxy(self, processor_module):
     if hasattr(processor_module, 'getProcessorProxy'):
       processor_proxy = processor_module.getProcessorProxy(self.context)
     elif hasattr(processor_module, 'plugin'):#TODO: delete this and above
@@ -67,48 +66,48 @@ class ProcessorPluginsManager(PluginsManagerBase):
       if issubclass(manifest_class, ProcessorManifestBase):
         processor_proxy = manifest_class(context=self.context).processor_proxy
       else:
-        raise RuntimeError('The manifest is not a subclass of ProcessorManifestBase. Instead it\'s %r'%manifest_class)
+        raise RuntimeError('The manifest is not a subclass of ProcessorManifestBase. Instead it\'s %r' % manifest_class)
     else:
-      raise FrameworkException('There is no definition on the module: %r.'%(processor_module))
+      raise FrameworkException('There is no definition on the module: %r.' % (processor_module))
     return processor_proxy
-  def loadProcessor(self,processor,minor_version,replace,replace_version,reload_):
-    self.log.debug('Loading processor: %r'%processor)
+  def loadProcessor(self, processor, minor_version, replace, replace_version, reload_):
+    self.log.debug('Loading processor: %r' % processor)
     processor_name, processor_package = self.processor_pkg_mngr.getPackageAndName(processor)
     build_modules = self.processor_pkg_mngr.getRevisionModules(processor_package)
-    
+
     #TODO: should exist a PluginLoadingPolicy class to apply policies??? vv
     #Or should i leave this like this, and just encapsulate from line 63 on?
     #Check we don't have an empty plugin
     if len(build_modules['versions']) == 0:
-      raise FrameworkException('Requested minor_version=%r for processor %r. There are no modules for such plugin.'%(minor_version,processor_name))
+      raise FrameworkException('Requested minor_version=%r for processor %r. There are no modules for such plugin.' % (minor_version, processor_name))
     #Check we have the minor_version or a later one
     #TODO: python3 breaks here!
     if minor_version > build_modules['versions'][-1]:
-      raise FrameworkException('Requested minor_version=%r for processor %r is newer than the latest minor_version available.'%(minor_version,processor_name))
-    
+      raise FrameworkException('Requested minor_version=%r for processor %r is newer than the latest minor_version available.' % (minor_version, processor_name))
+
     #TODO: should exist a PluginLoadingPolicy class to apply policies
     #Which plugin minor minor_version should be loaded?
     if self.latest_processor or minor_version == None: #Load the latest one
       module_index = -1
     else: #Load the asked minor_version or the next one available
       module_index = bisect_left(build_modules['versions'], minor_version)
-      
+
     #Let's get better naming #TODO: should came from PluginLoadingPolicy
     build_name = build_modules['names'][module_index]
     build_version = build_modules['versions'][module_index]
-    if self.context.backend_name == 'python': 
+    if self.context.backend_name == 'python':
       #On python the plugin module is the plugin itself #TODO: rename library_path to plugin_module
       library_path = self.processor_pkg_mngr.getRevisionModule(processor_name, build_name)
     else: #then its shedskin. We still need to load the shared library
-      library_path = processor_package.__path__[0] + '/%s.so.implementation'%build_name
-    
+      library_path = processor_package.__path__[0] + '/%s.so.implementation' % build_name
+
     #Add the list to the dictionary if it's not already there.
     if processor_name not in self.processors:
       self.processors[processor_name] = {}
     elif build_version in  self.processors[processor_name] and not reload_:
-      self.log.debug('Requested minor_version=%r for processor %r is already loaded.'%(build_version,processor_name))
+      self.log.debug('Requested minor_version=%r for processor %r is already loaded.' % (build_version, processor_name))
       return self.processors[processor_name][build_version]
-    
+
     #Do we need to create a processor or we use the existent one?
     if build_version not in self.processors[processor_name]:
       #New minor_version. Create the processor object.
@@ -122,8 +121,8 @@ class ProcessorPluginsManager(PluginsManagerBase):
       #TODO: data types can be a property, then it queries the proxy? (what?)
       processor.data_types = processor.proxy.getRequiredDataTypes().keys()
       processor.package = processor_package
-    else:      
-      #It's an existent one. This means we are reloading. 
+    else:
+      #It's an existent one. This means we are reloading.
       processor = self.processors[processor_name][build_version]
       #Let's unload before reloading.
       self.unloadProcessorLibrary(processor)
@@ -133,11 +132,11 @@ class ProcessorPluginsManager(PluginsManagerBase):
 
     #First load required data types or reload new versions.
     self.loadProcessorsDataTypes(processor.proxy)
-      
+
     #Finally load the processor library
     self.loadProcessorLibrary(processor)
-    
-    #Now that we loaded the data types and processor we can update 
+
+    #Now that we loaded the data types and processor we can update
       #the ids of the proxy
     self.setProcessorProxyDtypeIds(processor)
     return processor
@@ -148,5 +147,5 @@ class ProcessorPluginsManager(PluginsManagerBase):
   def setContainersDtypeId(self, proxy):
     #For each processor's property set its data type property_id
     for props_container in proxy.containers.values():
-      for prop in props_container.getProperties(DataPropertyProxy,FunctumPropertyProxy).values():
-        prop.dtype_id  = self.data_types[prop.data_type_name].property_id
+      for prop in props_container.getProperties(DataPropertyProxy, FunctumPropertyProxy).values():
+        prop.dtype_id = self.data_types[prop.data_type_name].property_id
