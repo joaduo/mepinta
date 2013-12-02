@@ -21,7 +21,7 @@ along with Mepinta. If not, see <http://www.gnu.org/licenses/>.
 import inspect
 from common.config.constants import global_config_namespace
 
-class CommonNode(object):
+class BaseNode(object):
   def __init__(self):
     self._config = dict()
     self._childs = set()
@@ -50,10 +50,10 @@ class CommonNode(object):
     self._childs.add(node)
     return node
 
-class ChildNode(CommonNode):
+class ChildNode(BaseNode):
   def __init__(self, parent):
     self.__parent = parent
-    CommonNode.__init__(self)
+    BaseNode.__init__(self)
 
   def hasConfig(self, key):
     return key in self._config or self.__parent.hasConfig(key)
@@ -68,7 +68,7 @@ class TreeContextStore(object):
   def __init__(self, config_tree_node=None):
     #Set default values for new configstore
     if not config_tree_node:
-      self.__config_tree_node = CommonNode()
+      self.__config_tree_node = BaseNode()
     else:
       self.__config_tree_node = config_tree_node
 
@@ -104,7 +104,8 @@ class TreeContextStore(object):
       owner_str = "%s" % owner
     return owner_str
 
-def testModule():
+def smokeTestModule():
+  from common.log.debugPrint import debugPrint
   def assertAndPrint(gc, name, owner, value):
     debugPrint(gc.getConfig(name, owner))
     assert(gc.getConfig(name, owner) == value)
@@ -123,4 +124,4 @@ def testModule():
   debugPrint(gc1.getConfig('hello3', owner='yo'))
 
 if __name__ == "__main__":
-  testModule()
+  smokeTestModule()

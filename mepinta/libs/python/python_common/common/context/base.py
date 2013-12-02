@@ -20,7 +20,7 @@ along with Mepinta. If not, see <http://www.gnu.org/licenses/>.
 '''
 from common.config.ConfigFactory import ConfigLoader
 from common.log.Logger import Logger
-from common.context.data_model import TreeContextStore, CommonNode
+from common.context.data_model import TreeContextStore, BaseNode
 
 class ContextBase(TreeContextStore):
   def __init__(self, arg):
@@ -30,43 +30,12 @@ class ContextBase(TreeContextStore):
       self.updateConfig(ConfigLoader().load(name))
       self.setConfig('name', name)
       self.setConfig('log', Logger())
-    elif isinstance(arg, CommonNode):
+    elif isinstance(arg, BaseNode):
       config_tree_node = arg
       TreeContextStore.__init__(self, config_tree_node)
 
-def testModule():
-  pass
-  #TODO: clean?
-#  from common.decorator.args_singleton import args_singleton
-#  @args_singleton
-#  class Context(ContextBase):
-#    pass
-#  from common.config.ContextWrapper import ContextWrapper
-#  ctxp = Context('python')
-#  ctxp2 = Context('python')
-#  ctxp3 = Context('python')
-#  ctxc = Context('c_and_cpp')
-#  debugPrint (ctxp)
-#  debugPrint (ctxp2)
-#  debugPrint (ctxp3)
-#  class Pototo:
-#    pass
-#  a = Pototo()
-#  from common.config.SelfConfigWrapper import SelfConfigWrapper
-#  cwrapper = SelfConfigWrapper(OwnerClass=a.__class__, context=ctxp)
-#  cwrapper.hola = 1
-#  debugPrint(cwrapper.hola)
-#  try:
-#    debugPrint(cwrapper.hola1)
-#  except Exception as e:
-#    debugPrint(e)
-#  debugPrint (ctxp)
-#  cwrapper = ContextWrapper(context=ctxp)
-#  cwrapper.hola = 1
-#  child = cwrapper.newChildConfig()
-#  debugPrint (ctxp)
-#  debugPrint (cwrapper.backend_name)
-
+def smokeTestModule():
+  raise RuntimeWarning('No smoke test')
 
 if __name__ == "__main__":
-  testModule()
+  smokeTestModule()
