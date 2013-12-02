@@ -20,6 +20,7 @@ along with Mepinta. If not, see <http://www.gnu.org/licenses/>.
 '''
 from common.abstract.FrameworkBase import FrameworkBase
 import pkgutil
+from importlib import import_module
 
 class PackageClassesInspector(FrameworkBase):
   def getChildModules(self, package):
@@ -36,24 +37,19 @@ class PackageClassesInspector(FrameworkBase):
   def _filterModule(self, module, filter_func):
     classes = []
     for obj in module.__dict__.values():
-      if filter_func(obj):
+      if filter_func(obj, module):
         classes.append(obj)
     return classes
 
   def _gatherModules(self, package, reload_):
     modules = []
-    prefix = package.__name__ + "."
-    for _, modname, ispkg in pkgutil.iter_modules(package.__path__, prefix):
+    prefix = package.__name__ + '.'
+    for _, modname, ispkg in pkgutil.walk_packages(package.__path__, prefix):
       if not ispkg:
-        module = __import__(modname, fromlist="dummy")
+        module = import_module(modname)
         if reload_:
           module = reload(module)
         modules.append(module)
-      else:
-        package = __import__(modname, fromlist="dummy")
-        if reload_:
-          package = reload(package)
-        modules += self._gatherModules(package, reload_)
     return modules
 
 def smokeTestModule():
