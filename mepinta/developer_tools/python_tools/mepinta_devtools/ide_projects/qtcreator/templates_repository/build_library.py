@@ -14,7 +14,7 @@ def logInfo(msg):
 def logError(msg):
   sys.stderr.write(msg + '\n')
 
-def buildLibrary():
+def main(argv):
   os.chdir(os.path.dirname(__file__))
   target = '${TARGET}'
   logInfo('Building %s ...' % target)
@@ -32,4 +32,4 @@ def buildLibrary():
   logInfo('Done building %s.' % target)
 
 if __name__ == "__main__":
-  buildLibrary()
+  main(None)

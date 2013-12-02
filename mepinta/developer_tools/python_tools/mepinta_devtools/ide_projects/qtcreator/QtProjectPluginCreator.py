@@ -81,6 +81,7 @@ class QtProjectPluginCreatorBase(FrameworkBase):
                             manifest.getName())
     self.file_manager.makedirs(project_path)
     #create pro file
+    #TODO: also pring whole module path (in order to know how to call it from make)
     pro_str = self.templates.getTemplate('k3dv1_plugin.pro',
                                          DESTDIR=dest_dir,
                                          TARGET=target,)
