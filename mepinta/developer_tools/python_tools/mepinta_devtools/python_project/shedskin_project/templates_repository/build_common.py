@@ -24,6 +24,7 @@ import os
 import shutil
 import shlex
 import argparse
+import re
 
 try:
   import shedskin
@@ -104,13 +105,19 @@ class ShedskinModuleBuilder(object):
 
   def run(self, argv=None, python_module=None):
     #get the parser and parse the sys.argv arguments
-    os.chdir(os.path.dirname(__file__))
+    script_path = os.path.realpath(__file__)
+    os.chdir(os.path.dirname(script_path))
+
     parser = self._getArgsParser(specify_module=not python_module)
     args = parser.parse_args(argv)
 
+    if args.clean:
+      self.cleanShedskinCode()
+      return
     #reset argv (used to pass arguments to shedksin)
     sys.argv = sys.argv[:1]
 
+    python_module = python_module or args.python_module
     python_module = self._cleanModuleName(python_module)
     generate = not os.path.exists(self.getMakefileName(python_module)) or \
               args.generate
@@ -131,9 +138,32 @@ class ShedskinModuleBuilder(object):
     parser.add_argument('--generate', action='store_true', help=help_)
     help_ = 'Force shedskin code compilation.'
     parser.add_argument('--compile', action='store_true', help=help_)
+    help_ = 'Clean all shedskin generated files.'
+    parser.add_argument('--clean', action='store_true', help=help_)
     help_ = 'Enable debug output.'
     parser.add_argument('--debug', action='store_true', help=help_)
     return parser
+
+
+  def _findFiles(self, directory, comp_re):
+    for root, _, files in os.walk(directory, followlinks=True):
+      for basename in files:
+        if comp_re.match(basename):
+          filename = os.path.join(root, basename)
+          yield filename
+
+  def cleanShedskinCode(self):
+    comp_re = re.compile(r'.*\.(ss\.py|hpp|cpp)$')
+    self.logInfo('Deleting *.hpp, *.cpp, *.ss.py ...')
+    script_path = os.path.realpath(__file__)
+    base_path = os.path.dirname(script_path)
+    for path in self._findFiles(base_path, comp_re):
+      os.remove(path)
+    for basename in os.listdir(os.curdir):
+      if basename.endswith('_Makefile'):
+        self.logInfo('Deleting %r' % basename)
+        os.remove(basename)
+    self.logInfo('Done')
 
 def main(argv):
   ShedskinModuleBuilder().run(argv)
