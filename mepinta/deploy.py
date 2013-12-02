@@ -80,5 +80,8 @@ class DeploymentCommand(object):
     mepinta_source_path = os.path.dirname(os.path.realpath(__file__))
     return mepinta_source_path
 
+def main(argv):
+  DeploymentCommand().run(argv)
+
 if __name__ == '__main__':
-  DeploymentCommand().run()
+  main(None)
