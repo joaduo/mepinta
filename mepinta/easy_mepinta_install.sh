@@ -1,9 +1,10 @@
+
 #!/bin/bash
 
 DEPLOY_DIR="mepinta_deployment"
 
 if [ -e "deploy.py" ] ; then
-  echo "You should run easy_install.sh only the first time you download mepinta."
+  echo "You should run easy_mepinta_install.sh only the first time you download mepinta."
   echo "Use the deploy command for a new deployment."
   exit 0
 elif [ -e "mepinta" ] ; then
