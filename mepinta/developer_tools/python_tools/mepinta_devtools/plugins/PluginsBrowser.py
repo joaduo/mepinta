@@ -34,7 +34,8 @@ class PluginsBrowser(FrameworkBase):
     '''Get the list of all concrete plugin manifest for a plugins_set included
     in the python path.
     '''
-    filter_func = lambda obj: isclass(obj) \
+    filter_func = lambda obj, module: isclass(obj) \
+                              and obj.__module__ == module.__name__ \
                               and issubclass(obj, manifest_type) \
                               and not obj.__name__.endswith('Base')
     manifests = self._getManifests(plugins_set, backend, plugin_type, filter_func)
@@ -67,9 +68,10 @@ class PluginsBrowser(FrameworkBase):
   def getBaseManifests(self, plugins_set, backend, plugin_type,
                       manifest_type=PluginManifestBase):
     '''Get the list of all plugin manifest for a plugins_set included in the
-    python path.
+    python path that are Base classes.
     '''
-    filter_func = lambda obj: isclass(obj) \
+    filter_func = lambda obj, module: isclass(obj) \
+                              and obj.__module__ == module.__name__ \
                               and issubclass(obj, PluginManifestBase)\
                               and obj.__name__.endswith('Base')
     manifests = self._getManifests(backend, plugin_type, filter_func)
