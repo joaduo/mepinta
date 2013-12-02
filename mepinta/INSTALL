@@ -38,5 +38,9 @@ For running some of the Python demos you need installed:
     Download it, extract it, and add the extracted folder to the PYTHONPATH 
   -xdot command ("apt-get install xdot" in ubuntu or debian)
 
+Building on Ubuntu
 
-
+Packages:
+libgc-dev
+libsigc++-2.0-dev
+libglibmm-2.4-dev
