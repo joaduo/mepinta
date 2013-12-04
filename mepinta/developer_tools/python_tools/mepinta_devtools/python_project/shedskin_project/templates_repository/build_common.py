@@ -33,15 +33,22 @@ except Exception as e:
   raise ImportError('%s  ImportError:%s' % (msg, e))
 
 class ShedskinModuleBuilder(object):
+  '''
+  Class responsible of generating shedskin code for a given python module.
+  Will also compile it and clean the code (but won't clean the compiled library)
+  It will also copy the resulting library
+  '''
   def logInfo(self, msg):
+    #simple logging
     print(msg)
 
   def logError(self, msg):
+    #simple logging
     sys.stderr.write(msg + '\n')
 
   def copyShedskinModule(self, python_module):
     #Copy the compiled .so module to the destination directory
-    module_lib = '%s.so' % python_module
+    module_lib = '%s.so' % python_module #TODO:Distribution Platform
     dst_module_lib = 'mepinta/pipeline/lo_cpp/%s' % module_lib
     if os.path.exists(module_lib):
       if os.path.exists(dst_module_lib):
