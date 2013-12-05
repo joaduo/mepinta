@@ -25,18 +25,26 @@ from common.context.base import ContextBase
 
 @arg_singleton_and_wrap
 class MepintaContext(ContextBase):
-  def __init__(self, backend_name, deployment_path):
+  def __init__(self, backend_name):
     ContextBase.__init__(self, backend_name)
-    self.__initConfig(deployment_path)
-  def __initConfig(self, deployment_path):
+    self.__initConfig()
+
+  def __initConfig(self):
     context = self
+    deployment_path = self.getConfig('deployment_config').deployment_path
     context_lo = ContextLo(context=context, deployment_path=deployment_path)
     context.setConfig('context_lo', context_lo)
     logger = context.getConfig('log')
     logger.setOutput(LogOutput(context=context))
 
+
 def testModule():
-  pass
+  context = MepintaContext('python')
+  from common.log.debugPrint import debugPrint
+  pprint = debugPrint
+  pprint(context.getConfig('backend_name'))
+  pprint(context.getConfig('plugin_build_targets'))
+  pprint(context.getConfigDict())
 
 if __name__ == "__main__":
   testModule()

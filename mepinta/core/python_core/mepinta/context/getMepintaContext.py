@@ -20,8 +20,9 @@ along with Mepinta. If not, see <http://www.gnu.org/licenses/>.
 '''
 from mepinta.context.MepintaContext import MepintaContext
 
+#TODO: delete file
 def getMepintaContext(backend_name='python', deployment_path=None):
-  return MepintaContext(backend_name, deployment_path)
+  return MepintaContext(backend_name)
 
 def testModule():
   from common.log.debugPrint import debugPrint

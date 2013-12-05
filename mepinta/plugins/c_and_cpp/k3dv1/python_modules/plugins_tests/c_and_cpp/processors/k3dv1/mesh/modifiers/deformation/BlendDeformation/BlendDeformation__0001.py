@@ -19,7 +19,7 @@ You should have received a copy of the GNU General Public License
 along with Mepinta. If not, see <http://www.gnu.org/licenses/>.
 '''
 from plugins_tests.base.K3dMeshPluginTest import K3dMeshPluginTest
-from mepinta.plugins_manifest import DataProperty 
+from mepinta.plugins_manifest import DataProperty
 
 class BlendDeformation(K3dMeshPluginTest):
   def __post_init__(self):
@@ -28,16 +28,16 @@ class BlendDeformation(K3dMeshPluginTest):
 
   def definePluginPipeline(self, test_pline):
     import plugins.c_and_cpp.processors.k3dv1.mesh.modifiers.deformation.DeformationExpression as deform
-    
+
     sphere_node = test_pline.getLastNode()
-    deform_node = test_pline.append(deform) 
+    deform_node = test_pline.append(deform)
     blend_node = test_pline.append(self.testedProcessors[0], connect=False)
-    
+
     test_pline.connect(blend_node.inputs.original_mesh, sphere_node.outputs.mesh)
     test_pline.connect(blend_node.inputs.mesh, deform_node.outputs.mesh)
-    
+
     test_pline.setLastNode(blend_node)
-    
+
     test_pline.setValue(blend_node.inputs.blend_amount, 0.5)
     test_pline.setValue(deform_node.inputs.x_function, 'z')
     test_pline.setValue(deform_node.inputs.y_function, 'x')
@@ -57,7 +57,7 @@ class BlendDeformation(K3dMeshPluginTest):
     test_pline.setValue(blend_node.inputs.blend_amount, 0.5 + time)
 
 test = BlendDeformation
-        
+
 if __name__ == "__main__":
   from pipeline_backend.logging.logging import LOG_INFO
   from mepinta.testing.plugins_testing.test_pipeline.InotifySimpleTestPipeline import InotifySimpleTestPipeline
@@ -71,5 +71,7 @@ if __name__ == "__main__":
 #  test_pline.evaluateProp(mw.functions.writeMesh)
   #NodeBoxSimplePipelineOutput(test_pline.getPipeline(), 600,600).run()
 #  PluginTestAutoTester(getDefaultContext(LOG_INFO)).test(test,gui=True)
-  PluginTestAutoTester(getDefaultContext(LOG_INFO)).test(test,gui=False)
+#  PluginTestAutoTester(getDefaultContext(LOG_INFO)).test(test, gui=False)
 #  PluginTestAutoTester(getDefaultContext()).test(test)#,gui=False)
+  PluginTestAutoTester(getDefaultContext(LOG_INFO)).test(gui=False)
+

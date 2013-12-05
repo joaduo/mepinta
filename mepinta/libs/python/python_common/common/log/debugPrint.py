@@ -19,10 +19,13 @@ You should have received a copy of the GNU General Public License
 along with Mepinta. If not, see <http://www.gnu.org/licenses/>.
 '''
 import sys
+from pprint import pformat
 
 def debugPrint(msg):
+  msg = pformat(msg)
   if __debug__:
-    sys.stdout.write(str(msg) + '\n')
+    sys.stdout.write(msg)
+    sys.stdout.write('\n')
   else:
     raise Exception('You should only used this function in a debug or test environment')
 

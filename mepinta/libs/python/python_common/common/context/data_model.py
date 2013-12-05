@@ -50,6 +50,9 @@ class BaseNode(object):
     self._childs.add(node)
     return node
 
+  def getConfigDict(self):
+    return dict(self._config)
+
 class ChildNode(BaseNode):
   def __init__(self, parent):
     self.__parent = parent
@@ -71,6 +74,9 @@ class TreeContextStore(object):
       self.__config_tree_node = BaseNode()
     else:
       self.__config_tree_node = config_tree_node
+
+  def getConfigDict(self):
+    return self.__config_tree_node.getConfigDict()
 
   def newChildConfig(self, **kwargs):
     copy = self.__class__(self.__config_tree_node.newChild())
@@ -95,10 +101,10 @@ class TreeContextStore(object):
 
   def __getOwnerStr(self, owner):
     if inspect.isclass(owner):
-      owner_str = "%s.%s" % (owner.__module__.__str__(),
+      owner_str = "class::%s.%s" % (owner.__module__.__str__(),
                     owner.__name__)
     elif isinstance(owner, str):
-      owner_str = "%s" % owner
+      owner_str = owner
     else:#TODO: debugPrint warning!!
       self.getConfig('log').w('owner (%r) should be a class or a string, type is %r' % (owner, type(owner)))
       owner_str = "%s" % owner
@@ -106,22 +112,23 @@ class TreeContextStore(object):
 
 def smokeTestModule():
   from common.log.debugPrint import debugPrint
+  p = debugPrint
   def assertAndPrint(gc, name, owner, value):
-    debugPrint(gc.getConfig(name, owner))
+    p(gc.getConfig(name, owner))
     assert(gc.getConfig(name, owner) == value)
   gc = TreeContextStore()
   gc.setConfig('hello', 10, owner='yo')
   gc.setConfig('hello2', 12, owner='yo')
-  debugPrint(gc.getConfig('hello', owner='yo'))
+  p(gc.getConfig('hello', owner='yo'))
   assert(gc.getConfig('hello', owner='yo') == 10)
   gc1 = gc.newChildConfig()
   gc1.setConfig('hello', 11, owner='yo')
-  debugPrint(gc1.getConfig('hello', owner='yo'))
+  p(gc1.getConfig('hello', owner='yo'))
   assert(gc1.getConfig('hello', owner='yo') == 11)
-  debugPrint(gc.getConfig('hello', owner='yo'))
-  debugPrint(gc1.getConfig('hello2', owner='yo'))
+  p(gc.getConfig('hello', owner='yo'))
+  p(gc1.getConfig('hello2', owner='yo'))
   gc.setConfig('hello3', 13, owner='yo')
-  debugPrint(gc1.getConfig('hello3', owner='yo'))
+  p(gc1.getConfig('hello3', owner='yo'))
 
 if __name__ == "__main__":
   smokeTestModule()

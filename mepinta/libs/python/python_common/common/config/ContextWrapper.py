@@ -40,7 +40,7 @@ class ContextWrapper(object):
   def __getattr__(self, name):
     if name in ['context', '__deepcopy__']:
       object.__getattribute__(self, name)
-    elif name in ['hasConfig', 'getConfig', 'setConfig', 'newChildConfig']:
+    elif name in ['hasConfig', 'getConfig', 'setConfig', 'newChildConfig', 'getConfigDict']:
       return getattr(self.context, name)
     elif self.context.hasConfig(name):
       return self.context.getConfig(name)
