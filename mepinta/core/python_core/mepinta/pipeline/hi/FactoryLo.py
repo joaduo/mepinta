@@ -56,11 +56,11 @@ class FactoryLo(FrameworkBase):
     #Ok, we can load the libbackend_c_api.so (that will load all the other .so)
     for api in ('c', 'cpp'):
       lib_name = 'libbackend_api_%s.so' % api
-      lib_path = joinPath(self.__deployment_path, 'build', 'libs', lib_name)
+      lib_path = joinPath(self.__deployment_path, 'build', 'libs', 'c_and_cpp', lib_name)
       self.log.debug("Loading lib at %r." % lib_path)
       #Check if we could load it
       if not load_library(lib_path, "global"):
-        raise MepintaError("Couldn't load mepinta_cpp core at %s." % lib_path)
+        raise MepintaError("Couldn't load mepinta backend core at %r." % lib_path)
 
   def getWrapped(self):
     if self.context.backend_name == 'python':
