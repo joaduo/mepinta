@@ -26,25 +26,25 @@ class ContextBase(TreeContextStore):
     if isinstance(arg, str):
       name = arg
       TreeContextStore.__init__(self)
-      #self.updateConfig(ConfigLoader().load(name))
-      self._setDefaultConfig(name)
       self.setConfig('name', name)
       self.setConfig('log', Logger())
+      self._setDefaultConfig(name)
+
     elif isinstance(arg, BaseNode):
       config_tree_node = arg
       TreeContextStore.__init__(self, config_tree_node)
 
-  def _getMepintaConfig(self, name):
-    from mepinta_config import mepinta_config
-    settings = mepinta_config(name)
-    return settings
+  def _getDefaultConfig(self, name):
+    class Config(object):
+      _config_dict = {}
+    return Config()
 
   def _setDefaultConfig(self, name):
-    settings = self._getMepintaConfig(name)
-    for name in dir(settings):
+    config = self._getDefaultConfig(name)
+    for name in dir(config):
       if not name.startswith('_'):
-        self.setConfig(name, getattr(settings, name))
-    config_dict = settings._config_dict
+        self.setConfig(name, getattr(config, name))
+    config_dict = config._config_dict
     for name, owner in config_dict:
       self.setConfig(name, config_dict[(name, owner)], owner)
 
@@ -52,8 +52,8 @@ def smokeTestModule():
   context = ContextBase('python')
   from common.log.debugPrint import debugPrint
   pprint = debugPrint
+  context.setConfig('backend_name', 'python')
   pprint(context.getConfig('backend_name'))
-  pprint(context.getConfig('plugin_build_targets'))
   pprint(context.getConfigDict())
 
 

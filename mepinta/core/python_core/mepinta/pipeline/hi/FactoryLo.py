@@ -51,6 +51,7 @@ class FactoryLo(FrameworkBase):
     return loadLibraryStandAlone
 
   def __loadLibsBackend(self):
+    #TODO: load_k3d_libs()
     load_library = self.__getLoadLibraryStandAlone()
     #Ok, we can load the libbackend_c_api.so (that will load all the other .so)
     for api in ('c', 'cpp'):

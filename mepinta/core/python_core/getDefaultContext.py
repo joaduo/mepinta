@@ -19,20 +19,7 @@ You should have received a copy of the GNU General Public License
 along with Mepinta. If not, see <http://www.gnu.org/licenses/>.
 '''
 from pipeline_backend.logging.logging import LOG_INFO, LOG_DEBUG
-from mepinta.context.getMepintaContext import getMepintaContext
 from mepinta.context.MepintaContext import MepintaContext
-
-#TODO: clean
-#def setConfigs(context, deployment_path):
-#  from mepinta.pipelineview.graph.GraphTopologyManager import GraphTopologyManager
-#  non_cached = False
-#  context.setConfig('non_cached', non_cached, GraphTopologyManager)
-#  context.log.w('Using artificial deployment config!')
-#  class deployment_config(object):
-#    def __init__(self):
-#      self.mepinta_source_path = '/home/jduo/001-Mepinta/git/mepinta/mepinta'
-#      self.deployment_path = deployment_path
-#  context.deployment_config = deployment_config()
 
 called_once = False
 def getDefaultContext(log_level=LOG_INFO, name='python'):
@@ -43,22 +30,14 @@ def getDefaultContext(log_level=LOG_INFO, name='python'):
     raise RuntimeError('You should call the default context only once. (in the main script)')
   else:
     called_once = True
-#  deployment_path = '/home/jduo/001-Mepinta/EclipseProjects_GitRepo/mepinta_test_folders/deployment7'
-  #context = getMepintaContext(name)
   context = MepintaContext(name)
   context.log.setLevel(log_level)
-#  setConfigs(context, deployment_path)
   return context
 
 def smokeTestModule():
   from common.log.debugPrint import debugPrint
-#  from mepinta.pipeline.hi.FactoryLo import FactoryLo
-#  ctxc = getDefaultContext(name='c_and_cpp')
   ctxc = getDefaultContext(name='python')
   debugPrint(ctxc.getConfigDict())
-  #ctxc.getConfig(name, owner)
-  #debugPrint(ctxc.deployment_config.deployment_path)
-#  flo = FactoryLo(context)
 
 if __name__ == "__main__":
   smokeTestModule()

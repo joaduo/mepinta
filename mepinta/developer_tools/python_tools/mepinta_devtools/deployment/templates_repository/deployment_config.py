@@ -14,10 +14,11 @@ def configurePythonPaths(create_context=True):
   path = os.path.join(config.mepinta_source_path, 'developer_tools',
                       'python_tools')
   sys.path.append(path)
+  sys.path.append(config.mepinta_source_path)
   from mepinta_devtools.deployment.PythonPathManager import PythonPathManager
   PythonPathManager().appendInitial(config.mepinta_source_path)
-  from mepinta.context.getMepintaContext import getMepintaContext
   if create_context:
-    context = getMepintaContext(deployment_path=config.deployment_path)
+    from mepinta.context.MepintaContext import MepintaContext
+    context = MepintaContext('python')
     context.deployment_config = config
     return context

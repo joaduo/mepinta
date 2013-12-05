@@ -63,12 +63,13 @@ class DeploymentManager(FrameworkBase):
 
   def deployTo(self, args_parser, deployment_path, force=False):
     #Check if the path specified is outside mepinta source path
-    if not self._outOfSourcePath(deployment_path):
-      msg = 'Deployment path %r is inside Mepinta source path %r. (deployment' \
-        ' path must reside outside Mepinta source path)' % (deployment_path,
-                                                            self._getSrcPath())
-      self.log.warning(msg)
-      return
+    #TODO: add it to .ignore
+    #if not self._outOfSourcePath(deployment_path):
+    #  msg = 'Deployment path %r is inside Mepinta source path %r. (deployment' \
+    #    ' path must reside outside Mepinta source path)' % (deployment_path,
+    #                                                        self._getSrcPath())
+    #  self.log.warning(msg)
+    #  return
     #Check if the deployment already exists
     if self._emptyDeploy(deployment_path) or force:
       if not self.file_manager.pathExists(deployment_path):

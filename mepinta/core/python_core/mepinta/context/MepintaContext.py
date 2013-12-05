@@ -37,6 +37,10 @@ class MepintaContext(ContextBase):
     logger = context.getConfig('log')
     logger.setOutput(LogOutput(context=context))
 
+  def _getDefaultConfig(self, name):
+    from mepinta_config import mepinta_config
+    settings = mepinta_config(name)
+    return settings
 
 def testModule():
   context = MepintaContext('python')

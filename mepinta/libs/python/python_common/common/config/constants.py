@@ -18,4 +18,4 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with Mepinta. If not, see <http://www.gnu.org/licenses/>.
 '''
-global_config_namespace = 'global::config'
+global_config_namespace = 'global::'
