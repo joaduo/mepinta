@@ -25,8 +25,8 @@ from common.context.base import ContextBase
 
 @arg_singleton_and_wrap
 class MepintaContext(ContextBase):
-  def __init__(self, backend_name):
-    ContextBase.__init__(self, backend_name)
+  def __init__(self, name):
+    ContextBase.__init__(self, name)
     self.__initConfig()
 
   def __initConfig(self):
@@ -39,11 +39,19 @@ class MepintaContext(ContextBase):
 
   def _getDefaultConfig(self, name):
     from mepinta_config import mepinta_config
-    settings = mepinta_config(name)
-    return settings
+    config = mepinta_config()
+    if not hasattr(config, 'backend_name'):
+      if 'python' in name:
+        config.backend_name = 'python'
+      elif 'cpp' in name:
+        config.backend_name = 'c_and_cpp'
+      else:
+        raise LookupError('Cannot find backend name for context name')
+    return config
 
 def testModule():
-  context = MepintaContext('python')
+  #context = MepintaContext('python')
+  context = MepintaContext('c_and_cpp')
   from common.log.debugPrint import debugPrint
   pprint = debugPrint
   pprint(context.getConfig('backend_name'))

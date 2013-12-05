@@ -8,13 +8,7 @@ class mepinta_config(object):
   minor_version_separator = '__'
   plugin_build_targets = ['Debug', 'Release', 'ReleasePointerSafe', 'ReleaseTypeSafe', 'ReleaseArgumentsSafe', ]
   nodebox_gui = False
-  def __init__(self, name):
-    if 'python' in name:
-      self.backend_name = 'python'
-    elif 'cpp' in name:
-      self.backend_name = 'c_and_cpp'
-    else:
-      raise LookupError('Cannot find backend name for context name')
+  def __init__(self):
     self.deployment_config = default_deployment_config
   _config_dict = {
                   ('non_cached', 'class::mepinta.pipelineview.graph.GraphTopologyManager.GraphTopologyManager'):

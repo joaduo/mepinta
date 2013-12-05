@@ -105,7 +105,8 @@ class ModuleAutoTesterBase(FrameworkBase): #TODO remove and use util
   def _getPackageAndMinorVersion(self, plugin_manifest):
     if plugin_manifest.__class__.__module__ == '__main__':
       import __main__
-      dir_list = splitPath(__main__.__file__)
+      dir_list = __main__.__file__.split(os.path.sep)
+      #splitPath(__main__.__file__)
       #TODO: fix this mess!
       start_index = -list(reversed(dir_list)).index('plugins') - 1
       package_str = '.'.join(dir_list[start_index:-1])
