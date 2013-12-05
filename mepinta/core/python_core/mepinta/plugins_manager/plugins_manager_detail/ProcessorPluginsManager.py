@@ -40,6 +40,7 @@ class ProcessorPluginsManager(PluginsManagerBase):
       self.data_types[data_type_name].processors.append(processor)
     #Add it to the loaded processors
     self.processors[processor.name][processor.version] = processor
+
   def unloadProcessorLibrary(self, processor):
     self.log.info('Unloading processor %r shared library' % processor)
     #Ask the lower lever C api to unload this library
@@ -49,6 +50,7 @@ class ProcessorPluginsManager(PluginsManagerBase):
       self.data_types[data_type_name].processors.remove(processor) #TODO: maybe later should use bisect_left
     #Processor is not loaded anymore
     del self.processors[processor.name][processor.version]
+
   def loadProcessorsDataTypes(self, processor_proxy):
     types_classes = [DataPropertyProxy, FunctumPropertyProxy]
     for data_type_name, data_type_versions in processor_proxy.getRequiredDataTypes(types_classes).items():
@@ -56,6 +58,7 @@ class ProcessorPluginsManager(PluginsManagerBase):
       version = data_type_versions[-1]
       #Lets load it
       self.parent.loadDataType(data_type_name, version)
+
   def __getProcessorProxy(self, processor_module):
     if hasattr(processor_module, 'getProcessorProxy'):
       processor_proxy = processor_module.getProcessorProxy(self.context)
@@ -70,6 +73,7 @@ class ProcessorPluginsManager(PluginsManagerBase):
     else:
       raise FrameworkException('There is no definition on the module: %r.' % (processor_module))
     return processor_proxy
+
   def loadProcessor(self, processor, minor_version, replace, replace_version, reload_):
     self.log.debug('Loading processor: %r' % processor)
     processor_name, processor_package = self.processor_pkg_mngr.getPackageAndName(processor)
@@ -78,7 +82,7 @@ class ProcessorPluginsManager(PluginsManagerBase):
     #TODO: should exist a PluginLoadingPolicy class to apply policies??? vv
     #Or should i leave this like this, and just encapsulate from line 63 on?
     #Check we don't have an empty plugin
-    if len(build_modules['versions']) == 0:
+    if not build_modules['versions']:
       raise FrameworkException('Requested minor_version=%r for processor %r. There are no modules for such plugin.' % (minor_version, processor_name))
     #Check we have the minor_version or a later one
     #TODO: python3 breaks here!
@@ -99,12 +103,12 @@ class ProcessorPluginsManager(PluginsManagerBase):
       #On python the plugin module is the plugin itself #TODO: rename library_path to plugin_module
       library_path = self.processor_pkg_mngr.getRevisionModule(processor_name, build_name)
     else: #then its shedskin. We still need to load the shared library
+      assert False, 'point to /mepinta/deployment/build/plugins_build/c_and_cpp'
       library_path = processor_package.__path__[0] + '/%s.so.implementation' % build_name
 
-    #Add the list to the dictionary if it's not already there.
-    if processor_name not in self.processors:
-      self.processors[processor_name] = {}
-    elif build_version in  self.processors[processor_name] and not reload_:
+    #Add the processor to the dictionary if it's not already there.
+    if build_version in  self.processors.setdefault(processor_name, {}) \
+    and not reload_:
       self.log.debug('Requested minor_version=%r for processor %r is already loaded.' % (build_version, processor_name))
       return self.processors[processor_name][build_version]
 
@@ -140,10 +144,12 @@ class ProcessorPluginsManager(PluginsManagerBase):
       #the ids of the proxy
     self.setProcessorProxyDtypeIds(processor)
     return processor
+
   def setProcessorProxyDtypeIds(self, processor):
     #We need to re/set proxy's ids in a case of re/load
     self.setContainersDtypeId(processor.proxy)
     processor.proxy.setFunctionsId(processor.functions)
+
   def setContainersDtypeId(self, proxy):
     #For each processor's property set its data type property_id
     for props_container in proxy.containers.values():
