@@ -123,15 +123,6 @@ class ProcessorPluginsManager(PluginsManagerBase):
           library_path=library_path,
           package=package
           )
-      processor.name = processor_name
-      processor.build_name = build_name
-      processor.version = build_version
-      processor.module = self.processor_pkg_mngr.getRevisionModule(processor_name, build_name)
-      processor.proxy = self.__getProcessorProxy(processor.module)
-      processor.library_path = library_path
-      #TODO: data types can be a property, then it queries the proxy? (what?)
-      processor.data_types = processor.proxy.getRequiredDataTypes().keys()
-      processor.package = package
     else:
       #It's an existent one. This means we are reloading.
       processor = self.processors[processor_name][build_version]
