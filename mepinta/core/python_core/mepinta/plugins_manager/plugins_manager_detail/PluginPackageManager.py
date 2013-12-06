@@ -22,8 +22,10 @@ import sys
 import imp
 import pkgutil
 from bisect import bisect_left
-from mepinta.plugins_manager.data_model import ProcessorMetadata, DataTypeMetadata
+from mepinta.plugins_manager.data_model import PluginMetadata
 from common.abstract.FrameworkBase import FrameworkBase
+import importlib
+from mepinta.plugins_manager.plugins_manager_detail.PluginImportError import PluginImportError
 
 class PluginPackageManager(FrameworkBase):
   '''
@@ -34,9 +36,11 @@ class PluginPackageManager(FrameworkBase):
   '''
   def __post_init__(self, plugins_type):
     self.plugins_type = plugins_type
+
   def buildPackageModuleName(self, version, short_name):  # TODO: remove?
     name = '%s.%s.' % (self.prefixes[version], self.plugins_type)
     return name
+
   def python2x3xImport(self, short_name):
     # TODO: make choice by context/context name
     prefixes = []
@@ -59,7 +63,11 @@ class PluginPackageManager(FrameworkBase):
       except Exception as e:
         self.log.lastException()  # TODO: add an config for this printing
         self.log.debug('Couldnt import %s. Exception: %s' % (name, e))
-    raise RuntimeError('Couldn\'t load (%s).%s.%s plugin.' % ('|'.join(prefixes), self.plugins_type, short_name))
+    #Couldn't find the requested package
+    namespace = '(%s).%s.%s' % ('|'.join(prefixes), self.plugins_type, short_name)
+    msg = 'Couldn\'t load {namespace} plugin.'.format(namespace=namespace)
+    raise PluginImportError(msg)
+
   def getPackageAndName(self, plugin):
     '''
       PluginsManager can receive a package/module or a string.
@@ -71,7 +79,7 @@ class PluginPackageManager(FrameworkBase):
     if isinstance(plugin, (str, unicode)):  # We have the name, then we need to get the package
       plugin_name = plugin
       plugin_package = self.python2x3xImport(plugin)
-    elif isinstance(plugin, ProcessorMetadata) or isinstance(plugin, DataTypeMetadata):
+    elif isinstance(plugin, PluginMetadata):
       # Is a Processor or DataType object, build the name
       # The package is already there
       plugin_name = self.prefix + plugin.name
@@ -82,6 +90,7 @@ class PluginPackageManager(FrameworkBase):
       plugin_name = '.'.join(plugin_package.__name__.split('.')[3:])
     self.log.debug('Name: %r, package: %s' % (plugin_name, plugin_package))
     return plugin_name, plugin_package
+
   def getRevisionModules(self, plugin_package):
     '''
       Within a plugin package we can find several modules. Each for one build.
@@ -103,11 +112,13 @@ class PluginPackageManager(FrameworkBase):
           other_modules.append(module_name)
     vers_mod_name = 'plugin_versioning'
     if vers_mod_name in other_modules:
-      self.log.debug('Found versioning module for plugin: %s' % plugin_package.__name__)
-      versioning_module = __import__(plugin_package.__name__ + '.' + vers_mod_name, fromlist="dummy")
-      if hasattr(versioning_module, 'str_to_version'):
+      self.log.debug('Found versioning module for plugin: %s' %
+                     plugin_package.__name__)
+      vers_namespace = '%s.%s' % (plugin_package.__name__ , vers_mod_name)
+      versioning_mod = importlib.import_module(vers_namespace)
+      if hasattr(versioning_mod, 'str_to_version'):
         # The developer can implement it's own minor versioning convention
-        str_to_version = versioning_module.str_to_version
+        str_to_version = versioning_mod.str_to_version
       else:
         self.log.warning('Found plugin versioning module, but has no versioning function "str_to_version". Using default')
         str_to_version = int
@@ -129,6 +140,7 @@ class PluginPackageManager(FrameworkBase):
       sorted_names_list.insert(index, module_name)
     # TODO: review this
     return dict(names=sorted_names_list, versions=sorted_version_list)
+
   def getRevisionModule(self, package_name, build_name):
     '''
       Once we know which module we are interested in, we would like to access its contents.

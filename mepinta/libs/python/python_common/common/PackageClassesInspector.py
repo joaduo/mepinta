@@ -24,10 +24,10 @@ from importlib import import_module
 
 class PackageClassesInspector(FrameworkBase):
   def getChildModules(self, package):
-    return self._gatherModules(package)
+    return self.gatherModules(package)
 
   def builDict(self, package, filter_func, reload_=True):
-    modules = self._gatherModules(package, reload_)
+    modules = self.gatherModules(package, reload_)
     modules_dict = {}
     for module in modules:
       filtered = self._filterModule(module, filter_func)
@@ -41,16 +41,14 @@ class PackageClassesInspector(FrameworkBase):
         classes.append(obj)
     return classes
 
-  def _gatherModules(self, package, reload_):
-    modules = []
+  def gatherModules(self, package, reload_):
     prefix = package.__name__ + '.'
     for _, modname, ispkg in pkgutil.walk_packages(package.__path__, prefix):
       if not ispkg:
         module = import_module(modname)
         if reload_:
           module = reload(module)
-        modules.append(module)
-    return modules
+        yield module
 
 def smokeTestModule():
   raise RuntimeWarning('No smoke test')

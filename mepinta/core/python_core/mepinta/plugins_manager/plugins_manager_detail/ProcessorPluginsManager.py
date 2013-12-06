@@ -24,10 +24,8 @@ from bisect import bisect_left
 from mepinta.plugins_manager.plugins_manager_detail.base import PluginsManagerBase
 from mepinta.plugins_manager.data_model import ProcessorMetadata
 from mepinta.plugins_manifest import ProcessorManifestBase
-from common.path import joinPath
+from mepinta.plugins_manager.plugins_manager_detail.PluginImportError import PluginImportError
 
-#TODO: review this mess below
-FrameworkException = RuntimeError
 
 class ProcessorPluginsManager(PluginsManagerBase):
   '''
@@ -70,25 +68,25 @@ class ProcessorPluginsManager(PluginsManagerBase):
       if issubclass(manifest_class, ProcessorManifestBase):
         processor_proxy = manifest_class(context=self.context).processor_proxy
       else:
-        raise RuntimeError('The manifest is not a subclass of ProcessorManifestBase. Instead it\'s %r' % manifest_class)
+        raise PluginImportError('The manifest is not a subclass of ProcessorManifestBase. Instead it\'s %r' % manifest_class)
     else:
-      raise FrameworkException('There is no definition on the module: %r.' % (processor_module))
+      raise PluginImportError('There is no definition on the module: %r.' % (processor_module))
     return processor_proxy
 
   def loadProcessor(self, processor, minor_version, replace, replace_version, reload_):
     self.log.debug('Loading processor: %r' % processor)
-    processor_name, processor_package = self.processor_pkg_mngr.getPackageAndName(processor)
-    build_modules = self.processor_pkg_mngr.getRevisionModules(processor_package)
+    processor_name, package = self.processor_pkg_mngr.getPackageAndName(processor)
+    build_modules = self.processor_pkg_mngr.getRevisionModules(package)
 
     #TODO: should exist a PluginLoadingPolicy class to apply policies??? vv
     #Or should i leave this like this, and just encapsulate from line 63 on?
     #Check we don't have an empty plugin
     if not build_modules['versions']:
-      raise FrameworkException('Requested minor_version=%r for processor %r. There are no modules for such plugin.' % (minor_version, processor_name))
+      raise PluginImportError('Requested minor_version=%r for processor %r. There are no modules for such plugin.' % (minor_version, processor_name))
     #Check we have the minor_version or a later one
     #TODO: python3 breaks here!
     if minor_version > build_modules['versions'][-1]:
-      raise FrameworkException('Requested minor_version=%r for processor %r is newer than the latest minor_version available.' % (minor_version, processor_name))
+      raise PluginImportError('Requested minor_version=%r for processor %r is newer than the latest minor_version available.' % (minor_version, processor_name))
 
     #TODO: should exist a PluginLoadingPolicy class to apply policies
     #Which plugin minor minor_version should be loaded?
@@ -104,7 +102,7 @@ class ProcessorPluginsManager(PluginsManagerBase):
       #On python the plugin module is the plugin itself #TODO: rename library_path to plugin_module
       library_path = self.processor_pkg_mngr.getRevisionModule(processor_name, build_name)
     else: #then its shedskin. We still need to load the shared library
-      library_path = self.getImplemetationPath(processor_package, build_name)
+      library_path = self.getImplemetationPath(package, build_name)
 
     #Add the processor to the dictionary if it's not already there.
     if build_version in  self.processors.setdefault(processor_name, {}) \
@@ -124,7 +122,7 @@ class ProcessorPluginsManager(PluginsManagerBase):
       processor.library_path = library_path
       #TODO: data types can be a property, then it queries the proxy? (what?)
       processor.data_types = processor.proxy.getRequiredDataTypes().keys()
-      processor.package = processor_package
+      processor.package = package
     else:
       #It's an existent one. This means we are reloading.
       processor = self.processors[processor_name][build_version]
