@@ -24,6 +24,7 @@ from bisect import bisect_left
 from mepinta.plugins_manager.plugins_manager_detail.base import PluginsManagerBase, \
   DataTypeUnavaliable
 from mepinta.plugins_manager.data_model import DataTypeMetadata
+from common.path import joinPath
 
 
 class DataTypePluginsManager(PluginsManagerBase):
@@ -63,9 +64,9 @@ class DataTypePluginsManager(PluginsManagerBase):
     if self.context.backend_name == 'python': #On python description package is the same data type package
       data_type.library_path = self.dtype_pkg_mngr.getRevisionModule(data_type, data_type.build_name)
     else: #then its cpp (shedskin)
-      #OS:
-      assert False, 'point to /mepinta/deployment/build/plugins_build/c_and_cpp'
-      data_type.library_path = data_type_package.__path__[0] + '/%s.so.implementation' % data_type.build_name
+      #Solve library path
+      data_type.library_path = self.getImplemetationPath(data_type_package, data_type.build_name)
+
       #Create the sym link for other dependent libraries
       #self.library_link_mgr.create_shared_lib_link(data_type.name, data_type.library_path)
 

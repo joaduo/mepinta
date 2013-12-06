@@ -24,6 +24,7 @@ from bisect import bisect_left
 from mepinta.plugins_manager.plugins_manager_detail.base import PluginsManagerBase
 from mepinta.plugins_manager.data_model import ProcessorMetadata
 from mepinta.plugins_manifest import ProcessorManifestBase
+from common.path import joinPath
 
 #TODO: review this mess below
 FrameworkException = RuntimeError
@@ -103,8 +104,7 @@ class ProcessorPluginsManager(PluginsManagerBase):
       #On python the plugin module is the plugin itself #TODO: rename library_path to plugin_module
       library_path = self.processor_pkg_mngr.getRevisionModule(processor_name, build_name)
     else: #then its shedskin. We still need to load the shared library
-      assert False, 'point to /mepinta/deployment/build/plugins_build/c_and_cpp'
-      library_path = processor_package.__path__[0] + '/%s.so.implementation' % build_name
+      library_path = self.getImplemetationPath(processor_package, build_name)
 
     #Add the processor to the dictionary if it's not already there.
     if build_version in  self.processors.setdefault(processor_name, {}) \

@@ -22,6 +22,7 @@ along with Mepinta. If not, see <http://www.gnu.org/licenses/>.
 from mepinta.pipeline.hi.plugin_loader.PluginLoader import PluginLoader
 from mepinta.plugins_manager.plugins_manager_detail.PluginPackageManager import PluginPackageManager
 from common.abstract.FrameworkBase import FrameworkBase
+from common.path import joinPath
 
 # TODO: review error reporting
 class DataTypeUnavaliable(RuntimeError):
@@ -42,3 +43,13 @@ class PluginsManagerBase(FrameworkBase):
     self.latest_data_type = False  # TODO: this should come from config
     self.latest_processor = False  # TODO: this should come from config
 
+  def getImplemetationPath(self, package, build_name):
+      #Get base path from the deployment
+      base_path = self.context.deployment_config.deployment_path
+      base_path = joinPath(base_path, 'build', 'plugins_build')
+      #Get path list from package namespace
+      path_list = package.__name__.split('.')
+      path_list = path_list[path_list.index(self.context.backend_name):]
+      plugin_path = joinPath(base_path, path_list)
+      library_path = joinPath(plugin_path, '%s.so.implementation' % build_name)
+      return library_path
