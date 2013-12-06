@@ -59,11 +59,11 @@ class ProcessorPluginsManager(PluginsManagerBase):
       self.parent.loadDataType(data_type_name, version)
 
   def __getProcessorProxy(self, processor_module):
-    if hasattr(processor_module, 'getProcessorProxy'):
-      processor_proxy = processor_module.getProcessorProxy(self.context)
-    elif hasattr(processor_module, 'plugin'):#TODO: delete this and above
-      processor_proxy = processor_module.plugin(context=self.context).processor_proxy
-    elif hasattr(processor_module, 'manifest'):
+    '''
+    Detects Processor Manifest Inside module and returns the Proxy of the processor.
+    :param processor_module: module containing the Processor Manifest
+    '''
+    if hasattr(processor_module, 'manifest'):
       manifest_class = processor_module.manifest
       if issubclass(manifest_class, ProcessorManifestBase):
         processor_proxy = manifest_class(context=self.context).processor_proxy
@@ -113,7 +113,16 @@ class ProcessorPluginsManager(PluginsManagerBase):
     #Do we need to create a processor or we use the existent one?
     if build_version not in self.processors[processor_name]:
       #New minor_version. Create the processor object.
-      processor = ProcessorMetadata() #TODO: pass properties as arguments
+      module = self.processor_pkg_mngr.getRevisionModule(processor_name, build_name)
+      processor = ProcessorMetadata(
+          name=processor_name,
+          build_name=build_name,
+          version=build_version,
+          module=module,
+          proxy=self.__getProcessorProxy(module),
+          library_path=library_path,
+          package=package
+          )
       processor.name = processor_name
       processor.build_name = build_name
       processor.version = build_version

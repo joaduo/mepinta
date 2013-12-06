@@ -40,30 +40,49 @@ class PluginMetadata(FrameworkObject):
     return '%r,%r' % (self.name, self.version)
 
 class DataTypeMetadata(PluginMetadata):
-  def __init__(self):
-    #TODO: passing all data in initialization
-    #List of processors dependent on this data type
+  def __init__(self, name, build_name, version, package):
+    self.name = name
+    self.build_name = build_name
+    self.version = version
+    self.package = package
+    #Initialize
     self.processors = []
     self.property_id = None
     #To be initialized #TODO: make a decorator to make sure they are initialized
       #self.info = None
+
   def __wrapped_lo__(self):
     if self.property_id != None:
       return self.property_id
     else:
       raise RuntimeError('Property: %s has no property_id defined' % self.name)
+
   def getShortName(self):
     return  self.name.split('.')[-1]
+
   def getCNamespace(self):
     if self.name.startswith('c.') or self.name.startswith('mepinta.'):
       return self.getShortName()
     return self.name.replace('.', '_')
+
   c_namespace = property(getCNamespace, None, None, None)
 
 class ProcessorMetadata(PluginMetadata):
-  def __init__(self):
+  def __init__(self, name, build_name, version, module, proxy,
+               library_path, package):
+    self.name = name
+    self.build_name = build_name
+    self.version = version
+    self.module = module
+    self.proxy = proxy
+    self.library_path = library_path
+          #TODO: data types can be a property, then it queries the proxy? (what?)
+    self.data_types = self.proxy.getRequiredDataTypes().keys()
+    self.package = package
+
     self.data_types = [] #data types used by this processor
     #We need to keep the functions ids across reloads
     self.functions = None #Leave it like this! Means functions were not loaded! #name:property_id
+
   def getFollowLibraryPath(self):
     pass

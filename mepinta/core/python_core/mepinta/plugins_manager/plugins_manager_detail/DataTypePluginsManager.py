@@ -58,24 +58,24 @@ class DataTypePluginsManager(PluginsManagerBase):
       module_index = bisect_left(build_modules['versions'], minor_version)
 
     #Create the data_type object
-    data_type = DataTypeMetadata()
-    data_type.name = data_type_name
-    data_type.build_name = build_modules['names'][module_index]
-    data_type.version = build_modules['versions'][module_index]
-    data_type.package = package
+    data_type = DataTypeMetadata(
+          name=data_type_name,
+          build_name=build_modules['names'][module_index],
+          version=build_modules['versions'][module_index],
+          package=package,
+          )
     if self.context.backend_name == 'python': #On python description package is the same data type package
       data_type.library_path = self.dtype_pkg_mngr.getRevisionModule(data_type, data_type.build_name)
     else: #then its cpp (shedskin)
       #Solve library path
       data_type.library_path = self.getImplemetationPath(package, data_type.build_name)
-
       #Create the sym link for other dependent libraries
       #self.library_link_mgr.create_shared_lib_link(data_type.name, data_type.library_path)
 
     if data_type.name not in self.data_types: #The data type is not already loaded
       self.loadDataTypeLibrary(data_type)
     else: #Ok, its loaded. We need to reload_
-      #save previous property_id
+      #reuse previous property_id
       data_type.property_id = self.data_types[data_type.name].property_id
       #Save unloaded processors before
       dependent_processors = copy.copy(self.data_types[data_type.name].processors)
@@ -93,8 +93,9 @@ class DataTypePluginsManager(PluginsManagerBase):
     #Ask the lower lever C api to load this library, with global symbols,
     #since they will be used by the processors
     self.plugin_loader.loadDataTypeLibrary(data_type)
-    #data_type.name_in_backend = self.shared_library_loader.loadDataTypeLibrary(data_type) #TODO: comes from the backend
-    #TODO: warn if there are equal names in backend?? (should be so for handling variable properties)
+    #TODO: This TODO below make no sense to me. Review
+      #data_type.name_in_backend = self.shared_library_loader.loadDataTypeLibrary(data_type) #TODO: comes from the backend
+      #TODO: warn if there are equal names in backend?? (should be so for handling variable properties)
     #For future loading purposes
     self.data_types[data_type.name] = data_type
 
