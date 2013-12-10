@@ -26,6 +26,7 @@ from mepinta.plugins_manager.data_model import PluginMetadata
 from common.abstract.FrameworkBase import FrameworkBase
 import importlib
 from mepinta.plugins_manager.plugins_manager_detail.PluginImportError import PluginImportError
+from mepinta_devtools.deployment.PythonPathManager import PythonPathManager
 
 class PluginPackageManager(FrameworkBase):
   '''
@@ -36,15 +37,13 @@ class PluginPackageManager(FrameworkBase):
   '''
   def __post_init__(self, plugins_type):
     self.plugins_type = plugins_type
-
-  def buildPackageModuleName(self, version, short_name):  # TODO: remove?
-    name = '%s.%s.' % (self.prefixes[version], self.plugins_type)
-    return name
+    self.python_path = PythonPathManager()
 
   def python2x3xImport(self, short_name):
     # TODO: make choice by context/context name
     prefixes = []
-    if self.context.backend_name == 'python':
+    backend = self.context.backend_name
+    if backend == 'python':
       prefixes.append('plugins.python')
       if sys.version_info[0] == 2:
         prefixes.append('plugins.python2x')
@@ -53,6 +52,31 @@ class PluginPackageManager(FrameworkBase):
     else:  # We are on c_and_cpp
       prefixes.append('plugins.c_and_cpp')
 
+    #TODO: do meta hooks
+#    config = self.context.deployment_config
+#    if hasattr(config, 'plugins_sets') and \
+#    config.plugins_sets.get(backend, None) :
+#      self.python_path.cleanPlugins(config.mepinta_source_path)
+#      for plugins_set in config.plugins_sets[backend]:
+#        self.python_path.appendPlugins(config.mepinta_source_path, plugins_set,
+#                                       backend)
+#        try:
+#          return self._importPackage(prefixes, short_name)
+#        except PluginImportError:
+#          pass
+#        self.python_path.removePlugins(config.mepinta_source_path, plugins_set,
+#                                       backend)
+#      #Couldn't find the requested package
+#      raise self._getMissingPluginError(prefixes, short_name)
+#    else:
+    return self._importPackage(prefixes, short_name)
+
+  def _getMissingPluginError(self, prefixes, short_name):
+      namespace = '(%s).%s.%s' % ('|'.join(prefixes), self.plugins_type, short_name)
+      msg = 'Couldn\'t load {namespace} plugin.'.format(namespace=namespace)
+      return PluginImportError(msg)
+
+  def _importPackage(self, prefixes, short_name):
     # TODO: create a complete list of plugins and search through it
     # also use inotify to monitor any change
     for prfx in prefixes:
@@ -60,13 +84,11 @@ class PluginPackageManager(FrameworkBase):
         name = '%s.%s.%s' % (prfx, self.plugins_type, short_name)
         module = __import__(name, fromlist="dummy")
         return module
-      except Exception as e:
+      except ImportError as e:
         self.log.lastException()  # TODO: add an config for this printing
         self.log.debug('Couldnt import %s. Exception: %s' % (name, e))
     #Couldn't find the requested package
-    namespace = '(%s).%s.%s' % ('|'.join(prefixes), self.plugins_type, short_name)
-    msg = 'Couldn\'t load {namespace} plugin.'.format(namespace=namespace)
-    raise PluginImportError(msg)
+    raise self._getMissingPluginError(prefixes, short_name)
 
   def getPackageAndName(self, plugin):
     '''
@@ -104,7 +126,8 @@ class PluginPackageManager(FrameworkBase):
     name_version_separator = self.context.minor_version_separator  # '__'
     for importer, modname, ispkg in pkgutil.iter_modules(plugin_package.__path__, prefix):  # TODO: remove prefix
       module_name = modname.split('.')[-1]  # TODO: with prefix removed, this is not necessary
-      self.log.debug("Found submodule %s (is a plugin_package: %s)" % (module_name, ispkg))
+      self.log.debug("Found submodule %s (is a plugin_package: %s)" %
+                     (module_name, ispkg))
       if not ispkg:
         if name_version_separator in module_name:
           modules_names.append(module_name)
@@ -120,10 +143,11 @@ class PluginPackageManager(FrameworkBase):
         # The developer can implement it's own minor versioning convention
         str_to_version = versioning_mod.str_to_version
       else:
-        self.log.warning('Found plugin versioning module, but has no versioning function "str_to_version". Using default')
+        self.log.w('Found plugin versioning module, but has no versioning '
+                   ' function "str_to_version". Using default')
         str_to_version = int
     else:
-      self.log.debug('There is no versioning module for this plugin. Using default')
+      self.log.d('There is no versioning module for this plugin. Using default')
       str_to_version = int
 
     sorted_names_list = []
@@ -133,7 +157,7 @@ class PluginPackageManager(FrameworkBase):
       try:
         version = str_to_version(version_str)
       except Exception as e:  # If there is an exception while converting
-        self.log.error('Exception while trying to convert string to version object')
+        self.log.e('Exception while trying to convert string to version object.')
         raise e
       index = bisect_left(sorted_version_list, version)
       sorted_version_list.insert(index, version)

@@ -59,6 +59,14 @@ class PythonPathManager(object):
     if path in sys.path:
       sys.path.remove(path)
 
+  def cleanPlugins(self, mepinta_source_path):
+    #Clean plugins paths
+    prefix = joinPath(mepinta_source_path, 'plugins')
+    prefix = os.path.realpath(prefix)
+    for path in sys.path:
+      if os.path.realpath(path).startswith(prefix):
+        sys.path.remove(path)
+
   def appendPlugins(self, mepinta_source_path, plugins_set, backend):
     rel_path = joinPath('plugins', backend, plugins_set, 'python_modules')
     self.__appendPath(mepinta_source_path, rel_path)
