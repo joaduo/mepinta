@@ -47,5 +47,5 @@ class PluginsManagerBase(FrameworkBase):
     path_list = package.__name__.split('.')
     path_list = path_list[path_list.index(self.context.backend_name):]
     plugin_path = joinPath(base_path, path_list)
-    library_path = joinPath(plugin_path, '%s.so.implementation' % build_name)
+    library_path = joinPath(plugin_path, 'lib%s.so' % build_name)
     return library_path
