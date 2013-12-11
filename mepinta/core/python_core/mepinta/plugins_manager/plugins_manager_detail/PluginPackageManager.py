@@ -39,18 +39,18 @@ class PluginPackageManager(FrameworkBase):
     self.plugins_type = plugins_type
     self.python_path = PythonPathManager()
 
-  def python2x3xImport(self, short_name):
-    # TODO: make choice by context/context name
-    prefixes = []
-    backend = self.context.backend_name
-    if backend == 'python':
-      prefixes.append('plugins.python')
-      if sys.version_info[0] == 2:
-        prefixes.append('plugins.python2x')
-      else:
-        prefixes.append('plugins.python3x')
+  def getBackendNamespaces(self):
+    if self.context.backend_name == 'python':
+      prefixes = ['plugins.python',
+                  #python2x or python3x
+                  'plugins.python%sx' % sys.version_info[0], ]
     else:  # We are on c_and_cpp
-      prefixes.append('plugins.c_and_cpp')
+      prefixes = ['plugins.c_and_cpp']
+    return prefixes
+
+  def python2x3xImport(self, short_name):
+    prefixes = self.getBackendNamespaces()
+    return self._importPackage(prefixes, short_name)
 
     #TODO: do meta hooks
 #    config = self.context.deployment_config
@@ -69,7 +69,7 @@ class PluginPackageManager(FrameworkBase):
 #      #Couldn't find the requested package
 #      raise self._getMissingPluginError(prefixes, short_name)
 #    else:
-    return self._importPackage(prefixes, short_name)
+#    return self._importPackage(prefixes, short_name)
 
   def _getMissingPluginError(self, prefixes, short_name):
       namespace = '(%s).%s.%s' % ('|'.join(prefixes), self.plugins_type, short_name)
