@@ -18,32 +18,10 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with Mepinta. If not, see <http://www.gnu.org/licenses/>.
 '''
-#    #Check if it has the plugins_set name inside?
-#    #plugins.*.processors.{plugins_set}
-#    #plugins.*.data_types.{plugins_set}
-#    pass
-#    #Si no plugins_set
-#    #Primero probar basic
-#    #luego el resto de los plugins en el orden de la configuración
-#    #plugins.
-#    #Podria hacer un dir in plugins.c_and_cpp y en plugins.python
-#
-#      #raise ImportError('No plugin set {0} for backend {1}.'.format(plugin_set, backend))
-#
-##  def _loadBackend(self, backend, plugins_dict):
-##    #return the fi
-##    if not plugins_dict[backend]:
-##      raise ImportError('No plugins p_sets for backend %r' % backend)
-##    module_path = joinPath(self.plugins_root, backend, plugins_dict[backend][0])
-##    return module_path
-
-
 import os
 from common.path import joinPath
 import sys
-import importlib
 import imp
-from pprint import pprint
 
 class PluginModuleLoader(object):
   def __init__(self, plugins_root, path):
@@ -117,13 +95,6 @@ def smokeTestModule():
   print m
   import plugins.c_and_cpp.data_types.cpp.std.string as s
   print s
-
-#  imp.find_module('plugins')
-
-#  sys.meta_path.append(mt)
-
-
-#  raise RuntimeWarning('No smoke test')
 
 if __name__ == "__main__":
   smokeTestModule()
