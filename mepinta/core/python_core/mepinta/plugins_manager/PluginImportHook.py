@@ -23,7 +23,7 @@ from common.path import joinPath
 import sys
 import imp
 
-class PluginModuleLoader(object):
+class ModuleLoader(object):
   def __init__(self, plugins_root, path):
     self.plugins_root = plugins_root
     self.path = path
@@ -47,10 +47,11 @@ class PluginModuleLoader(object):
     path = [getPath(s) for s in p_sets]
     try:
       return imp.find_module(split[-1], path)
-    except ImportError as e:
-      msg = 'No plugin module or package %r in path: %r. \n  Error: %s'
-      msg = msg % ('.'.join(split), path, e)
-      raise ImportError(msg)
+    except ImportError:
+      return None
+#      msg = 'No plugin module or package %r in path: %r. \n  Error: %s'
+#      msg = msg % ('.'.join(split), path, e)
+#      raise ImportError(msg)
 
   def load_module(self, fullname):
     split = fullname.split('.')
@@ -59,7 +60,8 @@ class PluginModuleLoader(object):
     if backend not in plugins_dict:
       raise ImportError('No plugins repository for backend %r.' % backend)
     found = self._findModule(split, backend, plugins_dict)
-    return imp.load_module(fullname, *found)
+    if found:
+      return imp.load_module(fullname, *found)
 
 
 class PluginImportHook(object):
@@ -79,7 +81,7 @@ class PluginImportHook(object):
     prefix = '.'.join(split[:2])
     #Starts with plugins.*.
     if prefix in self.prefixes and len(split) > 2:
-      return PluginModuleLoader(self.plugins_root, path)
+      return ModuleLoader(self.plugins_root, path)
 
 def smokeTestModule():
 #  from getDefaultContext import getDefaultContext
@@ -88,13 +90,16 @@ def smokeTestModule():
   mt = PluginImportHook(plugins_root)
   import sys
   sys.meta_path.append(mt)
+  import mepinta
   import plugins.c_and_cpp
   import plugins.c_and_cpp.data_types.k3dv1.bitmap as d
-  print d
+#  print d
   import plugins.c_and_cpp.data_types.mepinta.functum as m
-  print m
+#  print m
   import plugins.c_and_cpp.data_types.cpp.std.string as s
-  print s
+  import pprint
+  pprint.pprint(sys.modules)
+#  print sd
 
 if __name__ == "__main__":
   smokeTestModule()
