@@ -25,6 +25,7 @@ import imp
 from mepinta.testing.plugins_testing.processor.base import ProcessorPluginTestBase
 from mepinta.abstract.MepintaError import MepintaError
 from common.path import splitPath
+from importlib import import_module
 
 class ForkInotifyUtilsBase(FrameworkBase): #TODO: use composition
   def _reloadModule(self, module):
@@ -100,7 +101,7 @@ class ModuleAutoTesterBase(FrameworkBase): #TODO remove and use util
       import __main__
       return __main__
     else:
-      return __import__(class_.__module__, fromlist='dummy')
+      return import_module(class_.__module__)#__import__(class_.__module__, fromlist='dummy')
 
   def _getPackageAndMinorVersion(self, plugin_manifest):
     if plugin_manifest.__class__.__module__ == '__main__':
@@ -114,7 +115,7 @@ class ModuleAutoTesterBase(FrameworkBase): #TODO remove and use util
     else:
       package_str = '.'.join(plugin_manifest.__class__.__module__.split('.')[:-1])
       manifest_file = plugin_manifest.__class__.__module__.split('.')[-1]
-    plugin_package = __import__(package_str, fromlist="dummy")
+    plugin_package = import_module(package_str)#__import__(package_str, fromlist="dummy")
     minor_version = self.__getMinorVersion(manifest_file)
     return plugin_package, minor_version
 
