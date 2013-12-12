@@ -27,6 +27,7 @@ from common.abstract.FrameworkBase import FrameworkBase
 import importlib
 from mepinta.plugins_manager.plugins_manager_detail.PluginImportError import PluginImportError
 from mepinta_devtools.deployment.PythonPathManager import PythonPathManager
+from importlib import import_module
 
 class PluginPackageManager(FrameworkBase):
   '''
@@ -52,37 +53,16 @@ class PluginPackageManager(FrameworkBase):
     prefixes = self.getBackendNamespaces()
     return self._importPackage(prefixes, short_name)
 
-    #TODO: do meta hooks
-#    config = self.context.deployment_config
-#    if hasattr(config, 'plugins_sets') and \
-#    config.plugins_sets.get(backend, None) :
-#      self.python_path.cleanPlugins(config.mepinta_source_path)
-#      for plugins_set in config.plugins_sets[backend]:
-#        self.python_path.appendPlugins(config.mepinta_source_path, plugins_set,
-#                                       backend)
-#        try:
-#          return self._importPackage(prefixes, short_name)
-#        except PluginImportError:
-#          pass
-#        self.python_path.removePlugins(config.mepinta_source_path, plugins_set,
-#                                       backend)
-#      #Couldn't find the requested package
-#      raise self._getMissingPluginError(prefixes, short_name)
-#    else:
-#    return self._importPackage(prefixes, short_name)
-
   def _getMissingPluginError(self, prefixes, short_name):
       namespace = '(%s).%s.%s' % ('|'.join(prefixes), self.plugins_type, short_name)
       msg = 'Couldn\'t load {namespace} plugin.'.format(namespace=namespace)
       return PluginImportError(msg)
 
   def _importPackage(self, prefixes, short_name):
-    # TODO: create a complete list of plugins and search through it
-    # also use inotify to monitor any change
     for prfx in prefixes:
       try:
         name = '%s.%s.%s' % (prfx, self.plugins_type, short_name)
-        module = __import__(name, fromlist="dummy")
+        module = import_module(name)#__import__(name, fromlist="dummy")
         return module
       except ImportError as e:
         self.log.lastException()  # TODO: add an config for this printing
