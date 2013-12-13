@@ -3,8 +3,12 @@
 Mepinta
 '''
 import os
+import sys
+from PluginImportHook import PluginImportHook
 
 file_dir = os.path.dirname(__file__)
+
+sys.meta_path.append(PluginImportHook(os.path.join(file_dir, 'plugins')))
 
 class default_deployment_config(object):
   mepinta_source_path = file_dir
