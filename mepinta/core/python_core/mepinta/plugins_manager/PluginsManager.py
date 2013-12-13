@@ -22,9 +22,6 @@ from mepinta.plugins_manager.plugins_manager_detail.DataTypePluginsManager impor
 from mepinta.plugins_manager.plugins_manager_detail.ProcessorPluginsManager import ProcessorPluginsManager
 from common.abstract.FrameworkBase import FrameworkBase
 from common.abstract.decorators.context_singleton import context_singleton
-import sys
-from mepinta.plugins_manager.PluginImportHook import PluginImportHook
-from common.path import joinPath
 
 @context_singleton
 class PluginsManager(FrameworkBase):
@@ -44,11 +41,11 @@ class PluginsManager(FrameworkBase):
     self.data_type_plugins_manager = DataTypePluginsManager(data_types=self._data_types, processors=self.processors, parent=self, context=self.context)
     self.processor_plugins_manager = ProcessorPluginsManager(data_types=self._data_types, processors=self.processors, parent=self, context=self.context)
     #TODO: set for all contexts
-    self._setImportHook()
+#    self._setImportHook()
 
-  def _setImportHook(self):
-    plugins_root = joinPath(self.context.deployment_config.mepinta_source_path, 'plugins')
-    sys.meta_path.append(PluginImportHook(plugins_root))
+#  def _setImportHook(self):
+#    plugins_root = joinPath(self.context.deployment_config.mepinta_source_path, 'plugins')
+#    sys.meta_path.append(PluginImportHook(plugins_root))
 
   def loadDataType(self, data_type, minor_version=None, reload_=False):
     return self.data_type_plugins_manager.loadDataType(data_type, minor_version, reload_)
