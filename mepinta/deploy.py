@@ -56,13 +56,13 @@ class DeploymentCommand(object):
 
   def _getArgsParser(self):
     parser = argparse.ArgumentParser(description='Mepinta deployment script.')
-    help = 'Specify the path for a new Mepinta deployment. (will be created ' \
+    help_ = 'Specify the path for a new Mepinta deployment. (will be created ' \
             'if not existent)'
-    parser.add_argument('deployment_path', action='store', help=help)
-    help = 'Force the deployment to an existing non-empty path.'
-    parser.add_argument('--force', action='store_true', help=help)
-    help = 'Enable debug output.'
-    parser.add_argument('--debug', action='store_true', help=help)
+    parser.add_argument('deployment_path', action='store', help=help_)
+    help_ = 'Force the deployment to an existing non-empty path.'
+    parser.add_argument('--force', action='store_true', help=help_)
+    help_ = 'Enable debug output.'
+    parser.add_argument('--debug', action='store_true', help=help_)
     return parser
 
   def _configurePythonPaths(self, mepinta_source_path):
