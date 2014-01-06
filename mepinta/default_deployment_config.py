@@ -8,12 +8,15 @@ from PluginImportHook import PluginImportHook
 
 file_dir = os.path.dirname(__file__)
 
-sys.meta_path.append(PluginImportHook(os.path.join(file_dir, 'plugins')))
+plugin_import_hook = PluginImportHook(os.path.join(file_dir, 'plugins'))
+
+sys.meta_path.append(plugin_import_hook)
 
 class default_deployment_config(object):
   mepinta_source_path = file_dir
   deployment_path = os.path.join(file_dir, 'deployment')
   plugins_sets = dict(c_and_cpp=['basic', 'k3dv1'])
+  plugin_import_hook = plugin_import_hook
 #  libk3dsdk_path = '${libk3dsdk_path}'
 #  libgsigc2_path = '${libgsigc2_path}'
 #  libboost_unit_test_framework_path = '${libboost_unit_test_framework_path}'

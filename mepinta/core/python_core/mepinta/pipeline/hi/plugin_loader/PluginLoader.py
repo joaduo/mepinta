@@ -30,40 +30,37 @@ class PluginLoader(HiAutoBase):
     #TODO: review ids later
     self.last_func_id = 0
     self.last_dtype_id = 0
-    
+
   def getNewFuncId(self):
     self.last_func_id += 1
     return self.last_func_id
-  
+
   def getNewDtypeId(self):
     self.last_dtype_id += 1
     return self.last_dtype_id
-  
+
   def unloadDataTypeLibrary(self, data_type):
     self.wrapped.unloadDataTypeLibrary(data_type.library_path, data_type.property_id)
-    
+
   def loadDataTypeLibrary(self, data_type):
-    if data_type.property_id == None: 
+    if data_type.property_id == None:
       data_type.property_id = self.getNewDtypeId()
     self.wrapped.loadDataTypeLibrary(data_type.library_path, data_type.c_namespace, data_type.property_id)
 
   def dataTypeIsLoaded(self, data_type):
     return self.wrapped.dataTypeIsLoaded(data_type.library_path)
-  
+
   def unloadProcessorLibrary(self, processor):
     self.wrapped.unloadProcessorLibrary(processor.library_path, processor.functions.values())
-    
+
   def loadProcessorLibrary(self, processor):
-    if processor.functions == None: #first time we are loading this library
-      func_dict = {}
+    if not processor.functions and processor.proxy.getFunctionsDict():
+      #first time we are loading this library
       #Iterate over the functions to register
-      for func_name in processor.proxy.getFunctionsDict().keys():
-        func_id = self.getNewFuncId()
-        func_dict[func_name] = func_id
-      #let's save it for using when reloading the library
-      processor.functions = func_dict
-    else: #we are reloading this library, then use old ids
-      func_dict = processor.functions    
+      names = processor.proxy.getFunctionsDict()
+      #assing id to functions and save them for future use
+      processor.functions.update(dict((n, self.getNewFuncId()) for n in names))
+    func_dict = processor.functions
     #finally load the library
     self.wrapped.loadProcessorLibrary(processor.library_path, func_dict)
 
@@ -72,7 +69,7 @@ class PluginLoader(HiAutoBase):
 
 def test(argv):
   pass
-      
+
 if __name__ == '__main__':
   import sys
   test(sys.argv)

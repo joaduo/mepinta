@@ -29,6 +29,7 @@ from mepinta.plugins_manifest.proxy.ProcessorProxy import ProcessorProxy
 from common.path import splitPath, joinPath
 import os
 import re
+from importlib import import_module
 
 __all__ = [
            'DataProperty',
@@ -90,6 +91,38 @@ class PluginManifestBase(FrameworkBase):
   def getMakeName(self):
     return '.'.join(self.__module__.split('.')[2:])
 
+  def getPackageStrAndManifestFile(self):
+    plugin_manifest = self
+    if plugin_manifest.__class__.__module__ == '__main__':
+      import __main__
+      dir_list = __main__.__file__.split(os.path.sep)
+      #splitPath(__main__.__file__)
+      #TODO: fix this mess!
+      start_index = -list(reversed(dir_list)).index('plugins') - 1
+      package_str = '.'.join(dir_list[start_index:-1])
+      manifest_file = dir_list[-1]
+    else:
+      package_str = '.'.join(plugin_manifest.__class__.__module__.split('.')[:-1])
+      manifest_file = plugin_manifest.__class__.__module__.split('.')[-1]
+    return package_str, manifest_file
+
+  def getPackageStr(self):
+    package_str, _ = self.getPackageStrAndManifestFile()
+    return package_str
+
+  def getPreLoadPostUnload(self):
+    package_str = self.getPackageStr()
+    split = package_str.split('.')
+    pkg_names = [ '.'.join(split[:i]) for i in range(3, len(split)) ]
+    preload_postunload = {}
+    for p_name in pkg_names:
+      pkg = import_module(p_name)
+      for func_name in ('preLoadPlugin', 'postUnloadPlugin'):
+        if func_name in pkg:
+          preload_postunload.setdefault(pkg, {})[func_name] = getattr(pkg, func_name)
+    return preload_postunload
+
+
 class DataTypeManifestBase(PluginManifestBase):
   def getIncludeDir(self):
     #Example... of module
@@ -145,7 +178,7 @@ class ProcessorManifestBase(PluginManifestBase):
         self.__updateKwArgs(kwargs, meth(self, *args))
         called_methods.add(meth)
       else:
-        self.log.warning('Same _superDefine method %r for manifest: %r' % (meth, self))
+        self.log.warning('Same _superClassDefine method %r for manifest: %r' % (meth, self))
     return args, kwargs
 
   def __updateKwArgs(self, kwargs, props):
@@ -164,7 +197,8 @@ class ProcessorManifestBase(PluginManifestBase):
         if prop.name not in kwargs:
           kwargs[prop.name] = prop
         else:
-          raise RuntimeError('Duplicate name %r in define keywords: %r' % (prop.name, kwargs))
+          raise RuntimeError('Duplicate name %r in define keywords: %r' %
+                             (prop.name, kwargs))
 
   def __collectDefineMethods(self, base_classes):
     '''

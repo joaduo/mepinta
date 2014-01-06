@@ -104,23 +104,14 @@ class ModuleAutoTesterBase(FrameworkBase): #TODO remove and use util
       return import_module(class_.__module__)#__import__(class_.__module__, fromlist='dummy')
 
   def _getPackageAndMinorVersion(self, plugin_manifest):
-    if plugin_manifest.__class__.__module__ == '__main__':
-      import __main__
-      dir_list = __main__.__file__.split(os.path.sep)
-      #splitPath(__main__.__file__)
-      #TODO: fix this mess!
-      start_index = -list(reversed(dir_list)).index('plugins') - 1
-      package_str = '.'.join(dir_list[start_index:-1])
-      manifest_file = dir_list[-1]
-    else:
-      package_str = '.'.join(plugin_manifest.__class__.__module__.split('.')[:-1])
-      manifest_file = plugin_manifest.__class__.__module__.split('.')[-1]
+    package_str, manifest_file = plugin_manifest.getPackageStrAndManifestFile()
     plugin_package = import_module(package_str)#__import__(package_str, fromlist="dummy")
     minor_version = self.__getMinorVersion(manifest_file)
     return plugin_package, minor_version
 
   def __getMinorVersion(self, manifest_file):
-    if len(manifest_file.split('__')) != 2:
+    #if len(manifest_file.split('__')) != 2:
+    if len(manifest_file.split(self.context.minor_version_separator)) != 2:
       self.log.error('The Plugin Manifest file %r should obey the format: PluginName__$version$.py (MorphPoints_001.py for example)' % manifest_file)
     else:
       minor_version_str = manifest_file.split('__')[1]

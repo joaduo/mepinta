@@ -53,6 +53,7 @@ class GraphManager(FrameworkBase):
   def createNode(self, graph, processor): #TODO: add support for debugging version
     #create the node proxy
     node = self.node_mngr.new(processor)
+#    import ipdb; ipdb.set_trace()
     #Add the node to the graph
     graph.addNode(node)
     #sychronize node and inner pipeline

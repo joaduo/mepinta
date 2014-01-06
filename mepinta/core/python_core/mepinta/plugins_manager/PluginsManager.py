@@ -40,17 +40,13 @@ class PluginsManager(FrameworkBase):
     #Let's instance each plugins manager
     self.data_type_plugins_manager = DataTypePluginsManager(data_types=self._data_types, processors=self.processors, parent=self, context=self.context)
     self.processor_plugins_manager = ProcessorPluginsManager(data_types=self._data_types, processors=self.processors, parent=self, context=self.context)
-    #TODO: set for all contexts
-#    self._setImportHook()
-
-#  def _setImportHook(self):
-#    plugins_root = joinPath(self.context.deployment_config.mepinta_source_path, 'plugins')
-#    sys.meta_path.append(PluginImportHook(plugins_root))
 
   def loadDataType(self, data_type, minor_version=None, reload_=False):
     return self.data_type_plugins_manager.loadDataType(data_type, minor_version, reload_)
+
   def loadProcessor(self, processor, minor_version=None, replace=False, replace_version=None, reload_=False):
     return self.processor_plugins_manager.loadProcessor(processor, minor_version, replace, replace_version, reload_)
+
   def unloadProcessorLibrary(self, processor):
     return self.processor_plugins_manager.unloadProcessorLibrary(processor)
 

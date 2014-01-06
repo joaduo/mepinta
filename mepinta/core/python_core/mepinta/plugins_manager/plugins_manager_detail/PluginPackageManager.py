@@ -66,7 +66,7 @@ class PluginPackageManager(FrameworkBase):
         return module
       except ImportError as e:
         self.log.lastException()  # TODO: add an config for this printing
-        self.log.debug('Couldnt import %s. Exception: %s' % (name, e))
+        self.log.debug('Could not import %s. Exception: %s' % (name, e))
     #Couldn't find the requested package
     raise self._getMissingPluginError(prefixes, short_name)
 
@@ -75,9 +75,6 @@ class PluginPackageManager(FrameworkBase):
       PluginsManager can receive a package/module or a string.
       This functions gets whatever we don't have and returns both.
     '''
-#    debugPrint plugin
-#    import pdb;
-#    pdb.set_trace()
     if isinstance(plugin, (str, unicode)):  # We have the name, then we need to get the package
       plugin_name = plugin
       plugin_package = self.python2x3xImport(plugin)
@@ -137,7 +134,8 @@ class PluginPackageManager(FrameworkBase):
       try:
         version = str_to_version(version_str)
       except Exception as e:  # If there is an exception while converting
-        self.log.e('Exception while trying to convert string to version object.')
+        self.log.e('Exception while trying to convert version_str=%r to version'
+                   ' object.' % version_str)
         raise e
       index = bisect_left(sorted_version_list, version)
       sorted_version_list.insert(index, version)

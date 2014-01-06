@@ -48,7 +48,8 @@ class ProcessorProxy(FrameworkBase):
     self.containers[containerType] = container
     return container
 
-  def getRequiredDataTypes(self, types_classes=[DataPropertyProxy]):
+  def getRequiredDataTypes(self, types_classes=(DataPropertyProxy,)):
+    #TODO: rename types_classes -> types and use tuples instead of lists
     #TODO def getRequiredDataTypes(self, *types_classes): if len(types_classes) == 0: types_classes=[DataPropertyProxy]?
     '''Get a dict of the required data types for this processor. Avoid repeating data types.'''
     #return a dict like: {dt_name:{versions:[]}}
@@ -100,8 +101,7 @@ class ProcessorProxy(FrameworkBase):
       self.log.e(msg)
 
 def testModule():
-  from getDefaultContext import getDefaultContext
-  context = getDefaultContext()
+  assert None
 
 if __name__ == "__main__":
   testModule()

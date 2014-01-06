@@ -19,37 +19,32 @@ You should have received a copy of the GNU General Public License
 along with Mepinta. If not, see <http://www.gnu.org/licenses/>.
 '''
 from common.abstract.FrameworkObject import FrameworkObject
-from mepinta.abstract.MepintaError import MepintaError
-from mepinta.pipeline.lo.pipeline_data.data_model import Pipeline
-from common.abstract.decorators.context_singleton import context_singleton
 
 class PluginMetadata(FrameworkObject):
-  def __init__(self):
-    #TODO: passing all data in initialization
-    pass
-    #To be initialized
-    #self.name = None
-    #self.build_name = None
-    #self.version = 0
-    #self.library_path = None
-    #self.package = None
+  def __init__(self, name, build_name, version):
+    self.name = name
+    #TODO: rename build_name to minor_name?
+    self.build_name = build_name
+    self.version = version
+    #TODO: review #To be initialized #TODO: make a decorator to make sure they are initialized
     #self.info = None
+
   def __str__(self):
     return self.name
+
   def __repr__(self):
     return '%r,%r' % (self.name, self.version)
 
+  #TODO: add module to DataType,  and call manifest to solve this
+  def getPreLoadPostUnload(self):
+    return {}
+
 class DataTypeMetadata(PluginMetadata):
-  def __init__(self, name, build_name, version, package):
-    self.name = name
-    self.build_name = build_name
-    self.version = version
-    self.package = package
+  def __init__(self, name, build_name, version):
+    PluginMetadata.__init__(self, name, build_name, version)
     #Initialize
     self.processors = []
     self.property_id = None
-    #To be initialized #TODO: make a decorator to make sure they are initialized
-      #self.info = None
 
   def __wrapped_lo__(self):
     if self.property_id != None:
@@ -65,24 +60,13 @@ class DataTypeMetadata(PluginMetadata):
       return self.getShortName()
     return self.name.replace('.', '_')
 
-  c_namespace = property(getCNamespace, None, None, None)
+  c_namespace = property(getCNamespace)
 
 class ProcessorMetadata(PluginMetadata):
-  def __init__(self, name, build_name, version, module, proxy,
-               library_path, package):
-    self.name = name
-    self.build_name = build_name
-    self.version = version
-    self.module = module
-    self.proxy = proxy
-    self.library_path = library_path
-          #TODO: data types can be a property, then it queries the proxy? (what?)
-    self.data_types = self.proxy.getRequiredDataTypes().keys()
-    self.package = package
-
-    self.data_types = [] #data types used by this processor
-    #We need to keep the functions ids across reloads
-    self.functions = None #Leave it like this! Means functions were not loaded! #name:property_id
+  def __init__(self, name, build_name, version):
+    PluginMetadata.__init__(self, name, build_name, version)
+    #We need to keep the functions ids across reloads #name:property_id
+    self.functions = {}
 
   def getFollowLibraryPath(self):
     pass

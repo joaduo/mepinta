@@ -34,22 +34,22 @@ class Node(FrameworkObject):
     self.processor = processor
     self.__cloneFromManifest(self.processor.proxy)
 
-  def __cloneFromManifest(self, processor_proxy):
+  def __cloneFromManifest(self, proxy):
     '''
       Given a processor proxy the node clones the processor's topology
       and options.
     '''
     #TODO: automate this in order to maintain it from the ProcessorProxy perspective ?
     #TODO: the code below makes the debugger useless!! Why?
-    processor_proxy = deepcopy(processor_proxy)
-    self.containers = processor_proxy.containers
-    self.inputs = processor_proxy.inputs
-    self.internals = processor_proxy.internals
-    self.outputs = processor_proxy.outputs
-    self.functions = processor_proxy.functions
-    self.non_cached_capable = processor_proxy.non_cached_capable
-    self.marked_outputs = processor_proxy.marked_outputs
-    self.getRequiredDataTypes = processor_proxy.getRequiredDataTypes
+    proxy = deepcopy(proxy)
+    self.containers = proxy.containers
+    self.inputs = proxy.inputs
+    self.internals = proxy.internals
+    self.outputs = proxy.outputs
+    self.functions = proxy.functions
+    self.non_cached_capable = proxy.non_cached_capable
+    self.marked_outputs = proxy.marked_outputs
+    self.getRequiredDataTypes = proxy.getRequiredDataTypes
 
   def getPropertiesIds(self):
     pass #for container in self.containers.getProperties()

@@ -23,8 +23,8 @@ from mepinta.plugins_manifest.proxy.data_model import DataPropertyProxy, \
 from bisect import bisect_left
 from mepinta.plugins_manager.plugins_manager_detail.base import PluginsManagerBase
 from mepinta.plugins_manager.data_model import ProcessorMetadata
-from mepinta.plugins_manifest import ProcessorManifestBase
 from mepinta.plugins_manager.plugins_manager_detail.PluginImportError import PluginImportError
+from mepinta.plugins_manager.metadata_wrappers.ProcessorMetadataWrapper import ProcessorMetadataWrapper
 
 
 class ProcessorPluginsManager(PluginsManagerBase):
@@ -50,106 +50,73 @@ class ProcessorPluginsManager(PluginsManagerBase):
     #Processor is not loaded anymore
     del self.processors[processor.name][processor.version]
 
-  def loadProcessorsDataTypes(self, processor_proxy):
-    types_classes = [DataPropertyProxy, FunctumPropertyProxy]
-    for data_type_name, data_type_versions in processor_proxy.getRequiredDataTypes(types_classes).items():
+  def loadProcessorsDataTypes(self, processor):
+    proxy = processor.proxy
+    types_classes = (DataPropertyProxy, FunctumPropertyProxy)
+    for data_type_name, data_type_versions in proxy.getRequiredDataTypes(types_classes).items():
       #get the biggest version of a required datatype
       version = data_type_versions[-1]
       #Lets load it
       self.parent.loadDataType(data_type_name, version)
 
-  def __getProcessorProxy(self, processor_module):
-    '''
-    Detects Processor Manifest Inside module and returns the Proxy of the processor.
-    :param processor_module: module containing the Processor Manifest
-    '''
-    if hasattr(processor_module, 'manifest'):
-      manifest_class = processor_module.manifest
-      if issubclass(manifest_class, ProcessorManifestBase):
-        processor_proxy = manifest_class(context=self.context).processor_proxy
-      else:
-        raise PluginImportError('The manifest is not a subclass of ProcessorManifestBase. Instead it\'s %r' % manifest_class)
-    else:
-      raise PluginImportError('There is no definition on the module: %r.' % (processor_module))
-    return processor_proxy
+  def _getMinorVersion(self, minor_version, package, processor_name):
+    #TODO: should exist a PluginLoadingPolicy class to apply policies?
+    modules = self.processor_pkg_mngr.getRevisionModules(package)
 
-  def loadProcessor(self, processor, minor_version, replace, replace_version, reload_):
-    self.log.debug('Loading processor: %r' % processor)
-    processor_name, package = self.processor_pkg_mngr.getPackageAndName(processor)
-    build_modules = self.processor_pkg_mngr.getRevisionModules(package)
-
-    #TODO: should exist a PluginLoadingPolicy class to apply policies??? vv
-    #Or should i leave this like this, and just encapsulate from line 63 on?
-    #Check we don't have an empty plugin
-    if not build_modules['versions']:
-      raise PluginImportError('Requested minor_version=%r for processor %r. There are no modules for such plugin.' % (minor_version, processor_name))
-    #Check we have the minor_version or a later one
     #TODO: python3 breaks here!
-    if minor_version > build_modules['versions'][-1]:
-      raise PluginImportError('Requested minor_version=%r for processor %r is newer than the latest minor_version available.' % (minor_version, processor_name))
+    #Check we don't have an empty plugin dir
+    #and we have the minor_version or a later one
+    if not modules['versions'] or minor_version > modules['versions'][-1]:
+      raise PluginImportError('No minor version equal or newer than %r for %r'
+                              'versions=%r' % (minor_version, processor_name,
+                                               modules['versions']))
 
-    #TODO: should exist a PluginLoadingPolicy class to apply policies
     #Which plugin minor minor_version should be loaded?
     if self.latest_processor or minor_version == None: #Load the latest one
       module_index = -1
     else: #Load the asked minor_version or the next one available
-      module_index = bisect_left(build_modules['versions'], minor_version)
+      module_index = bisect_left(modules['versions'], minor_version)
 
     #Let's get better naming #TODO: should came from PluginLoadingPolicy
-    build_name = build_modules['names'][module_index]
-    build_version = build_modules['versions'][module_index]
-    if self.context.backend_name == 'python':
-      #On python the plugin module is the plugin itself #TODO: rename library_path to plugin_module
-      library_path = self.processor_pkg_mngr.getRevisionModule(processor_name, build_name)
-    else: #then its shedskin. We still need to load the shared library
-      library_path = self.getImplemetationPath(package, build_name)
+    build_name = modules['names'][module_index]
+    minor_version = modules['versions'][module_index]
+    return build_name, minor_version
+
+  def loadProcessor(self, processor, minor_version, replace, replace_version, reload_):
+    self.log.debug('Loading processor: %r' % processor)
+    processor_name, package = self.processor_pkg_mngr.getPackageAndName(processor)
+
+    build_name, minor_version = self._getMinorVersion(minor_version, package, processor_name)
 
     #Add the processor to the dictionary if it's not already there.
-    if build_version in  self.processors.setdefault(processor_name, {}) \
+    if minor_version in  self.processors.setdefault(processor_name, {}) \
     and not reload_:
-      self.log.debug('Requested minor_version=%r for processor %r is already loaded.' % (build_version, processor_name))
-      return self.processors[processor_name][build_version]
+      self.log.debug('Requested minor_version=%r for processor %r is already '
+                     'loaded.' % (minor_version, processor_name))
+      return self.processors[processor_name][minor_version]
 
     #Do we need to create a processor or we use the existent one?
-    if build_version not in self.processors[processor_name]:
+    if minor_version not in self.processors[processor_name]:
       #New minor_version. Create the processor object.
-      module = self.processor_pkg_mngr.getRevisionModule(processor_name, build_name)
-      processor = ProcessorMetadata(
+      meta_data = ProcessorMetadata(
           name=processor_name,
           build_name=build_name,
-          version=build_version,
-          module=module,
-          proxy=self.__getProcessorProxy(module),
-          library_path=library_path,
-          package=package
+          version=minor_version,
           )
+      processor = ProcessorMetadataWrapper(self.context, meta_data=meta_data)
     else:
       #It's an existent one. This means we are reloading.
-      processor = self.processors[processor_name][build_version]
+      processor = self.processors[processor_name][minor_version]
       #Let's unload before reloading.
       self.unloadProcessorLibrary(processor)
-      #reload manifest module too
-      processor.module = self.processor_pkg_mngr.getRevisionModule(processor_name, build_name)
-      processor.proxy = self.__getProcessorProxy(processor.module)
 
     #First load required data types or reload new versions.
-    self.loadProcessorsDataTypes(processor.proxy)
+    self.loadProcessorsDataTypes(processor)
 
     #Finally load the processor library
     self.loadProcessorLibrary(processor)
 
-    #Now that we loaded the data types and processor we can update
-      #the ids of the proxy
-    self.setProcessorProxyDtypeIds(processor)
+    #Now update the data types' and functions' ids in the proxy
+    processor.setIds(self.data_types)
     return processor
 
-  def setProcessorProxyDtypeIds(self, processor):
-    #We need to re/set proxy's ids in a case of re/load
-    self.setContainersDtypeId(processor.proxy)
-    processor.proxy.setFunctionsId(processor.functions)
-
-  def setContainersDtypeId(self, proxy):
-    #For each processor's property set its data type property_id
-    for props_container in proxy.containers.values():
-      for prop in props_container.getProperties(DataPropertyProxy, FunctumPropertyProxy).values():
-        prop.dtype_id = self.data_types[prop.data_type_name].property_id

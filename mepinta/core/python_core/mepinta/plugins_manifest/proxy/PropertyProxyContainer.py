@@ -68,7 +68,7 @@ class PropertyProxyContainer(FrameworkBase):
         name.
         FunctionPropertyProxy if th
     '''
-    if not len(types):
+    if not types:
       types = self.__getContainerTypes()
     properties = {}
     for prop_name, prop_proxy in self.__dict__.items():

@@ -23,6 +23,7 @@ from common.path import joinPath
 import sys
 import imp
 
+
 class LoaderBase(object):
   def __init__(self, plugins_root, path):
     self.plugins_root = plugins_root
@@ -34,7 +35,6 @@ class LoaderBase(object):
     plugins_dict = dict((backend, getDirs(joinPath(plugins_root, backend)))
                         for backend in getDirs(plugins_root))
     return plugins_dict
-
 
 
 class PluginLoader(LoaderBase):
@@ -56,12 +56,14 @@ class PluginLoader(LoaderBase):
     if len(split) >= 4 and split[3] in p_sets:
       p_sets = set([split[3]])
     def getPath(plugin_set):
-      return joinPath(self.plugins_root, backend, plugin_set, 'python_modules', split[:-1])
+      return joinPath(self.plugins_root, backend, plugin_set, 'python_modules',
+                      split[:-1])
     path = [getPath(s) for s in p_sets]
     try:
       return imp.find_module(split[-1], path)
     except ImportError:
       return None
+
 
 class BrutePluginLoader(LoaderBase):
   def load_module(self, fullname):
@@ -92,9 +94,9 @@ class PluginImportHook(object):
     self.prefixes = self.getPrefixes()
 
   def getPrefixes(self):
-    namespaces = {'plugins.python': PluginLoader,
-                  #python2x or python3x
+    namespaces = {#python2x or python3x
                   'plugins.python%sx' % sys.version_info[0]: PluginLoader,
+                  'plugins.python': PluginLoader,
                   'plugins.c_and_cpp': PluginLoader,
                   'plugins_tests':BrutePluginLoader,
                   }
@@ -105,6 +107,7 @@ class PluginImportHook(object):
     names = filter(lambda p: fullname.startswith(p), self.prefixes)
     if names:
       return self.prefixes[names[0]](self.plugins_root, path)
+
 
 def smokeTestModule():
 #  from getDefaultContext import getDefaultContext
