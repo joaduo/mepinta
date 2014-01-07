@@ -109,6 +109,8 @@ class ProcessorPluginsManager(PluginsManagerBase):
       processor = self.processors[processor_name][minor_version]
       #Let's unload before reloading.
       self.unloadProcessorLibrary(processor)
+      #Reset proxy, module and package (keeps functions ids)
+      processor.refresh()
 
     #First load required data types or reload new versions.
     self.loadProcessorsDataTypes(processor)
