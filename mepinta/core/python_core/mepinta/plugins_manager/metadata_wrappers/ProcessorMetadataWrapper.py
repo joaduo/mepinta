@@ -20,8 +20,6 @@ along with Mepinta. If not, see <http://www.gnu.org/licenses/>.
 '''
 from mepinta.plugins_manager.metadata_wrappers.base import MetadataWrapperBase
 from mepinta.plugins_manager.plugins_manager_detail.PluginPackageManager import PluginPackageManager
-from mepinta.plugins_manifest import ProcessorManifestBase
-from mepinta.plugins_manager.plugins_manager_detail.PluginImportError import PluginImportError
 from mepinta.plugins_manifest.proxy.data_model import DataPropertyProxy, \
   FunctumPropertyProxy
 
@@ -41,18 +39,7 @@ class ProcessorMetadataWrapper(MetadataWrapperBase):
       processor.
     '''
     if not self._proxy:
-      module = self.module
-      if hasattr(module, 'manifest'):
-        manifest_class = module.manifest
-        if issubclass(manifest_class, ProcessorManifestBase):
-          self._proxy = manifest_class(context=self.context).processor_proxy
-        else:
-          msg = ('The manifest is not a subclass of PritocessorManifestBase.'
-                 ' Instead it is %r' % manifest_class)
-          raise PluginImportError(msg)
-      else:
-        raise PluginImportError('There is no definition on the module: %r.' %
-                                (module))
+      self._proxy = self.manifest.processor_proxy
     return self._proxy
 
 

@@ -43,6 +43,7 @@ As illustrated above, QualifierBase children classes can wrap a
 property and other qualifiers. The qualifiers mask one or more property from a
 PropertyProxy.
 
+#TODO: better real world examples
 Examples of qualifiers usage:
   """
     In a real world manifest you should use aliases found in plugin_manifest.__init__ package

@@ -26,6 +26,12 @@ class DataTypeMetadataWrapper(MetadataWrapperBase):
     self._pkg_mngr = PluginPackageManager(plugins_type='data_types',
                                           context=self.context)
 
+  @property
+  def manifest(self):
+    if hasattr(self.module, 'manifest'):
+      return MetadataWrapperBase.getManifest(self)
+    else:
+      return object()
 
 def smokeTestModule():
 #  from getDefaultContext import getDefaultContext

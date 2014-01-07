@@ -21,6 +21,8 @@ along with Mepinta. If not, see <http://www.gnu.org/licenses/>.
 from common.abstract.FrameworkBase import FrameworkBase
 from mepinta.plugins_manager.data_model import DataTypeMetadata
 from common.path import joinPath
+from mepinta.plugins_manifest import ProcessorManifestBase
+from mepinta.plugins_manager.plugins_manager_detail.PluginImportError import PluginImportError
 
 class MetadataWrapperBase(FrameworkBase):
   def __post_init__(self, meta_data):
@@ -30,6 +32,7 @@ class MetadataWrapperBase(FrameworkBase):
   def refresh(self):
     self._module = None
     self._package = None
+    self._manifest = None
 
   def _hasAttr(self, name):
     return name in dir(self)
@@ -74,6 +77,29 @@ class MetadataWrapperBase(FrameworkBase):
     if not self._package:
       self._package = self._pkg_mngr.python2x3xImport(self.name)
     return self._package
+
+  def getPreLoadPostUnload(self):
+    if hasattr(self.manifest, 'getPreLoadPostUnload'):
+      return self.manifest.getPreLoadPostUnload()
+    return {}
+
+
+  def getManifest(self):
+    if not self._manifest:
+      module = self.module
+      if hasattr(module, 'manifest'):
+        manifest = module.manifest
+        if not issubclass(manifest, ProcessorManifestBase):
+          msg = ('The manifest is not a subclass of PritocessorManifestBase.'
+                 ' Instead it is %r' % manifest)
+          raise PluginImportError(msg)
+      else:
+        raise PluginImportError('There is no definition on the module: %r.' %
+                                  (module))
+      self._manifest = manifest(self.context)
+    return self._manifest
+
+  manifest = property(getManifest)
 
 
 def smokeTestModule():
