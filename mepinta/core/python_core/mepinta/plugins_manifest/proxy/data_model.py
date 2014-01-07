@@ -196,11 +196,14 @@ class PropertyDepedencies(object):
     return self.__props.__iter__()
   def appendDependency(self, dency):
     if dency in self.__props:
-      raise RuntimeError('Dependency %r already in this Property\'s dependencies.' % dency)
+      raise RuntimeError('Dependency %r already in this Property\'s '
+                         'dependencies.' % dency)
     elif isinstance(dency, (PropertyProxy, QualifierBase)):
       self.__props.append(dency)
     else:
-      raise RuntimeError('Unsupported dependency type for %r. Dependencies should be a list of PropertyProxy or a PropertyProxy.' % dency)
+      raise RuntimeError('Unsupported dependency type for %r. Dependencies '
+                         'should be a list of PropertyProxy or a PropertyProxy.'
+                         % dency)
 
 class PropertyProxy(PropertyAndQualifierBase):
   '''
@@ -234,11 +237,13 @@ class PropertyProxy(PropertyAndQualifierBase):
 
   #Properties
   def getDpdencies(self):
-    '''You can get dpdencies, but never set it. Always add or remove declarationOrder from the list.'''
+    '''You can get dpdencies, but never set it. Always add or remove
+    declarationOrder from the list.'''
     return self.__dpdencies
   def setDpdencies(self, value):
     if self.__dpdencies != value:
-      raise RuntimeError('Trying to change %r property\'s dpdencies object. You should use the += operator instead.' % str(self))
+      raise RuntimeError('Trying to change %r property\'s dpdencies object. '
+                         'You should use the += operator instead.' % str(self))
   dpdencies = property(getDpdencies, setDpdencies, None, None)
 
 class InOutPropertyProxyBase(PropertyProxy):
@@ -255,8 +260,10 @@ class InOutPropertyProxyBase(PropertyProxy):
 
   def directed(self, direction):
     '''
-      if direction='>' means other property depends on this property in the relation.(but is not notified)
-      if direction='<' means this property notifies changes to the other property in the relation.(but won't be in it's args)
+      if direction='>' means other property depends on this property in the
+        relation.(but is not notified)
+      if direction='<' means this property notifies changes to the other
+        property in the relation.(but won't be in it's args)
     '''
     return DirectionQualifier(self, direction)
 
@@ -313,9 +320,11 @@ class GenericEnumProxy(DataPropertyProxy):
       raise RuntimeError('At least you should provide one label=value pair.')
     for value in enum_dict.values():
       if not isinstance(value, int):
-        raise RuntimeError('For a GenericEnum you must supply a label=value dictionary. Where value is of int type.')
+        raise RuntimeError('For a GenericEnum you must supply a label=value '
+                           'dictionary. Where value is of int type.')
     if len(set(enum_dict.values())) != len(enum_dict):
-      raise RuntimeError('For a GenericEnum you must supply a label=value dictionary. All values must differ.')
+      raise RuntimeError('For a GenericEnum you must supply a label=value '
+                         'dictionary. All values must differ.')
   def setDefault(self, value):
     '''
       Set the default value for this enum. (when the given value doesn't
@@ -329,12 +338,14 @@ class GenericEnumProxy(DataPropertyProxy):
     elif value in self.enum_dict:
       self.default_value = self.enum_dict[value]
     else:
-      raise RuntimeError('Default value %r was not defined for this enum %r' % (value, self.enum_dict))
+      raise RuntimeError('Default value %r was not defined for this enum %r' %
+                         (value, self.enum_dict))
     return self
   #Properties
   def getEnumId(self):
     if self.__enum_id == None:
-      raise RuntimeError('A enum property_id must be set from the PropertyProxyContainer class.')
+      raise RuntimeError('A enum property_id must be set from the '
+                         'PropertyProxyContainer class.')
     return self.__enum_id
   def setEnumId(self, value):
     self.__enum_id = value
