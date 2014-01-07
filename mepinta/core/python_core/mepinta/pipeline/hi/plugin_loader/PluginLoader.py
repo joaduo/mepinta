@@ -58,12 +58,11 @@ class PluginLoader(HiAutoBase):
                                         processor.functions.values())
 
   def loadProcessorLibrary(self, processor):
-    if not processor.functions and processor.proxy.getFunctionsDict():
-      #first time we are loading this library
-      #Iterate over the functions to register
-      names = processor.proxy.getFunctionsDict()
-      #assing id to functions and save them for future use
-      processor.functions.update(dict((n, self.getNewFuncId()) for n in names))
+    #Iterate over the functions' names to register
+    names = processor.proxy.getFunctionsDict()
+    #assign id to functions without id
+    processor.functions.update(dict((n, self.getNewFuncId()) for n in names
+                                    if n not in processor.functions))
     #finally load the library
     self.wrapped.loadProcessorLibrary(processor.library_path,
                                       processor.functions)
