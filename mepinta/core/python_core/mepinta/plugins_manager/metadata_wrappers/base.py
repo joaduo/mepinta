@@ -26,8 +26,6 @@ class MetadataWrapperBase(FrameworkBase):
   def __post_init__(self, meta_data):
     self._meta_data = meta_data
     self.refresh()
-    #Change __setattr__ behavoir now (to allow setting metadata values)
-#    self.__setattr__ = self._setattr
 
   def refresh(self):
     self._module = None
@@ -42,17 +40,6 @@ class MetadataWrapperBase(FrameworkBase):
     else:
       #self.log.d('Looking up attr name=%r in metadata' % name)
       return getattr(self._meta_data, name)
-
-#  def _setattr(self, name, value):
-#    #The wrapper should only work with _<name> attributes
-#    if not name.startswith('_') and hasattr(self._meta_data, name):
-#      #Make sure its not a read-only property in the wrapper
-#      msg = 'You cannot set a attr in both %r and %r' % (self, self._meta_data)
-#      assert not hasattr(self, name), msg
-#      #ok, set the meta_data value
-#      return self._meta_data.__setattr__(name, value)
-#    else:
-#      return FrameworkBase.__setattr__(self, name, value)
 
   def _getImplemetationPath(self, package, build_name):
     #Get base path from the deployment
