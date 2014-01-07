@@ -29,17 +29,10 @@ class ProcessorMetadataWrapper(MetadataWrapperBase):
   def __post_init__(self):
     self._pkg_mngr = PluginPackageManager(plugins_type='processors',
                                           context=self.context)
-    self._functions = None
 
   def refresh(self):
     MetadataWrapperBase.refresh(self)
     self._proxy = None
-
-  @property
-  def functions(self):
-    if not self._functions:
-      self._functions = self.proxy.functions
-    return self._functions
 
   @property
   def proxy(self):
@@ -54,7 +47,7 @@ class ProcessorMetadataWrapper(MetadataWrapperBase):
         if issubclass(manifest_class, ProcessorManifestBase):
           self._proxy = manifest_class(context=self.context).processor_proxy
         else:
-          msg = ('The manifest is not a subclass of ProcessorManifestBase.'
+          msg = ('The manifest is not a subclass of PritocessorManifestBase.'
                  ' Instead it is %r' % manifest_class)
           raise PluginImportError(msg)
       else:
