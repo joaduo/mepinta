@@ -40,18 +40,22 @@ class PluginLoader(HiAutoBase):
     return self.last_dtype_id
 
   def unloadDataTypeLibrary(self, data_type):
-    self.wrapped.unloadDataTypeLibrary(data_type.library_path, data_type.property_id)
+    self.wrapped.unloadDataTypeLibrary(data_type.library_path,
+                                       data_type.property_id)
 
   def loadDataTypeLibrary(self, data_type):
     if data_type.property_id == None:
       data_type.property_id = self.getNewDtypeId()
-    self.wrapped.loadDataTypeLibrary(data_type.library_path, data_type.c_namespace, data_type.property_id)
+    self.wrapped.loadDataTypeLibrary(data_type.library_path,
+                                     data_type.c_namespace,
+                                     data_type.property_id)
 
   def dataTypeIsLoaded(self, data_type):
     return self.wrapped.dataTypeIsLoaded(data_type.library_path)
 
   def unloadProcessorLibrary(self, processor):
-    self.wrapped.unloadProcessorLibrary(processor.library_path, processor.functions.values())
+    self.wrapped.unloadProcessorLibrary(processor.library_path,
+                                        processor.functions.values())
 
   def loadProcessorLibrary(self, processor):
     if not processor.functions and processor.proxy.getFunctionsDict():
@@ -60,9 +64,9 @@ class PluginLoader(HiAutoBase):
       names = processor.proxy.getFunctionsDict()
       #assing id to functions and save them for future use
       processor.functions.update(dict((n, self.getNewFuncId()) for n in names))
-    func_dict = processor.functions
     #finally load the library
-    self.wrapped.loadProcessorLibrary(processor.library_path, func_dict)
+    self.wrapped.loadProcessorLibrary(processor.library_path,
+                                      processor.functions)
 
   def processorIsLoaded(self, processor):
     return self.wrapped.processorIsLoaded(processor.library_path)
