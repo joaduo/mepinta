@@ -92,6 +92,7 @@ class PluginImportHook(object):
   def __init__(self, plugins_root):
     self.plugins_root = plugins_root
     self.prefixes = self.getPrefixes()
+    self.enabled = True
 
   def getPrefixes(self):
     namespaces = {#python2x or python3x
@@ -103,10 +104,11 @@ class PluginImportHook(object):
     return namespaces
 
   def find_module(self, fullname, path):
-    #Find accepted prefixes
-    names = filter(lambda p: fullname.startswith(p), self.prefixes)
-    if names:
-      return self.prefixes[names[0]](self.plugins_root, path)
+    if self.enabled:
+      #Find accepted prefixes
+      names = filter(lambda p: fullname.startswith(p), self.prefixes)
+      if names:
+        return self.prefixes[names[0]](self.plugins_root, path)
 
 
 def smokeTestModule():
@@ -114,6 +116,7 @@ def smokeTestModule():
 #  context = getDefaultContext()
   plugins_root = '/home/jduo/001-Mepinta/git/mepinta/mepinta/plugins'
   mt = PluginImportHook(plugins_root)
+#  mt.enabled = False
   import sys
   sys.meta_path.append(mt)
   import mepinta

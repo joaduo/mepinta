@@ -78,11 +78,19 @@ class MetadataWrapperBase(FrameworkBase):
       self._package = self._pkg_mngr.python2x3xImport(self.name)
     return self._package
 
-  def getPreLoadPostUnload(self):
-    if hasattr(self.manifest, 'getPreLoadPostUnload'):
-      return self.manifest.getPreLoadPostUnload()
-    return {}
+  def runPreLoad(self):
+    return self._runPrePostload('preLoadPlugin')
 
+  def runPostLoad(self):
+    return self._runPrePostload('postUnloadPlugin')
+
+  def _runPrePostLoad(self, func_name):
+    if hasattr(self.manifest, 'getPreLoadPostUnload'):
+      functions = self.manifest.getPreLoadPostUnload()
+    else:
+      functions = {}
+    for pkg_name in sorted(functions.keys()):
+      functions[pkg_name][func_name](self.context)
 
   def getManifest(self):
     if not self._manifest:

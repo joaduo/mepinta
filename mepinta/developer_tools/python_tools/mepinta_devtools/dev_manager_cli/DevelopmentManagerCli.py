@@ -121,6 +121,12 @@ class DevelopmentManagerCli(FrameworkBase):
       return QtProjectPluginCreatorBase(self.context)
 
   def _deployPluginSet(self, plugins_set, backend, sdk_path, overwrite):
+    self.context.deployment_config.plugin_import_hook.enabled = False
+    mk_cmds = self._deployPluginSetWrapped(plugins_set, backend, sdk_path, overwrite)
+    self.context.deployment_config.plugin_import_hook.enabled = True
+    return mk_cmds
+
+  def _deployPluginSetWrapped(self, plugins_set, backend, sdk_path, overwrite):
     '''Deploy all plugins projects for a certain plugins_set'''
     #select the plugin project creator
     mk_cmds = []
