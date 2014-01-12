@@ -33,10 +33,16 @@ class PluginLoader(object):
   def __init__(self, context_lo):
     self.context_lo = context_lo
 
+  def loadLibrary(self, path, symbol):
+    return loadLibrary(path, symbol)
+
+  def unloadLibrary(self, handle):
+    return unloadLibrary(handle)
+
   def unloadDataTypeLibrary(self, path, dtype_id):
     if path in self.context_lo.data_types_paths:#unload library
       logInfo('Unloading data type library at %r with dtype_id=%r' % (path, dtype_id))
-      unloadLibrary(self.context_lo.data_types_paths[path])
+      self.unloadLibrary(self.context_lo.data_types_paths[path])
       self.context_lo.data_types_paths.__delitem__(path)
       self.context_lo.data_types[dtype_id].updateHandle(None)
     else:
@@ -46,7 +52,7 @@ class PluginLoader(object):
     if path not in self.context_lo.data_types_paths: #Ok, the library isnt loaded
       logInfo('Loading data type library at %r with data_type_name=%r and dtype_id=%r' % (path, data_type_name, dtype_id))
       #TODO: get real name set it and return it!
-      handle = loadLibrary(path, symbol='global')
+      handle = self.loadLibrary(path, symbol='global')
       self.context_lo.data_types_paths[path] = handle
       if dtype_id not in self.context_lo.data_types:
         self.context_lo.data_types[dtype_id] = DataType(data_type_name, handle)
@@ -61,7 +67,7 @@ class PluginLoader(object):
   def unloadProcessorLibrary(self, path, func_ids):
     if path in self.context_lo.processors_paths:#unload library
       logInfo('Unloading processor library at %r with func_ids=%r' % (path, func_ids))
-      unloadLibrary(self.context_lo.processors_paths[path])
+      self.unloadLibrary(self.context_lo.processors_paths[path])
       #Unregister functions
       for f_id in func_ids:
         self.context_lo.functions[f_id].updateFuncPointer(None)
@@ -73,7 +79,7 @@ class PluginLoader(object):
   def loadProcessorLibrary(self, path, func_dict):
     if path not in self.context_lo.processors_paths: #Ok, the library isn't loaded
       logInfo('Loading processor library at %r with func_dict=%r ' % (path, func_dict))
-      handle = loadLibrary(path, symbol='local')
+      handle = self.loadLibrary(path, symbol='local')
       self.context_lo.processors_paths[path] = handle
       #Register functions:
       for func_name in func_dict:

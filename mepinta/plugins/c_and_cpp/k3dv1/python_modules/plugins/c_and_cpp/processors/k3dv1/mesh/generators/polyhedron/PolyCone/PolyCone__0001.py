@@ -52,6 +52,6 @@ if __name__ == "__main__":
   from mepinta.context.MepintaContext import MepintaContext
   from pipeline_backend.logging.logging import LOG_INFO
   context = MepintaContext('c_and_cpp')
-  context.log.setLevel(LOG_INFO)
+#  context.log.setLevel(LOG_INFO)
   PluginManifestAutoTester().test(manifest)
 

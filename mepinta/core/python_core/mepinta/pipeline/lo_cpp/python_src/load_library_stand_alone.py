@@ -43,6 +43,7 @@ def localLogError(msg):
   sys.stderr.write(msg + '\n')
 
 def loadLibraryStandAlone(path, symbol):
+  #TODO: unify with pipeline_lo_facade.FactoryLo
   if path in loaded_libraries:
     symbol = loaded_libraries[path][1]
     localLogInfo("Library at %r already loaded with symbol %r" % (path, symbol))

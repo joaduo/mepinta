@@ -58,8 +58,21 @@ from mepinta.pipeline.lo.reentrant.reentrant import shedskin_reentrant
 from mepinta.pipeline.lo.exceptions.MepintaLoError import shedskin_MepintaLoError
 from mepinta.pipeline.lo.value_manager.DebugPropertyValueManager import shedskin_DebugPropertyValueManager
 #from mepinta.pipeline.lo.generic_data.ConditionalBDGraph import shedskin_ConditionalBDGraph
+from pipeline_backend.load_unload_library.load_unload_library import unloadLibrary, loadLibrary
 
 class FactoryLo(object):
+  def __init__(self):
+    self._loaded_libraries = {}
+
+  def loadLibrary(self, path, symbol):
+    handle = loadLibrary(path, symbol)
+    self._loaded_libraries[path] = (handle, symbol)
+    return True
+
+  def unloadLibrary(self, path):
+    handle, _ = self._loaded_libraries[path]
+    unloadLibrary(handle)
+
   def get_TopologyManager(self, context_lo):
     return TopologyManager(context_lo)
   def get_PropertyManager(self, context_lo):
@@ -91,6 +104,7 @@ class FactoryLo(object):
   def get_LogOutput(self):
     return LogOutput()
 
+
 def shedskin_facade(pline_evaluator_base):
   flo = FactoryLo()
   context_lo = flo.get_ContextLo()
@@ -108,6 +122,8 @@ def shedskin_facade(pline_evaluator_base):
   flo.get_PropertyValueManager(context_lo)
   flo.get_TopologyManager(context_lo)
   flo.get_ValueManager(context_lo)
+  flo.loadLibrary('/path/to.so', 'global')
+  flo.unloadLibrary('/path/to.so')
 
 def shedskin_generation():
   shedskin_DirectedGraph()

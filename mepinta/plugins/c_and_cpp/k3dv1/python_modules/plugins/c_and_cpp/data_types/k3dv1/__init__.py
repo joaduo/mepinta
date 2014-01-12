@@ -18,6 +18,7 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with Mepinta. If not, see <http://www.gnu.org/licenses/>.
 '''
+from mepinta.pipeline.hi.load_unload_library import loadLibrary
 
 
 def getK3dList():
@@ -56,14 +57,14 @@ libk3dsdk-expression.so"""
   return libs
 
 def loadK3dLibs():
-  from mepinta.pipeline.lo_cpp.load_library_stand_alone import loadLibraryStandAlone
+  #from mepinta.pipeline.lo_cpp.load_library_stand_alone import loadLibraryStandAlone
   libs = getK3dList()
   libs += ["/home/jduo/Projects/Informatica/Mepinta/EclipseProjects_Basic_Data_Types/k3dv1/k3dv1MPExtension/Debug/libk3dv1MPExtension.so"]
   libs += ["/home/jduo/001-Mepinta/EclipseProjects_Basic_Data_Types/Mepinta/MepintaLocal/src/mepinta/lib/libMepintaArgsApi.so"]
   libs += ["/home/jduo/Projects/Informatica/Mepinta/EclipseProjects_Basic_Data_Types/Mepinta/MepintaArgsApiCpp/Debug/libMepintaArgsApiCpp.so"]
 
   for path in libs:
-    loadLibraryStandAlone(path, symbol="global")
+    loadLibrary(path, symbol="global")
 
 def preLoadPlugin(context, manifest):
   if not context.hasConfig('libs_loaded', __file__):
