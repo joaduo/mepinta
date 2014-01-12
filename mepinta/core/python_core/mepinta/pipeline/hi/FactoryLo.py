@@ -22,6 +22,7 @@ from common.abstract.decorators.context_singleton import context_singleton
 from common.abstract.FrameworkBase import FrameworkBase
 from mepinta.abstract.MepintaError import MepintaError
 from common.path import joinPath
+from mepinta.pipeline.hi.load_unload_library import loadLibrary
 
 def unwrapLo(wrapper): #TODO: take this out of here?
   if hasattr(wrapper, '__wrapped_lo__'):
@@ -37,29 +38,14 @@ class FactoryLo(FrameworkBase):
     self.__deployment_path = deployment_path
     self.wrapped = self.getWrapped()()
 
-  def __getLoadLibraryStandAlone(self):
-    #Import the shedskin module to load the backend_c_api library
-    #The rest of the libraries will be loaded by that library.
-    try:
-      from mepinta.pipeline.lo_cpp.load_library_stand_alone import loadLibraryStandAlone
-    except ImportError as e:
-      msg = 'There may not exist mepinta.pipeline.lo_cpp.load_library_stand_alone '\
-        '(shedskin cpp compiled) module. (check how to build it if not there)'
-      msg += '\n ImportError:%s' % e
-      self.log.e(msg)
-      raise MepintaError(msg)
-    return loadLibraryStandAlone
-
   def __loadLibsBackend(self):
-    #TODO: load_k3d_libs()
-    load_library = self.__getLoadLibraryStandAlone()
     #Ok, we can load the libbackend_c_api.so (that will load all the other .so)
     for api in ('c', 'cpp'):
       lib_name = 'libbackend_api_%s.so' % api
       lib_path = joinPath(self.__deployment_path, 'build', 'libs', 'c_and_cpp', lib_name)
       self.log.debug("Loading lib at %r." % lib_path)
       #Check if we could load it
-      if not load_library(lib_path, "global"):
+      if not loadLibrary(lib_path, "global", primitive_lib=True):
         raise MepintaError("Couldn't load mepinta backend core at %r." % lib_path)
 
   def getWrapped(self):
