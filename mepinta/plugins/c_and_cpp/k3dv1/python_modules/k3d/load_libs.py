@@ -53,19 +53,19 @@ def getK3dList():
   k3d_libs_path = "/home/jduo/Projects/Informatica/k3d/build/renamed/lib/"
   k3d_libs = """libk3dsdk.so
 libk3dsdk-expression.so"""
-  libs += [k3d_libs_path+lib for lib in k3d_libs.splitlines()]
+  libs += [k3d_libs_path + lib for lib in k3d_libs.splitlines()]
   return libs
 
-def load_k3d_libs():
-  libs = getK3dList()
-  libs += ["/home/jduo/Projects/Informatica/Mepinta/EclipseProjects_Basic_Data_Types/k3dv1/k3dv1MPExtension/Debug/libk3dv1MPExtension.so"]
-  libs += ["/home/jduo/001-Mepinta/EclipseProjects_Basic_Data_Types/Mepinta/MepintaLocal/src/mepinta/lib/libMepintaArgsApi.so"]
-  libs += ["/home/jduo/Projects/Informatica/Mepinta/EclipseProjects_Basic_Data_Types/Mepinta/MepintaArgsApiCpp/Debug/libMepintaArgsApiCpp.so"]
-  
-  for path in libs:
-    load_library_stand_alone(path, symbol="global")
+#def load_k3d_libs():
+#  libs = getK3dList()
+#  libs += ["/home/jduo/Projects/Informatica/Mepinta/EclipseProjects_Basic_Data_Types/k3dv1/k3dv1MPExtension/Debug/libk3dv1MPExtension.so"]
+#  libs += ["/home/jduo/001-Mepinta/EclipseProjects_Basic_Data_Types/Mepinta/MepintaLocal/src/mepinta/lib/libMepintaArgsApi.so"]
+#  libs += ["/home/jduo/Projects/Informatica/Mepinta/EclipseProjects_Basic_Data_Types/Mepinta/MepintaArgsApiCpp/Debug/libMepintaArgsApiCpp.so"]
+#
+#  for path in libs:
+#    load_library_stand_alone(path, symbol="global")
 
 if __name__ == "__main__":
   load_k3d_libs()
 
-        
+

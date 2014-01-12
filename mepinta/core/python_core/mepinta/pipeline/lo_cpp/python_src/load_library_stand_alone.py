@@ -43,11 +43,15 @@ def localLogError(msg):
   sys.stderr.write(msg + '\n')
 
 def loadLibraryStandAlone(path, symbol):
+  if path in loaded_libraries:
+    symbol = loaded_libraries[path][1]
+    localLogInfo("Library at %r already loaded with symbol %r" % (path, symbol))
+    return True
   handle = loadLibrary(path, symbol)
   if handle == None:
     localLogError("ERROR: Couldn't load the library at %r with symbol %r" % (path, symbol))
     return False
-  loaded_libraries[path] = handle
+  loaded_libraries[path] = (handle, symbol)
   localLogInfo("Successfully loaded the library at %r with symbol %r" % (path, symbol))
   return True
 

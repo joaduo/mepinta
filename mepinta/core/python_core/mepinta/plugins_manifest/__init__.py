@@ -118,7 +118,7 @@ class PluginManifestBase(FrameworkBase):
     for p_name in pkg_names:
       pkg = reload(import_module(p_name))
       for func_name in ('preLoadPlugin', 'postUnloadPlugin'):
-        if func_name in pkg:
+        if hasattr(pkg, func_name):
           preload_postunload.setdefault(pkg, {})[func_name] = getattr(pkg, func_name)
     return preload_postunload
 

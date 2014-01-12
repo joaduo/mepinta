@@ -31,24 +31,21 @@ class PolyCube(MeshSourceManifestBase):
     inputs.width = DataProperty('k3d::double_t')
     inputs.height = DataProperty('k3d::double_t')
     inputs.depth = DataProperty('k3d::double_t')
-    
+
     #Set dependencies
-    updateMeshTopology.dpdencies +=  [ inputs.rows
-                                      ,inputs.columns
-                                      ,inputs.slices]                          
-    updateMeshGeometry.dpdencies +=  [ inputs.rows
-                                      ,inputs.columns
-                                      ,inputs.slices
-                                      ,inputs.width
-                                      ,inputs.height
-                                      ,inputs.depth]
+    updateMeshTopology.dpdencies += [ inputs.rows
+                                      , inputs.columns
+                                      , inputs.slices]
+    updateMeshGeometry.dpdencies += [ inputs.rows
+                                      , inputs.columns
+                                      , inputs.slices
+                                      , inputs.width
+                                      , inputs.height
+                                      , inputs.depth]
 
 manifest = PolyCube
 
 if __name__ == "__main__":
+  from mepinta.testing.plugins_testing.PluginManifestAutoTester import PluginManifestAutoTester
   from mepinta.context.MepintaContext import MepintaContext
-  from mepinta.plugins_manifest.PluginManifestTester import PluginManifestTester
-  context = MepintaContext('c_and_cpp')
-  plugin_instance = manifest(context=context)
-  context.log(manifest)
-  PluginManifestTester(context=context).test(plugin_instance)
+  PluginManifestAutoTester(MepintaContext('c_and_cpp')).test(manifest)

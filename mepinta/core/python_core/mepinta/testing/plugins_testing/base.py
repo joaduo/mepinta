@@ -118,7 +118,7 @@ class ModuleAutoTesterBase(FrameworkBase): #TODO remove and use util
       minor_version_str = minor_version_str.split('.')[0]
       try:
         minor_version = int(minor_version_str)
-        self.log.debug('Plugin minor versino is %s' % minor_version)
+        self.log.debug('Plugin minor version is %s' % minor_version)
       except ValueError as value_error:
         raise MepintaError('Couldn\'t convert the minor version to number from file %r. (exception %s).' % (manifest_file, value_error))
       return minor_version

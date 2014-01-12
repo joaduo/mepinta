@@ -79,10 +79,10 @@ class MetadataWrapperBase(FrameworkBase):
     return self._package
 
   def runPreLoad(self):
-    return self._runPrePostload('preLoadPlugin')
+    return self._runPrePostLoad('preLoadPlugin')
 
-  def runPostLoad(self):
-    return self._runPrePostload('postUnloadPlugin')
+  def runPostUnload(self):
+    return self._runPrePostLoad('postUnloadPlugin')
 
   def _runPrePostLoad(self, func_name):
     if hasattr(self.manifest, 'getPreLoadPostUnload'):
@@ -90,16 +90,17 @@ class MetadataWrapperBase(FrameworkBase):
     else:
       functions = {}
     for pkg_name in sorted(functions.keys()):
-      functions[pkg_name][func_name](self.context)
+      functions[pkg_name][func_name](self.context, self)
 
   def getManifest(self):
     if not self._manifest:
       module = self.module
       if hasattr(module, 'manifest'):
         manifest = module.manifest
-        if not issubclass(manifest, ProcessorManifestBase):
-          msg = ('The manifest is not a subclass of PritocessorManifestBase.'
-                 ' Instead it is %r' % manifest)
+        manifest_type = self.getManifestType()
+        if not issubclass(manifest, manifest_type):
+          msg = ('The manifest is not a subclass of %r. Instead it is %r' %
+                 (manifest_type, manifest))
           raise PluginImportError(msg)
       else:
         raise PluginImportError('There is no definition on the module: %r.' %

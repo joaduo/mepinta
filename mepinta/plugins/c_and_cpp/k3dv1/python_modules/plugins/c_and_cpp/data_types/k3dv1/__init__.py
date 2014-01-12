@@ -46,7 +46,7 @@ def getK3dList():
   #libk3d-solar-solpos.so"""
 
   libs = [
-  "/usr/lib/libsigc-2.0.so",
+#  "/usr/lib/libsigc-2.0.so",
   "/home/jduo/002-k3d/build/dependencies/boost_1_45_0/bin.v2/libs/test/build/gcc-4.4.3/release/threading-multi/libboost_unit_test_framework.so.1.45.0",
   ]
   k3d_libs_path = "/home/jduo/Projects/Informatica/k3d/build/renamed/lib/"
@@ -56,19 +56,17 @@ libk3dsdk-expression.so"""
   return libs
 
 def loadK3dLibs():
-  from mepinta.pipeline.lo_cpp.load_library_stand_alone import load_library_stand_alone
+  from mepinta.pipeline.lo_cpp.load_library_stand_alone import loadLibraryStandAlone
   libs = getK3dList()
   libs += ["/home/jduo/Projects/Informatica/Mepinta/EclipseProjects_Basic_Data_Types/k3dv1/k3dv1MPExtension/Debug/libk3dv1MPExtension.so"]
   libs += ["/home/jduo/001-Mepinta/EclipseProjects_Basic_Data_Types/Mepinta/MepintaLocal/src/mepinta/lib/libMepintaArgsApi.so"]
   libs += ["/home/jduo/Projects/Informatica/Mepinta/EclipseProjects_Basic_Data_Types/Mepinta/MepintaArgsApiCpp/Debug/libMepintaArgsApiCpp.so"]
 
   for path in libs:
-    load_library_stand_alone(path, symbol="global")
+    loadLibraryStandAlone(path, symbol="global")
 
-done = False
-def preLoadPlugin(context):
-  global done
-  if not done:
+def preLoadPlugin(context, manifest):
+  if not context.hasConfig('libs_loaded', __file__):
     loadK3dLibs()
-    done = True
+    context.setConfig('libs_loaded', True, __file__)
 

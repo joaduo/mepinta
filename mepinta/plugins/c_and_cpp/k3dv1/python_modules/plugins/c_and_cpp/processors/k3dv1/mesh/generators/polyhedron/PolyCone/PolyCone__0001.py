@@ -33,24 +33,25 @@ class PolyCone(MeshSourceManifestBase):
     inputs.u_power = DataProperty('k3d::double_t')
     inputs.v_power = DataProperty('k3d::double_t')
     #inputs.bottom_segments = DataProperty('k3d::int32_t') #TODO:?
-    
+
     #Connect inputs to functions
     updateMeshTopology.dpdencies += [inputs.u_segments,
                                      inputs.v_segments,
-                                     inputs.bottom_cap,]
+                                     inputs.bottom_cap, ]
     updateMeshGeometry.dpdencies += [inputs.u_segments,
                                      inputs.v_segments,
                                      inputs.height,
                                      inputs.radius,
                                      inputs.u_power,
-                                     inputs.v_power,]
+                                     inputs.v_power, ]
 
 manifest = PolyCone
 
 if __name__ == "__main__":
+  from mepinta.testing.plugins_testing.PluginManifestAutoTester import PluginManifestAutoTester
   from mepinta.context.MepintaContext import MepintaContext
-  from mepinta.plugins_manifest.PluginManifestTester import PluginManifestTester
+  from pipeline_backend.logging.logging import LOG_INFO
   context = MepintaContext('c_and_cpp')
-  plugin_instance = manifest(context=context)
-  context.log(manifest)
-  PluginManifestTester(context=context).test(plugin_instance)
+  context.log.setLevel(LOG_INFO)
+  PluginManifestAutoTester().test(manifest)
+

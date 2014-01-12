@@ -22,6 +22,7 @@ from mepinta.plugins_manager.metadata_wrappers.base import MetadataWrapperBase
 from mepinta.plugins_manager.plugins_manager_detail.PluginPackageManager import PluginPackageManager
 from mepinta.plugins_manifest.proxy.data_model import DataPropertyProxy, \
   FunctumPropertyProxy
+from mepinta.plugins_manifest import ProcessorManifestBase
 
 class ProcessorMetadataWrapper(MetadataWrapperBase):
   def __post_init__(self):
@@ -31,6 +32,9 @@ class ProcessorMetadataWrapper(MetadataWrapperBase):
   def refresh(self):
     MetadataWrapperBase.refresh(self)
     self._proxy = None
+
+  def getManifestType(self):
+    return ProcessorManifestBase
 
   @property
   def proxy(self):

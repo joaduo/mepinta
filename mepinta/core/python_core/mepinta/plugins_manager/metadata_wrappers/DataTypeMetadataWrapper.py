@@ -20,6 +20,7 @@ along with Mepinta. If not, see <http://www.gnu.org/licenses/>.
 '''
 from mepinta.plugins_manager.metadata_wrappers.base import MetadataWrapperBase
 from mepinta.plugins_manager.plugins_manager_detail.PluginPackageManager import PluginPackageManager
+from mepinta.plugins_manifest import DataTypeManifestBase
 
 class DataTypeMetadataWrapper(MetadataWrapperBase):
   def __post_init__(self):
@@ -32,6 +33,9 @@ class DataTypeMetadataWrapper(MetadataWrapperBase):
       return MetadataWrapperBase.getManifest(self)
     else:
       return object()
+
+  def getManifestType(self):
+    return DataTypeManifestBase
 
 def smokeTestModule():
 #  from getDefaultContext import getDefaultContext

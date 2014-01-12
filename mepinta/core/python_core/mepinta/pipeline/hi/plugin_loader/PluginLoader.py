@@ -42,10 +42,12 @@ class PluginLoader(HiAutoBase):
   def unloadDataTypeLibrary(self, data_type):
     self.wrapped.unloadDataTypeLibrary(data_type.library_path,
                                        data_type.property_id)
+    data_type.runPostUnload()
 
   def loadDataTypeLibrary(self, data_type):
     if data_type.property_id == None:
       data_type.property_id = self.getNewDtypeId()
+    data_type.runPreLoad()
     self.wrapped.loadDataTypeLibrary(data_type.library_path,
                                      data_type.c_namespace,
                                      data_type.property_id)
@@ -56,6 +58,7 @@ class PluginLoader(HiAutoBase):
   def unloadProcessorLibrary(self, processor):
     self.wrapped.unloadProcessorLibrary(processor.library_path,
                                         processor.functions.values())
+    processor.runPostUnload()
 
   def loadProcessorLibrary(self, processor):
     #Iterate over the functions' names to register
@@ -63,6 +66,8 @@ class PluginLoader(HiAutoBase):
     #assign id to functions without id
     processor.functions.update(dict((n, self.getNewFuncId()) for n in names
                                     if n not in processor.functions))
+    #run preLoadPlugin functions
+    processor.runPreLoad()
     #finally load the library
     self.wrapped.loadProcessorLibrary(processor.library_path,
                                       processor.functions)

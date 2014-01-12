@@ -60,12 +60,15 @@ class DevelopmentManagerCli(FrameworkBase):
     self.mepinta_sdk_creator.createProject(sdk_path, overwrite)
     return sdk_path
 
+  def getLibsPath(self, backend):
+    return joinPath(self._getBuildPath(), 'libs', backend)
+
   def _createLibsPath(self, backend, overwrite):
     '''Create the directory where the common libs will be stored.
     Libs needed to start up mepinta. Mepinta core libs specially.
     (but not support libs)
     '''
-    libs_path = joinPath(self._getBuildPath(), 'libs', backend)
+    libs_path = self.getLibsPath(backend)
     self.file_manager.makedirs(libs_path)
     return libs_path
 
