@@ -33,26 +33,6 @@ g++ -D STAND_ALONE_LOAD_UNLOAD
 import sys
 from pipeline_backend.load_unload_library.load_unload_library import loadLibrary, unloadLibrary
 
-#def loadLibraryCommon(loadLibrary, loaded_libraries, path, symbol, log_error, log_info):
-#  if path in loaded_libraries:
-#    symbol = loaded_libraries[path][1]
-#    log_info("Library at %r already loaded with symbol %r" % (path, symbol))
-#    return True
-#  handle = loadLibrary(path, symbol)
-#  if handle == None:
-#    log_error("ERROR: Couldn't load the library at %r with symbol %r" % (path, symbol))
-#    return False
-#  loaded_libraries[path] = (handle, symbol)
-#  log_info("Successfully loaded the library at %r with symbol %r" % (path, symbol))
-#  return True
-#
-#def unloadLibraryCommon(unloadLibrary, loaded_libraries, path, log_warning):
-#  if path not in loaded_libraries:
-#    log_warning("Library at %r was never loaded" % (path))
-#    return -1
-#  handle, _ = loaded_libraries[path]
-#  return unloadLibrary(handle)
-
 loaded_libraries = {}
 
 def logInfo(msg):
