@@ -32,7 +32,7 @@ g++ -D STAND_ALONE_LOAD_UNLOAD
 '''
 
 import sys
-from pipeline_backend.load_unload_library.load_unload_library import loadLibrary
+from pipeline_backend.load_unload_library.load_unload_library import loadLibrary, unloadLibrary
 
 loaded_libraries = {}
 
@@ -55,6 +55,9 @@ def loadLibraryStandAlone(path, symbol):
   loaded_libraries[path] = (handle, symbol)
   localLogInfo("Successfully loaded the library at %r with symbol %r" % (path, symbol))
   return True
+
+def unloadLibraryStandAlone(path):
+  pass
 
 def shedskin_load_library_stand_alone():
   loadLibraryStandAlone("", "")

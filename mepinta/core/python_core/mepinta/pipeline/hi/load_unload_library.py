@@ -21,30 +21,36 @@ along with Mepinta. If not, see <http://www.gnu.org/licenses/>.
 import sys
 from mepinta.abstract.MepintaError import MepintaError
 
+path_mod = {}
+
+def _getCachedFunction(path, name, primitive_lib):
+  if path not in path_mod:
+    path_mod[path] = _getFunction(name, primitive_lib)
+  mod, name = path_mod[path]
+  return getattr(mod, name)
+
 
 def _getFunction(name, primitive_lib):
   lo_facade = 'mepinta.pipeline.lo_cpp.pipeline_lo_facade'
   if lo_facade in sys.modules and not primitive_lib:
     from mepinta.pipeline.lo_cpp.pipeline_lo_facade import FactoryLo
     mod = FactoryLo()
-    return getattr(mod, name)
   elif primitive_lib:
-    from mepinta.pipeline.lo_cpp.load_library_stand_alone import loadLibraryStandAlone
-    if name == 'loadLibrary':
-      return loadLibraryStandAlone
-    else:
-      raise NotImplementedError()
+    import mepinta.pipeline.lo_cpp.load_library_stand_alone as mod
+    name += 'StandAlone'
   else:
     msg = ('You can\'t load a non-primitive lib without pipeline_lo_facade '
            'module loaded. If it is a primitive lib mark it as such')
     raise MepintaError(msg)
+  return mod, name
 
-#TODO: keep count with which module which library was loaded with
 def loadLibrary(path, symbol, primitive_lib=False):
-  return _getFunction('loadLibrary', primitive_lib)(path, symbol)
+  function = _getCachedFunction(path, 'loadLibrary', primitive_lib)
+  return function(path, symbol)
 
 def unloadLibrary(path, primitive_lib=False):
-  return _getFunction('unloadLibrary', primitive_lib)(path)
+  function = _getCachedFunction(path, 'unloadLibrary', primitive_lib)
+  return function(path)
 
 def smokeTestModule():
 #  from getDefaultContext import getDefaultContext

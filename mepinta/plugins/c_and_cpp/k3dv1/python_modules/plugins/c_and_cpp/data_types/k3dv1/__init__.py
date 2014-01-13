@@ -47,7 +47,7 @@ def getK3dList():
   #libk3d-solar-solpos.so"""
 
   libs = [
-#  "/usr/lib/libsigc-2.0.so",
+  "/usr/lib/libsigc-2.0.so",
   "/home/jduo/002-k3d/build/dependencies/boost_1_45_0/bin.v2/libs/test/build/gcc-4.4.3/release/threading-multi/libboost_unit_test_framework.so.1.45.0",
   ]
   k3d_libs_path = "/home/jduo/Projects/Informatica/k3d/build/renamed/lib/"
