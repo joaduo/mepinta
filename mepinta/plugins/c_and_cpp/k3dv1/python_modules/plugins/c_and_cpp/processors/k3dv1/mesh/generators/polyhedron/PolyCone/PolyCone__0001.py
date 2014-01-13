@@ -25,14 +25,14 @@ from plugins.c_and_cpp.processors.k3dv1.mesh.generators.base.MeshSourceManifestB
 class PolyCone(MeshSourceManifestBase):
   def define(self, inputs, internals, functions, outputs, updateMeshTopology, updateMeshGeometry):
     #Inputs
-    inputs.u_segments = DataProperty('k3d::int32_t')
-    inputs.v_segments = DataProperty('k3d::int32_t')
-    inputs.bottom_cap = DataProperty('k3d::bool_t')
-    inputs.radius = DataProperty('k3d::double_t')
-    inputs.height = DataProperty('k3d::double_t')
-    inputs.u_power = DataProperty('k3d::double_t')
-    inputs.v_power = DataProperty('k3d::double_t')
-    #inputs.bottom_segments = DataProperty('k3d::int32_t') #TODO:?
+    inputs.u_segments = 'k3d::int32_t'
+    inputs.v_segments = 'k3d::int32_t'
+    inputs.bottom_cap = 'k3d::bool_t'
+    inputs.radius = 'k3d::double_t'
+    inputs.height = 'k3d::double_t'
+    inputs.u_power = 'k3d::double_t'
+    inputs.v_power = 'k3d::double_t'
+    #inputs.bottom_segments = 'k3d::int32_t' #TODO:?
 
     #Connect inputs to functions
     updateMeshTopology.dpdencies += [inputs.u_segments,
@@ -53,5 +53,4 @@ if __name__ == "__main__":
   from pipeline_backend.logging.logging import LOG_INFO
   context = MepintaContext('c_and_cpp')
 #  context.log.setLevel(LOG_INFO)
-  PluginManifestAutoTester().test(manifest)
-
+  PluginManifestAutoTester().test(manifest, gui=False)
