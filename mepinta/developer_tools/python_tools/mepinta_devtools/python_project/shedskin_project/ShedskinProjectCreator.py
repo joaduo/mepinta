@@ -67,8 +67,7 @@ class ShedskinProjectCreator(FrameworkBase):
 
   def __linkLoadLibraryStandAlone(self, mepinta_source_path, python_src_path, overwrite):
     load_dst = joinPath(python_src_path, 'load_library_stand_alone.py')
-    load_src = 'mepinta/pipeline/lo_cpp/python_src/load_library_stand_alone.py'
-    load_src = joinPath(load_src.split('/'))
+    load_src = joinPath('mepinta', 'pipeline', 'lo', 'load_library_stand_alone.py')
     self.file_manager.symlink(load_src, load_dst, overwrite)
 
   def __copyScripts(self, python_src_path):

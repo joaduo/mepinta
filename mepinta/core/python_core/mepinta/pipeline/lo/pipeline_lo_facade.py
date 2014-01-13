@@ -57,21 +57,37 @@ from mepinta.pipeline.lo.reentrant.data_model import shedskin_reentrant_data_mod
 from mepinta.pipeline.lo.reentrant.reentrant import shedskin_reentrant
 from mepinta.pipeline.lo.exceptions.MepintaLoError import shedskin_MepintaLoError
 from mepinta.pipeline.lo.value_manager.DebugPropertyValueManager import shedskin_DebugPropertyValueManager
+from pipeline_backend.load_unload_library.load_unload_library import loadLibrary, unloadLibrary
+from pipeline_backend.logging.logging import logError, logInfo
 #from mepinta.pipeline.lo.generic_data.ConditionalBDGraph import shedskin_ConditionalBDGraph
-from pipeline_backend.load_unload_library.load_unload_library import unloadLibrary, loadLibrary
 
 class FactoryLo(object):
   def __init__(self):
     self._loaded_libraries = {}
 
   def loadLibrary(self, path, symbol):
+    loaded_libraries = self._loaded_libraries
+    #Common code in load_library_stand_alone (not easy to share because of shedksin)
+    if path in loaded_libraries:
+      symbol = loaded_libraries[path][1]
+      logInfo("Library at %r already loaded with symbol %r" % (path, symbol))
+      return True
     handle = loadLibrary(path, symbol)
-    self._loaded_libraries[path] = (handle, symbol)
+    if handle == None:
+      logError("Couldn't load the library at %r with symbol %r" % (path, symbol))
+      return False
+    loaded_libraries[path] = (handle, symbol)
+    logInfo("Successfully loaded the library at %r with symbol %r" % (path, symbol))
     return True
 
   def unloadLibrary(self, path):
-    handle, _ = self._loaded_libraries[path]
-    unloadLibrary(handle)
+    loaded_libraries = self._loaded_libraries
+    #Common code in load_library_stand_alone (not easy to share because of shedksin)
+    if path not in loaded_libraries:
+      logError("Library at %r was never loaded" % (path))
+      return -1
+    handle, _ = loaded_libraries[path]
+    return unloadLibrary(handle)
 
   def get_TopologyManager(self, context_lo):
     return TopologyManager(context_lo)
@@ -123,7 +139,7 @@ def shedskin_facade(pline_evaluator_base):
   flo.get_TopologyManager(context_lo)
   flo.get_ValueManager(context_lo)
   flo.loadLibrary('/path/to.so', 'global')
-  flo.unloadLibrary('/path/to.so')
+#  flo.unloadLibrary('/path/to.so')
 
 def shedskin_generation():
   shedskin_DirectedGraph()

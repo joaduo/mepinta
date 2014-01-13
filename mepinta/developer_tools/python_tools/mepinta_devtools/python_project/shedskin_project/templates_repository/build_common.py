@@ -92,7 +92,7 @@ class ShedskinModuleBuilder(object):
       self.logError('There was an error building %s.so cmd=%r.' % (python_module, cmd))
       self.logError(stderr)
       self.logError(stdout)
-      self.sys.exit(r_value)
+      sys.exit(r_value)
     self.logInfo('Done building %s.' % python_module)
 
   def generateAndBuild(self, python_module, generate, build):
