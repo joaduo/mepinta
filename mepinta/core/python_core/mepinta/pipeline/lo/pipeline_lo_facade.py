@@ -139,7 +139,7 @@ def shedskin_facade(pline_evaluator_base):
   flo.get_TopologyManager(context_lo)
   flo.get_ValueManager(context_lo)
   flo.loadLibrary('/path/to.so', 'global')
-#  flo.unloadLibrary('/path/to.so')
+  flo.unloadLibrary('/path/to.so')
 
 def shedskin_generation():
   shedskin_DirectedGraph()
