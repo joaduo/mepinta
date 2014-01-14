@@ -24,11 +24,11 @@ from plugins.c_and_cpp.processors.k3dv1.mesh.generators.base.MeshSourceManifestB
 
 class PolySphere(MeshSourceManifestBase):
   def define(self, inputs, internals, functions, outputs, updateMeshTopology, updateMeshGeometry):
-    inputs.u_segments = DataProperty('k3d::int32_t')
-    inputs.v_segments = DataProperty('k3d::int32_t')
-    inputs.radius = DataProperty('k3d::double_t')
-    inputs.u_power = DataProperty('k3d::double_t')
-    inputs.v_power = DataProperty('k3d::double_t')
+    inputs.u_segments = 'k3d::int32_t'
+    inputs.v_segments = 'k3d::int32_t'
+    inputs.radius = 'k3d::double_t'
+    inputs.u_power = 'k3d::double_t'
+    inputs.v_power = 'k3d::double_t'
     inputs.primitive = GenericEnum(SPHERE=0, QUAD_ONLY_SPHERE=1, SPHEREIZED_CYLINDER=2).setDefault('SPHERE')
 
     updateMeshTopology.dpdencies += [inputs.u_segments,
