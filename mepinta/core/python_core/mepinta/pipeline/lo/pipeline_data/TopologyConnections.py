@@ -79,7 +79,7 @@ class TopologyConnections:
     self.dpdents.__delitem__(dency_id) #we delete the dency_id:dent_id relations
     return dents_ids
   def __str__(self):
-    return '%s: Dents %s | Dencies %s' % (self.__class__.__name__, self.dpdencies, self.dpdents)
+    return 'TopologyConnections: Dents %s | Dencies %s' % (self.dpdencies, self.dpdents)
   def __len__(self):
     return len(self.navigation)
 

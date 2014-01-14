@@ -50,7 +50,4 @@ manifest = PolyCone
 if __name__ == "__main__":
   from mepinta.testing.plugins_testing.PluginManifestAutoTester import PluginManifestAutoTester
   from mepinta.context.MepintaContext import MepintaContext
-  from pipeline_backend.logging.logging import LOG_INFO
-  context = MepintaContext('c_and_cpp')
-#  context.log.setLevel(LOG_INFO)
-  PluginManifestAutoTester().test(manifest, gui=False)
+  PluginManifestAutoTester(MepintaContext('c_and_cpp')).test(manifest)

@@ -62,7 +62,9 @@ def createGeometry(args):
   geometry.bezier_paths.append(range(points) + [0])
 
 if __name__ == "__main__":
-  from getDefaultContext import getDefaultContext
   from mepinta.testing.plugins_testing.PluginManifestAutoTester import PluginManifestAutoTester
-  context = getDefaultContext()
-  PluginManifestAutoTester(context=context).test(manifest)
+  from mepinta.context.MepintaContext import MepintaContext
+  from pipeline_backend.logging.logging import LOG_INFO
+  context = MepintaContext('python')
+#  context.log.setLevel(LOG_INFO)
+  PluginManifestAutoTester(context).test(manifest, gui=False)

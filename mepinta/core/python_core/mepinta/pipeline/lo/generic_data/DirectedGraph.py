@@ -126,8 +126,8 @@ class DirectedGraph(object):
     if self.__keys[index] == item_id:
       return index
     else:
-      raise ValueError('%.index(x): x not in table' % self.__class__.__name__)
-  def bisectLeftRight(self, a, x, lo=0, hi= -1):
+      raise ValueError('DirectedGraph.index(x): x not in table')
+  def bisectLeftRight(self, a, x, lo=0, hi=-1):
       """
       """
 
@@ -155,7 +155,7 @@ class DirectedGraph(object):
         if a[lo] != x:
           lo = self.bisect_left(a, x, lo, mid)
       return lo, hi
-  def bisectRight(self, a, x, lo=0, hi= -1):
+  def bisectRight(self, a, x, lo=0, hi=-1):
       """
       """
 
@@ -168,7 +168,7 @@ class DirectedGraph(object):
           if x < a[mid]: hi = mid
           else: lo = mid + 1
       return lo
-  def bisect_left(self, a, x, lo=0, hi= -1):
+  def bisect_left(self, a, x, lo=0, hi=-1):
       """
       Return the index where to insert item x in list a, assuming a is sorted.
 
@@ -202,7 +202,6 @@ class DirectedGraph(object):
     for index, k in enumerate(self.__keys):
       str_ += '%s:%s ' % (k, self.__values[index])
     return str_
-#    return str(self.__keys)+str(self.__values)
 
 def shedskin_DirectedGraph():
   a = [1, 2, 4, 5, 6, 6, 6, 8, 100, 3221]
@@ -236,7 +235,8 @@ def shedskin_DirectedGraph():
   tbl.index(6)
   str(tbl)
 
-#def shedskin_test():
+#def smokeTestModule():
+#  from common.log.debugPrint import debugPrint
 #  id_indexed_table = DirectedGraph()
 #  id_indexed_table.add(4, 543)
 #  id_indexed_table.add(4, 45)
@@ -269,9 +269,6 @@ def shedskin_DirectedGraph():
 #  debugPrint(id_indexed_table)
 
 if __name__ == '__main__':
-  #import sys
-#  test(sys.argv)
-#  test(None)
   shedskin_DirectedGraph()
-#  shedskin_test()
+#  smokeTestModule()
 
