@@ -9,8 +9,6 @@ class mepinta_config(object):
   plugin_build_targets = ['Debug', 'Release', 'ReleasePointerSafe', 'ReleaseTypeSafe', 'ReleaseArgumentsSafe', ]
   nodebox_gui = False
   deployment_config = default_deployment_config()
-#  def __init__(self):
-#    self.deployment_config = default_deployment_config
   _config_dict = {
                   ('non_cached', 'class::mepinta.pipelineview.graph.GraphTopologyManager.GraphTopologyManager'):
                   False,
