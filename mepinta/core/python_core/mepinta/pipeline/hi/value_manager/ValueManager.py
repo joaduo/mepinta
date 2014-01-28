@@ -28,20 +28,20 @@ from common.abstract.FrameworkBase import FrameworkBase
 class ValueManager(FrameworkBase): #TODO: rename to TypedValueManager
   def __post_init__(self):
     self._value_manager_lo = FactoryLo(self.context).getInstance('ValueManager', self.context)
-    self.__get_dispatch_dict = self.__getDispatchDict('get')
-    self.__set_dispatch_dict = self.__getDispatchDict('set')
+    self._get_dispatch_dict = self.__getDispatchDict('get')
+    self._set_dispatch_dict = self.__getDispatchDict('set')
 
   def getValue(self, pline, prop):
-    if prop.data_type_name in self.__get_dispatch_dict:
-      return self.__get_dispatch_dict[prop.data_type_name](pline, prop)
+    if prop.data_type_name in self._get_dispatch_dict:
+      return self._get_dispatch_dict[prop.data_type_name](pline, prop)
     else:
       self.log.warning('Unsupported getter for type %s' % prop.getDataTypeShortName())
 
   def setValue(self, pline, prop, value):
     if isinstance(prop, GenericEnumProxy):
       self.__setGenericEnum(pline, prop, value)
-    elif prop.data_type_name in self.__set_dispatch_dict:
-      self.__set_dispatch_dict[prop.data_type_name](pline, prop, value)
+    elif prop.data_type_name in self._set_dispatch_dict:
+      self._set_dispatch_dict[prop.data_type_name](pline, prop, value)
     else:
       self.log.warning('Unsupported setter for type %s' % prop.getDataTypeShortName())
 
@@ -58,18 +58,22 @@ class ValueManager(FrameworkBase): #TODO: rename to TypedValueManager
     dispatch_dict = {}
     for data_type_name, (data_type_nick, type_cast) in dispatch_template.items():
       method = getattr(self._value_manager_lo, '%s%ss' % (prefix, data_type_nick))
-      if prefix == 'set':
-        def unwrapAndCast(pline, prop, value):
-          method(unwrapLo(pline), [unwrapLo(prop)], [type_cast(value)])
-      elif prefix == 'get':
-        def unwrapAndCast(pline, prop):
-          values = method(unwrapLo(pline), [unwrapLo(prop)])
-          if len(values) > 0:
-            return values[0]
-          else:
-            return None
-      dispatch_dict[data_type_name] = unwrapAndCast
+      unwrap_and_cast = self._getUnwrapAndCast(prefix, method, type_cast)
+      dispatch_dict[data_type_name] = unwrap_and_cast
     return dispatch_dict
+
+  def _getUnwrapAndCast(self, prefix, method, type_cast):
+    if prefix == 'set':
+      def unwrapAndCast(pline, prop, value):
+        method(unwrapLo(pline), [unwrapLo(prop)], [type_cast(value)])
+    elif prefix == 'get':
+      def unwrapAndCast(pline, prop):
+        values = method(unwrapLo(pline), [unwrapLo(prop)])
+        if len(values) > 0:
+          return values[0]
+        else:
+          return None
+    return unwrapAndCast
 
   def __setGenericEnum(self, pline, prop, value):
     if value in prop.enum_dict:

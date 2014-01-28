@@ -19,11 +19,48 @@ You should have received a copy of the GNU General Public License
 along with Mepinta. If not, see <http://www.gnu.org/licenses/>.
 '''
 from common.context.Context import arg_singleton_and_wrap
+from common.context.base import ContextBase
 from mepinta.pipeline.hi.context_lo.ContextLo import ContextLo
 from mepinta.pipeline.hi.LogOutput import LogOutput
-from common.context.base import ContextBase
+from mepinta.abstract.MepintaError import MepintaError
+from inspect import currentframe
+import os
+import re
 
-@arg_singleton_and_wrap
+
+class singleton_autocontext(arg_singleton_and_wrap):
+  '''
+  We would like to select context based on the package that is calling the
+    context.
+  '''
+  def __call__(self, name=None, *args):
+    if not name:
+      path = self._getCallerFilePath()
+      name = self.solveContextName(path)
+    return super(singleton_autocontext, self).__call__(name, *args)
+
+  def _getCallerFilePath(self):
+    frame = self._getFrame(back=3)
+    return frame.f_code.co_filename
+
+  def _getFrame(self, back):
+    frame = currentframe()
+    for _ in range(back):
+        frame = frame.f_back
+    return frame
+
+  def solveContextName(self, path):
+    regex = r'plugins.(?P<backend>(?:python)|(?:c_and_cpp)).(?:[a-z_0-9]+).python_modules'
+    regex = regex.replace('.', os.path.sep)
+    m = re.search(regex, path)
+    if m:
+      name = m.group('backend')
+      return name
+    else:
+      raise MepintaError('Could not resolve backend automatically by path %r '
+                         '(specify backend name explicitly)' % path)
+
+@singleton_autocontext
 class MepintaContext(ContextBase):
   def __init__(self, name):
     ContextBase.__init__(self, name)

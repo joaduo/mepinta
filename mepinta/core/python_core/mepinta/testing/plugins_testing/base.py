@@ -24,15 +24,15 @@ import sys
 import imp
 from mepinta.testing.plugins_testing.processor.base import ProcessorPluginTestBase
 from mepinta.abstract.MepintaError import MepintaError
-from common.path import splitPath
+from common.path import formatPathPrint
 from importlib import import_module
 
 class ForkInotifyUtilsBase(FrameworkBase): #TODO: use composition
   def _reloadModule(self, module):
     #if it's the main module, do a hack. (reload it as a different module from the filename)
-    if module.__name__ == '__main__':
+    if '__main__' in module.__name__:
       self.log.debug('Reloading %r. (it\'s the main module)' % module)
-      module = imp.load_source('__main__reloaded', module.__file__)
+      module = imp.load_source('__main__reloaded', module.__file__.replace('.pyc', '.py'))
     else: #if it's other module, then simply reload it with imp
       self.log.debug('Reloading %r.' % module)
       imp.reload(module)
@@ -40,15 +40,19 @@ class ForkInotifyUtilsBase(FrameworkBase): #TODO: use composition
     return module
 
   def _getTestInstance(self, testModule):
-    for class_ in testModule.__dict__.values():
-      if issubclass(class_, ProcessorPluginTestBase):
-        return class_(self.context)
-    raise RuntimeError('There is no a test class in module: %s' % testModule)
-#    if hasattr(testModule, 'test') and issubclass(testModule.test, ProcessorPluginTestBase):
-#      testModule = self._reloadModule(testModule)
-#      return testModule.test(self.context)
-#    else:
-#      raise RuntimeError('There is no a test class in module: %s' % testModule)
+    class_name = 'test'
+    if not hasattr(testModule, class_name):
+      class_name = testModule.__name__.split('.')[-1].split(self.context.minor_version_separator)[0]
+    if hasattr(testModule, class_name) and \
+    issubclass(getattr(testModule, class_name), ProcessorPluginTestBase):
+      testModule = self._reloadModule(testModule)
+      class_ = getattr(testModule, class_name)
+      return class_(self.context)
+    else:
+      path = formatPathPrint(testModule.__file__)
+      msg = 'There is no a test class in module: %s, file:\n%s' % (testModule,
+                                                                   path)
+      raise RuntimeError(msg)
 
   def _getModuleFilePath(self, module):
     '''Get the .py file for a given module.

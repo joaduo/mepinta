@@ -31,7 +31,7 @@ class AbstractValueManager(FrameworkBase):
 
   def __checkProp(self, prop):
     if not isinstance(prop, DataPropertyProxy):
-      raise RuntimeError('You shold provide a DataPropertyProxy object. Unsupported object: %r of type %r' % (prop, type(prop)))
+      raise RuntimeError('You should provide a DataPropertyProxy object. Unsupported object: %r of type %r' % (prop, type(prop)))
 
   def __checkProps(self, props):
     for prop in props:

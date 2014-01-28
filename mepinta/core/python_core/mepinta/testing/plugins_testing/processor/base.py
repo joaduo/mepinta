@@ -83,8 +83,8 @@ class ProcessorPluginTestBase(FrameworkBase):
     When a processors is being watched means that it's implementation is being
     watched for changes (through Inotify in Linux)
     '''
-    if not len(self.testedProcessors):
-      raise MepintaError('You should set self.tested_processor on test __post_init__ method.')
+    if not self.testedProcessors:
+      raise MepintaError('You should set self.testedProcessors on test __post_init__ method.')
     return self.testedProcessors
 
   define_once = True
