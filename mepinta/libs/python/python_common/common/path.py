@@ -75,6 +75,14 @@ def joinPath(path, *path_list):
     joint_path = os.path.join(joint_path, joinPath(path_list))
   return joint_path
 
+def formatPathPrint(path, line=None, error=False, allow_pyc=False):
+  if not allow_pyc and path.endswith('.pyc'):
+    path = path[:-1]
+  if not line:
+    line = 1
+  path = os.path.realpath(path)
+  return '  File "%s", line %d\n' % (path, line)
+
 def smokeTestModule():
   from common.log.debugPrint import debugPrint
   debugPrint(joinPath('/path/to/file', 'some_path', ['some', 'other', 'path']))
