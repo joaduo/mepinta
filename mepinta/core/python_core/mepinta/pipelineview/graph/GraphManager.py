@@ -57,7 +57,7 @@ class GraphManager(FrameworkBase):
     #Add the node to the graph
     graph.addNode(node)
     #sychronize node and inner pipeline
-    self.__syncNode(graph.pline, node)
+    self._syncNode(graph.pline, node)
     #return new node
     return node
 
@@ -66,7 +66,7 @@ class GraphManager(FrameworkBase):
     node_id = node.node_id
     raise NotImplementedError()
 
-  def __syncNode(self, pline, node):
+  def _syncNode(self, pline, node):
     #Create the properties on the pline
     prop_ids = self.prop_mngr.createProperties(pline, node)
     #Connect dpdencies
@@ -103,4 +103,4 @@ class GraphManager(FrameworkBase):
 #    #Set the new data types property_id to the node
 #    self.plugins_mngr.processor_plugins_manager.setContainersDtypeId(node)
 #    #Now we can sync the node as if it were a new one
-#    self.__syncNode(graph.pline, node)
+#    self._syncNode(graph.pline, node)
