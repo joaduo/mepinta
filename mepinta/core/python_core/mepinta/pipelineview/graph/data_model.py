@@ -27,29 +27,13 @@ class Node(FrameworkObject):
     It's composed by groups of properties (lo.pipeline's properties)
   '''
   def __init__(self, name, processor):
-    #There is no superior object to store the id (Node has to store it itself)
+    #There is no superior object to store the id (Node has to store itself)
     self.node_id = 0
     self.name = name
     #TODO: rename to processor_metadata
     self.processor = processor
-    self.__cloneFromManifest(self.processor.proxy)
-
-  def __cloneFromManifest(self, proxy):
-    '''
-      Given a processor proxy the node clones the processor's topology
-      and options.
-    '''
-    #TODO: automate this in order to maintain it from the ProcessorProxy perspective ?
-    #TODO: the code below makes the debugger useless!! Why?
-    proxy = deepcopy(proxy)
-    self.containers = proxy.containers
-    self.inputs = proxy.inputs
-    self.internals = proxy.internals
-    self.outputs = proxy.outputs
-    self.functions = proxy.functions
-    self.non_cached_capable = proxy.non_cached_capable
-    self.marked_outputs = proxy.marked_outputs
-    self.getRequiredDataTypes = proxy.getRequiredDataTypes
+    #Clone connections of the proxy
+    self.processor.proxy.spawnIntoNode(self)
 
   def getPropertiesIds(self):
     pass #for container in self.containers.getProperties()

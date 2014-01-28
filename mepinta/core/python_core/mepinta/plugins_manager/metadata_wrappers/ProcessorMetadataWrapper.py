@@ -20,8 +20,6 @@ along with Mepinta. If not, see <http://www.gnu.org/licenses/>.
 '''
 from mepinta.plugins_manager.metadata_wrappers.base import MetadataWrapperBase
 from mepinta.plugins_manager.plugins_manager_detail.PluginPackageManager import PluginPackageManager
-from mepinta.plugins_manifest.proxy.data_model import DataPropertyProxy, \
-  FunctumPropertyProxy
 from mepinta.plugins_manifest import ProcessorManifestBase
 
 class ProcessorMetadataWrapper(MetadataWrapperBase):
@@ -51,17 +49,9 @@ class ProcessorMetadataWrapper(MetadataWrapperBase):
   def data_types(self):
     return self.proxy.getRequiredDataTypes().keys()
 
-  def setIds(self, data_types):
+  def setIds(self):
     #We need to re/set proxy's ids in a case of re/load
-    self._setContainersIds(self.proxy, data_types)
     self.proxy.setFunctionsId(self._meta_data.functions)
-
-  def _setContainersIds(self, proxy, data_types):
-    #For each processor's property set its data type property_id
-    for props_container in proxy.containers.values():
-      for prop in props_container.getProperties(DataPropertyProxy,
-                                                FunctumPropertyProxy).values():
-        prop.dtype_id = data_types[prop.data_type_name].property_id
 
 
 def smokeTestModule():

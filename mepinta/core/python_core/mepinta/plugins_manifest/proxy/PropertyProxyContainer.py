@@ -31,14 +31,24 @@ class PropertyProxyContainer(FrameworkBase):
     All private attributes are not converted.
   '''
   def __post_init__(self):
-    self.__declaration_order = [] #keep  the manifest' properties declaration order
-    self.__container_type = None
-    self.__backend_name = self.context.backend_name
-    self.__data_type_alias_manager = DataTypeAliasManager(self.context)
+    self._cloned = False #True means it represent a concrete node in the pipeline
+    self._declaration_order = [] #keep  the manifest' properties declaration order
+    self._container_type = None
+    self._backend_name = self.context.backend_name
+    self._data_type_alias_manager = DataTypeAliasManager(self.context)
+
+
+  def flagCloned(self):
+    self._cloned = True
+    from mepinta.plugins_manager.PluginsManager import PluginsManager
+    self._plugins_manager = PluginsManager(self.context)
+
+  def _getDataTypesDict(self):
+    return self._plugins_manager.data_type_plugins_manager.data_types
 
   @property
   def containerType(self):
-    return self.__container_type
+    return self._container_type
 
   def setContainerType(self, containerType):
     '''
@@ -46,11 +56,11 @@ class PropertyProxyContainer(FrameworkBase):
       the container type. (done in the ProcessorProxy class)
     :param containerType:
     '''
-    self.__container_type = containerType
+    self._container_type = containerType
 
   @property
   def declarationOrder(self):
-    return self.__declaration_order
+    return self._declaration_order
 
   def getProperties(self, *types):
     '''
@@ -69,15 +79,23 @@ class PropertyProxyContainer(FrameworkBase):
         FunctionPropertyProxy if th
     '''
     if not types:
-      types = self.__getContainerTypes()
+      types = self.__getContainerType()
     properties = {}
-    for prop_name, prop_proxy in self.__dict__.items():
+    for prop_name, prop in self.__dict__.items():
       #Check if the property is of the type or the qualified is of the type
-      if isinstance(prop_proxy, types) or isinstance(prop_proxy, QualifierBase) and isinstance(prop_proxy.__qualified__(), types):
-        properties[prop_name] = prop_proxy
+      if self._isinstance(prop, types):
+        properties[prop_name] = prop
+        if self._cloned and self._isinstance(prop, InOutPropertyProxyBase) \
+        and not hasattr(prop, 'dtype_id'):
+          prop.dtype_id = self._getDataTypesDict()[prop.data_type_name].property_id
     return properties
 
-  def __getContainerTypes(self):
+  def _isinstance(self, prop_proxy, types):
+    return isinstance(prop_proxy, types) or \
+           isinstance(prop_proxy, QualifierBase) and \
+           isinstance(prop_proxy.__qualified__(), types)
+
+  def __getContainerType(self):
     '''Get the container's default type, based on container name'''
     if self.containerType == 'function':
       return FunctionPropertyProxy
@@ -92,7 +110,7 @@ class PropertyProxyContainer(FrameworkBase):
     '''
     if not name.startswith('_') :
       if isinstance(value, str):
-        if value in self.__data_type_alias_manager.getFunctumAliases():
+        if value in self._data_type_alias_manager.getFunctumAliases():
           value = FunctumPropertyProxy()
         else:
           value = DataPropertyProxy(value)
@@ -103,7 +121,7 @@ class PropertyProxyContainer(FrameworkBase):
         self.__addProp(name, value)
         #value.parent = self #TODO: remove?
         if isinstance(value.__qualified__(), InOutPropertyProxyBase):
-          value.data_type_name = self.__data_type_alias_manager.getRealDataTypeName(value.data_type_alias)
+          value.data_type_name = self._data_type_alias_manager.getRealDataTypeName(value.data_type_alias)
     FrameworkBase.__setattr__(self, name, value)
 
   def __addProp(self, name, value):

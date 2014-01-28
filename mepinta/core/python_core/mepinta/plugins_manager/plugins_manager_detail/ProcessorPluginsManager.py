@@ -119,6 +119,6 @@ class ProcessorPluginsManager(PluginsManagerBase):
     self.loadProcessorLibrary(processor)
 
     #Now update the data types' and functions' ids in the proxy
-    processor.setIds(self.data_types)
+    processor.setIds()
     return processor
 

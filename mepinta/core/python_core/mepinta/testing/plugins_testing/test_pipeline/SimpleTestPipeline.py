@@ -85,7 +85,7 @@ class SimpleTestPipeline(FrameworkBase):
       self._graph_manager.autoConnect(self._graph, dent_node, self._last_node)
 
   def syncNode(self, node):
-    self._graph_manager._syncNode(self._graph, node)
+    self._graph_manager._syncNode(self._graph.pline, node)
 
   def setLastNode(self, node):
     self._last_node = node

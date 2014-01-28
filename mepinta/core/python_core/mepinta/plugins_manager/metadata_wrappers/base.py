@@ -21,7 +21,6 @@ along with Mepinta. If not, see <http://www.gnu.org/licenses/>.
 from common.abstract.FrameworkBase import FrameworkBase
 from mepinta.plugins_manager.data_model import DataTypeMetadata
 from common.path import joinPath
-from mepinta.plugins_manifest import ProcessorManifestBase
 from mepinta.plugins_manager.plugins_manager_detail.PluginImportError import PluginImportError
 
 class MetadataWrapperBase(FrameworkBase):

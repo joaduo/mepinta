@@ -23,6 +23,7 @@ from bisect import insort_left
 from mepinta.plugins_manifest.proxy.data_model import FunctionPropertyProxy, \
   FunctumPropertyProxy, DataPropertyProxy
 from mepinta.plugins_manifest.proxy.PropertyProxyContainer import PropertyProxyContainer
+from copy import deepcopy
 
 class ProcessorProxy(FrameworkBase):
   #TODO: see what to move from
@@ -99,6 +100,31 @@ class ProcessorProxy(FrameworkBase):
     else:
       msg = 'No container for func_name:%r' % func_name
       self.log.e(msg)
+
+  def spawnIntoNode(self, node):
+    '''
+    Deepcopy this proxy and assign cloned containers and other parameters to t
+      he new node
+    :param node:
+    '''
+    #deepcopy breaks pydev debugger
+    proxy = deepcopy(self)
+    #proxy = self
+    attr_names = [
+              'containers',
+              'inputs',
+              'internals',
+              'outputs',
+              'functions',
+              'non_cached_capable',
+              'marked_outputs',
+              'getRequiredDataTypes',
+               ]
+    for name in attr_names:
+      attr = getattr(proxy, name)
+      if isinstance(attr, PropertyProxyContainer):
+        attr.flagCloned()
+      setattr(node, name, attr)
 
 def testModule():
   assert None
