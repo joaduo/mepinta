@@ -62,16 +62,13 @@ if __name__ == "__main__":
   from pipeline_backend.logging.logging import LOG_INFO
   from mepinta.testing.plugins_testing.test_pipeline.InotifySimpleTestPipeline import InotifySimpleTestPipeline
   from mepinta.testing.plugins_testing.PluginTestAutoTester import PluginTestAutoTester
-  from getDefaultContext import getDefaultContext
-#  context = getDefaultContext()
+  from mepinta.context.MepintaContext import MepintaContext
+  context = MepintaContext('c_and_cpp')
 #  from mepinta.testing.plugins_testing.nodebox.NodeBoxSimplePipelineOutput import NodeBoxSimplePipelineOutput
-#  test_pline = InotifySimpleTestPipeline(context)
-#  test(context).definePipeline(test_pline)
+  test_pline = InotifySimpleTestPipeline(context)
+  test(context).definePipeline(test_pline)
 #  mw = test_pline.getNodesDict()['K3DMeshWriter 1']
 #  test_pline.evaluateProp(mw.functions.writeMesh)
   #NodeBoxSimplePipelineOutput(test_pline.getPipeline(), 600,600).run()
-#  PluginTestAutoTester(getDefaultContext(LOG_INFO)).test(test,gui=True)
-#  PluginTestAutoTester(getDefaultContext(LOG_INFO)).test(test, gui=False)
-#  PluginTestAutoTester(getDefaultContext()).test(test)#,gui=False)
-  PluginTestAutoTester(getDefaultContext(LOG_INFO)).test(gui=False)
+#  PluginTestAutoTester(context).test(gui=False)
 

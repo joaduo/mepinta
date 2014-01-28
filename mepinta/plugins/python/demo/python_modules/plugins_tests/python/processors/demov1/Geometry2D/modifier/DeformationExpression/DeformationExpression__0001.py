@@ -45,5 +45,5 @@ if __name__ == "__main__":
 #  import unittest
 #  unittest.main()
   from mepinta.testing.plugins_testing.PluginTestAutoTester import PluginTestAutoTester
-  from getDefaultContext import getDefaultContext
-  PluginTestAutoTester(context=getDefaultContext()).test()
+  from mepinta.context.MepintaContext import MepintaContext
+  PluginTestAutoTester(context=MepintaContext()).test()

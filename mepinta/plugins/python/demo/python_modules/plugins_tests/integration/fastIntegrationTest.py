@@ -19,18 +19,19 @@ You should have received a copy of the GNU General Public License
 along with Mepinta. If not, see <http://www.gnu.org/licenses/>.
 '''
 
+
 def getTestModules():
   test_modules = []
-  import plugins_tests.python.processors.actiontree.UndoableGraph.generator.EmptyGraph.EmptyGraph__0001 as testModule
-  test_modules.append(testModule)
+#  import plugins_tests.python.processors.actiontree.UndoableGraph.generator.EmptyGraph.EmptyGraph__0001 as testModule
+#  test_modules.append(testModule)
   import plugins_tests.python.processors.demov1.Geometry2D.modifier.DeformationExpression.DeformationExpression__0001 as testModule
   test_modules.append(testModule)
   return test_modules
 
 def fastIntegrationTestPython(context=None, gui=False):
-  from getDefaultContext import getDefaultContext
+  from mepinta.context.MepintaContext import MepintaContext
   if not context:
-    context = getDefaultContext()
+    context = MepintaContext()
   from mepinta.testing.plugins_testing.PluginTestAutoTester import PluginTestAutoTester
   test_modules = getTestModules()
   if gui:
@@ -40,7 +41,7 @@ def fastIntegrationTestPython(context=None, gui=False):
       PluginTestAutoTester(context).shallowTest(gui=gui, testModule=testModule)
 
 def testModule():
-  fastIntegrationTestPython()
+  fastIntegrationTestPython(gui=False)
 
 if __name__ == "__main__":
   testModule()

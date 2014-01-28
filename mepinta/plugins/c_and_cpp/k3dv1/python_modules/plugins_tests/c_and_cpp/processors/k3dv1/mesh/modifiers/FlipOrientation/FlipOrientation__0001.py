@@ -40,8 +40,8 @@ class FlipOrientation(K3dMeshPluginTest):
     K3dMeshPluginTest.stressPipeline(self, test_pline, time)
 
 test = FlipOrientation
-        
+
 if __name__ == "__main__":
   from getDefaultContext import getDefaultContext
   from pipeline_backend.logging.logging import LOG_INFO
-  PluginTestAutoTester(getDefaultContext(LOG_INFO)).test(test,gui=True)
+  PluginTestAutoTester(getDefaultContext(LOG_INFO)).test(gui=True)
