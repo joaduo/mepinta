@@ -48,7 +48,7 @@ class K3dMeshPluginTest(ProcessorPluginTestBase):
   def validateOutputMesh(self):
     raise NotImplementedError("Implement!")
 
-  def definePluginPipeline(self):
+  def definePluginPipeline(self, test_pline):
     raise NotImplementedError("Implement on children classes!")
 
   def definePipeline(self, test_pline):
