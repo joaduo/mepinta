@@ -24,11 +24,19 @@ class singleton_decorator(object):
     Singleton pattern decorator.
     There will be only one instance of the decorated class.
     Decorator always returns same instance.
-  '''  
+  '''
   def __init__(self, class_):
+    '''
+    :param class_: class to be converted in singleton (means you cannot
+    inherit from it anymore)
+    '''
     self.class_ = class_
     self.instance = None
+
   def __call__(self, *a, **ad):
+    '''
+    Initialize class if not yet initialized. Return instance.
+    '''
     if self.instance == None:
-      self.instance = self.class_(*a,**ad)
+      self.instance = self.class_(*a, **ad)
     return self.instance

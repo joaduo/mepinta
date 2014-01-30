@@ -54,7 +54,7 @@ def smokeTestModule():
   debugPrint(pm.config.hola)
   try:
     pm.config.context = 'bla'
-  except Exception as e:
+  except AttributeError as e:
     debugPrint(e)
 
 if __name__ == '__main__':

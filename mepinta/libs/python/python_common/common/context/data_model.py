@@ -20,7 +20,6 @@ along with Mepinta. If not, see <http://www.gnu.org/licenses/>.
 '''
 import inspect
 from common.config.constants import global_config_namespace
-from pprint import pformat
 
 class BaseNode(object):
   def __init__(self):
@@ -55,6 +54,7 @@ class BaseNode(object):
     return dict(self._config)
 
   def _reprDict(self, dictionary, indent=0):
+    #TODO: use _StringIO
     result = '{'
     for k in dictionary:
       v = dictionary[k]
@@ -63,7 +63,6 @@ class BaseNode(object):
     return result
 
   def _repr(self, indent=0):
-    f = pformat
     indent += 2
     indent1 = indent
     result = '\n%s%s( config=' % (' ' * indent1, str(self))

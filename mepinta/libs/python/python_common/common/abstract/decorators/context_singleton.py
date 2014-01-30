@@ -26,8 +26,18 @@ class context_singleton(object):
     So for each Context there will be only one instance of the decorated class.
   '''
   def __init__(self, class_):
+    '''
+    :param class_: class to be converted in singleton (means you cannot
+    inherit from it anymore)
+    '''
     self.class_ = class_
+
   def __call__(self, context=None, *a, **ad):
+    '''
+    Initialize class if not yet initialized for the context given.
+    Return instance.
+    :param context: context (you must always provide one)
+    '''
     if context == None:
       msg = ("You should always provide a context for class: %r" %
              self.class_.__class__.__name__)
