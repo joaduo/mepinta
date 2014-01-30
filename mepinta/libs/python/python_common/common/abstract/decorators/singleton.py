@@ -25,10 +25,10 @@ class singleton_decorator(object):
     There will be only one instance of the decorated class.
     Decorator always returns same instance.
   '''  
-  def __init__(self, Class):
-    self.Class = Class
+  def __init__(self, class_):
+    self.class_ = class_
     self.instance = None
   def __call__(self, *a, **ad):
     if self.instance == None:
-      self.instance = self.Class(*a,**ad)
+      self.instance = self.class_(*a,**ad)
     return self.instance
