@@ -38,7 +38,7 @@ class SelfConfigBase(ContextClientBase):
   def __init__(self, context):
     ContextClientBase.__init__(self, context)
 
-    self.config = SelfConfigWrapper(OwnerClass=self.__class__, context=self.context)
+    self.config = SelfConfigWrapper(owner_class=self.__class__, context=self.context)
     self.log = self.context.log
 
 def smokeTestModule():

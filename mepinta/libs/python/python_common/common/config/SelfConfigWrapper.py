@@ -27,29 +27,29 @@ class SelfConfigWrapper(object):
     This wrapper is used by classes inheriting from
     :class:`from common.abstract.SelfConfigBase.SelfConfigBase`.
   '''
-  def __init__(self, OwnerClass, context):
-    object.__setattr__(self, 'OwnerClass', OwnerClass)
+  def __init__(self, owner_class, context):
+    object.__setattr__(self, 'owner_class', owner_class)
     object.__setattr__(self, 'context', context)
 
   def __getattr__(self, name):
     #TODO:CODE VALIDATION validate call stack
-    if name in ['context', 'OwnerClass', '__deepcopy__']: #context and OwnerClass shouldn't be intercepted
+    if name in ['context', 'owner_class', '__deepcopy__']: #context and owner_class shouldn't be intercepted
       object.__getattribute__(self, name)
-    elif self.context.hasConfig(name, self.OwnerClass): #Intercept other config name
-      return self.context.getConfig(name, self.OwnerClass)
+    elif self.context.hasConfig(name, self.owner_class): #Intercept other config name
+      return self.context.getConfig(name, self.owner_class)
     else: #there is no config for such name
-      raise AttributeError('There is no config for %r of the class %r' % (name, self.OwnerClass))
+      raise AttributeError('There is no config for %r of the class %r' % (name, self.owner_class))
       #TODO: create the correct Error type
 
   def __deepcopy__(self, memo):
     return self
 
   def __setattr__(self, name, value):
-    key_names = ['context', 'OwnerClass']
-    if name not in key_names : #context and OwnerClass shouldn't be intercepted
-      self.context.setConfig(name, value, self.OwnerClass)
+    key_names = ['context', 'owner_class']
+    if name not in key_names : #context and owner_class shouldn't be intercepted
+      self.context.setConfig(name, value, self.owner_class)
     else:
-      class_str = "%s.%s" % (self.OwnerClass.__module__.__str__(), self.OwnerClass.__name__)
+      class_str = "%s.%s" % (self.owner_class.__module__.__str__(), self.owner_class.__name__)
       raise RuntimeError('You shouldn\'t use the names in %r for a class\' own config. (%r in this case) \n'\
                          'The names in %r are reserved attributes for the context wrapper. Please use any other config name.' % \
                          (key_names, class_str, key_names))
