@@ -50,6 +50,7 @@ class singleton_autocontext(arg_singleton_and_wrap):
     return frame
 
   def solveContextName(self, path):
+    #TODO: solve based on the main script also (if this method fails)
     regex = r'plugins.(?P<backend>(?:python)|(?:c_and_cpp)).(?:[a-z_0-9]+).python_modules'
     regex = regex.replace('.', os.path.sep)
     m = re.search(regex, path)
@@ -62,11 +63,18 @@ class singleton_autocontext(arg_singleton_and_wrap):
 
 @singleton_autocontext
 class MepintaContext(ContextBase):
+  '''
+  Specializes the "encapsulated context pattern" for a Mepinta environment.
+  This means:
+    -having a 'backend_name' property
+    -initializing lower level 'ContextLo' based on backend
+    -setting logging output to the based on backend and specific for mepinta
+  '''
   def __init__(self, name):
     ContextBase.__init__(self, name)
-    self.__initConfig()
+    self._initConfig()
 
-  def __initConfig(self):
+  def _initConfig(self):
     context = self
     deployment_path = self.getConfig('deployment_config').deployment_path
     context_lo = ContextLo(context=context, deployment_path=deployment_path)
@@ -86,7 +94,7 @@ class MepintaContext(ContextBase):
         raise LookupError('Cannot find backend name for context name')
     return config
 
-def testModule():
+def smokeTestModule():
   #context = MepintaContext('python')
   context = MepintaContext('c_and_cpp')
   from common.log.debugPrint import debugPrint
@@ -96,4 +104,4 @@ def testModule():
   pprint(context.getConfigDict())
 
 if __name__ == "__main__":
-  testModule()
+  smokeTestModule()
