@@ -45,6 +45,7 @@ class QtProjectPluginCreatorBase(FrameworkBase):
     #TODO:INSTALL Distribution specific
     includes = '''/usr/lib/glibmm-2.4/include
 /usr/include/glibmm-2.4
+/usr/lib/x86_64-linux-gnu/glibmm-2.4/include/
 /usr/lib/x86_64-linux-gnu/glib-2.0/include/
 /usr/lib/x86_64-linux-gnu/sigc++-2.0/include/
 /usr/lib/glib-2.0/include
