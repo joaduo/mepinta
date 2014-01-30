@@ -71,8 +71,8 @@ class ProcessorPluginTestRunner(ForkInotifyUtilsBase):
     if not test_pline: #If no pipeline  is provided, create one
       test_pline = InotifySimpleTestPipeline(self.context)
     #Create the first fork (that will be killed when a processor manifest changes)
-    manifestInotifyFunction = self.__getManifestInotifyFunction(test_modules, test_pline)
-    self._child_pid = self._callFunctionOnFork(manifestInotifyFunction, wait_child=False)
+    function = self.__getManifestInotifyFunction(test_modules, test_pline)
+    self._child_pid = self._callFunctionOnFork(function, wait_child=False)
 
     #register provided module/s
     self.registerTestModules(test_modules, test_pline)
@@ -86,7 +86,8 @@ class ProcessorPluginTestRunner(ForkInotifyUtilsBase):
     #define signal handler
     def exitSignalHandler(received_signal, frame):
       self.log.info("Killing child process.")
-      self.log.debug("Killing child process %s with signal %s." % (self._child_pid, signal.SIGTERM))
+      self.log.debug("Killing child process %s with signal %s." %
+                     (self._child_pid, signal.SIGTERM))
       #if the child is not killed will remain running after father's dead
       os.kill(self._child_pid, signal.SIGTERM)
       #ok, now we can exit
@@ -119,16 +120,18 @@ class ProcessorPluginTestRunner(ForkInotifyUtilsBase):
         the whole pipeline.
       '''
       if self._child_pid:#if there were a prior proces, then kill it
-        self.log.debug("Killing child process %s with signal %s." % (self._child_pid, signal.SIGTERM))
+        self.log.debug("Killing child process %s with signal %s." %
+                       (self._child_pid, signal.SIGTERM))
         #if the child is not killed will remain running after father's dead
         #send the TERM signal 15
         os.kill(self._child_pid, signal.SIGTERM)
         #wait for the children death
         child_pid, status = os.waitpid(self._child_pid, 0)
-        self.log.debug("Child process %s ended with status %s." % (child_pid, status))
+        self.log.debug("Child process %s ended with status %s." %
+                       (child_pid, status))
       #Get the function to call when the manifest changed (means need to reload the whole pipeline)
-      manifestInotifyFunction = self.__getManifestInotifyFunction(testModule, test_pline)
-      self._child_pid = self._callFunctionOnFork(manifestInotifyFunction, wait_child=False)
+      function = self.__getManifestInotifyFunction(testModule, test_pline)
+      self._child_pid = self._callFunctionOnFork(function, wait_child=False)
     #load the processor to get the manifest's module path
     processor_metadata = self._plugins_mngr.loadProcessor(processor)
     path = self._getModuleFilePath(processor_metadata.module)
@@ -142,6 +145,7 @@ class ProcessorPluginTestRunner(ForkInotifyUtilsBase):
     self._inotify_mngr.registerAction(path_action)
 
 if __name__ == "__main__":
+  from common.log.debugPrint import debugPrint
   from getDefaultContext import getDefaultContext
   from pipeline_backend.logging.logging import LOG_INFO#, LOG_DEBUG
   #ptr = ProcessorPluginTestRunner(getDefaultContext(LOG_DEBUG))

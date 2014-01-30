@@ -24,8 +24,8 @@ def getTestModules():
   test_modules = []
 #  import plugins_tests.python.processors.actiontree.UndoableGraph.generator.EmptyGraph.EmptyGraph__0001 as testModule
 #  test_modules.append(testModule)
-  import plugins_tests.python.processors.demov1.Geometry2D.modifier.DeformationExpression.DeformationExpression__0001 as testModule
-  test_modules.append(testModule)
+  import plugins_tests.python.processors.demov1.Geometry2D.modifier.DeformationExpression.DeformationExpression__0001 as test_module
+  test_modules.append(test_module)
   return test_modules
 
 def fastIntegrationTestPython(context=None, gui=False):
@@ -37,11 +37,11 @@ def fastIntegrationTestPython(context=None, gui=False):
   if gui:
     PluginTestAutoTester(context).shallowTest(gui=gui, testModule=test_modules[0])
   else:
-    for testModule in test_modules:
-      PluginTestAutoTester(context).shallowTest(gui=gui, testModule=testModule)
+    for test_module in test_modules:
+      PluginTestAutoTester(context).shallowTest(gui=gui, testModule=test_module)
 
-def testModule():
+def smokeTestModule():
   fastIntegrationTestPython(gui=False)
 
 if __name__ == "__main__":
-  testModule()
+  smokeTestModule()

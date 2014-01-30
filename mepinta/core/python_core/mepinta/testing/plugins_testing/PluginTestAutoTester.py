@@ -26,8 +26,8 @@ from mepinta.testing.plugins_testing.gui.SimpleTestPipelineGui import SimpleTest
 
 class PluginTestAutoTester(ModuleAutoTesterBase):
   def __post_init__(self):
-    self.__fork_inotify_utils = ForkInotifyUtilsBase(self.context)
-    self.__plugin_testr_unner = ProcessorPluginTestRunner(self.context)
+    self._fork_inotify_utils = ForkInotifyUtilsBase(self.context)
+    self._test_runner = ProcessorPluginTestRunner(self.context)
 
   def __getTestModule(self, testModule):
     if not testModule:
@@ -44,10 +44,10 @@ class PluginTestAutoTester(ModuleAutoTesterBase):
 
   def test(self, gui=True, testModule=None): #TODO: rename to deepTest
     self.__setGui(gui)
-    self.__plugin_testr_unner.blockListeningEvents(self.__getTestModule(testModule))
+    self._test_runner.blockListeningEvents(self.__getTestModule(testModule))
 
   def __createPipeline(self, testModule):
-    test_instance = self.__fork_inotify_utils._getTestInstance(testModule)
+    test_instance = self._fork_inotify_utils._getTestInstance(testModule)
     test_pline = InotifySimpleTestPipeline(self.context)
     test_instance.definePipeline(test_pline)
     return test_pline
@@ -64,7 +64,8 @@ class PluginTestAutoTester(ModuleAutoTesterBase):
     if gui:
       SimpleTestPipelineGui(self.context, test_pline=test_pline).run()
     else:
-      test_instance = self.__fork_inotify_utils._getTestInstance(self.__getTestModule(testModule))
+      utils = self._fork_inotify_utils
+      test_instance = utils._getTestInstance(self.__getTestModule(testModule))
       test_instance.stressPipeline(test_pline, time=0)
       test_pline.evaluateProp()
 

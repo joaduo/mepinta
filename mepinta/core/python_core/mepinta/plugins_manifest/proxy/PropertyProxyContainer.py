@@ -35,7 +35,7 @@ class PropertyProxyContainer(FrameworkBase):
     self._declaration_order = [] #keep  the manifest' properties declaration order
     self._container_type = None
     self._backend_name = self.context.backend_name
-    self._data_type_alias_manager = DataTypeAliasManager(self.context)
+    self._alias_manager = DataTypeAliasManager(self.context)
 
 
   def flagCloned(self):
@@ -110,7 +110,7 @@ class PropertyProxyContainer(FrameworkBase):
     '''
     if not name.startswith('_') :
       if isinstance(value, str):
-        if value in self._data_type_alias_manager.getFunctumAliases():
+        if value in self._alias_manager.getFunctumAliases():
           value = FunctumPropertyProxy()
         else:
           value = DataPropertyProxy(value)
@@ -121,7 +121,7 @@ class PropertyProxyContainer(FrameworkBase):
         self.__addProp(name, value)
         #value.parent = self #TODO: remove?
         if isinstance(value.__qualified__(), InOutPropertyProxyBase):
-          value.data_type_name = self._data_type_alias_manager.getRealDataTypeName(value.data_type_alias)
+          value.data_type_name = self._alias_manager.getRealName(value.data_type_alias)
     FrameworkBase.__setattr__(self, name, value)
 
   def __addProp(self, name, value):

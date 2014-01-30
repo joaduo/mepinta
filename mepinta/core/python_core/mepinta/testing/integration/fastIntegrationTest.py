@@ -29,8 +29,8 @@ def fastIntegrationTest(context=None):
   else:
     raise NotImplementedError()
 
-def testModule():
+def smokeTestModule():
   fastIntegrationTest()
 
 if __name__ == "__main__":
-  testModule()
+  smokeTestModule()

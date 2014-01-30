@@ -96,12 +96,13 @@ class DataTypeAliasManager(FrameworkBase):
                  }
     return alias_dict
 
-  def getRealDataTypeName(self, data_type_alias):
+  def getRealName(self, data_type_alias):
     '''
       Support data_type aliases. (avoiding redundant data types)
     '''
     if data_type_alias == 'k3d::filesystem::path*':
-      self.log.w("Conversion of %s is to char*.(this is wrong and is just a hack) WORK IN PROGRESS!" % data_type_alias)
+      self.log.w('Conversion of %s is to char*.(this is wrong and is just a '
+                 'hack) WIP...' % data_type_alias)
 
     alias_dict = self.__getAliasDict(self.context.backend_name)
     if data_type_alias in alias_dict:
