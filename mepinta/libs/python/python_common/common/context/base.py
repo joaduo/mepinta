@@ -22,7 +22,24 @@ from common.log.Logger import Logger
 from common.context.data_model import TreeContextStore, BaseNode
 
 class ContextBase(TreeContextStore):
+  '''
+  Implements a "encapsulated context pattern".
+  All FrameworkBase children will generally need a context as first argument.
+
+  This context enables:
+    - Context storage of shared configuration among classes
+    - Ability to fork a context into a new one and inherit non overridden
+      configuration. (creating a tree of inheritance between contexts, check
+      :class:`common.context.data_model.TreeContextStore`)
+  '''
   def __init__(self, arg):
+    '''
+    If arg is a string, creates a new Context.
+    If arg is a Context instance, creates of fork of that context (WIP)
+
+    :param arg: a string with the name of the context or an instances of
+      :class:`common.context.data_model.BaseNode`
+    '''
     if isinstance(arg, str):
       name = arg
       TreeContextStore.__init__(self)
@@ -35,11 +52,20 @@ class ContextBase(TreeContextStore):
       TreeContextStore.__init__(self, config_tree_node)
 
   def _getDefaultConfig(self, name):
+    '''
+    Function to be overridden in child classes in order to obtain configuration
+    from anywhere.
+    :param name: name of the context instantiated
+    '''
     class Config(object):
       _config_dict = {}
     return Config()
 
   def _setDefaultConfig(self, name):
+    '''
+    Loads the default config parameters into the context data structure (tree).
+    :param name: name of the context instantiated
+    '''
     config = self._getDefaultConfig(name)
     for name in dir(config):
       if not name.startswith('_'):

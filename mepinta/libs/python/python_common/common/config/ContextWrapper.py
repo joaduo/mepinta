@@ -35,9 +35,20 @@ class ContextWrapper(object):
         This way, accessing to the global config is straightforward.
   '''
   def __init__(self, context):
+    '''
+    :param context: context to be wrapped
+    '''
     object.__setattr__(self, 'context', context)
 
   def __getattr__(self, name):
+    '''
+    If:
+      - name matches a ContextWrapper's attr, return it, if not
+      - name matches stored global config inside context, return it, if not
+      - raises exception
+    :param name: attribute to be retrieved (in config or intance's attr)
+    :raises: AttributeError
+    '''
     if name in ['context', '__deepcopy__']:
       object.__getattribute__(self, name)
     elif name in ['hasConfig', 'getConfig', 'setConfig', 'newChildConfig', 'getConfigDict']:
@@ -48,6 +59,15 @@ class ContextWrapper(object):
       raise AttributeError('There is no global config named %r ' % (name))
 
   def __setattr__(self, name, value):
+    '''
+    If:
+      - name matches a ContextWrapper's attr, raise KeyError, if not
+      - store value in global config inside context, set it
+
+    :param name: global config paramter to be set in
+    :param value: value of parameter
+    :raises: KeyError
+    '''
     reserved_props = ['context', '__deepcopy__', 'config', 'hasConfig', 'getConfig', 'setConfig']
     if name not in reserved_props:
       self.context.setConfig(name, value)
@@ -55,4 +75,8 @@ class ContextWrapper(object):
       raise KeyError('Cannot set config with name in %r. Those are reserved names.' % reserved_props)
 
   def __deepcopy__(self, memo): #Disable DeepCopy
+    '''
+    Disable deepcopying, since the class has its own forking mechanism.
+    :param memo:
+    '''
     return self

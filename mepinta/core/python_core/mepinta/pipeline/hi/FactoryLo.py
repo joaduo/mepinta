@@ -42,7 +42,8 @@ class FactoryLo(FrameworkBase):
     #Ok, we can load the libbackend_c_api.so (that will load all the other .so)
     for api in ('c', 'cpp'):
       lib_name = 'libbackend_api_%s.so' % api
-      lib_path = joinPath(self.__deployment_path, 'build', 'libs', 'c_and_cpp', lib_name)
+      lib_path = joinPath(self.__deployment_path, 'build', 'libs', 'c_and_cpp',
+                          lib_name)
       self.log.debug("Loading lib at %r." % lib_path)
       #Check if we could load it
       if not loadLibrary(lib_path, "global", primitive_lib=True):
@@ -56,12 +57,14 @@ class FactoryLo(FrameworkBase):
       try:
         from mepinta.pipeline.lo_cpp.pipeline_lo_facade import FactoryLo as WrappedClass
       except ImportError as e:
-        msg = 'There may not exist mepinta.pipeline.lo_cpp.pipeline_lo_facade (shedskin cpp compiled) module. (check how to build it if not there)'
-        msg += '\n ImportError:%s' % e
+        msg = ('There may not exist mepinta.pipeline.lo_cpp.pipeline_lo_facade'
+               ' (shedskin cpp compiled) module. (check how to build it if not'
+               ' there)\n ImportError:%s' % e)
         self.log.e(msg)
         raise MepintaError(msg)
     else:
-      raise MepintaError("There is not such backend: %r" % self.context.backend_name)
+      raise MepintaError("There is not such backend: %r" %
+                         self.context.backend_name)
     return WrappedClass
 
   def getClass(self, class_name):

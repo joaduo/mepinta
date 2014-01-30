@@ -71,30 +71,30 @@ class TreeContextStore(object):
   def __init__(self, config_tree_node=None):
     #Set default values for new configstore
     if not config_tree_node:
-      self.__config_tree_node = BaseNode()
+      self._root_node = BaseNode()
     else:
-      self.__config_tree_node = config_tree_node
+      self._root_node = config_tree_node
 
   def getConfigDict(self):
-    return self.__config_tree_node.getConfigDict()
+    return self._root_node.getConfigDict()
 
   def newChildConfig(self, **kwargs):
-    copy = self.__class__(self.__config_tree_node.newChild())
+    copy = self.__class__(self._root_node.newChild())
     copy.updateConfig(kwargs)
     return copy
 
   def updateConfig(self, update_dict):
-    self.__config_tree_node.updateConfig(update_dict)
+    self._root_node.updateConfig(update_dict)
 
   def hasConfig(self, name, owner=global_config_namespace):
-    return self.__config_tree_node.hasConfig(self.__getConfigKey(name, owner))
+    return self._root_node.hasConfig(self.__getConfigKey(name, owner))
 
   def getConfig(self, name, owner=global_config_namespace):
-    return self.__config_tree_node.getConfig(self.__getConfigKey(name, owner))
+    return self._root_node.getConfig(self.__getConfigKey(name, owner))
 
   def setConfig(self, name, value, owner=global_config_namespace):
     key = self.__getConfigKey(name, owner)
-    self.__config_tree_node.setConfig(key, value)
+    self._root_node.setConfig(key, value)
 
   def __getConfigKey(self, name, owner=global_config_namespace):
     return (self.__getOwnerStr(owner), name)
@@ -106,7 +106,8 @@ class TreeContextStore(object):
     elif isinstance(owner, str):
       owner_str = owner
     else:#TODO: debugPrint warning!!
-      self.getConfig('log').w('owner (%r) should be a class or a string, type is %r' % (owner, type(owner)))
+      self.getConfig('log').w('owner (%r) should be a class or a string, type'
+                              ' is %r' % (owner, type(owner)))
       owner_str = "%s" % owner
     return owner_str
 

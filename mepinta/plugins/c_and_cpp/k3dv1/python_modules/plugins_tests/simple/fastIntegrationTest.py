@@ -34,10 +34,10 @@ def fastIntegrationTestPython(context=None, gui=False):
   from mepinta.testing.plugins_testing.PluginTestAutoTester import PluginTestAutoTester
   test_modules = getTestModules()
   if gui:
-    PluginTestAutoTester(context).shallowTest(gui=gui, testModule=test_modules[0])
+    PluginTestAutoTester(context).shallowTest(gui, test_modules[0])
   else:
     for test_module in test_modules:
-      PluginTestAutoTester(context).shallowTest(gui=gui, testModule=test_module)
+      PluginTestAutoTester(context).shallowTest(gui, test_module)
 
 def smokeTestModule():
   fastIntegrationTestPython(gui=False)
