@@ -28,15 +28,18 @@ class PostInitStrategyBase(object):
     Adds the "__post_init__" capabilities to a class.
     Arguments received on "__post_init__" should always be passed as keywords,
       if not a TypeError exception will be Raised.
-    There is no need to declare arguments as keywords but you need to provide
-      them as keywords in the class initialization.
+    There is no need to declare arguments as keywords in the method but you need
+      to provide them as keywords in the class initialization.
     This class is not meant to be inherited by concrete class, but by
       superclasses.
     Classes inheriting this class must call the _initChildren method in order
       to call all __post_init__ methods.
   '''
   def __init__(self, context):
-    pass
+    '''
+    :param context: Unused in the future we could change the strategy algorithm
+      depending on the context.
+    '''
 
   def _initChildren(self, args, kwargs):
     '''
@@ -57,7 +60,15 @@ class PostInitStrategyBase(object):
     self.__callInits(list(reversed(posts)), kwargs)
 
   def __callInits(self, funcs, kwargs):
-    # Iterate functions and pass existing arguments.
+    '''
+    Iterate functions and pass existing arguments.
+    It will inspect each __post_init__ function and pass those arguments from
+    kwargs. If non kwargument is missing it will raise a TypeError exception
+    with a nice output pointing to the original __post_init__ source.
+
+    :param funcs: list of functions to be called (in that order)
+    :param kwargs: kwargs passed to class initialization (except context)
+    '''
     for class_, func in funcs:
       args = portableGetArgspec(func)[0]
       #filter those arguments that this __post_init__ receives
@@ -69,9 +80,9 @@ class PostInitStrategyBase(object):
         # Extract the traceback of the exception
         tb_list = traceback.extract_tb(sys.exc_info()[2])
         # File where the error occurred
-        error_file = self.__cleanFile(tb_list[-1][0])
+        error_file = self.__cleanPycExt(tb_list[-1][0])
         # if the error was calling func, then report accordingly.
-        if error_file == self.__cleanFile(__file__):
+        if error_file == self.__cleanPycExt(__file__):
           # The problems is calling func.
           # Get this traceback
           tb_list = traceback.extract_stack()
@@ -83,15 +94,26 @@ class PostInitStrategyBase(object):
           new_message = self.__reportOutsideError(tb_list, class_, error)
         raise TypeError(new_message)
 
-  def __cleanFile(self, file_name):
-    #Get rid of .pyc if there.
+  def __cleanPycExt(self, file_name):
+    '''
+    Get rid of .pyc at the end of file name to point to the source .py
+    :param file_name:
+    '''
     if file_name.endswith('.pyc'):
       return file_name[:-1]
     return file_name
 
   def __reportOutsideError(self, tb_list, class_, error):
-    #Create a report of an error outside this file when one calling
-    #__post_init__ method
+    '''
+    Create a report of an error while calling a __post_init__ method and the
+    error is thrown outside this module. (class)
+
+    Makes easier to find where the code to be fixed is.
+
+    :param tb_list: traceback list of the error
+    :param class_: visited class that produced the error
+    :param error: error (exception) thrown while calling func
+    '''
     tb_list = traceback.format_list(tb_list)
     msg = '\nTraceback: \n'
     msg += ''.join(tb_list)
@@ -99,8 +121,18 @@ class PostInitStrategyBase(object):
     return msg
 
   def __reportLocalError(self, tb_list, class_, func, error):
-    #Create a report of an error inside this file when one calling
-    #__post_init__ method. (probably some argumenst typerror)
+    '''
+    Create a report of an error while calling a __post_init__ method and the
+    error is thrown within this module. (class)
+
+    Errors are probably argument type errors, so we want to point to the
+    declaration of the __post_init__ function that generated the exception
+
+    :param tb_list: traceback list of the error
+    :param class_: visited class that produced the error
+    :param func: method of the class that produced the error
+    :param error: error (exception) thrown while calling func
+    '''
     tb_list = traceback.format_list(tb_list[:-3])
     msg = '\nTraceback: \n'
     msg += ''.join(tb_list)
@@ -119,7 +151,13 @@ class PostInitStrategyBase(object):
     return msg
 
   def __getInitLists(self, class_, posts, already_added):
-    #Visit the inheritance line to gather all the __post_init__ methods
+    '''
+     Visit the inheritance line to gather all the __post_init__ methods
+    :param class_: class for methods to be gathered
+    :param posts: list of post init functions to be returned (due to recursion)
+    :param already_added: set of already visited methods
+    '''
+
     if class_ == PostInitStrategyBase:
       #Its this class we can stop recursion
       return
