@@ -20,14 +20,16 @@ along with Mepinta. If not, see <http://www.gnu.org/licenses/>.
 '''
 from pipeline_backend.logging.logging import LOG_INFO, LOG_DEBUG
 from mepinta.context.MepintaContext import MepintaContext
+import sys
 
 called_once = False
 def getDefaultContext(log_level=LOG_INFO, name='python'):
   '''Creates a default context to reduce code verbosity for starting.'''
-
+  print >> sys.stderr, 'Calling getDefaultContext is deprecated.'
   global called_once
   if called_once:
-    raise RuntimeError('You should call the default context only once. (in the main script)')
+    raise RuntimeError('You should call the default context only once. (in the'
+                       ' main script)')
   else:
     called_once = True
   context = MepintaContext(name)
