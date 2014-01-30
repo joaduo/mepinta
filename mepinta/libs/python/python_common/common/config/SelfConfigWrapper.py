@@ -23,8 +23,9 @@ class SelfConfigWrapper(object):
   '''
     Provides a wrapper for a context object to have easier access to a
     class' own config.
-    This wrapper is used by classes inheriting from 'SelfConfigBase'
-    for reading and writing its own config.
+
+    This wrapper is used by classes inheriting from
+    :class:`from common.abstract.SelfConfigBase.SelfConfigBase`.
   '''
   def __init__(self, OwnerClass, context):
     object.__setattr__(self, 'OwnerClass', OwnerClass)

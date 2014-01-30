@@ -24,15 +24,16 @@ from common.config.SelfConfigWrapper import SelfConfigWrapper
 
 class SelfConfigBase(ContextClientBase):
   '''
+    Makes easier to access class context configuration through self.config proxy
+
     They will do to save some config:
       self.config.some_parameter = <value>
     And to retrieve it:
       <variable> = self.config.some_parameter
-    Where 'self' would be an instance of the owner class (OwnerClass).
+
     Without this wrapper the class should have to do:
       <variable> = self.context.get_config(self.__class__,'some_parameter')
     This way, accessing to the config is straightforward.
-
   '''
   def __init__(self, context):
     ContextClientBase.__init__(self, context)
@@ -40,8 +41,9 @@ class SelfConfigBase(ContextClientBase):
     self.config = SelfConfigWrapper(OwnerClass=self.__class__, context=self.context)
     self.log = self.context.log
 
-def testModule():
+def smokeTestModule():
   from common.context.Context import Context
+  from common.log.debugPrint import debugPrint
   class FooTestPluginsManager(SelfConfigBase):
     def __post_init__(self):
       self.processors = {}
@@ -56,4 +58,4 @@ def testModule():
     debugPrint(e)
 
 if __name__ == '__main__':
-  testModule()
+  smokeTestModule()

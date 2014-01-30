@@ -22,32 +22,29 @@ along with Mepinta. If not, see <http://www.gnu.org/licenses/>.
 from common.config.ContextWrapper import ContextWrapper
 from common.context.Context import ContextBase
 
-#TODO: rename it to GlobalConfigUserBase
+
 class ContextClientBase(object):
   '''
-    Classes inheriting from 'ContextClientBase' will have easier access to the
-    global config embedded in the context object.
-    They will do to save some config:
-      self.context.some_parameter = <value>
-    And to retrieve it:
-      <variable> = self.context.some_parameter
-    Where 'self' would be an instance of the owner class (OwnerClass).
-    Without this wrapper the class should have to do:
-      <variable> = self.context.get_config(self.__class__,'some_parameter')
-    or
-      <variable> = context.get_config(self.__class__,'some_parameter')
-    This way, accessing to the config is straightforward.
+    Makes sure that every context object is wrapped by
+    :class:`common.config.ContextWrapper.ContextWrapper`
   '''
   def __init__(self, context=None):
+    '''
+    Wrap context if not wrapped yet.
+    :param context: context, instance of :class:`from common.context.Context.ContextBase`
+    '''
     self.context = self.__setContext(context)
-#  def __healthContext(self, context):
-#    return isinstance(context, ContextWrapper) or isinstance(context, ContextBase)
+
   def __setContext(self, context):
+    '''
+    Wrap context if not wrapped yet.
+    :param context: context, instance of :class:`from common.context.Context.ContextBase`
+    '''
     if context == None:
-      raise RuntimeError("You should provide a Context for this object since it " \
-                         "inherits from %r" % self.__class__)
-#    elif not self.__healthContext(context):
-    elif not (isinstance(context, ContextWrapper) or isinstance(context, ContextBase)): #health
+      raise RuntimeError("You should provide a Context for this object since it"
+                         " is an instance of %r" % self.__class__)
+    elif not (isinstance(context, ContextWrapper) \
+    or isinstance(context, ContextBase)): #healthy
       raise RuntimeError('Provided context %r is of incorrect type' % context)
     else:
       #The context need to be wrapped in order to have easier access to the global config
@@ -55,3 +52,21 @@ class ContextClientBase(object):
         context = ContextWrapper(context)
     return context
 
+def smokeTestModule():
+  from common.context.Context import Context
+  from common.log.debugPrint import debugPrint
+  class Client(ContextClientBase):
+    def example(self):
+      self.processors = {}
+  ctx = Context('python')
+  client = Client(context=ctx)
+  debugPrint(client.context)
+  client.context.hola = 'valor'
+  debugPrint(client.context.hola)
+  try:
+    client.context.context = 'bla'
+  except Exception as e:
+    debugPrint(e)
+
+if __name__ == '__main__':
+  smokeTestModule()
