@@ -21,6 +21,6 @@ along with Mepinta. If not, see <http://www.gnu.org/licenses/>.
 
 class FrameworkObject(object):
   '''
-  Base object for all classes in the framework. (perhaps a bad design decision
-  since it could perfectly be object)
+  Base object for data classes in the framework.
+  (perhaps a bad design decision since object could fit)
   '''
