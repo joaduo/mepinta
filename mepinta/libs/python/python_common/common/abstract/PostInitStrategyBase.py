@@ -35,11 +35,12 @@ class PostInitStrategyBase(object):
     Classes inheriting this class must call the _initChildren method in order
       to call all __post_init__ methods.
   '''
-  def __init__(self, context):
+  def __init__(self, *args, **kwargs):
     '''
     :param context: Unused in the future we could change the strategy algorithm
       depending on the context.
     '''
+    self._initChildren(args, kwargs)
 
   def _initChildren(self, args, kwargs):
     '''
@@ -184,11 +185,8 @@ def smokeTestModule():
     def __post_init__(self, value, too, test=1, tat=20):
       self.post_init_var = value
 
-  from common.context.Context import Context
-  ctx = Context('python')
-  cc = ConcreteClass(context=ctx)
-  cc._initChildren([], dict(context=ctx, too=2, something=2312, value1=231, other_value=20, value=100, test=2))
-  # print(cc.post_init_var, cc.post_init_var1)
+  cc = ConcreteClass(context=1, too=2, something=2312, value1=231, other_value=20, value=100, test=2)
+  print(cc.post_init_var, cc.post_init_var1)
 
 if __name__ == '__main__':
   smokeTestModule()

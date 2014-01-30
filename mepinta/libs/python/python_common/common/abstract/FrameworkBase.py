@@ -23,10 +23,13 @@ from common.abstract.PostInitStrategyBase import PostInitStrategyBase
 
 
 class FrameworkBase(PostInitStrategyBase, SelfConfigBase):
+  '''
+  Base class for all logic classes in the framework.
+  Data classes should inherit from object or FrameworkObject
+  '''
   def __init__(self, context, *a, **ad):
     SelfConfigBase.__init__(self, context=context)
-    PostInitStrategyBase.__init__(self, context)
-    PostInitStrategyBase._initChildren(self, a, ad)
+    PostInitStrategyBase.__init__(self, *a, **ad)
 
 
 def smokeTestModule():
@@ -39,7 +42,7 @@ def smokeTestModule():
   class Foo(object):
     pass
 
-  #class ConcreteClass(Foo, ExtendedBase):
+#  class ConcreteClass(Foo, ExtendedBase):
   class ConcreteClass(ExtendedBase, Foo):
     def __post_init__(self, value):
       debugPrint('Post init Concrete')
