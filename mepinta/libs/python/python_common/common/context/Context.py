@@ -37,7 +37,7 @@ class arg_singleton_and_wrap(object):
     '''
     self.class_ = class_
 
-  def __call__(self, name, *args):
+  def __call__(self, name, *args, **kwargs):
     '''
     Wraps decorated class initialization. When called instantiates class and
     saves it in a cache dictionary with 'name' as key.
@@ -45,7 +45,7 @@ class arg_singleton_and_wrap(object):
     :param name: name of the context to be singletoned
     '''
     if name not in self.__instances:
-      self.__instances[name] = ContextWrapper(self.class_(name, *args))
+      self.__instances[name] = ContextWrapper(self.class_(name, *args, **kwargs))
     return self.__instances[name]
 
   def getCurrentContexts(self):

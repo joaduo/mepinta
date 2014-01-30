@@ -23,9 +23,11 @@ from common.context.base import ContextBase
 from mepinta.pipeline.hi.context_lo.ContextLo import ContextLo
 from mepinta.pipeline.hi.LogOutput import LogOutput
 from mepinta.abstract.MepintaError import MepintaError
+from pipeline_backend.logging.logging import LOG_INFO
 from inspect import currentframe
 import os
 import re
+
 
 
 class singleton_autocontext(arg_singleton_and_wrap):
@@ -33,11 +35,11 @@ class singleton_autocontext(arg_singleton_and_wrap):
   We would like to select context based on the package that is calling the
     context.
   '''
-  def __call__(self, name=None, *args):
+  def __call__(self, name=None, *args, **kwargs):
     if not name:
       path = self._getCallerFilePath()
       name = self.solveContextName(path)
-    return super(singleton_autocontext, self).__call__(name, *args)
+    return super(singleton_autocontext, self).__call__(name, *args, **kwargs)
 
   def _getCallerFilePath(self):
     frame = self._getFrame(back=3)
@@ -70,17 +72,18 @@ class MepintaContext(ContextBase):
     -initializing lower level 'ContextLo' based on backend
     -setting logging output to the based on backend and specific for mepinta
   '''
-  def __init__(self, name):
+  def __init__(self, name, log_level=LOG_INFO):
     ContextBase.__init__(self, name)
-    self._initConfig()
+    self._initConfig(log_level)
 
-  def _initConfig(self):
+  def _initConfig(self, log_level):
     context = self
     deployment_path = self.getConfig('deployment_config').deployment_path
     context_lo = ContextLo(context=context, deployment_path=deployment_path)
     context.setConfig('context_lo', context_lo)
     logger = context.getConfig('log')
     logger.setOutput(LogOutput(context=context))
+    logger.setLevel(log_level)
 
   def _getDefaultConfig(self, name):
     from mepinta_config import mepinta_config
