@@ -41,32 +41,38 @@ class PluginLoader(object):
 
   def unloadDataTypeLibrary(self, path, dtype_id):
     if path in self.context_lo.data_types_paths:#unload library
-      logInfo('Unloading data type library at %r with dtype_id=%r' % (path, dtype_id))
+      logInfo('Unloading data type library at %r with dtype_id=%r'
+              % (path, dtype_id))
       self.unloadLibrary(self.context_lo.data_types_paths[path])
       self.context_lo.data_types_paths.__delitem__(path)
       self.context_lo.data_types[dtype_id].updateHandle(None)
     else:
-      logDebug('Data type library already unloaded.(at %r with dtype_id=%r)' % (path, dtype_id))
+      logDebug('Data type library already unloaded.(at %r with dtype_id=%r)'
+               % (path, dtype_id))
 
   def loadDataTypeLibrary(self, path, data_type_name, dtype_id):
-    if path not in self.context_lo.data_types_paths: #Ok, the library isnt loaded
-      logInfo('Loading data type library at %r with data_type_name=%r and dtype_id=%r' % (path, data_type_name, dtype_id))
+    if path not in self.context_lo.data_types_paths:
+      #Ok, the library isnt loaded
+      logInfo('Loading data type library at %r with data_type_name=%r and '
+              'dtype_id=%r' % (path, data_type_name, dtype_id))
       #TODO: get real name set it and return it!
-      handle = self.loadLibrary(path, symbol='global')
+      handle = self.loadLibrary(path, symbol='deep')
       self.context_lo.data_types_paths[path] = handle
       if dtype_id not in self.context_lo.data_types:
         self.context_lo.data_types[dtype_id] = DataType(data_type_name, handle)
       else:
         self.context_lo.data_types[dtype_id].updateHandle(handle)
     else:
-      logDebug('Loading data type library already loaded. At %r with data_type_name=%r and dtype_id=%r' % (path, data_type_name, dtype_id))
+      logDebug('Loading data type library already loaded. At %r with data_type_'
+               'name=%r and dtype_id=%r' % (path, data_type_name, dtype_id))
 
   def dataTypeIsLoaded(self, path):
     return self.context_lo.data_types_paths.__contains__(path)
 
   def unloadProcessorLibrary(self, path, func_ids):
     if path in self.context_lo.processors_paths:#unload library
-      logInfo('Unloading processor library at %r with func_ids=%r' % (path, func_ids))
+      logInfo('Unloading processor library at %r with func_ids=%r'
+              % (path, func_ids))
       self.unloadLibrary(self.context_lo.processors_paths[path])
       #Unregister functions
       for f_id in func_ids:
@@ -74,11 +80,14 @@ class PluginLoader(object):
       #delete the unloaded library (to avoid uncorrect lib handle lookup)
       self.context_lo.processors_paths.__delitem__(path)
     else:
-      logDebug('Processor library already unloaded. (at %r with func_ids=%r)' % (path, func_ids))
+      logDebug('Processor library already unloaded. (at %r with func_ids=%r)'
+               % (path, func_ids))
 
   def loadProcessorLibrary(self, path, func_dict):
-    if path not in self.context_lo.processors_paths: #Ok, the library isn't loaded
-      logInfo('Loading processor library at %r with func_dict=%r ' % (path, func_dict))
+    if path not in self.context_lo.processors_paths:
+      #Ok, the library isn't loaded
+      logInfo('Loading processor library at %r with func_dict=%r '
+              % (path, func_dict))
       handle = self.loadLibrary(path, symbol='local')
       self.context_lo.processors_paths[path] = handle
       #Register functions:
@@ -90,9 +99,11 @@ class PluginLoader(object):
         if func_id in self.context_lo.functions:
           self.context_lo.functions[func_id].updateFuncPointer(func_ptr)
         else:
-          self.context_lo.functions[func_id] = ProcessorFunction(func_name, func_ptr)
+          self.context_lo.functions[func_id] = ProcessorFunction(func_name,
+                                                                 func_ptr)
     else:
-      logDebug('Processor library already loaded. (at %r with func_dict=%r)' % (path, func_dict))
+      logDebug('Processor library already loaded. (at %r with func_dict=%r)'
+               % (path, func_dict))
 
   def processorIsLoaded(self, path):
     return self.context_lo.processors_paths.__contains__(path)
