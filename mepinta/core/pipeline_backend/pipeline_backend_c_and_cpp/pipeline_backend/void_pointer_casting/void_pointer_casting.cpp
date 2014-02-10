@@ -91,9 +91,9 @@ void *strCharpToVoidp(str *_str_) {
 
 //str is garbage collected by libgc
 void *strStringToVoidp(str *_str_) {
-    //return (void*) &_str_->unit; //WRONG HACK! (later will try to free a string allocated with GC Boehm)
     //TODO: create str_boehm_gc_string_to_voidp
-    return (void*) new std::string(_str_->unit.c_str());
+    //TODO:BEWARE (only works with Boehm GC) Add some kind of checking we are using Boehm in this Data type
+    return (void*) &_str_->unit;
 }
 
 void *anyPtrToVoidp(void *anything) {

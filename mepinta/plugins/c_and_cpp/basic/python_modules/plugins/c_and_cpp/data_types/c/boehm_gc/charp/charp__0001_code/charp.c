@@ -16,13 +16,6 @@
 //You should have received a copy of the GNU General Public License
 //along with Mepinta. If not, see <http://www.gnu.org/licenses/>.
 
-/*
- * GC_charp.c
- *
- *  Created on: Oct 31, 2011
- *      Author: jduo
- */
-
 #include <string.h>
 #include <mepintasdk/sdk.h>
 #include "charp.h"

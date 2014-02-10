@@ -16,17 +16,12 @@
 //You should have received a copy of the GNU General Public License
 //along with Mepinta. If not, see <http://www.gnu.org/licenses/>.
 
-/*
- * charp.c
- *
- *  Created on: Oct 31, 2011
- *      Author: jduo
- */
-
 #include <string.h>
 #include <mepintasdk/sdk.h>
 #include "charp.h"
 
+//BEWARE: If you use non Garbage Collected functions the pointer casting in
+//void_pointer_casting.cpp should pass a copy and not a reference
 DECLARE_MEMORY_MNGMNT_FUNCTIONS(GARBAGE_COLLECTED);
 
 //This function is never published in the .h, since it's called solving it's symbol from the handle
