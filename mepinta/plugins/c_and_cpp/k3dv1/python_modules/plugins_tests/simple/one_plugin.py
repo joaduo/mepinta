@@ -22,9 +22,10 @@ from mepinta.testing.plugins_testing.test_pipeline.SimpleTestPipeline import Sim
 from mepinta.context.MepintaContext import MepintaContext
 from mepinta.testing.plugins_testing.gui.SimpleTestPipelineGui import SimpleTestPipelineGui
 from mepinta.testing.plugins_testing.test_pipeline.InotifySimpleTestPipeline import InotifySimpleTestPipeline
+from pipeline_backend.logging.logging import LOG_DEBUG
 
 def smokeTestModule():
-  context = MepintaContext()
+  context = MepintaContext(log_level=LOG_DEBUG)
 #  pline = SimpleTestPipeline(context)
   pline = InotifySimpleTestPipeline(context)
 
@@ -37,8 +38,21 @@ def smokeTestModule():
   pline.setValue(node.inputs.width, 1.)
   pline.setValue(node.inputs.height, 1.)
   pline.setValue(node.inputs.depth, 1.)
-  pline.defaultEvaluated.append(node.outputs.mesh)
-  print node
+#  pline.defaultEvaluated.append(node.outputs.mesh)
+  import plugins.c_and_cpp.processors.k3dv1.mesh.output.file.K3DMeshWriter as k3d_wtr
+  write_node = pline.append(k3d_wtr)
+  pline.setValue(write_node.inputs.file, '/home/jduo/output.k3d')
+  pline.defaultEvaluated.append(write_node.functions.writeMesh)
+  pline.evaluateProp()
+#  pline.setValue(node.inputs.rows, 3)
+#  pline.evaluateProp()
+#  for i in range(100):
+#    pline.setValue(node.inputs.depth, 1. + i)
+#    pline.evaluateProp()
+#    import time
+#    time.sleep(0.1)
+#  print node
+#  import ipdb; ipdb.set_trace()
   gui.run()
 
 if __name__ == "__main__":
