@@ -34,15 +34,24 @@ from mepinta.pipeline.lo.pipeline_data.data_model import PropertyValuePointer
 #TODO: rename to PipelineEvaluator
 class PipelineEvaluatorFunctum(PipelineEvaluatorBase):
   '''
-  Evaluates a Pipeline (from lo package) given a property.
-  This means it visits all dependencies in the graph recursively until evaluated
-   the desired property.
+  Evaluates a Pipeline(lo) given a property.
+  This means it visits all dependencies in the graph recursively until it
+    evaluates the desired property.
   It stops evaluating a recursion branch when there are no more changed
     dependencies or it founds a cyclic connection.
-  If the Property is not marked as changed, it won't be evaluated. (also its
-    dependencies)
+  If the Property is not marked as changed, it won't be evaluated.
   '''
   def __callProcessor(self, pline, prop_id, prop, func_prop_value, args_mngr):
+    '''
+    Calls the processor function (solving its function pointer) passign the
+      mepinta_args structure as the only argument.
+    Functions return a int with a code associated.
+    :param pline:
+    :param prop_id:
+    :param prop:
+    :param func_prop_value:
+    :param args_mngr:
+    '''
     func_ptr = self.context_lo.functions[func_prop_value.func_id].getFuncPointer()
     #TODO: if using long on shedkin, then casting should be applied
     logDebug("Entering processor function '%s'." % prop.name)
@@ -54,15 +63,35 @@ class PipelineEvaluatorFunctum(PipelineEvaluatorBase):
                (prop.name, exit_status))
 
     if prop_id in pline.marked_outputs:
-      #We have a propagation filter. Then it must create its changed set
+      #We have a propagation filter. (conditional evaluation)
+      #Then it must create its changed set
       return args_mngr.buildChangedSet()
     return None
 
   def evaluateProp(self, pline, prop_id):
+    '''
+    Evaluates the pipeline to determine the value of the property that
+      matched the prop_id given.
+    Navigates properties backwards recursively (from dependents to dependencies)
+      to generate a forward propagation (from dependencies to dependents) of
+      evaluation of each property. (thus satisfying each property depedendecies
+      on evaluation)
+    :param pline: a Pipeline (lo) instance
+    :param prop_id: the id of the property to be evaluated
+    :return: tuple of (prop_id, prop) where prop_id and prop is the really
+      evaluated prop
+    '''
     prop = pline.all_properties[prop_id]
     return self.__evalProperty(pline, prop_id, prop)
 
   def __evalFunction(self, pline, prop_id, prop):
+    '''
+    When a function node is found, means it has to be evaluated. But before
+      evaluating a function all its changed dependencies must be evaluated.
+    So it will call recursively __evalProperty and __evalFunction.
+    Once all are evaluated it will call the processor's functions passing the
+      args structure as only argument. build with :class:`ProcessorArgsManager`
+    '''
     logDebug('Evaluating function with prop_id=%r' % prop_id)
     #TODO: review if this code is necessary.
     if not prop_id in pline.changed_track: #Already visited on this evaluation round?
@@ -88,6 +117,15 @@ class PipelineEvaluatorFunctum(PipelineEvaluatorBase):
     return self.__callProcessor(pline, prop_id, prop, func_prop_value, args_mngr)
 
   def __inputValue(self, pline, input_id, args_mngr):
+    '''
+    Will evaluate an input value wether it's a function or a data property.
+    Once a property is evaluated it can be added o the args to be passed to the
+      function we are gathering dependencies for. (via args_mngr)
+    :param pline: :class:`Pipeline` instance object
+    :param input_id: property id of the input property to be evaluated
+    :param args_mngr: instance of :class:`ProcessorArgsManager` to gather args
+      into
+    '''
     input_prop = pline.all_properties[input_id]
     if hasFlags(input_prop.type, CUSTOM_PROPERTY_FLAG):
       args_mngr.setInOut(CUSTOM_INPUT_PROPS)
@@ -105,14 +143,26 @@ class PipelineEvaluatorFunctum(PipelineEvaluatorBase):
       #TODO: review it we really need to initialize properties
       #self.p_value_mngr.init_set_prop_value(input_prop, input_dency_prop.getValuePtr())
       args_mngr.append(input_id, input_prop, dency_prop)
-      if changed: #TODO: review if this is OK here
+      if changed:
+        #Optimization: Used for conditional processing.
         args_mngr.changedValue()
       else:
+        #Optimization: Used for conditional processing.
         args_mngr.unchangedValue()
-      args_mngr.nextProp() #TODO: this method is useful if we avoid adding a prop not changed
+      #this method is useful if we avoid adding a prop not changed
+      #(used for args caching, WIP)
+      args_mngr.nextProp()
       return input_id
 
   def __outputValue(self, pline, out_id, args_mngr):
+    '''
+    Will gather all output "args" for a processor's functions into the args
+      structure managed by args_mngr instance.
+    :param pline: :class:`Pipeline` instance object
+    :param input_id: property id of the output property to be later evaluated
+    :param args_mngr: instance of :class:`ProcessorArgsManager` to gather output
+      args into
+    '''
     out_prop = pline.all_properties[out_id]
     if hasFlags(out_prop.type, CUSTOM_PROPERTY_FLAG):
       args_mngr.setInOut(CUSTOM_OUTPUT_PROPS)
@@ -122,23 +172,53 @@ class PipelineEvaluatorFunctum(PipelineEvaluatorBase):
     if out_id in pline.changed_track:
       pline.changed_track.remove(out_id)
 
+    #Its a data property, so we will output on them
     if not hasFlags(out_prop.type, FUNCTION_PROPERTY_FLAG):
+      #we need to make sure output data is initialized
       self.p_value_mngr.initPropValue(out_prop)
       args_mngr.append(out_id, out_prop, out_prop)
-      args_mngr.unchangedValue() #Reset its output status
-      args_mngr.nextProp() #Check if this is necessary or (append should increment the pointer?)
+      #Resets its status for optimization techniques (conditional evaluation)
+      args_mngr.unchangedValue()
+      #Properties are in certain order (used for args caching, WIP)
+      args_mngr.nextProp()
 
   def __solveNonCached(self, pline, out_id, out_prop):
+    '''
+    out_prop its in cached_link, means its possible to have (non-)cached links.
+      out_prop <- input_prop
+    First it evaluates the input_prop.
+    Checks if non-caching is enabled for this (non-cached capable) link:
+      - If stealing is possible calls __stealInput method
+      - If not, copies the data from input_prop into out_prop
+    :param pline:
+    :param out_id:
+    :param out_prop:
+    '''
     input_id = pline.cached_link.getFirst(out_id)
     input_prop = pline.all_properties[input_id]
     input_id, input_prop = self.__evalProperty(pline, input_id, input_prop)
-    if out_id in pline.getTopology().cached: #We are caching on this node, then we must copy values
+    if out_id in pline.getTopology().cached:
+      #We are caching on this node, then we must copy values
       logDebug('Copying value for property:%r id=%r' % (out_prop.name, out_id))
       self.p_value_mngr.copyPropValue(out_prop, input_prop.getValuePtr())
-    else: #We can directly pass the value_pointer
+    else:
+      #We can directly pass the value_pointer
       self.__stealInput(pline, out_id, out_prop, input_id, input_prop)
 
   def __stealInput(self, pline, out_id, out_prop, input_id, input_prop):
+    '''
+    Steals data from an input_prop into out_prop. Thus working as a big memory
+      optimization on linear pipelines. (always working on the same data)
+    Using non-cached links requires a higher analysis, since it requires
+      linear "sub-pipelines" and this class does not check so.
+    In fact, in the case of K-3d, data uses copy-on-write policy, so this
+      optimization is unnecessary in such case.
+    :param pline: Pipeline (lo) instance
+    :param out_id: property id of the out_prop parameter
+    :param out_prop: "output" property of the cached link context
+    :param input_id: property id of the input_prop parameter
+    :param input_prop: "input" property of the cached link context
+    '''
     #TODO: create a ValuePointerStealer? What for?
     #If we steal a value of an unchanged property, we will run into problems
     #We must fix that situation
@@ -162,9 +242,6 @@ class PipelineEvaluatorFunctum(PipelineEvaluatorBase):
     '''
     Evaluates all the dependencies of a functum, and packs function and
     dependencies together for later evaluation.
-    :param pline: Pipeline
-    :param prop_id: Property id of the prop parameter
-    :param prop: Pipeline's Property
     '''
     logDebug("Evaluating functum with prop_id=%r" % prop_id)
     #TODO: review if this code is necessary.
@@ -205,25 +282,43 @@ class PipelineEvaluatorFunctum(PipelineEvaluatorBase):
     return self.__evalFunctum(pline, prop_id, prop)
 
   def __evaleDataProperty(self, pline, prop_id, prop):
+    '''
+    Evaluates an Data property. Will iterate over and evaluate all its
+    dependencies. Dependencies could be:
+      - One or more functions (will evaluate all of them and return the prop)
+      - One data property (solve its value and return it)
+
+    :param pline: Pipeline (lo) instance
+    :param prop_id: property id of the prop parameter
+    :param prop: pipeline's Property
+    :return: tuple of (prop_id, prop) where prop_id and prop is the really
+      evaluated prop
+    '''
+    #Get all connected dependencies of a prop_id in the topology
     dencies = pline.getTopology().connections.dpdencies[prop_id]
     logDebug("Evaluating property with prop_id=%r" % prop_id)
+    #We assume the property hasn't changed
     changed = False
     if prop_id in pline.changed_track:#Has changed?
       changed = True
       logDebug("Removing changed Property with prop_id=%r" % prop_id)
-      pline.changed_track.remove(prop_id)#Mark as visited for this round
-      if prop_id in pline.cached_link: #Steal input value
+      #Mark as visited for this round
+      pline.changed_track.remove(prop_id)
+      if prop_id in pline.cached_link:
+        #its in cached_link => its possible to have (non-)cached links
         self.__solveNonCached(pline, prop_id, prop)
+    #Iterate over
     for dency_id in dencies:
       dency_prop = pline.all_properties[dency_id]
       if hasFlags(dency_prop.type, FUNCTION_PROPERTY_FLAG):
         if changed:
           #Only evaluateProp function if property was notified of a change
           self.__evalFunction(pline, dency_id, dency_prop)
-      else: #Connected to several InOutProperties
+      else:
         if len(dencies) == 1:
           return self.__evalProperty(pline, dency_id, dency_prop)
         else:
+          #Connected to several InOutProperties
           msg = ('A common (in/out/internal) property shouldn\'t be connected '
                  'to functions and other properties.For prop_id: %r' % prop_id)
           logWarning(msg)
@@ -232,6 +327,15 @@ class PipelineEvaluatorFunctum(PipelineEvaluatorBase):
     return prop_id, prop
 
   def __evalProperty(self, pline, prop_id, prop):
+    '''
+    Distinguish between functions, functums and data properties.
+    Calls each evaluation function depending on its type.
+    :param pline: Pipeline (lo) instance
+    :param prop_id: property id of the prop parameter
+    :param prop: pipeline's Property
+    :return: tuple of (prop_id, prop) where prop_id and prop is the really
+      evaluated prop
+    '''
     #Distinguish between property's types and call the corresponding function
     if hasFlags(prop.type, FUNCTION_PROPERTY_FLAG):
       #is a function, then evaluate it
