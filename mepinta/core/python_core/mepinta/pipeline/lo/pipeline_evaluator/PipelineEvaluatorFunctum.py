@@ -50,7 +50,8 @@ class PipelineEvaluatorFunctum(PipelineEvaluatorBase):
     logDebug("Leaving processor function '%s'." % prop.name)
     if exit_status != PROCESSOR_EXIT_NORMAL:
       #TODO: fix this on python should log as error when fixed
-      logDebug("Processor function '%s' with unnormal exit status: %r." % (prop.name, exit_status))
+      logDebug("Processor function '%s' with unnormal exit status: %r." %
+               (prop.name, exit_status))
 
     if prop_id in pline.marked_outputs:
       #We have a propagation filter. Then it must create its changed set
@@ -144,12 +145,18 @@ class PipelineEvaluatorFunctum(PipelineEvaluatorBase):
     #Also we can only steal a value when its pointed only by one prop (the non_cached input)
     #if not, we need to copy it as many time as the stealing needs
     logDebug('Non cached properties should be used in a restricted context.')
-    logDebug('Stealing value for property:%r id=%r from property:%r id=%r' % (out_prop.name, out_id, input_prop.name, input_id))
-    self.p_value_mngr.setPropValuePointer(out_prop, input_prop.getValuePtr()) #Need to do this first, if not the value will be freed
-    logDebug('Detaching from previous property:%r id=%r' % (input_prop.name, input_id))
-    vpointer_none = PropertyValuePointer() #Create a value pointer with None as value #TODO: relies on garbage collector
-    self.p_value_mngr.setPropValuePointer(input_prop, vpointer_none) #Ok, you do not own the previous value anymore.
-    pline.getTopology().changed_primary.add(input_id) #input changed (we stole it's value and needs to propagate the change)
+    logDebug('Stealing value for property:%r id=%r from property:%r id=%r' %
+             (out_prop.name, out_id, input_prop.name, input_id))
+    #Need to do this first, if not the value will be freed
+    self.p_value_mngr.setPropValuePointer(out_prop, input_prop.getValuePtr())
+    logDebug('Detaching from previous property:%r id=%r' %
+             (input_prop.name, input_id))
+    #Create a value pointer with None as value #TODO: relies on garbage collector
+    vpointer_none = PropertyValuePointer()
+    #Ok, you do not own the previous value anymore.
+    self.p_value_mngr.setPropValuePointer(input_prop, vpointer_none)
+    #input changed (we stole it's value and needs to propagate the change)
+    pline.getTopology().changed_primary.add(input_id)
 
   def __evalFunctum(self, pline, prop_id, prop):
     '''
@@ -192,7 +199,8 @@ class PipelineEvaluatorFunctum(PipelineEvaluatorBase):
     if len(dencies) == 1: #Check if connected to other functum
       dency_id = dencies[0]
       dency_prop = pline.all_properties[dency_id]
-      if hasFlags(dency_prop.type, FUNCTUM_PROPERTY_FLAG): #Its a functum connected to other functum
+      if hasFlags(dency_prop.type, FUNCTUM_PROPERTY_FLAG):
+        #Its a functum connected to other functum
         return self.__evalFunctumOrDependency(pline, dency_id, dency_prop)
     return self.__evalFunctum(pline, prop_id, prop)
 
@@ -209,24 +217,29 @@ class PipelineEvaluatorFunctum(PipelineEvaluatorBase):
     for dency_id in dencies:
       dency_prop = pline.all_properties[dency_id]
       if hasFlags(dency_prop.type, FUNCTION_PROPERTY_FLAG):
-        if changed: #Only evaluateProp function if property was notified of a change
+        if changed:
+          #Only evaluateProp function if property was notified of a change
           self.__evalFunction(pline, dency_id, dency_prop)
       else: #Connected to several InOutProperties
         if len(dencies) == 1:
           return self.__evalProperty(pline, dency_id, dency_prop)
         else:
-          logWarning("A common (in/out/internal) property shouldn't be connected to functions and other properties.For prop_id: %r " % prop_id)
+          msg = ('A common (in/out/internal) property shouldn\'t be connected '
+                 'to functions and other properties.For prop_id: %r' % prop_id)
+          logWarning(msg)
     if changed: #It's a leaf property, the value may be uninitialized
       self.p_value_mngr.initPropValue(prop)
     return prop_id, prop
 
   def __evalProperty(self, pline, prop_id, prop):
     #Distinguish between property's types and call the corresponding function
-    if hasFlags(prop.type, FUNCTION_PROPERTY_FLAG): #is a function, then evaluate it
+    if hasFlags(prop.type, FUNCTION_PROPERTY_FLAG):
+      #is a function, then evaluate it
       self.__evalFunction(pline, prop_id, prop)
       return prop_id, prop
     else:
-      if hasFlags(prop.type, FUNCTUM_PROPERTY_FLAG): #Its a functum (datum + function)
+      if hasFlags(prop.type, FUNCTUM_PROPERTY_FLAG):
+        #Its a functum (datum + function)
         return self.__evalFunctumOrDependency(pline, prop_id, prop)
       else: #Its a data property
         return self.__evaleDataProperty(pline, prop_id, prop)
