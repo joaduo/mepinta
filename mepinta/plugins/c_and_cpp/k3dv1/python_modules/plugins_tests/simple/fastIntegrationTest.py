@@ -18,19 +18,22 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with Mepinta. If not, see <http://www.gnu.org/licenses/>.
 '''
+from pipeline_backend.logging.logging import LOG_DEBUG
 
 
 def getTestModules():
   test_modules = []
-  #import plugins_tests.python.processors.demov1.Geometry2D.modifier.DeformationExpression.DeformationExpression__0001 as testModule
   import plugins_tests.c_and_cpp.processors.k3dv1.mesh.modifiers.deformation.BlendDeformation.BlendDeformation__0001 as test_module
+#  import plugins_tests.c_and_cpp.processors.k3dv1.mesh.modifiers.polyhedron.QSlim.QSlim__0001 as test_module
+#  import plugins_tests.c_and_cpp.processors.k3dv1.mesh.selection.SelectPointsExpression.SelectPointsExpression__0001 as test_module
   test_modules.append(test_module)
   return test_modules
 
 def fastIntegrationTestPython(context=None, gui=False):
   from mepinta.context.MepintaContext import MepintaContext
   if not context:
-    context = MepintaContext()
+    context = MepintaContext(log_level=LOG_DEBUG)
+#    context = MepintaContext()
   from mepinta.testing.plugins_testing.PluginTestAutoTester import PluginTestAutoTester
   test_modules = getTestModules()
   if gui:
@@ -40,7 +43,7 @@ def fastIntegrationTestPython(context=None, gui=False):
       PluginTestAutoTester(context).shallowTest(gui, test_module)
 
 def smokeTestModule():
-  fastIntegrationTestPython(gui=False)
+  fastIntegrationTestPython(gui=True)
 
 if __name__ == "__main__":
   smokeTestModule()
