@@ -29,9 +29,14 @@ from pipeline_backend.logging.logging import logDebug
 #TODO: make it thread safe
 #TODO: add assert to checkRepr
 class PropertyValueManager(object):
+  '''
+  Responsible of managing Properties Values.
+  Init, copy and delete values. Solving functions to do so.
+  '''
   def __init__(self, context_lo):
     self.context_lo = context_lo
     self.func_caller = FunctionCaller()
+
   def replacePropValue(self, prop, value):
     logDebug('Replacing prop value for prop %r.' % prop)
     if prop.getValuePtr().getValue() == None:
@@ -40,6 +45,7 @@ class PropertyValueManager(object):
       data_type = self.context_lo.data_types[prop.dtype_id]
       func_ptr_del = data_type.getFuncPtr('delete')
       prop.getValuePtr().replaceValue(value, func_ptr_del)
+
   def initPropValue(self, prop):
     '''
     '''
@@ -73,7 +79,8 @@ class PropertyValueManager(object):
       if prop.getValuePtr().getValue() == None:
         #need to init the value where we are copying to
         self.initPropValue(prop)
-      logDebug('Using copyTo for copying values to prop:%r from value_ptr:%r' % (prop, value_ptr))
+      logDebug('Using copyTo for copying values to prop:%r from value_ptr:%r'
+               % (prop, value_ptr))
       self.func_caller.callCopyToFunc(func_ptr_copy
                                          , prop.getValuePtr().getValue()
                                          , value_ptr.getValue())
