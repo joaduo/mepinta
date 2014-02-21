@@ -19,7 +19,6 @@ You should have received a copy of the GNU General Public License
 along with Mepinta. If not, see <http://www.gnu.org/licenses/>.
 '''
 import inspect
-from common.config.constants import global_config_namespace
 
 class BaseNode(object):
   def __init__(self):
@@ -96,6 +95,7 @@ class ChildNode(BaseNode):
     else:
       return self.__parent.getConfig(key)
 
+global_config_namespace = 'global::'
 
 class TreeContextStore(object):
   def __init__(self, config_tree_node=None):
