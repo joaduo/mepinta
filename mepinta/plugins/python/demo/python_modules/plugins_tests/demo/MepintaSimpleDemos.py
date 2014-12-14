@@ -71,7 +71,7 @@ class MepintaSimpleDemos(FrameworkBase):
         except Exception as e:
             self.log.error('Exception %r ocurred.' % e)
             self.log.error(
-                '\n This may mean that you have the wrong nodebox gl library installed. Check the mepinta INSTALL file for further instructions. \n')
+                '\n This may mean that you have the wrong nodebox gl library installed (or missing pyglet). Check the mepinta INSTALL file for further instructions. \n')
 
     def __getTestPipeline(self):
         test_pline = InotifySimpleTestPipeline(self.context)
