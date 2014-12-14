@@ -22,42 +22,43 @@ from mepinta.plugins_manager.metadata_wrappers.base import MetadataWrapperBase
 from mepinta.plugins_manager.plugins_manager_detail.PluginPackageManager import PluginPackageManager
 from mepinta.plugins_manifest import ProcessorManifestBase
 
+
 class ProcessorMetadataWrapper(MetadataWrapperBase):
-  def __post_init__(self):
-    self._pkg_mngr = PluginPackageManager(plugins_type='processors',
-                                          context=self.context)
 
-  def refresh(self):
-    MetadataWrapperBase.refresh(self)
-    self._proxy = None
+    def __post_init__(self):
+        self._pkg_mngr = PluginPackageManager(plugins_type='processors',
+                                              context=self.context)
 
-  def getManifestType(self):
-    return ProcessorManifestBase
+    def refresh(self):
+        MetadataWrapperBase.refresh(self)
+        self._proxy = None
 
-  @property
-  def proxy(self):
-    '''
-    Detects Processor Manifest Inside module and returns the Proxy of the
-      processor.
-    '''
-    if not self._proxy:
-      self._proxy = self.manifest.processor_proxy
-    return self._proxy
+    def getManifestType(self):
+        return ProcessorManifestBase
 
+    @property
+    def proxy(self):
+        '''
+        Detects Processor Manifest Inside module and returns the Proxy of the
+          processor.
+        '''
+        if not self._proxy:
+            self._proxy = self.manifest.processor_proxy
+        return self._proxy
 
-  @property
-  def data_types(self):
-    return self.proxy.getRequiredDataTypes().keys()
+    @property
+    def data_types(self):
+        return self.proxy.getRequiredDataTypes().keys()
 
-  def setIds(self):
-    #We need to re/set proxy's ids in a case of re/load
-    self.proxy.setFunctionsId(self._meta_data.functions)
+    def setIds(self):
+        # We need to re/set proxy's ids in a case of re/load
+        self.proxy.setFunctionsId(self._meta_data.functions)
 
 
 def smokeTestModule():
-#  from getDefaultContext import getDefaultContext
-#  context = getDefaultContext()
-  raise RuntimeWarning('No smoke test')
+    #  from getDefaultContext import getDefaultContext
+    #  context = getDefaultContext()
+    raise RuntimeWarning('No smoke test')
 
 if __name__ == "__main__":
-  smokeTestModule()
+    smokeTestModule()

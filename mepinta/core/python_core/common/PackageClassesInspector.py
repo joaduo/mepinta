@@ -22,36 +22,39 @@ from common.abstract.FrameworkBase import FrameworkBase
 import pkgutil
 from importlib import import_module
 
+
 class PackageClassesInspector(FrameworkBase):
-  def getChildModules(self, package):
-    return self.gatherModules(package)
 
-  def builDict(self, package, filter_func, reload_=True):
-    modules = self.gatherModules(package, reload_)
-    modules_dict = {}
-    for module in modules:
-      filtered = self._filterModule(module, filter_func)
-      modules_dict[module] = filtered
-    return modules_dict
+    def getChildModules(self, package):
+        return self.gatherModules(package)
 
-  def _filterModule(self, module, filter_func):
-    classes = []
-    for obj in module.__dict__.values():
-      if filter_func(obj, module):
-        classes.append(obj)
-    return classes
+    def builDict(self, package, filter_func, reload_=True):
+        modules = self.gatherModules(package, reload_)
+        modules_dict = {}
+        for module in modules:
+            filtered = self._filterModule(module, filter_func)
+            modules_dict[module] = filtered
+        return modules_dict
 
-  def gatherModules(self, package, reload_):
-    prefix = package.__name__ + '.'
-    for _, modname, ispkg in pkgutil.walk_packages(package.__path__, prefix):
-      if not ispkg:
-        module = import_module(modname)
-        if reload_:
-          module = reload(module)
-        yield module
+    def _filterModule(self, module, filter_func):
+        classes = []
+        for obj in module.__dict__.values():
+            if filter_func(obj, module):
+                classes.append(obj)
+        return classes
+
+    def gatherModules(self, package, reload_):
+        prefix = package.__name__ + '.'
+        for _, modname, ispkg in pkgutil.walk_packages(package.__path__, prefix):
+            if not ispkg:
+                module = import_module(modname)
+                if reload_:
+                    module = reload(module)
+                yield module
+
 
 def smokeTestModule():
-  raise RuntimeWarning('No smoke test')
+    raise RuntimeWarning('No smoke test')
 
 if __name__ == "__main__":
-  smokeTestModule()
+    smokeTestModule()

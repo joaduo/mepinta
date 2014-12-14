@@ -20,12 +20,14 @@ along with Mepinta. If not, see <http://www.gnu.org/licenses/>.
 '''
 from mepinta_devtools.templates.logic.base import TemplateLogicBase
 
+
 class TemplateXMLBase(TemplateLogicBase):
-  _file_ext = 'xml'
+    _file_ext = 'xml'
+
 
 def testModule():
-  from getDefaultContext import getDefaultContext
-  context = getDefaultContext()
+    from getDefaultContext import getDefaultContext
+    context = getDefaultContext()
 
 if __name__ == "__main__":
-  testModule()
+    testModule()

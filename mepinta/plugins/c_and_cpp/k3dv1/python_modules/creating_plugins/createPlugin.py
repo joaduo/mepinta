@@ -22,18 +22,22 @@ from mepinta.context.MepintaContext import MepintaContext
 from mepinta.plugins_creation.module_to_cpp.eclipse_project.K3dv1EclipseProjectCreator import K3dv1EclipseProjectCreator
 from mepinta.plugins_creation.module_to_cpp.qt_project.K3dv1QtProjectCreator import K3dv1QtProjectCreator
 
-def createPlugin(plugin_module, eclipse_root, translation_dict, overwrite=False):  
-  context = MepintaContext('python')  
-  plugin_manifest = plugin_module.manifest(context=context)
-  eclipse_creator = K3dv1EclipseProjectCreator(context=context)
-  eclipse_creator.create(plugin_manifest, eclipse_root, translation_dict, overwrite)
 
-def createPluginQt(plugin_module, qt_root, translation_dict, overwrite=False):  
-  context = MepintaContext('python')  
-  plugin_manifest = plugin_module.manifest(context=context)
-  eclipse_creator = K3dv1QtProjectCreator(context=context)
-  eclipse_creator.create(plugin_manifest, qt_root, translation_dict, overwrite)
+def createPlugin(plugin_module, eclipse_root, translation_dict, overwrite=False):
+    context = MepintaContext('python')
+    plugin_manifest = plugin_module.manifest(context=context)
+    eclipse_creator = K3dv1EclipseProjectCreator(context=context)
+    eclipse_creator.create(
+        plugin_manifest, eclipse_root, translation_dict, overwrite)
+
+
+def createPluginQt(plugin_module, qt_root, translation_dict, overwrite=False):
+    context = MepintaContext('python')
+    plugin_manifest = plugin_module.manifest(context=context)
+    eclipse_creator = K3dv1QtProjectCreator(context=context)
+    eclipse_creator.create(
+        plugin_manifest, qt_root, translation_dict, overwrite)
 
 
 if __name__ == "__main__":
-  pass
+    pass

@@ -18,19 +18,24 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with Mepinta. If not, see <http://www.gnu.org/licenses/>.
 '''
+
+
 class PipelineCheckRepr(object):
-  def __init__(self, context_lo):
-    pass
-  def checkPipeline(self, pline):
-    #Check valid connections
-    #Check valid values in properties
-    #Check functions pointer existence (warn about them)
-    #Check topology consistency (properties id exist)
-    pass
+
+    def __init__(self, context_lo):
+        pass
+
+    def checkPipeline(self, pline):
+        # Check valid connections
+        # Check valid values in properties
+        # Check functions pointer existence (warn about them)
+        # Check topology consistency (properties id exist)
+        pass
+
 
 def testModule():
-  from getDefaultContext import getDefaultContext
-  context = getDefaultContext()
+    from getDefaultContext import getDefaultContext
+    context = getDefaultContext()
 
 if __name__ == "__main__":
-  testModule()
+    testModule()

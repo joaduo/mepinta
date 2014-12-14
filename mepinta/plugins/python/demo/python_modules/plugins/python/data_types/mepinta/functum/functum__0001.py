@@ -23,8 +23,9 @@ along with Mepinta. If not, see <http://www.gnu.org/licenses/>.
 
 from mepinta.plugins_manifest import DataTypeManifestBase
 
-class manifest(DataTypeManifestBase):
-  pass
 
-    
-#All code is inside mepinta, this is just dummy module
+class manifest(DataTypeManifestBase):
+    pass
+
+
+# All code is inside mepinta, this is just dummy module

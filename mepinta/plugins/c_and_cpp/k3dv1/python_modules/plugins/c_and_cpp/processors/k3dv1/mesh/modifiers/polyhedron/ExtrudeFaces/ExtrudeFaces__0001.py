@@ -22,35 +22,37 @@ along with Mepinta. If not, see <http://www.gnu.org/licenses/>.
 from mepinta.plugins_manifest import DataProperty
 from plugins.c_and_cpp.processors.k3dv1.mesh.modifiers.base.MeshModifierBase import MeshModifierBase
 
+
 class ExtrudeFaces(MeshModifierBase):
-  def define(self, inputs, internals, functions, outputs, createMesh, updateMesh):
-    #(self, inputs, internals, functions, outputs):
-    inputs.segments = DataProperty('k3d::int32_t')
-    inputs.group_faces = DataProperty('k3d::bool_t')
-    inputs.group_normals = DataProperty('k3d::bool_t')
-    inputs.select_new_faces = DataProperty('k3d::bool_t')
-    inputs.distance = DataProperty('k3d::double_t')
-    inputs.inset = DataProperty('k3d::double_t')
-    internals.extrude_vertices = DataProperty('mepinta::internal_any')
-    internals.point_map = DataProperty('mepinta::internal_any')
-    
-    createMesh.dpdencies += [inputs.segments,
-                             inputs.group_faces,
-                             inputs.group_normals,
-                             inputs.select_new_faces,
-                             internals.extrude_vertices,
-                             internals.point_map,]
-    updateMesh.dpdencies += [inputs.distance,
-                             inputs.inset,
-                             internals.extrude_vertices,
-                             internals.point_map,]
+
+    def define(self, inputs, internals, functions, outputs, createMesh, updateMesh):
+        #(self, inputs, internals, functions, outputs):
+        inputs.segments = DataProperty('k3d::int32_t')
+        inputs.group_faces = DataProperty('k3d::bool_t')
+        inputs.group_normals = DataProperty('k3d::bool_t')
+        inputs.select_new_faces = DataProperty('k3d::bool_t')
+        inputs.distance = DataProperty('k3d::double_t')
+        inputs.inset = DataProperty('k3d::double_t')
+        internals.extrude_vertices = DataProperty('mepinta::internal_any')
+        internals.point_map = DataProperty('mepinta::internal_any')
+
+        createMesh.dpdencies += [inputs.segments,
+                                 inputs.group_faces,
+                                 inputs.group_normals,
+                                 inputs.select_new_faces,
+                                 internals.extrude_vertices,
+                                 internals.point_map, ]
+        updateMesh.dpdencies += [inputs.distance,
+                                 inputs.inset,
+                                 internals.extrude_vertices,
+                                 internals.point_map, ]
 
 manifest = ExtrudeFaces
 
 if __name__ == "__main__":
-  from mepinta.context.MepintaContext import MepintaContext
-  from mepinta.plugins_manifest.PluginManifestTester import PluginManifestAutoTester
-  context = MepintaContext('c_and_cpp')
-  plugin_instance = manifest(context=context)
-  context.log(manifest)
-  PluginManifestAutoTester(context=context).test(plugin_instance)
+    from mepinta.context.MepintaContext import MepintaContext
+    from mepinta.plugins_manifest.PluginManifestTester import PluginManifestAutoTester
+    context = MepintaContext('c_and_cpp')
+    plugin_instance = manifest(context=context)
+    context.log(manifest)
+    PluginManifestAutoTester(context=context).test(plugin_instance)

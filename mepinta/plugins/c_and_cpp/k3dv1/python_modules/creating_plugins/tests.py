@@ -20,19 +20,22 @@ along with Mepinta. If not, see <http://www.gnu.org/licenses/>.
 '''
 
 from mepinta.plugins_creation.eclipse_project.EclipseProjectCreator import EclipseProjectTemplates,\
-  EclipseProjectCreator
+    EclipseProjectCreator
+
 
 def create_test():
-  from mepinta.context.MepintaContext import MepintaContext
-  context = MepintaContext('python')  
-  import plugins.c_and_cpp.processors.k3dv1.Mesh.modifiers.deformation.DeformationExpression.DeformationExpression__0001 as plugin_module
-  plugin_manifest = plugin_module.manifest(context=context)
-  eclipse_projects_root = "/home/jduo/001-Mepinta/tmp/eclipse_example"
-  eclipse_templates = EclipseProjectTemplates(context=context)
-  templates = eclipse_templates.getTemplatePerPath(plugin_manifest, eclipse_projects_root)
-  context.get_log().info(templates)
-  eclipse_creator = EclipseProjectCreator(context=context)
-  eclipse_creator.create(plugin_manifest, eclipse_projects_root, translation_dict={}, overwrite=True)
-        
+    from mepinta.context.MepintaContext import MepintaContext
+    context = MepintaContext('python')
+    import plugins.c_and_cpp.processors.k3dv1.Mesh.modifiers.deformation.DeformationExpression.DeformationExpression__0001 as plugin_module
+    plugin_manifest = plugin_module.manifest(context=context)
+    eclipse_projects_root = "/home/jduo/001-Mepinta/tmp/eclipse_example"
+    eclipse_templates = EclipseProjectTemplates(context=context)
+    templates = eclipse_templates.getTemplatePerPath(
+        plugin_manifest, eclipse_projects_root)
+    context.get_log().info(templates)
+    eclipse_creator = EclipseProjectCreator(context=context)
+    eclipse_creator.create(
+        plugin_manifest, eclipse_projects_root, translation_dict={}, overwrite=True)
+
 if __name__ == "__main__":
-  create_test()
+    create_test()

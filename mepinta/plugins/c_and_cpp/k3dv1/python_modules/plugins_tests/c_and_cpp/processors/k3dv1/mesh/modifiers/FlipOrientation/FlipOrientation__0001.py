@@ -21,27 +21,29 @@ along with Mepinta. If not, see <http://www.gnu.org/licenses/>.
 from plugins_tests.base.K3dMeshPluginTest import K3dMeshPluginTest
 from mepinta.testing.plugins_testing.PluginTestAutoTester import PluginTestAutoTester
 
+
 class FlipOrientation(K3dMeshPluginTest):
-  def __post_init__(self):
-    import plugins.c_and_cpp.processors.k3dv1.mesh.modifiers.FlipOrientation as flip
-    self.testedProcessors.append(flip)
 
-  def definePluginPipeline(self, test_pline):
-    #import plugins.c_and_cpp.processors.k3dv1.mesh.selection.faces.SelectFaceByNumber as select
-    #test_pline.append(select)
-    self._selectAllInputVertexs(test_pline)
-    flip = self.testedProcessors[0]
-    test_pline.append(flip)
+    def __post_init__(self):
+        import plugins.c_and_cpp.processors.k3dv1.mesh.modifiers.FlipOrientation as flip
+        self.testedProcessors.append(flip)
 
-  def getTimeParameters(self):
-    return self.time.startEndStepSleep(start=0., end=3., step=0.5, sleep=0.05)
+    def definePluginPipeline(self, test_pline):
+        #import plugins.c_and_cpp.processors.k3dv1.mesh.selection.faces.SelectFaceByNumber as select
+        # test_pline.append(select)
+        self._selectAllInputVertexs(test_pline)
+        flip = self.testedProcessors[0]
+        test_pline.append(flip)
 
-  def stressPipeline(self, test_pline, time):
-    K3dMeshPluginTest.stressPipeline(self, test_pline, time)
+    def getTimeParameters(self):
+        return self.time.startEndStepSleep(start=0., end=3., step=0.5, sleep=0.05)
+
+    def stressPipeline(self, test_pline, time):
+        K3dMeshPluginTest.stressPipeline(self, test_pline, time)
 
 test = FlipOrientation
 
 if __name__ == "__main__":
-  from getDefaultContext import getDefaultContext
-  from pipeline_backend.logging.logging import LOG_INFO
-  PluginTestAutoTester(getDefaultContext(LOG_INFO)).test(gui=True)
+    from getDefaultContext import getDefaultContext
+    from pipeline_backend.logging.logging import LOG_INFO
+    PluginTestAutoTester(getDefaultContext(LOG_INFO)).test(gui=True)

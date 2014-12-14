@@ -21,17 +21,19 @@ along with Mepinta. If not, see <http://www.gnu.org/licenses/>.
 from mepinta.plugins_manifest import DataProperty
 from plugins.c_and_cpp.processors.k3dv1.mesh.selection.base.SimpleSelectExpressionBase import SimpleSelectExpressionBase
 
-class SelectFacesExpression(SimpleSelectExpressionBase): 
-  def define(self, inputs, internals, functions, outputs, updateSelection):
-    inputs.primitive_index_name = DataProperty('k3d::string_t')
-    inputs.face_index_name = DataProperty('k3d::string_t')
-    
-    updateSelection.dpdencies += [inputs.primitive_index_name,
-                                  inputs.face_index_name,]
+
+class SelectFacesExpression(SimpleSelectExpressionBase):
+
+    def define(self, inputs, internals, functions, outputs, updateSelection):
+        inputs.primitive_index_name = DataProperty('k3d::string_t')
+        inputs.face_index_name = DataProperty('k3d::string_t')
+
+        updateSelection.dpdencies += [inputs.primitive_index_name,
+                                      inputs.face_index_name, ]
 
 manifest = SelectFacesExpression
 
 if __name__ == "__main__":
-  from getDefaultContext import getDefaultContext
-  from mepinta.testing.plugins_testing.PluginManifestAutoTester import PluginManifestAutoTester
-  PluginManifestAutoTester(getDefaultContext()).test(manifest)#, gui=True)
+    from getDefaultContext import getDefaultContext
+    from mepinta.testing.plugins_testing.PluginManifestAutoTester import PluginManifestAutoTester
+    PluginManifestAutoTester(getDefaultContext()).test(manifest)  # , gui=True)

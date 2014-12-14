@@ -23,19 +23,23 @@ from mepinta.plugins_creation.module_to_cpp.eclipse_project.templates.ProjectXML
 from mepinta.plugins_creation.templates.base import PluginTemplatesBase
 from mepinta.plugins_creation.module_to_cpp.templates.processor_plugin.ProcessorCPP import ProcessorCPP
 
+
 class K3dv1EclipseProjectTemplates(PluginTemplatesBase):
-  '''Maps the templates files and their corresponding translators classes to the
-  path for the final translated file.
-  '''
-  def _getTemplatesRoot(self):
-    import mepinta.plugins_creation.module_to_cpp.eclipse_project as eclipse_project
-    return self._buildTemplateRoot(eclipse_project, ['repository', 'k3dv1'])
-  def _getMapDict(self, plugin_manifest):
-    return {
-            (ProcessorCPP, 'src/processor.cpp'):'src/%s.cpp' % plugin_manifest.getName(),
-            (CProjectXML, 'cproject.xml'):'.cproject',
-            (ProjectXML, 'project.xml') :'.project',
-           }
+
+    '''Maps the templates files and their corresponding translators classes to the
+    path for the final translated file.
+    '''
+
+    def _getTemplatesRoot(self):
+        import mepinta.plugins_creation.module_to_cpp.eclipse_project as eclipse_project
+        return self._buildTemplateRoot(eclipse_project, ['repository', 'k3dv1'])
+
+    def _getMapDict(self, plugin_manifest):
+        return {
+            (ProcessorCPP, 'src/processor.cpp'): 'src/%s.cpp' % plugin_manifest.getName(),
+                (CProjectXML, 'cproject.xml'): '.cproject',
+                (ProjectXML, 'project.xml'): '.project',
+        }
 
 if __name__ == "__main__":
-  pass
+    pass

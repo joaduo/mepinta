@@ -24,38 +24,42 @@ Created on Sep 23, 2011
 @author: jduo
 '''
 from proxy.data_model import ProcessorProxy,\
-  InOutPropertyProxy, FunctionPropertyProxy
+    InOutPropertyProxy, FunctionPropertyProxy
 from plugins.python.data_types.Geometry2D_v1.gemoetry2dv1__001 import Path2D
 from plugins.python.sdk.props_utilities import getPropValue
 
+
 def getProcessorProxy(context):
-  pp = ProcessorProxy('Geometry2DAddPath')
-  #Inputs
-  pp.inputs.geometry_2d = InOutPropertyProxy('Geometry2D_v1',1)
-  pp.inputs.point_indexes = InOutPropertyProxy('Py_list',1)
-  #Outputs
-  pp.outputs.geometry_2d = InOutPropertyProxy('Geometry2D_v1',1)
-  pp.functions.modifyGeometry = FunctionPropertyProxy()
-  
-  #Set sinks & dpdencies
-  pp.outputs.geometry_2d.dpdencies += [pp.functions.modifyGeometry]
-  pp.functions.modifyGeometry.dpdencies += [pp.inputs.geometry_2d,pp.inputs.point_indexes]
-  
-  #We can work directly on the output
-  pp.non_cached_capable += ['geometry_2d']
-  
-  return pp
+    pp = ProcessorProxy('Geometry2DAddPath')
+    # Inputs
+    pp.inputs.geometry_2d = InOutPropertyProxy('Geometry2D_v1', 1)
+    pp.inputs.point_indexes = InOutPropertyProxy('Py_list', 1)
+    # Outputs
+    pp.outputs.geometry_2d = InOutPropertyProxy('Geometry2D_v1', 1)
+    pp.functions.modifyGeometry = FunctionPropertyProxy()
+
+    # Set sinks & dpdencies
+    pp.outputs.geometry_2d.dpdencies += [pp.functions.modifyGeometry]
+    pp.functions.modifyGeometry.dpdencies += [
+        pp.inputs.geometry_2d, pp.inputs.point_indexes]
+
+    # We can work directly on the output
+    pp.non_cached_capable += ['geometry_2d']
+
+    return pp
+
 
 def modifyGeometry(args):
-  #Inputs
-  point_indexes = getPropValue(args, 'inputs','point_indexes')
-  #Outputs
-  geom2d = getPropValue(args, 'outputs','geometry_2d')
-  #Big deal!!
-  max_point_index = len(geom2d.points)
-  p_indexes_new = filter(lambda x: isinstance(x, int) and x < max_point_index and x >= 0, point_indexes)
-  geom2d.bezier_paths.append(p_indexes_new)
+    # Inputs
+    point_indexes = getPropValue(args, 'inputs', 'point_indexes')
+    # Outputs
+    geom2d = getPropValue(args, 'outputs', 'geometry_2d')
+    # Big deal!!
+    max_point_index = len(geom2d.points)
+    p_indexes_new = filter(
+        lambda x: isinstance(x, int) and x < max_point_index and x >= 0, point_indexes)
+    geom2d.bezier_paths.append(p_indexes_new)
 
 if __name__ == '__main__':
-  pp = getProcessorProxy(None)
-  debugPrint( pp)
+    pp = getProcessorProxy(None)
+    debugPrint(pp)

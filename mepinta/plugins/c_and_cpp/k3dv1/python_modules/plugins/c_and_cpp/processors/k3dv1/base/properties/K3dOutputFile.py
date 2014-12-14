@@ -20,9 +20,11 @@ along with Mepinta. If not, see <http://www.gnu.org/licenses/>.
 '''
 from mepinta.plugins_manifest import DataProperty
 
+
 class K3dOutputFile(DataProperty):
-  def __init__(self):
-    DataProperty.__init__(self, 'k3d::filesystem::path')
-        
+
+    def __init__(self):
+        DataProperty.__init__(self, 'k3d::filesystem::path')
+
 if __name__ == "__main__":
-  pass
+    pass

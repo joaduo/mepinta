@@ -23,23 +23,26 @@ from mepinta.context.MepintaContext import MepintaContext
 import sys
 
 called_once = False
+
+
 def getDefaultContext(log_level=LOG_INFO, name='python'):
-  '''Creates a default context to reduce code verbosity for starting.'''
-  print >> sys.stderr, 'Calling getDefaultContext is deprecated.'
-  global called_once
-  if called_once:
-    raise RuntimeError('You should call the default context only once. (in the'
-                       ' main script)')
-  else:
-    called_once = True
-  context = MepintaContext(name)
-  context.log.setLevel(log_level)
-  return context
+    '''Creates a default context to reduce code verbosity for starting.'''
+    print >> sys.stderr, 'Calling getDefaultContext is deprecated.'
+    global called_once
+    if called_once:
+        raise RuntimeError('You should call the default context only once. (in the'
+                           ' main script)')
+    else:
+        called_once = True
+    context = MepintaContext(name)
+    context.log.setLevel(log_level)
+    return context
+
 
 def smokeTestModule():
-  from common.log.debugPrint import debugPrint
-  ctxc = getDefaultContext(name='python')
-  debugPrint(ctxc.getConfigDict())
+    from common.log.debugPrint import debugPrint
+    ctxc = getDefaultContext(name='python')
+    debugPrint(ctxc.getConfigDict())
 
 if __name__ == "__main__":
-  smokeTestModule()
+    smokeTestModule()

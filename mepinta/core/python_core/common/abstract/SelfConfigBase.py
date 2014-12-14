@@ -22,40 +22,47 @@ along with Mepinta. If not, see <http://www.gnu.org/licenses/>.
 from common.abstract.ContextClientBase import ContextClientBase
 from common.config.SelfConfigWrapper import SelfConfigWrapper
 
+
 class SelfConfigBase(ContextClientBase):
-  '''
-    Makes easier to access class context configuration through self.config proxy
 
-    They will do to save some config:
-      self.config.some_parameter = <value>
-    And to retrieve it:
-      <variable> = self.config.some_parameter
+    '''
+      Makes easier to access class context configuration through self.config proxy
 
-    Without this wrapper the class should have to do:
-      <variable> = self.context.get_config(self.__class__,'some_parameter')
-    This way, accessing to the config is straightforward.
-  '''
-  def __init__(self, context):
-    ContextClientBase.__init__(self, context)
+      They will do to save some config:
+        self.config.some_parameter = <value>
+      And to retrieve it:
+        <variable> = self.config.some_parameter
 
-    self.config = SelfConfigWrapper(owner_class=self.__class__, context=self.context)
-    self.log = self.context.log
+      Without this wrapper the class should have to do:
+        <variable> = self.context.get_config(self.__class__,'some_parameter')
+      This way, accessing to the config is straightforward.
+    '''
+
+    def __init__(self, context):
+        ContextClientBase.__init__(self, context)
+
+        self.config = SelfConfigWrapper(
+            owner_class=self.__class__, context=self.context)
+        self.log = self.context.log
+
 
 def smokeTestModule():
-  from common.context.Context import Context
-  from common.log.debugPrint import debugPrint
-  class FooTestPluginsManager(SelfConfigBase):
-    def __post_init__(self):
-      self.processors = {}
-  ctx = Context('python')
-  pm = FooTestPluginsManager(context=ctx)
-  debugPrint(pm.config)
-  pm.config.hola = 'valor'
-  debugPrint(pm.config.hola)
-  try:
-    pm.config.context = 'bla'
-  except AttributeError as e:
-    debugPrint(e)
+    from common.context.Context import Context
+    from common.log.debugPrint import debugPrint
+
+    class FooTestPluginsManager(SelfConfigBase):
+
+        def __post_init__(self):
+            self.processors = {}
+    ctx = Context('python')
+    pm = FooTestPluginsManager(context=ctx)
+    debugPrint(pm.config)
+    pm.config.hola = 'valor'
+    debugPrint(pm.config.hola)
+    try:
+        pm.config.context = 'bla'
+    except AttributeError as e:
+        debugPrint(e)
 
 if __name__ == '__main__':
-  smokeTestModule()
+    smokeTestModule()

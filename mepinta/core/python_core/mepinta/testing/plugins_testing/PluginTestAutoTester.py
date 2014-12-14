@@ -19,65 +19,69 @@ You should have received a copy of the GNU General Public License
 along with Mepinta. If not, see <http://www.gnu.org/licenses/>.
 '''
 from mepinta.testing.plugins_testing.base import ModuleAutoTesterBase, \
-  ForkInotifyUtilsBase
+    ForkInotifyUtilsBase
 from mepinta.testing.plugins_testing.ProcessorPluginTestRunner import ProcessorPluginTestRunner
 from mepinta.testing.plugins_testing.test_pipeline.InotifySimpleTestPipeline import InotifySimpleTestPipeline
 from mepinta.testing.plugins_testing.gui.SimpleTestPipelineGui import SimpleTestPipelineGui
 
+
 class PluginTestAutoTester(ModuleAutoTesterBase):
-  def __post_init__(self):
-    self._fork_inotify_utils = ForkInotifyUtilsBase(self.context)
-    self._test_runner = ProcessorPluginTestRunner(self.context)
 
-  def __getTestModule(self, testModule):
-    if not testModule:
-      import __main__
-      return __main__
-    else:
-      return testModule
+    def __post_init__(self):
+        self._fork_inotify_utils = ForkInotifyUtilsBase(self.context)
+        self._test_runner = ProcessorPluginTestRunner(self.context)
 
-  def __setGui(self, gui):
-    self.context.nodebox_gui = gui
+    def __getTestModule(self, testModule):
+        if not testModule:
+            import __main__
+            return __main__
+        else:
+            return testModule
 
-  def deepTest(self, gui=True, testModule=None):
-    self.test(gui, testModule)
+    def __setGui(self, gui):
+        self.context.nodebox_gui = gui
 
-  def test(self, gui=True, testModule=None): #TODO: rename to deepTest
-    self.__setGui(gui)
-    self._test_runner.blockListeningEvents(self.__getTestModule(testModule))
+    def deepTest(self, gui=True, testModule=None):
+        self.test(gui, testModule)
 
-  def __createPipeline(self, testModule):
-    test_instance = self._fork_inotify_utils._getTestInstance(testModule)
-    test_pline = InotifySimpleTestPipeline(self.context)
-    test_instance.definePipeline(test_pline)
-    return test_pline
+    def test(self, gui=True, testModule=None):  # TODO: rename to deepTest
+        self.__setGui(gui)
+        self._test_runner.blockListeningEvents(
+            self.__getTestModule(testModule))
 
-  def simpleTest(self, gui=True, testModule=None):
-    self.__setGui(gui)
-    testModule = self.__getTestModule(testModule)
-    test_pline = self.__createPipeline(testModule)
-    test_pline.blockListeningEvents(testModule)
+    def __createPipeline(self, testModule):
+        test_instance = self._fork_inotify_utils._getTestInstance(testModule)
+        test_pline = InotifySimpleTestPipeline(self.context)
+        test_instance.definePipeline(test_pline)
+        return test_pline
 
-  def shallowTest(self, gui=True, testModule=None):
-    self.__setGui(gui)
-    test_pline = self.__createPipeline(self.__getTestModule(testModule))
-    if gui:
-      SimpleTestPipelineGui(self.context, test_pline=test_pline).run()
-    else:
-      utils = self._fork_inotify_utils
-      test_instance = utils._getTestInstance(self.__getTestModule(testModule))
-      test_instance.stressPipeline(test_pline, time=0)
-      test_pline.evaluateProp()
+    def simpleTest(self, gui=True, testModule=None):
+        self.__setGui(gui)
+        testModule = self.__getTestModule(testModule)
+        test_pline = self.__createPipeline(testModule)
+        test_pline.blockListeningEvents(testModule)
 
-  def smokeTest(self, gui=True, testModule=None):
-    self.__setGui(gui)
-    test_pline = self.__createPipeline(self.__getTestModule(testModule))
-    if gui:
-      from mepinta.testing.plugins_testing.nodebox.NodeBoxSimplePipelineOutput import NodeBoxSimplePipelineOutput
-      NodeBoxSimplePipelineOutput(test_pline.getPipeline()).run()
+    def shallowTest(self, gui=True, testModule=None):
+        self.__setGui(gui)
+        test_pline = self.__createPipeline(self.__getTestModule(testModule))
+        if gui:
+            SimpleTestPipelineGui(self.context, test_pline=test_pline).run()
+        else:
+            utils = self._fork_inotify_utils
+            test_instance = utils._getTestInstance(
+                self.__getTestModule(testModule))
+            test_instance.stressPipeline(test_pline, time=0)
+            test_pline.evaluateProp()
 
-  def visualizeXdot(self, gui=True):
-    raise NotImplementedError()
+    def smokeTest(self, gui=True, testModule=None):
+        self.__setGui(gui)
+        test_pline = self.__createPipeline(self.__getTestModule(testModule))
+        if gui:
+            from mepinta.testing.plugins_testing.nodebox.NodeBoxSimplePipelineOutput import NodeBoxSimplePipelineOutput
+            NodeBoxSimplePipelineOutput(test_pline.getPipeline()).run()
+
+    def visualizeXdot(self, gui=True):
+        raise NotImplementedError()
 
 if __name__ == "__main__":
-  pass
+    pass

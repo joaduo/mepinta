@@ -20,23 +20,26 @@ along with Mepinta. If not, see <http://www.gnu.org/licenses/>.
 '''
 from plugins.python.processors.actiontree.UndoableGraph.output.base.UndoableGraphRendererBase import UndoableGraphRendererBase
 
+
 class manifest(UndoableGraphRendererBase):
-  def define(self, inputs, internals, functions, outputs, render):
-    internals.temp_data = 'dict'
-    render.dpdencies += internals.temp_data
+
+    def define(self, inputs, internals, functions, outputs, render):
+        internals.temp_data = 'dict'
+        render.dpdencies += internals.temp_data
+
 
 def render(args):
-  from mepinta_python_sdk.props import getPropValue
-  from mepinta.testing.plugins_testing.nodebox.NodeBoxSimplePipelineOutput import NodeBoxSimplePipelineOutput
-  graph = getPropValue(args, 'inputs', 'graph')
-  temp_data = getPropValue(args, 'inputs', 'temp_data')
-  pline = graph.pline
-  data_name = 'NodeBoxSimplePipelineOutput'
-  if data_name not in temp_data:
-    temp_data[data_name] = NodeBoxSimplePipelineOutput(pline)
-  temp_data[data_name].update()
+    from mepinta_python_sdk.props import getPropValue
+    from mepinta.testing.plugins_testing.nodebox.NodeBoxSimplePipelineOutput import NodeBoxSimplePipelineOutput
+    graph = getPropValue(args, 'inputs', 'graph')
+    temp_data = getPropValue(args, 'inputs', 'temp_data')
+    pline = graph.pline
+    data_name = 'NodeBoxSimplePipelineOutput'
+    if data_name not in temp_data:
+        temp_data[data_name] = NodeBoxSimplePipelineOutput(pline)
+    temp_data[data_name].update()
 
 if __name__ == "__main__":
-  from getDefaultContext import getDefaultContext
-  from mepinta.testing.plugins_testing.PluginManifestAutoTester import PluginManifestAutoTester
-  PluginManifestAutoTester(getDefaultContext()).test(manifest)#, gui=True)
+    from getDefaultContext import getDefaultContext
+    from mepinta.testing.plugins_testing.PluginManifestAutoTester import PluginManifestAutoTester
+    PluginManifestAutoTester(getDefaultContext()).test(manifest)  # , gui=True)

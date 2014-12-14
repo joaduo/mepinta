@@ -22,37 +22,41 @@ from common.abstract.FrameworkBase import FrameworkBase
 from mepinta.pipeline.hi.base import unwrap_decorator
 from mepinta.pipeline.hi.FactoryLo import FactoryLo
 
+
 class UntypedValueManager(FrameworkBase):
-  def __post_init__(self):
-    self._value_manager_lo = FactoryLo(self.context).getInstance('ValueManager', self.context)
 
-  @unwrap_decorator
-  def getValue(self, pline, prop):
-    values = self._value_manager_lo.getUntypedPropsValues(pline, [prop])
-    if len(values) > 0:
-      return values[0]
-    else:
-      return None
+    def __post_init__(self):
+        self._value_manager_lo = FactoryLo(
+            self.context).getInstance('ValueManager', self.context)
 
-  @unwrap_decorator
-  def setValue(self, pline, prop, value):
-    self._value_manager_lo.setUntypedPropsValues(pline, [prop], [value])
+    @unwrap_decorator
+    def getValue(self, pline, prop):
+        values = self._value_manager_lo.getUntypedPropsValues(pline, [prop])
+        if len(values) > 0:
+            return values[0]
+        else:
+            return None
 
-  @unwrap_decorator
-  def markChanged(self, pline, prop):
-    self._value_manager_lo.markChangedProps(pline, [prop])
+    @unwrap_decorator
+    def setValue(self, pline, prop, value):
+        self._value_manager_lo.setUntypedPropsValues(pline, [prop], [value])
 
-  @unwrap_decorator
-  def getValues(self, pline, props):
-    return self._value_manager_lo.getUntypedPropsValues(pline, props)
+    @unwrap_decorator
+    def markChanged(self, pline, prop):
+        self._value_manager_lo.markChangedProps(pline, [prop])
 
-  @unwrap_decorator
-  def setValues(self, pline, props, values):
-    self._value_manager_lo.setUntypedPropsValues(pline, props, values)
+    @unwrap_decorator
+    def getValues(self, pline, props):
+        return self._value_manager_lo.getUntypedPropsValues(pline, props)
+
+    @unwrap_decorator
+    def setValues(self, pline, props, values):
+        self._value_manager_lo.setUntypedPropsValues(pline, props, values)
+
 
 def testModule():
-  from getDefaultContext import getDefaultContext
-  context = getDefaultContext()
+    from getDefaultContext import getDefaultContext
+    context = getDefaultContext()
 
 if __name__ == "__main__":
-  testModule()
+    testModule()

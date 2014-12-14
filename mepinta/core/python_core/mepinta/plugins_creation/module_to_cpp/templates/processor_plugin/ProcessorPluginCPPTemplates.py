@@ -22,17 +22,20 @@ from mepinta.plugins_creation.templates.base import PluginTemplatesBase
 from common.path import joinPath
 from mepinta.plugins_creation.module_to_cpp.templates.processor_plugin.ProcessorCPP import ProcessorCPP
 
+
 class ProcessorPluginCPPTemplates(PluginTemplatesBase):
-  def _getTemplatesRoot(self):
-    import mepinta.plugins_creation.module_to_cpp.templates.processor_plugin as processor_plugin
-    return joinPath(processor_plugin.__path__[0],'repository','cpp_default')
-  def _getMapDict(self, plugin_name):
-    #Debug, TypeSafe, OrderSafe, Optimized
-    return {
+
+    def _getTemplatesRoot(self):
+        import mepinta.plugins_creation.module_to_cpp.templates.processor_plugin as processor_plugin
+        return joinPath(processor_plugin.__path__[0], 'repository', 'cpp_default')
+
+    def _getMapDict(self, plugin_name):
+        #Debug, TypeSafe, OrderSafe, Optimized
+        return {
             #(DeclarationH,'src/properties/declaration.h'):None,
             #(WrappersH,'src/properties/wrappers.h'):None,
-            (ProcessorCPP,'src/processor.cpp'):'src/%s.cpp'%plugin_name,
-           }  
-        
+                (ProcessorCPP, 'src/processor.cpp'): 'src/%s.cpp'%plugin_name,
+            }
+
 if __name__ == "__main__":
-  pass
+    pass

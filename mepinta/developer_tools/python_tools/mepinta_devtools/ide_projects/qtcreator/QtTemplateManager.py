@@ -20,6 +20,8 @@ along with Mepinta. If not, see <http://www.gnu.org/licenses/>.
 '''
 from mepinta_devtools.templates.TemplateManager import TemplateManager
 
+
 class QtTemplateManager(TemplateManager):
-  def __init__(self, context):
-    TemplateManager.__init__(self, context, path_ref=__file__)
+
+    def __init__(self, context):
+        TemplateManager.__init__(self, context, path_ref=__file__)

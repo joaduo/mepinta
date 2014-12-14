@@ -20,40 +20,42 @@ along with Mepinta. If not, see <http://www.gnu.org/licenses/>.
 '''
 
 from mepinta.plugins_manifest import ProcessorManifestBase, DataProperty, FunctionProperty, \
-  directed, Functum
+    directed, Functum
+
 
 class OgreRenderOutput(ProcessorManifestBase):
-  build = False
-  def define(self, inputs, internals, functions, outputs):
-    #Inputs
-    inputs.opengl_context = DataProperty('mepinta::internal_any*')
-    inputs.ogre_context = DataProperty('mepinta::internal_any*')
-    inputs.width = DataProperty('int')
-    inputs.height = DataProperty('int')
-    inputs.position_x = DataProperty('double')
-    inputs.position_y = DataProperty('double')
-    inputs.position_z = DataProperty('double')
-    inputs.mesh = DataProperty('k3d::mesh*')
-    #functions
-    functions.renderMesh = FunctionProperty()
-    #dependencies
-    functions.renderMesh.dpdencies += [
-                                       inputs.opengl_context,
-                                       inputs.ogre_context,
-                                       inputs.width,
-                                       inputs.height,
-                                       inputs.position_x,
-                                       inputs.position_y,
-                                       inputs.position_z,
-                                       inputs.mesh,
-                                      ]
+    build = False
+
+    def define(self, inputs, internals, functions, outputs):
+        # Inputs
+        inputs.opengl_context = DataProperty('mepinta::internal_any*')
+        inputs.ogre_context = DataProperty('mepinta::internal_any*')
+        inputs.width = DataProperty('int')
+        inputs.height = DataProperty('int')
+        inputs.position_x = DataProperty('double')
+        inputs.position_y = DataProperty('double')
+        inputs.position_z = DataProperty('double')
+        inputs.mesh = DataProperty('k3d::mesh*')
+        # functions
+        functions.renderMesh = FunctionProperty()
+        # dependencies
+        functions.renderMesh.dpdencies += [
+            inputs.opengl_context,
+            inputs.ogre_context,
+            inputs.width,
+            inputs.height,
+            inputs.position_x,
+            inputs.position_y,
+            inputs.position_z,
+            inputs.mesh,
+        ]
 
 manifest = OgreRenderOutput
 
 if __name__ == "__main__":
-  from mepinta.context.MepintaContext import MepintaContext
-  from mepinta.plugins_manifest.PluginManifestTester import PluginManifestTester
-  context = MepintaContext('c_and_cpp')
-  plugin_instance = manifest(context=context)
-  context.log(manifest)
-  PluginManifestTester(context=context).test(plugin_instance)
+    from mepinta.context.MepintaContext import MepintaContext
+    from mepinta.plugins_manifest.PluginManifestTester import PluginManifestTester
+    context = MepintaContext('c_and_cpp')
+    plugin_instance = manifest(context=context)
+    context.log(manifest)
+    PluginManifestTester(context=context).test(plugin_instance)

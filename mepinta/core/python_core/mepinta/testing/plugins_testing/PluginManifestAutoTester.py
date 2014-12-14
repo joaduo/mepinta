@@ -29,56 +29,60 @@ from mepinta_devtools.ide_projects.FileManager import FileManager
 from common.shellcmds.CommandRunner import CommandRunner
 import os
 
+
 class PluginManifestAutoTester(ModuleAutoTesterBase):
-  def __init__(self, context=None):
-    if context == None:
-      from mepinta.context.MepintaContext import MepintaContext
-      context = MepintaContext(self.__guessBackendName())
-    ModuleAutoTesterBase.__init__(self, context)
 
-  def __guessBackendName(self):
-    #TODO: fix! get "caller" module
-    #return 'python'
-    return 'c_and_cpp'
+    def __init__(self, context=None):
+        if context == None:
+            from mepinta.context.MepintaContext import MepintaContext
+            context = MepintaContext(self.__guessBackendName())
+        ModuleAutoTesterBase.__init__(self, context)
 
-  def __createNode(self, plugin_manifest):
-    graph = Graph(Pipeline(context=self.context))
-    #pline.grow()
-    graph.pline.startTopologyChangeSet()
-    plinmngr = PluginsManager(context=self.context)
-    plugin_package, minor_version = self._getPackageAndMinorVersion(plugin_manifest)
-    processor_metadata = plinmngr.loadProcessor(plugin_package, minor_version)
-    gm = GraphManager(context=self.context)
-    node = gm.createNode(graph, processor_metadata)
-    self.logPline(graph.pline)
-    return graph.pline, node
+    def __guessBackendName(self):
+        # TODO: fix! get "caller" module
+        # return 'python'
+        return 'c_and_cpp'
 
-  def logPline(self, pline):
-    self.log.debug(pline.all_properties)
-    self.log.debug(pline.getTopology())
+    def __createNode(self, plugin_manifest):
+        graph = Graph(Pipeline(context=self.context))
+        # pline.grow()
+        graph.pline.startTopologyChangeSet()
+        plinmngr = PluginsManager(context=self.context)
+        plugin_package, minor_version = self._getPackageAndMinorVersion(
+            plugin_manifest)
+        processor_metadata = plinmngr.loadProcessor(
+            plugin_package, minor_version)
+        gm = GraphManager(context=self.context)
+        node = gm.createNode(graph, processor_metadata)
+        self.logPline(graph.pline)
+        return graph.pline, node
 
-  def __getPline(self, plugin_manifest_class):
-    plugin_manifest = plugin_manifest_class(self.context)
-    pline, _ = self.__createNode(plugin_manifest)
-    return pline
+    def logPline(self, pline):
+        self.log.debug(pline.all_properties)
+        self.log.debug(pline.getTopology())
 
-  def visualizeXdot(self, plugin_manifest_class):
-    pline = self.__getPline(plugin_manifest_class)
-    graphviz_translator = PipelineGraphvizTranslator(self.context)
-    graphviz_str = graphviz_translator.translate(pline)
-    path = './pipeline.dot'
-    FileManager(self.context).saveTextFile(path, graphviz_str, overwrite=True)
-    CommandRunner(self.context).run('xdot %s' % path)
-    os.remove(path)
+    def __getPline(self, plugin_manifest_class):
+        plugin_manifest = plugin_manifest_class(self.context)
+        pline, _ = self.__createNode(plugin_manifest)
+        return pline
 
-  def test(self, plugin_manifest_class, gui=True):
-    pline = self.__getPline(plugin_manifest_class)
-    if gui:
-      #import here to avoid unnecessary memory use and delays
-      from mepinta.testing.plugins_testing.nodebox.NodeBoxSimplePipelineOutput import NodeBoxSimplePipelineOutput
-      NodeBoxSimplePipelineOutput(pline, 600, 600).run()
+    def visualizeXdot(self, plugin_manifest_class):
+        pline = self.__getPline(plugin_manifest_class)
+        graphviz_translator = PipelineGraphvizTranslator(self.context)
+        graphviz_str = graphviz_translator.translate(pline)
+        path = './pipeline.dot'
+        FileManager(self.context).saveTextFile(
+            path, graphviz_str, overwrite=True)
+        CommandRunner(self.context).run('xdot %s' % path)
+        os.remove(path)
+
+    def test(self, plugin_manifest_class, gui=True):
+        pline = self.__getPline(plugin_manifest_class)
+        if gui:
+            # import here to avoid unnecessary memory use and delays
+            from mepinta.testing.plugins_testing.nodebox.NodeBoxSimplePipelineOutput import NodeBoxSimplePipelineOutput
+            NodeBoxSimplePipelineOutput(pline, 600, 600).run()
 
 if __name__ == "__main__":
-  #import ftest
-  pass
-
+    #import ftest
+    pass

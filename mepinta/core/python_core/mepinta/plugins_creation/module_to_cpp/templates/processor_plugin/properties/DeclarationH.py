@@ -19,9 +19,9 @@ You should have received a copy of the GNU General Public License
 along with Mepinta. If not, see <http://www.gnu.org/licenses/>.
 '''
 from mepinta.plugins_creation.templates.base import ManifestAndFileTemplateBase,\
-  on_template
+    on_template
 
-props_declaration_template='''
+props_declaration_template = '''
 #define ${FUNCTION_NAME_INPUTS_DECLARATION} \
   ${INPUTS_DECLARATION}
   
@@ -29,11 +29,13 @@ props_declaration_template='''
   ${OUPUTS_DECLARATION}  
 '''
 
+
 class DeclarationH(ManifestAndFileTemplateBase):
-  @on_template
-  def functionsPropertiesDeclaration(self):
-    #return None
-    return ''
-        
+
+    @on_template
+    def functionsPropertiesDeclaration(self):
+        # return None
+        return ''
+
 if __name__ == "__main__":
-  pass
+    pass

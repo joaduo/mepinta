@@ -20,16 +20,18 @@ along with Mepinta. If not, see <http://www.gnu.org/licenses/>.
 '''
 from plugins.c_and_cpp.processors.k3dv1.mesh.input.file.base.MeshReaderManifestBase import MeshReaderManifestBase
 
+
 class OBJMeshReader(MeshReaderManifestBase):
-  def define(self, inputs, internals, functions, outputs, loadMesh):
-    pass
+
+    def define(self, inputs, internals, functions, outputs, loadMesh):
+        pass
 
 manifest = OBJMeshReader
 
 if __name__ == "__main__":
-  from mepinta.context.MepintaContext import MepintaContext
-  from mepinta.plugins_manifest.PluginManifestTester import PluginManifestTester
-  context = MepintaContext('c_and_cpp')
-  plugin_instance = manifest(context=context)
-  context.log(manifest)
-  PluginManifestTester(context=context).test(plugin_instance)
+    from mepinta.context.MepintaContext import MepintaContext
+    from mepinta.plugins_manifest.PluginManifestTester import PluginManifestTester
+    context = MepintaContext('c_and_cpp')
+    plugin_instance = manifest(context=context)
+    context.log(manifest)
+    PluginManifestTester(context=context).test(plugin_instance)

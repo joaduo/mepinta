@@ -27,5 +27,5 @@ from mepinta.abstract.FrameworkBase import FrameworkBase
 
 
 class ActionsBrowser(FrameworkBase):
-  #def list_
-  pass
+    # def list_
+    pass

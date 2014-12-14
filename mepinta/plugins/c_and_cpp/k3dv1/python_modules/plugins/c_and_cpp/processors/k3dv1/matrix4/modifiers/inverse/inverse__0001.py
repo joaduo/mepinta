@@ -21,17 +21,18 @@ along with Mepinta. If not, see <http://www.gnu.org/licenses/>.
 
 from mepinta.plugins_manifest import ProcessorManifestBase, DataProperty, FunctionProperty
 
+
 class inverse(ProcessorManifestBase):
-  def define(self, inputs, internals, functions, outputs):
-    #inputs. = DataProperty('')
-    #outputs. = DataProperty('')
-    #functions. = FunctionProperty()
-    pass
-    #functions..dpdencies += [inputs.,]
-    #outputs..dpdencies += [functions.]
+
+    def define(self, inputs, internals, functions, outputs):
+        # inputs. = DataProperty('')
+        # outputs. = DataProperty('')
+        # functions. = FunctionProperty()
+        pass
+        # functions..dpdencies += [inputs.,]
+        # outputs..dpdencies += [functions.]
 
 manifest = inverse
 
 if __name__ == "__main__":
-  pass
-
+    pass

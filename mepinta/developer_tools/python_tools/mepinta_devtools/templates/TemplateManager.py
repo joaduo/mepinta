@@ -24,23 +24,24 @@ from mepinta_devtools.ide_projects.FileManager import FileManager
 from string import Template
 import os
 
+
 class TemplateManager(FrameworkBase):
-  def __post_init__(self, path_ref):
-    self.__path_ref = path_ref
-    self.file_manager = FileManager(self.context)
 
-  def getTemplate(self, template_name, **kwargs):
-    template_path = joinPath(self.getRepoPath(), template_name)
-    template = self.file_manager.loadTextFile(template_path)
-    if len(kwargs):
-      return Template(template).safe_substitute(kwargs)
-    else:
-      return template
+    def __post_init__(self, path_ref):
+        self.__path_ref = path_ref
+        self.file_manager = FileManager(self.context)
 
-  def getRepoPath(self):
-    return joinPath(os.path.dirname(self.__path_ref), 'templates_repository')
+    def getTemplate(self, template_name, **kwargs):
+        template_path = joinPath(self.getRepoPath(), template_name)
+        template = self.file_manager.loadTextFile(template_path)
+        if len(kwargs):
+            return Template(template).safe_substitute(kwargs)
+        else:
+            return template
 
-  def copyScripts(self, repo_subpath, deployment_path, scripts_names):
-    path = joinPath(self.getRepoPath(), repo_subpath)
-    self.file_manager.copyFiles(path, deployment_path, scripts_names)
+    def getRepoPath(self):
+        return joinPath(os.path.dirname(self.__path_ref), 'templates_repository')
 
+    def copyScripts(self, repo_subpath, deployment_path, scripts_names):
+        path = joinPath(self.getRepoPath(), repo_subpath)
+        self.file_manager.copyFiles(path, deployment_path, scripts_names)

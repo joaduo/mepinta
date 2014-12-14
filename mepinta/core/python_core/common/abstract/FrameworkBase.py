@@ -23,35 +23,40 @@ from common.abstract.PostInitStrategyBase import PostInitStrategyBase
 
 
 class FrameworkBase(PostInitStrategyBase, SelfConfigBase):
-  '''
-  Base class for all logic classes in the framework.
-  Data classes should inherit from object or FrameworkObject
-  '''
-  def __init__(self, context, *a, **ad):
-    SelfConfigBase.__init__(self, context=context)
-    PostInitStrategyBase.__init__(self, *a, **ad)
+
+    '''
+    Base class for all logic classes in the framework.
+    Data classes should inherit from object or FrameworkObject
+    '''
+
+    def __init__(self, context, *a, **ad):
+        SelfConfigBase.__init__(self, context=context)
+        PostInitStrategyBase.__init__(self, *a, **ad)
 
 
 def smokeTestModule():
-  from common.log.debugPrint import debugPrint
-  class ExtendedBase(FrameworkBase):
-    def __post_init__(self, *a, **ad):
-      debugPrint('Post init Extended Base')
-      pass
+    from common.log.debugPrint import debugPrint
 
-  class Foo(object):
-    pass
+    class ExtendedBase(FrameworkBase):
+
+        def __post_init__(self, *a, **ad):
+            debugPrint('Post init Extended Base')
+            pass
+
+    class Foo(object):
+        pass
 
 #  class ConcreteClass(Foo, ExtendedBase):
-  class ConcreteClass(ExtendedBase, Foo):
-    def __post_init__(self, value):
-      debugPrint('Post init Concrete')
-      self.post_init_var = value
+    class ConcreteClass(ExtendedBase, Foo):
 
-  from common.context.Context import Context
-  ctx = Context('python')
-  cc = FrameworkBase(context=ctx)
-  cc = ConcreteClass(context=ctx, value=1)
+        def __post_init__(self, value):
+            debugPrint('Post init Concrete')
+            self.post_init_var = value
+
+    from common.context.Context import Context
+    ctx = Context('python')
+    cc = FrameworkBase(context=ctx)
+    cc = ConcreteClass(context=ctx, value=1)
 
 if __name__ == '__main__':
-  smokeTestModule()
+    smokeTestModule()

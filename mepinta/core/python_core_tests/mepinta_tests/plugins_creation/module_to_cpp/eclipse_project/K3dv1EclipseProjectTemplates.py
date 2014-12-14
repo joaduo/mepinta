@@ -22,25 +22,30 @@ from mepinta_tests.base import MepintaTestBase
 from mepinta.plugins_creation.module_to_cpp.eclipse_project.K3dv1EclipseProjectTemplates import K3dv1EclipseProjectTemplates
 from mepinta_tests.dummy_classes.PluginManifestDummy import PluginManifestDummy
 
+
 class K3dv1EclipseProjectTemplates_test(MepintaTestBase):
-  def run(self):
-    tested_instance = K3dv1EclipseProjectTemplates(context=self.context)
-    target_root = "../.."
-    plugin_manifest = PluginManifestDummy(context=self.context)
-    templates = tested_instance.getTemplatePerPath(target_root, plugin_manifest=plugin_manifest)
-    # templates = K3dv1EclipseProjectTemplates(context=self.context).getTemplatePerPath(target_root, plugin_manifest=plugin_manifest)
-    return self.validateOutputTemplates(templates)
-  def validateOutputTemplates(self, templates):
-    self.log(templates)
-    for templ, dir_ in templates.items():
-      self.log("%r:%r" % (templ, dir_))
-    return True
+
+    def run(self):
+        tested_instance = K3dv1EclipseProjectTemplates(context=self.context)
+        target_root = "../.."
+        plugin_manifest = PluginManifestDummy(context=self.context)
+        templates = tested_instance.getTemplatePerPath(
+            target_root, plugin_manifest=plugin_manifest)
+        # templates = K3dv1EclipseProjectTemplates(context=self.context).getTemplatePerPath(target_root, plugin_manifest=plugin_manifest)
+        return self.validateOutputTemplates(templates)
+
+    def validateOutputTemplates(self, templates):
+        self.log(templates)
+        for templ, dir_ in templates.items():
+            self.log("%r:%r" % (templ, dir_))
+        return True
+
 
 def testModule():
-  from getDefaultContext import getDefaultContext
-  context = getDefaultContext()
-  test = K3dv1EclipseProjectTemplates_test(context=context)
-  return test.run()
+    from getDefaultContext import getDefaultContext
+    context = getDefaultContext()
+    test = K3dv1EclipseProjectTemplates_test(context=context)
+    return test.run()
 
 if __name__ == "__main__":
-  testModule()
+    testModule()

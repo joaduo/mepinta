@@ -19,13 +19,15 @@ You should have received a copy of the GNU General Public License
 along with Mepinta. If not, see <http://www.gnu.org/licenses/>.
 '''
 
-class ProcessorContext(object):
-  def __init__(self, context_lo, pline, pline_evaluator):
-    self.context_lo = context_lo
-    self.pline = pline
-    self.pline_evaluator = pline_evaluator
 
-        
+class ProcessorContext(object):
+
+    def __init__(self, context_lo, pline, pline_evaluator):
+        self.context_lo = context_lo
+        self.pline = pline
+        self.pline_evaluator = pline_evaluator
+
+
 def shedskin_reentrant_data_model(context_lo, pline, pline_evaluator):
-  processor_context = ProcessorContext(context_lo, pline, pline_evaluator)
-  return processor_context
+    processor_context = ProcessorContext(context_lo, pline, pline_evaluator)
+    return processor_context

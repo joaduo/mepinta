@@ -19,13 +19,15 @@ You should have received a copy of the GNU General Public License
 along with Mepinta. If not, see <http://www.gnu.org/licenses/>.
 '''
 from mepinta.plugins_creation.templates.base import ManifestAndFileTemplateBase,\
-  on_template
+    on_template
+
 
 class ProcessorPRO(ManifestAndFileTemplateBase):
-  @on_template
-  def compilerArgs(self):
-    return "-c -fmessage-length=0 -fPIC -fvisibility=hidden -D k3d=k3dv1 -shared"
 
-        
+    @on_template
+    def compilerArgs(self):
+        return "-c -fmessage-length=0 -fPIC -fvisibility=hidden -D k3d=k3dv1 -shared"
+
+
 if __name__ == "__main__":
-  pass
+    pass

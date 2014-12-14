@@ -20,8 +20,9 @@ along with Mepinta. If not, see <http://www.gnu.org/licenses/>.
 '''
 from common.abstract.FrameworkBase import FrameworkBase
 
+
 class MepintaTestBase(FrameworkBase):
-  pass
+    pass
 
 if __name__ == "__main__":
-  pass
+    pass

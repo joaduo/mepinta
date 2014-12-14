@@ -19,40 +19,42 @@ You should have received a copy of the GNU General Public License
 along with Mepinta. If not, see <http://www.gnu.org/licenses/>.
 '''
 from mepinta.plugins_manifest import ProcessorManifestBase, DataProperty, FunctionProperty, \
-  Functum, directed
+    Functum, directed
+
 
 class MeshModifierBase(ProcessorManifestBase):
-  def _superClassDefine(self, inputs, internals, functions, outputs):
-    '''
-      Creates a common topology pipeline for mesh modifiers.
-      (demuxing the mesh Topology and Geometry updates signals)
-    '''
-    inputs.mesh = DataProperty('k3d::mesh')
-    outputs.mesh = DataProperty('k3d::mesh')
-    internals.createMesh = Functum()
-    internals.updateMesh = Functum()
-    functions.demuxMeshSignal = FunctionProperty()
 
-    internals.createMesh.dpdencies += [directed('>', inputs.mesh), ]
-    internals.updateMesh.dpdencies += [directed('>', inputs.mesh), ]
+    def _superClassDefine(self, inputs, internals, functions, outputs):
+        '''
+          Creates a common topology pipeline for mesh modifiers.
+          (demuxing the mesh Topology and Geometry updates signals)
+        '''
+        inputs.mesh = DataProperty('k3d::mesh')
+        outputs.mesh = DataProperty('k3d::mesh')
+        internals.createMesh = Functum()
+        internals.updateMesh = Functum()
+        functions.demuxMeshSignal = FunctionProperty()
 
-    functions.demuxMeshSignal.dpdencies += [internals.createMesh,
-                                            internals.updateMesh,
-                                            inputs.mesh, ]
-    outputs.mesh.dpdencies += [functions.demuxMeshSignal,
-                               directed('<', internals.createMesh),
-                               directed('<', internals.updateMesh), ]
-    return internals.createMesh, internals.updateMesh
+        internals.createMesh.dpdencies += [directed('>', inputs.mesh), ]
+        internals.updateMesh.dpdencies += [directed('>', inputs.mesh), ]
 
-  def define(self, inputs, internals, functions, outputs, createMesh, updateMesh):
-    '''
-      Implement this method on children classes.
-      Example:
-        inputs.rows = 'uint'
-        createMesh.dpdencies += [inputs.rows]
-    '''
-    pass
+        functions.demuxMeshSignal.dpdencies += [internals.createMesh,
+                                                internals.updateMesh,
+                                                inputs.mesh, ]
+        outputs.mesh.dpdencies += [functions.demuxMeshSignal,
+                                   directed('<', internals.createMesh),
+                                   directed('<', internals.updateMesh), ]
+        return internals.createMesh, internals.updateMesh
+
+    def define(self, inputs, internals, functions, outputs, createMesh, updateMesh):
+        '''
+          Implement this method on children classes.
+          Example:
+            inputs.rows = 'uint'
+            createMesh.dpdencies += [inputs.rows]
+        '''
+        pass
 
 
 if __name__ == "__main__":
-  pass
+    pass

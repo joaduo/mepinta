@@ -24,49 +24,50 @@ Created on Sep 23, 2011
 @author: jduo
 '''
 from proxy.data_model import ProcessorProxy,\
-  InOutPropertyProxy, FunctionPropertyProxy
+    InOutPropertyProxy, FunctionPropertyProxy
 import random
 from plugins.python.sdk.props_utilities import getPropValue
 
+
 def getProcessorProxy(context):
-  pp = ProcessorProxy('Geometry2DRandomPoints')
-  #Inputs
-  pp.inputs.geometry_2d = InOutPropertyProxy('Geometry2D_v1',1)
-  pp.inputs.amount = InOutPropertyProxy('Py_int',1)
-  pp.inputs.seed = InOutPropertyProxy('Py_int',1)
-  pp.inputs.x_limit = InOutPropertyProxy('Py_float',1)
-  pp.inputs.y_limit = InOutPropertyProxy('Py_float',1)  
-  #Outputs
-  pp.outputs.geometry_2d = InOutPropertyProxy('Geometry2D_v1',1)
-  pp.functions.modifyGeometry = FunctionPropertyProxy()
-  
-  #Set sinks & dpdencies
-  pp.outputs.geometry_2d.dpdencies += [pp.functions.modifyGeometry]
-  pp.functions.modifyGeometry.dpdencies += [pp.inputs.geometry_2d
-                                           ,pp.inputs.amount
-                                           ,pp.inputs.x_limit
-                                           ,pp.inputs.y_limit
-                                           ,pp.inputs.seed]
-  
-  #We can work directly on the output
-  pp.non_cached_capable += ['geometry_2d']
-  
-  return pp
+    pp = ProcessorProxy('Geometry2DRandomPoints')
+    # Inputs
+    pp.inputs.geometry_2d = InOutPropertyProxy('Geometry2D_v1', 1)
+    pp.inputs.amount = InOutPropertyProxy('Py_int', 1)
+    pp.inputs.seed = InOutPropertyProxy('Py_int', 1)
+    pp.inputs.x_limit = InOutPropertyProxy('Py_float', 1)
+    pp.inputs.y_limit = InOutPropertyProxy('Py_float', 1)
+    # Outputs
+    pp.outputs.geometry_2d = InOutPropertyProxy('Geometry2D_v1', 1)
+    pp.functions.modifyGeometry = FunctionPropertyProxy()
+
+    # Set sinks & dpdencies
+    pp.outputs.geometry_2d.dpdencies += [pp.functions.modifyGeometry]
+    pp.functions.modifyGeometry.dpdencies += [pp.inputs.geometry_2d, pp.inputs.amount
+                                              , pp.inputs.x_limit
+                                              , pp.inputs.y_limit
+                                              , pp.inputs.seed]
+
+    # We can work directly on the output
+    pp.non_cached_capable += ['geometry_2d']
+
+    return pp
+
 
 def modifyGeometry(args):
-  #Inputs
-  amount = getPropValue(args, 'inputs','point_indexes')
-  x_limit = getPropValue(args, 'inputs','x_limit')
-  y_limit = getPropValue(args, 'inputs','y_limit')
-  seed = getPropValue(args, 'inputs','seed')
-  #Outputs
-  geom2d = getPropValue(args, 'outputs','geometry_2d')
-  #Big deal!!
-  random.seed(seed)
-  for i in xrange(amount):
-    #geom2d.points.append(Point2D(random.random()*x_limit,random.random()*y_limit))
-    geom2d.points.append([random.random()*x_limit-x_limit/2,random.random()*y_limit-y_limit/2])
+    # Inputs
+    amount = getPropValue(args, 'inputs', 'point_indexes')
+    x_limit = getPropValue(args, 'inputs', 'x_limit')
+    y_limit = getPropValue(args, 'inputs', 'y_limit')
+    seed = getPropValue(args, 'inputs', 'seed')
+    # Outputs
+    geom2d = getPropValue(args, 'outputs', 'geometry_2d')
+    # Big deal!!
+    random.seed(seed)
+    for i in xrange(amount):
+        # geom2d.points.append(Point2D(random.random()*x_limit,random.random()*y_limit))
+        geom2d.points.append([random.random() *x_limit-x_limit/2, random.random()*y_limit-y_limit/2])
 
 if __name__ == '__main__':
-  pp = getProcessorProxy(None)
-  debugPrint( pp)
+    pp = getProcessorProxy(None)
+    debugPrint(pp)

@@ -22,25 +22,28 @@ from mepinta.plugins_manager.metadata_wrappers.base import MetadataWrapperBase
 from mepinta.plugins_manager.plugins_manager_detail.PluginPackageManager import PluginPackageManager
 from mepinta.plugins_manifest import DataTypeManifestBase
 
+
 class DataTypeMetadataWrapper(MetadataWrapperBase):
-  def __post_init__(self):
-    self._pkg_mngr = PluginPackageManager(plugins_type='data_types',
-                                          context=self.context)
 
-  @property
-  def manifest(self):
-    if hasattr(self.module, 'manifest'):
-      return MetadataWrapperBase.getManifest(self)
-    else:
-      return object()
+    def __post_init__(self):
+        self._pkg_mngr = PluginPackageManager(plugins_type='data_types',
+                                              context=self.context)
 
-  def getManifestType(self):
-    return DataTypeManifestBase
+    @property
+    def manifest(self):
+        if hasattr(self.module, 'manifest'):
+            return MetadataWrapperBase.getManifest(self)
+        else:
+            return object()
+
+    def getManifestType(self):
+        return DataTypeManifestBase
+
 
 def smokeTestModule():
-#  from getDefaultContext import getDefaultContext
-#  context = getDefaultContext()
-  raise RuntimeWarning('No smoke test')
+    #  from getDefaultContext import getDefaultContext
+    #  context = getDefaultContext()
+    raise RuntimeWarning('No smoke test')
 
 if __name__ == "__main__":
-  smokeTestModule()
+    smokeTestModule()

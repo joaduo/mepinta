@@ -21,14 +21,18 @@ along with Mepinta. If not, see <http://www.gnu.org/licenses/>.
 from common.abstract.FrameworkObject import FrameworkObject
 from string import Template
 
+
 class DictionaryBasedTranslator(FrameworkObject):
-  ''' '''
-  def getContent(self, template, translation_dict):
-    return Template(template).safe_substitute(translation_dict)
+
+    ''' '''
+
+    def getContent(self, template, translation_dict):
+        return Template(template).safe_substitute(translation_dict)
+
 
 def testModule():
-  from getDefaultContext import getDefaultContext
-  context = getDefaultContext()
+    from getDefaultContext import getDefaultContext
+    context = getDefaultContext()
 
 if __name__ == "__main__":
-  testModule()
+    testModule()

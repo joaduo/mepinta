@@ -20,16 +20,19 @@ along with Mepinta. If not, see <http://www.gnu.org/licenses/>.
 '''
 from mepinta_devtools.templates.mappers.base import MapperBase
 
+
 class StrToFileMap(MapperBase):
-  def __init__(self, template_logic, template, dst_path, overwrite=False):
-    self.template_logic = template_logic
-    self.template = template
-    self.dst_path = dst_path
-    self.overwrite = overwrite
+
+    def __init__(self, template_logic, template, dst_path, overwrite=False):
+        self.template_logic = template_logic
+        self.template = template
+        self.dst_path = dst_path
+        self.overwrite = overwrite
+
 
 def testModule():
-  from getDefaultContext import getDefaultContext
-  context = getDefaultContext()
+    from getDefaultContext import getDefaultContext
+    context = getDefaultContext()
 
 if __name__ == "__main__":
-  testModule()
+    testModule()

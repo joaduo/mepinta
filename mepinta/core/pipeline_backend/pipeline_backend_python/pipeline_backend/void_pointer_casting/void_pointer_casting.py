@@ -19,77 +19,96 @@ You should have received a copy of the GNU General Public License
 along with Mepinta. If not, see <http://www.gnu.org/licenses/>.
 '''
 
-#Data
-def intToVoidp(int_v):#TODO: remove
-  return int_v
+# Data
+
+def intToVoidp(int_v):  # TODO: remove
+    return int_v
+
 
 def doubleToVoidp(float_v):
-  return float_v
+    return float_v
+
 
 def strToVoidp(str_):
-  return str_
+    return str_
+
 
 def strCharpToVoidp(str_):
-  return str_
+    return str_
+
 
 def strStringToVoidp(str_):
-  return str_
+    return str_
+
 
 def anyPtrToVoidp(anything):
-  return anything
+    return anything
+
 
 def voidpToInt(voidp):
-  return voidp
+    return voidp
+
 
 def voidpToDouble(voidp):
-  return voidp
+    return voidp
+
 
 def voidpToStr(voidp):
-  return voidp
+    return voidp
+
 
 def voidpCharpToStr(voidp):
-  return voidp
+    return voidp
+
 
 def voidpStringToStr(voidp):
-  return voidp
+    return voidp
+
 
 def voidpToListInt(voidp):
-  return voidp
+    return voidp
+
 
 def voidp_to_FunctionPropertyValue(voidp):
-  return voidp
+    return voidp
+
 
 def voidp_to_FunctumPropertyValue(voidp):
-  return voidp
+    return voidp
 
-#Functions pointers
+# Functions pointers
+
+
 def voidpToFuncArgVoid(voidp):
-  return voidp
+    return voidp
+
 
 def voidpToFuncArgVoidp(voidp):
-  return voidp
+    return voidp
+
 
 def voidpToProcessorFunc(voidp):
-  return voidp
+    return voidp
+
 
 def voidpToCopyToFunc(voidp):
-  return voidp
+    return voidp
+
 
 def shedskin_void_pointer_casting():
-  voidp = None
-  voidpToFuncArgVoid(voidp)
-  voidpToFuncArgVoidp(voidp)
+    voidp = None
+    voidpToFuncArgVoid(voidp)
+    voidpToFuncArgVoidp(voidp)
 
-  voidpToInt(voidp)
-  voidpToStr(voidp)
-  voidpToDouble(voidp)
-  voidpToListInt(voidp)
+    voidpToInt(voidp)
+    voidpToStr(voidp)
+    voidpToDouble(voidp)
+    voidpToListInt(voidp)
 
-  anyPtrToVoidp(voidp)
-  intToVoidp(1)
-  doubleToVoidp(10.0)
-  strToVoidp('')
+    anyPtrToVoidp(voidp)
+    intToVoidp(1)
+    doubleToVoidp(10.0)
+    strToVoidp('')
 
 if __name__ == '__main__':
-  shedskin_void_pointer_casting()
-
+    shedskin_void_pointer_casting()

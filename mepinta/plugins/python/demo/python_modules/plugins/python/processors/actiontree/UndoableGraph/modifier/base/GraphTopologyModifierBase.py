@@ -20,48 +20,52 @@ along with Mepinta. If not, see <http://www.gnu.org/licenses/>.
 '''
 
 from mepinta.plugins_manifest import ProcessorManifestBase, FunctionProperty, \
-  directed
+    directed
+
 
 class GraphTopologyModifierBase(ProcessorManifestBase):
-  def _superClassDefine(self, inputs, internals, functions, outputs):
-    #inputs
-    inputs.graph = 'actiontree.UndoableGraph'
-    inputs.context_name = 'str'
-    #outputs
-    outputs.graph = 'actiontree.UndoableGraph'
-    #functions
-    functions.demuxSignal = FunctionProperty()
-    internals.changeGraphTopology = 'functum'
-    internals.changeGraphValues = 'functum'
 
-    #Set dependencies
-    #Set signal demux dependencies
-    functions.demuxSignal.dpdencies += [inputs.graph,
-                                        directed('>', internals.changeGraphTopology),
-                                        directed('>', internals.changeGraphValues), ]
-    #Set modifier related topology ids
-    internals.changeGraphTopology.dpdencies += [inputs.graph,
-                                                inputs.context_name, ]
-    internals.changeGraphValues.dpdencies += [internals.changeGraphTopology,
-                                              inputs.graph,
-                                              inputs.context_name, ]
-    outputs.graph.dpdencies += [functions.demuxSignal,
-                                directed('<', internals.changeGraphTopology),
-                                directed('<', internals.changeGraphValues), ]
+    def _superClassDefine(self, inputs, internals, functions, outputs):
+        # inputs
+        inputs.graph = 'actiontree.UndoableGraph'
+        inputs.context_name = 'str'
+        # outputs
+        outputs.graph = 'actiontree.UndoableGraph'
+        # functions
+        functions.demuxSignal = FunctionProperty()
+        internals.changeGraphTopology = 'functum'
+        internals.changeGraphValues = 'functum'
 
-    self.nonCached(outputs.graph)
+        # Set dependencies
+        # Set signal demux dependencies
+        functions.demuxSignal.dpdencies += [inputs.graph,
+                                            directed(
+                                                '>', internals.changeGraphTopology),
+                                            directed('>', internals.changeGraphValues), ]
+        # Set modifier related topology ids
+        internals.changeGraphTopology.dpdencies += [inputs.graph,
+                                                    inputs.context_name, ]
+        internals.changeGraphValues.dpdencies += [internals.changeGraphTopology,
+                                                  inputs.graph,
+                                                  inputs.context_name, ]
+        outputs.graph.dpdencies += [functions.demuxSignal,
+                                    directed(
+                                        '<', internals.changeGraphTopology),
+                                    directed('<', internals.changeGraphValues), ]
 
-    return internals.changeGraphValues, internals.changeGraphTopology
+        self.nonCached(outputs.graph)
 
-  def define(self, inputs, internals, functions, outputs, changeGraphValues, changeGraphTopology):
-    '''
-      Implement this method on children classes.
-      Example:
-        inputs.node_name = 'str'
-        changeGraphTopology.dpdencies += [inputs.node_name]
-    '''
-    pass
+        return internals.changeGraphValues, internals.changeGraphTopology
+
+    def define(self, inputs, internals, functions, outputs, changeGraphValues, changeGraphTopology):
+        '''
+          Implement this method on children classes.
+          Example:
+            inputs.node_name = 'str'
+            changeGraphTopology.dpdencies += [inputs.node_name]
+        '''
+        pass
 
 
 if __name__ == "__main__":
-  pass
+    pass

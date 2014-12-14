@@ -23,42 +23,44 @@ from getDefaultContext import getDefaultContext
 from pipeline_backend.logging.logging import LOG_INFO
 from plugins_tests.base.K3dMeshPluginTest import K3dMeshPluginTest
 
+
 class SelectFaceByNumber(K3dMeshPluginTest):
-  def __post_init__(self):
-    import plugins.c_and_cpp.processors.k3dv1.mesh.selection.bynumber.SelectFaceByNumber as select
-    self.testedProcessors.append(select)
 
-  def _createInputMesh(self, test_pline):
-    import plugins.c_and_cpp.processors.k3dv1.mesh.input.file.OBJMeshReader as obj_rdr
-    obj_node = test_pline.append(obj_rdr)
-    test_pline.setValue(obj_node.inputs.file, '/home/jduo/output.obj')
-    test_pline.defaultMarked.append(obj_node.functions.loadMesh)
-    return obj_node
+    def __post_init__(self):
+        import plugins.c_and_cpp.processors.k3dv1.mesh.selection.bynumber.SelectFaceByNumber as select
+        self.testedProcessors.append(select)
 
-  def definePluginPipeline(self, test_pline):
-    select = self.testedProcessors[0]
-    n_sel = test_pline.append(select)
-    import plugins.c_and_cpp.processors.k3dv1.mesh.modifiers.polyhedron.ExtrudeFaces as ext_fac
-    n_ext = test_pline.append(ext_fac)
-    
-    test_pline.setValue(n_sel.inputs.primitive_number, 0)
-    test_pline.setValue(n_sel.inputs.face_index, 0)
-    test_pline.setValue(n_ext.inputs.segments, 2)
-    test_pline.setValue(n_ext.inputs.distance, 4.0)
-    
-  def getTimeParameters(self):
-    return self.time.startEndStepSleep(end=-15., step=2, sleep=0.1)
+    def _createInputMesh(self, test_pline):
+        import plugins.c_and_cpp.processors.k3dv1.mesh.input.file.OBJMeshReader as obj_rdr
+        obj_node = test_pline.append(obj_rdr)
+        test_pline.setValue(obj_node.inputs.file, '/home/jduo/output.obj')
+        test_pline.defaultMarked.append(obj_node.functions.loadMesh)
+        return obj_node
 
-  def stressPipeline(self, test_pline, time):
-    nodes = test_pline.getNodesDict()
-    node_sel = nodes['SelectFaceByNumber 1']
-    test_pline.setValue(node_sel.inputs.face_index,time*2)
-    node_ext = nodes['ExtrudeFaces 1']
-    test_pline.setValue(node_ext.inputs.distance, 1.0+time/4.0)
-    test_pline.setValue(node_ext.inputs.segments, 1.0+time/4.0)
-     
-        
+    def definePluginPipeline(self, test_pline):
+        select = self.testedProcessors[0]
+        n_sel = test_pline.append(select)
+        import plugins.c_and_cpp.processors.k3dv1.mesh.modifiers.polyhedron.ExtrudeFaces as ext_fac
+        n_ext = test_pline.append(ext_fac)
+
+        test_pline.setValue(n_sel.inputs.primitive_number, 0)
+        test_pline.setValue(n_sel.inputs.face_index, 0)
+        test_pline.setValue(n_ext.inputs.segments, 2)
+        test_pline.setValue(n_ext.inputs.distance, 4.0)
+
+    def getTimeParameters(self):
+        return self.time.startEndStepSleep(end=-15., step=2, sleep=0.1)
+
+    def stressPipeline(self, test_pline, time):
+        nodes = test_pline.getNodesDict()
+        node_sel = nodes['SelectFaceByNumber 1']
+        test_pline.setValue(node_sel.inputs.face_index, time *2)
+        node_ext = nodes['ExtrudeFaces 1']
+        test_pline.setValue(node_ext.inputs.distance, 1.0 + time/4.0)
+        test_pline.setValue(node_ext.inputs.segments, 1.0 + time/4.0)
+
+
 test = SelectFaceByNumber
-        
+
 if __name__ == "__main__":
-  sfbn = SelectFaceByNumber(getDefaultContext(LOG_INFO))
+    sfbn = SelectFaceByNumber(getDefaultContext(LOG_INFO))

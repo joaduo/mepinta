@@ -21,7 +21,7 @@ along with Mepinta. If not, see <http://www.gnu.org/licenses/>.
 from common.inotify.InotifyActionManager import InotifyActionManager
 from mepinta.plugins_manager.PluginsManager import PluginsManager
 from common.inotify.actions.PathAction import PathAction
-from common.inotify.mask import IN_CLOSE_WRITE#, IN_ATTRIB, IN_ALL_EVENTS
+from common.inotify.mask import IN_CLOSE_WRITE  # , IN_ATTRIB, IN_ALL_EVENTS
 from mepinta.testing.plugins_testing.base import ForkInotifyUtilsBase
 from common.type_checking.isiterable import isiterable
 from mepinta.testing.plugins_testing.test_pipeline.InotifySimpleTestPipeline import InotifySimpleTestPipeline
@@ -29,126 +29,136 @@ import signal
 import sys
 import os
 
+
 class ProcessorPluginTestRunner(ForkInotifyUtilsBase):
-  '''Runs a realtime interactive tests for plugin development.
-  The main job of this class is to:
-    -start a fork and run the provided test in a forked process
-    -watch the plugin's manifest for changes, if it changes, kills the child
-     process and re-launches a new child with the new manifest.
 
-  This class processes modules with a class inheriting from:
-    mepinta.testing.plugins_testing.processor.base.ProcessorPluginTestBase
-  Declaring a variable 'test' pointing to the class in the module is necessary.
-  For example:
-  class MyProcessorName(ProcessorPluginTestBase):
-    def definePipeline(self, test_pipeline):
-      ...
-    def stressPipeline(self, test_pipeline, time):
-      ...
-  test = MyProcessorName
-  '''
-  def __post_init__(self):
-    #inotify manager for watching plugin's manifest
-    self._inotify_mngr = InotifyActionManager(self.context)
-    #plugin manager for getting paths to the manifests
-    self._plugins_mngr = PluginsManager(self.context)
-    #process id of the forked childs (where the test_pipeline is runned)
-    self._child_pid = None
+    '''Runs a realtime interactive tests for plugin development.
+    The main job of this class is to:
+      -start a fork and run the provided test in a forked process
+      -watch the plugin's manifest for changes, if it changes, kills the child
+       process and re-launches a new child with the new manifest.
 
-  def __getManifestInotifyFunction(self, test_modules, test_pline):
-    #define the function to be run in the fork process
-    def manifestInotifyFunction():
-      #create and setup pipeline
-      test_pline.registerTestModules(test_modules)
-      #evaluate the first time
-      test_pline.evalOnTest()
-      #listen input events (gui, input files, test module, and processor library)
-      test_pline.blockListeningEvents([])
-    #return the just created function
-    return manifestInotifyFunction
+    This class processes modules with a class inheriting from:
+      mepinta.testing.plugins_testing.processor.base.ProcessorPluginTestBase
+    Declaring a variable 'test' pointing to the class in the module is necessary.
+    For example:
+    class MyProcessorName(ProcessorPluginTestBase):
+      def definePipeline(self, test_pipeline):
+        ...
+      def stressPipeline(self, test_pipeline, time):
+        ...
+    test = MyProcessorName
+    '''
 
-  def blockListeningEvents(self, test_modules, test_pline=None, timeout=None):
-    if not test_pline: #If no pipeline  is provided, create one
-      test_pline = InotifySimpleTestPipeline(self.context)
-    #Create the first fork (that will be killed when a processor manifest changes)
-    function = self.__getManifestInotifyFunction(test_modules, test_pline)
-    self._child_pid = self._callFunctionOnFork(function, wait_child=False)
+    def __post_init__(self):
+        # inotify manager for watching plugin's manifest
+        self._inotify_mngr = InotifyActionManager(self.context)
+        # plugin manager for getting paths to the manifests
+        self._plugins_mngr = PluginsManager(self.context)
+        # process id of the forked childs (where the test_pipeline is runned)
+        self._child_pid = None
 
-    #register provided module/s
-    self.registerTestModules(test_modules, test_pline)
+    def __getManifestInotifyFunction(self, test_modules, test_pline):
+        # define the function to be run in the fork process
+        def manifestInotifyFunction():
+            # create and setup pipeline
+            test_pline.registerTestModules(test_modules)
+            # evaluate the first time
+            test_pline.evalOnTest()
+            # listen input events (gui, input files, test module, and processor
+            # library)
+            test_pline.blockListeningEvents([])
+        # return the just created function
+        return manifestInotifyFunction
 
-    #set signals handlers before blocking
-    self._setSignals()
-    #Listen for processors' manifests changes
-    self._inotify_mngr.blockListeningEvents(timeout)
+    def blockListeningEvents(self, test_modules, test_pline=None, timeout=None):
+        if not test_pline:  # If no pipeline  is provided, create one
+            test_pline = InotifySimpleTestPipeline(self.context)
+        # Create the first fork (that will be killed when a processor manifest
+        # changes)
+        function = self.__getManifestInotifyFunction(test_modules, test_pline)
+        self._child_pid = self._callFunctionOnFork(function, wait_child=False)
 
-  def _setSignals(self):
-    #define signal handler
-    def exitSignalHandler(received_signal, frame):
-      self.log.info("Killing child process.")
-      self.log.debug("Killing child process %s with signal %s." %
-                     (self._child_pid, signal.SIGTERM))
-      #if the child is not killed will remain running after father's dead
-      os.kill(self._child_pid, signal.SIGTERM)
-      #ok, now we can exit
-      sys.exit(0)
-    #link handler to the interrupt signal
-    signal.signal(signal.SIGINT, exitSignalHandler)
-    signal.signal(signal.SIGTERM, exitSignalHandler)
+        # register provided module/s
+        self.registerTestModules(test_modules, test_pline)
 
-  def registerTestModules(self, test_modules, test_pline):
-    #is it one module or a list of modules?
-    if not isiterable(test_modules):
-      test_modules = [test_modules]
-    #regiter each provided module
-    for testModule in test_modules:
-      self._registerTestModule(testModule, test_pline)
+        # set signals handlers before blocking
+        self._setSignals()
+        # Listen for processors' manifests changes
+        self._inotify_mngr.blockListeningEvents(timeout)
 
-  def _registerTestModule(self, testModule, test_pline):
-    #Get the plugin test instance
-    plugin_test = self._getTestInstance(testModule)
-    #Creates processors manifest files watchers
-    for processor in plugin_test.getWatchedProcessors():
-      #watch it's processor manifest for changes
-      self.__watchProcessorManifest(processor, testModule, test_pline)
+    def _setSignals(self):
+        # define signal handler
+        def exitSignalHandler(received_signal, frame):
+            self.log.info("Killing child process.")
+            self.log.debug("Killing child process %s with signal %s." %
+                           (self._child_pid, signal.SIGTERM))
+            # if the child is not killed will remain running after father's
+            # dead
+            os.kill(self._child_pid, signal.SIGTERM)
+            # ok, now we can exit
+            sys.exit(0)
+        # link handler to the interrupt signal
+        signal.signal(signal.SIGINT, exitSignalHandler)
+        signal.signal(signal.SIGTERM, exitSignalHandler)
 
-  def __watchProcessorManifest(self, processor, testModule, test_pline):
-    '''Defines the function to be call when the plugin's manifest changes.'''
-    #define the function to call when the processor's manifest (.py) changes
-    def manifestInotifyForked(event, action, manager):
-      '''Kills previous child process and creates a new one that will recreate
-        the whole pipeline.
-      '''
-      if self._child_pid:#if there were a prior proces, then kill it
-        self.log.debug("Killing child process %s with signal %s." %
-                       (self._child_pid, signal.SIGTERM))
-        #if the child is not killed will remain running after father's dead
-        #send the TERM signal 15
-        os.kill(self._child_pid, signal.SIGTERM)
-        #wait for the children death
-        child_pid, status = os.waitpid(self._child_pid, 0)
-        self.log.debug("Child process %s ended with status %s." %
-                       (child_pid, status))
-      #Get the function to call when the manifest changed (means need to reload the whole pipeline)
-      function = self.__getManifestInotifyFunction(testModule, test_pline)
-      self._child_pid = self._callFunctionOnFork(function, wait_child=False)
-    #load the processor to get the manifest's module path
-    processor_metadata = self._plugins_mngr.loadProcessor(processor)
-    path = self._getModuleFilePath(processor_metadata.module)
-    #unload processor to release libraries (very important, if not the file won't be released when deleted)
-    self._plugins_mngr.unloadProcessorLibrary(processor_metadata)
-    #Create the action for the file
-    path_action = PathAction(self.context, path=path, mask=IN_CLOSE_WRITE)
-    #append function on notification for the file
-    path_action.appendFunction(manifestInotifyForked)
-    #register the action for future notifications listening
-    self._inotify_mngr.registerAction(path_action)
+    def registerTestModules(self, test_modules, test_pline):
+        # is it one module or a list of modules?
+        if not isiterable(test_modules):
+            test_modules = [test_modules]
+        # regiter each provided module
+        for testModule in test_modules:
+            self._registerTestModule(testModule, test_pline)
+
+    def _registerTestModule(self, testModule, test_pline):
+        # Get the plugin test instance
+        plugin_test = self._getTestInstance(testModule)
+        # Creates processors manifest files watchers
+        for processor in plugin_test.getWatchedProcessors():
+            # watch it's processor manifest for changes
+            self.__watchProcessorManifest(processor, testModule, test_pline)
+
+    def __watchProcessorManifest(self, processor, testModule, test_pline):
+        '''Defines the function to be call when the plugin's manifest changes.'''
+        # define the function to call when the processor's manifest (.py)
+        # changes
+        def manifestInotifyForked(event, action, manager):
+            '''Kills previous child process and creates a new one that will recreate
+              the whole pipeline.
+            '''
+            if self._child_pid:  # if there were a prior proces, then kill it
+                self.log.debug("Killing child process %s with signal %s." %
+                               (self._child_pid, signal.SIGTERM))
+                # if the child is not killed will remain running after father's dead
+                # send the TERM signal 15
+                os.kill(self._child_pid, signal.SIGTERM)
+                # wait for the children death
+                child_pid, status = os.waitpid(self._child_pid, 0)
+                self.log.debug("Child process %s ended with status %s." %
+                               (child_pid, status))
+            # Get the function to call when the manifest changed (means need to
+            # reload the whole pipeline)
+            function = self.__getManifestInotifyFunction(
+                testModule, test_pline)
+            self._child_pid = self._callFunctionOnFork(
+                function, wait_child=False)
+        # load the processor to get the manifest's module path
+        processor_metadata = self._plugins_mngr.loadProcessor(processor)
+        path = self._getModuleFilePath(processor_metadata.module)
+        # unload processor to release libraries (very important, if not the
+        # file won't be released when deleted)
+        self._plugins_mngr.unloadProcessorLibrary(processor_metadata)
+        # Create the action for the file
+        path_action = PathAction(self.context, path=path, mask=IN_CLOSE_WRITE)
+        # append function on notification for the file
+        path_action.appendFunction(manifestInotifyForked)
+        # register the action for future notifications listening
+        self._inotify_mngr.registerAction(path_action)
 
 if __name__ == "__main__":
-  from common.log.debugPrint import debugPrint
-  from getDefaultContext import getDefaultContext
-  from pipeline_backend.logging.logging import LOG_INFO#, LOG_DEBUG
-  #ptr = ProcessorPluginTestRunner(getDefaultContext(LOG_DEBUG))
-  ptr = ProcessorPluginTestRunner(getDefaultContext(LOG_INFO))
-  debugPrint (ptr)
-
+    from common.log.debugPrint import debugPrint
+    from getDefaultContext import getDefaultContext
+    from pipeline_backend.logging.logging import LOG_INFO  # , LOG_DEBUG
+    #ptr = ProcessorPluginTestRunner(getDefaultContext(LOG_DEBUG))
+    ptr = ProcessorPluginTestRunner(getDefaultContext(LOG_INFO))
+    debugPrint(ptr)

@@ -19,15 +19,16 @@ You should have received a copy of the GNU General Public License
 along with Mepinta. If not, see <http://www.gnu.org/licenses/>.
 '''
 
+
 def isiterable(instance):
-  try:
-    iterator = iter(instance)
-    return True
-  except TypeError as e:
-    return False
+    try:
+        iterator = iter(instance)
+        return True
+    except TypeError as e:
+        return False
 
 
 if __name__ == "__main__":
-  debugPrint(isiterable([]))
-  debugPrint(isiterable("foo"))
-  debugPrint(isiterable(10))
+    debugPrint(isiterable([]))
+    debugPrint(isiterable("foo"))
+    debugPrint(isiterable(10))

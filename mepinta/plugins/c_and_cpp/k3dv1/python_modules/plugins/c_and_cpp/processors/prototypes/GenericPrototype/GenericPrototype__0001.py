@@ -20,25 +20,28 @@ along with Mepinta. If not, see <http://www.gnu.org/licenses/>.
 '''
 
 from mepinta.plugins_manifest import ProcessorManifestBase, FunctionProperty, \
-  directed, Functum, DataProperty
+    directed, Functum, DataProperty
+
 
 class GenericPrototype(ProcessorManifestBase):
-  def define(self, inputs, internals, functions, outputs):
-    inputs.count = 'k3d::int32_t'
-    inputs.phrase = 'k3d::string_t'
-    functions.fooFunction = FunctionProperty()
-    
-    functions.fooFunction.dpdencies += inputs.count, inputs.phrase
-    
-    #inputs. = DataProperty('')
-    #outputs. = DataProperty('')
-    #functions. = FunctionProperty()
-    #functions..dpdencies += [inputs.,]
-    #outputs..dpdencies += [functions.]
+
+    def define(self, inputs, internals, functions, outputs):
+        inputs.count = 'k3d::int32_t'
+        inputs.phrase = 'k3d::string_t'
+        functions.fooFunction = FunctionProperty()
+
+        functions.fooFunction.dpdencies += inputs.count, inputs.phrase
+
+        # inputs. = DataProperty('')
+        # outputs. = DataProperty('')
+        # functions. = FunctionProperty()
+        # functions..dpdencies += [inputs.,]
+        # outputs..dpdencies += [functions.]
 
 manifest = GenericPrototype
 
 if __name__ == "__main__":
-  from getDefaultContext import getDefaultContext
-  from mepinta.plugins_manifest.PluginManifestTester import PluginManifestAutoTester
-  PluginManifestAutoTester(getDefaultContext()).test(manifest(getDefaultContext()))
+    from getDefaultContext import getDefaultContext
+    from mepinta.plugins_manifest.PluginManifestTester import PluginManifestAutoTester
+    PluginManifestAutoTester(getDefaultContext()).test(
+        manifest(getDefaultContext()))

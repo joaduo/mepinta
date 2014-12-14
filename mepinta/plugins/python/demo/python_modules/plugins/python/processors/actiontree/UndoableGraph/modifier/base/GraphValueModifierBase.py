@@ -19,34 +19,37 @@ You should have received a copy of the GNU General Public License
 along with Mepinta. If not, see <http://www.gnu.org/licenses/>.
 '''
 from mepinta.plugins_manifest import ProcessorManifestBase, FunctionProperty, \
-  directed
+    directed
+
 
 class GraphValueModifierBase(ProcessorManifestBase):
-  def _superClassDefine(self, inputs, internals, functions, outputs):
-    #inputs
-    inputs.graph = 'actiontree.UndoableGraph'
-    inputs.context_name = 'str'
-    #outputs
-    outputs.graph = 'actiontree.UndoableGraph'
-    #functions
-    functions.changeGraphValues = FunctionProperty()
-    #Set dependencies
-    #Set modifier related topology ids
-    functions.changeGraphValues.dpdencies += (inputs.graph,
-                                              inputs.context_name,)
-    outputs.graph.dpdencies += functions.changeGraphValues
 
-    self.nonCached(outputs.graph)
+    def _superClassDefine(self, inputs, internals, functions, outputs):
+        # inputs
+        inputs.graph = 'actiontree.UndoableGraph'
+        inputs.context_name = 'str'
+        # outputs
+        outputs.graph = 'actiontree.UndoableGraph'
+        # functions
+        functions.changeGraphValues = FunctionProperty()
+        # Set dependencies
+        # Set modifier related topology ids
+        functions.changeGraphValues.dpdencies += (inputs.graph,
+                                                  inputs.context_name,)
+        outputs.graph.dpdencies += functions.changeGraphValues
 
-    return functions.changeGraphValues
-  def define(self, inputs, internals, functions, outputs, changeGraphValues):
-    '''
-      Implement this method on children classes.
-      Example:
-        inputs.node_name = 'str'
-        changeGraphValues.dpdencies += [inputs.node_name]
-    '''
-    pass
+        self.nonCached(outputs.graph)
+
+        return functions.changeGraphValues
+
+    def define(self, inputs, internals, functions, outputs, changeGraphValues):
+        '''
+          Implement this method on children classes.
+          Example:
+            inputs.node_name = 'str'
+            changeGraphValues.dpdencies += [inputs.node_name]
+        '''
+        pass
 
 if __name__ == "__main__":
-  pass
+    pass

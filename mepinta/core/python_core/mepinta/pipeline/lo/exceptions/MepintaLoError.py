@@ -19,8 +19,10 @@ You should have received a copy of the GNU General Public License
 along with Mepinta. If not, see <http://www.gnu.org/licenses/>.
 '''
 
+
 class MepintaLoError(Exception):
-  pass
+    pass
+
 
 def shedskin_MepintaLoError():
-  e = MepintaLoError()
+    e = MepintaLoError()

@@ -22,21 +22,24 @@ along with Mepinta. If not, see <http://www.gnu.org/licenses/>.
 
 from mepinta.plugins_manifest import DataTypeManifestBase
 
-class manifest(DataTypeManifestBase):
-  pass
 
-    
+class manifest(DataTypeManifestBase):
+    pass
+
 
 def new():
-  return list()
+    return list()
+
 
 def copy(list_):
-  return list(list_)
+    return list(list_)
+
 
 def delete(list_):
-  pass
+    pass
+
 
 def copyTo(to_list, from_list):
-  del to_list[:]
-  to_list += from_list
-  return to_list
+    del to_list[:]
+    to_list += from_list
+    return to_list

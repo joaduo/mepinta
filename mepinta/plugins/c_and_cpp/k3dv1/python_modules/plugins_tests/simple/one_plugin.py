@@ -24,26 +24,27 @@ from mepinta.testing.plugins_testing.gui.SimpleTestPipelineGui import SimpleTest
 from mepinta.testing.plugins_testing.test_pipeline.InotifySimpleTestPipeline import InotifySimpleTestPipeline
 from pipeline_backend.logging.logging import LOG_DEBUG
 
-def smokeTestModule():
-  context = MepintaContext(log_level=LOG_DEBUG)
-#  pline = SimpleTestPipeline(context)
-  pline = InotifySimpleTestPipeline(context)
 
-  gui = SimpleTestPipelineGui(context, test_pline=pline)
-  import plugins.c_and_cpp.processors.k3dv1.mesh.generators.polyhedron.PolyCube as processor
-  node = pline.append(processor)
-  pline.setValue(node.inputs.rows, 2)
-  pline.setValue(node.inputs.columns, 2)
-  pline.setValue(node.inputs.slices, 2)
-  pline.setValue(node.inputs.width, 1.)
-  pline.setValue(node.inputs.height, 1.)
-  pline.setValue(node.inputs.depth, 1.)
+def smokeTestModule():
+    context = MepintaContext(log_level=LOG_DEBUG)
+#  pline = SimpleTestPipeline(context)
+    pline = InotifySimpleTestPipeline(context)
+
+    gui = SimpleTestPipelineGui(context, test_pline=pline)
+    import plugins.c_and_cpp.processors.k3dv1.mesh.generators.polyhedron.PolyCube as processor
+    node = pline.append(processor)
+    pline.setValue(node.inputs.rows, 2)
+    pline.setValue(node.inputs.columns, 2)
+    pline.setValue(node.inputs.slices, 2)
+    pline.setValue(node.inputs.width, 1.)
+    pline.setValue(node.inputs.height, 1.)
+    pline.setValue(node.inputs.depth, 1.)
 #  pline.defaultEvaluated.append(node.outputs.mesh)
-  import plugins.c_and_cpp.processors.k3dv1.mesh.output.file.K3DMeshWriter as k3d_wtr
-  write_node = pline.append(k3d_wtr)
-  pline.setValue(write_node.inputs.file, '/home/jduo/output.k3d')
-  pline.defaultEvaluated.append(write_node.functions.writeMesh)
-  pline.evaluateProp()
+    import plugins.c_and_cpp.processors.k3dv1.mesh.output.file.K3DMeshWriter as k3d_wtr
+    write_node = pline.append(k3d_wtr)
+    pline.setValue(write_node.inputs.file, '/home/jduo/output.k3d')
+    pline.defaultEvaluated.append(write_node.functions.writeMesh)
+    pline.evaluateProp()
 #  pline.setValue(node.inputs.rows, 3)
 #  pline.evaluateProp()
 #  for i in range(100):
@@ -53,7 +54,7 @@ def smokeTestModule():
 #    time.sleep(0.1)
 #  print node
 #  import ipdb; ipdb.set_trace()
-  gui.run()
+    gui.run()
 
 if __name__ == "__main__":
-  smokeTestModule()
+    smokeTestModule()

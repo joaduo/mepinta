@@ -20,21 +20,21 @@ along with Mepinta. If not, see <http://www.gnu.org/licenses/>.
 '''
 from importing_plugins.base import createPackageImport, importDataTypes
 
+
 def importCommonDataTypes():
-  eclipse_root_basic = "/home/jduo/Projects/Informatica/Mepinta/EclipseProjects_Basic_Data_Types/Basic/DataTypes"
-  data_types_basic= {
-                    "c.builtin" : "charp int double uint".split(),
-                    "cpp.std" : "string".split(),
-                    "mepinta" : "internal_any functum".split(),
-                   }
-  data_type_imports = [(data_types_basic,eclipse_root_basic)]
-  
-  eclipse_root_GC = "/home/jduo/Projects/Informatica/Mepinta/EclipseProjects_Basic_Data_Types/Basic/Boehm_GC"
-  data_types_GC= {"c.boehm_gc" : "charp".split(), }  
-  data_type_imports.append((data_types_GC, eclipse_root_GC))
-  
-  importDataTypes(data_type_imports)
+    eclipse_root_basic = "/home/jduo/Projects/Informatica/Mepinta/EclipseProjects_Basic_Data_Types/Basic/DataTypes"
+    data_types_basic = {
+        "c.builtin": "charp int double uint".split(),
+                      "cpp.std": "string".split(),
+                      "mepinta": "internal_any functum".split(),
+    }
+    data_type_imports = [(data_types_basic, eclipse_root_basic)]
 
-if __name__ == "__main__":   
-  importCommonDataTypes()
+    eclipse_root_GC = "/home/jduo/Projects/Informatica/Mepinta/EclipseProjects_Basic_Data_Types/Basic/Boehm_GC"
+    data_types_GC = {"c.boehm_gc" : "charp".split(), }
+    data_type_imports.append((data_types_GC, eclipse_root_GC))
 
+    importDataTypes(data_type_imports)
+
+if __name__ == "__main__":
+    importCommonDataTypes()

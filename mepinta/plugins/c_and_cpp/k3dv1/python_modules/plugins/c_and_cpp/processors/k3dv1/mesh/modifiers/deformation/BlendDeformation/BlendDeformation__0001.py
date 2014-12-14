@@ -22,15 +22,17 @@ along with Mepinta. If not, see <http://www.gnu.org/licenses/>.
 from mepinta.plugins_manifest import DataProperty
 from plugins.c_and_cpp.processors.k3dv1.mesh.modifiers.deformation.base.SimpleDeformationManifestBase import SimpleDeformationManifestBase
 
-class BlendDeformation(SimpleDeformationManifestBase):
-  def define(self, inputs, internals, functions, outputs, deformMesh):
-    inputs.blend_amount = DataProperty('k3d::double_t')
-    inputs.original_mesh = DataProperty('k3d::mesh')
 
-    deformMesh.dpdencies += inputs.blend_amount, inputs.original_mesh
+class BlendDeformation(SimpleDeformationManifestBase):
+
+    def define(self, inputs, internals, functions, outputs, deformMesh):
+        inputs.blend_amount = DataProperty('k3d::double_t')
+        inputs.original_mesh = DataProperty('k3d::mesh')
+
+        deformMesh.dpdencies += inputs.blend_amount, inputs.original_mesh
 
 manifest = BlendDeformation
 
 if __name__ == "__main__":
-  from mepinta.testing.plugins_testing.PluginManifestAutoTester import PluginManifestAutoTester
-  PluginManifestAutoTester().test(manifest)#, gui=True)
+    from mepinta.testing.plugins_testing.PluginManifestAutoTester import PluginManifestAutoTester
+    PluginManifestAutoTester().test(manifest)  # , gui=True)

@@ -20,39 +20,41 @@ along with Mepinta. If not, see <http://www.gnu.org/licenses/>.
 '''
 
 from mepinta.plugins_manifest import ProcessorManifestBase, DataProperty, FunctionProperty, \
-  directed, Functum
+    directed, Functum
+
 
 class SimpleDeformationManifestBase(ProcessorManifestBase):
-  def _superClassDefine(self, inputs, internals, functions, outputs):
-    '''Creates the common topology pipeline for SimpelMeshDeformation modifiers.'''
-    inputs.mesh = DataProperty('k3d::mesh')
-    outputs.mesh = DataProperty('k3d::mesh')
-    internals.deformMesh = Functum()
-    functions.demuxMeshSignal = FunctionProperty()
-    
-    internals.deformMesh.dpdencies +=[directed('>',inputs.mesh),]
-    
-    functions.demuxMeshSignal.dpdencies += [internals.deformMesh,
-                                            inputs.mesh,]
-    outputs.mesh.dpdencies += [functions.demuxMeshSignal,
-                               directed('<',internals.deformMesh),]
-    return internals.deformMesh
 
-  def define(self, inputs, internals, functions, outputs, deformMesh):
-    '''
-      Implement this method on children classes.
-      Example:
-        inputs.rows = DataProperty('uint')
-        deformMesh.dpdencies += [inputs.rows]
-    '''
-    pass
+    def _superClassDefine(self, inputs, internals, functions, outputs):
+        '''Creates the common topology pipeline for SimpelMeshDeformation modifiers.'''
+        inputs.mesh = DataProperty('k3d::mesh')
+        outputs.mesh = DataProperty('k3d::mesh')
+        internals.deformMesh = Functum()
+        functions.demuxMeshSignal = FunctionProperty()
+
+        internals.deformMesh.dpdencies += [directed('>', inputs.mesh),]
+
+        functions.demuxMeshSignal.dpdencies += [internals.deformMesh,
+                                                inputs.mesh, ]
+        outputs.mesh.dpdencies += [functions.demuxMeshSignal,
+                                   directed('<', internals.deformMesh), ]
+        return internals.deformMesh
+
+    def define(self, inputs, internals, functions, outputs, deformMesh):
+        '''
+          Implement this method on children classes.
+          Example:
+            inputs.rows = DataProperty('uint')
+            deformMesh.dpdencies += [inputs.rows]
+        '''
+        pass
 
 manifest = SimpleDeformationManifestBase
 
 if __name__ == "__main__":
-  from mepinta.context.MepintaContext import MepintaContext
-  from mepinta.plugins_manifest.PluginManifestTester import PluginManifestTester
-  context = MepintaContext('c_and_cpp')
-  plugin_instance = manifest(context=context)
-  context.log(manifest)
-  PluginManifestTester(context=context).test(plugin_instance)
+    from mepinta.context.MepintaContext import MepintaContext
+    from mepinta.plugins_manifest.PluginManifestTester import PluginManifestTester
+    context = MepintaContext('c_and_cpp')
+    plugin_instance = manifest(context=context)
+    context.log(manifest)
+    PluginManifestTester(context=context).test(plugin_instance)

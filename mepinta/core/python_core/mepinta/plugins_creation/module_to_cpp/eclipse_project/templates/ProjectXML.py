@@ -19,13 +19,15 @@ You should have received a copy of the GNU General Public License
 along with Mepinta. If not, see <http://www.gnu.org/licenses/>.
 '''
 from mepinta.plugins_creation.templates.base import ManifestAndFileTemplateBase,\
-  on_template
+    on_template
+
 
 class ProjectXML(ManifestAndFileTemplateBase):
-  @on_template
-  def projectName(self):
-    return self.plugin_manifest.getName()
 
-        
+    @on_template
+    def projectName(self):
+        return self.plugin_manifest.getName()
+
+
 if __name__ == "__main__":
-  pass
+    pass

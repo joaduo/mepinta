@@ -21,46 +21,50 @@ along with Mepinta. If not, see <http://www.gnu.org/licenses/>.
 from copy import deepcopy
 from common.abstract.FrameworkObject import FrameworkObject
 
+
 class Node(FrameworkObject):
-  '''
-    A Graph node.
-    It's composed by groups of properties (lo.pipeline's properties)
-  '''
-  def __init__(self, name, processor):
-    #There is no superior object to store the id (Node has to store itself)
-    self.node_id = 0
-    self.name = name
-    #TODO: rename to processor_metadata
-    self.processor = processor
-    #Clone connections of the proxy
-    self.processor.proxy.spawnIntoNode(self)
 
-  def getPropertiesIds(self):
-    pass #for container in self.containers.getProperties()
+    '''
+      A Graph node.
+      It's composed by groups of properties (lo.pipeline's properties)
+    '''
 
-  def __str__(self):
-    return 'Node(%r,%r)' % (self.name, self.processor)
+    def __init__(self, name, processor):
+        # There is no superior object to store the id (Node has to store
+        # itself)
+        self.node_id = 0
+        self.name = name
+        # TODO: rename to processor_metadata
+        self.processor = processor
+        # Clone connections of the proxy
+        self.processor.proxy.spawnIntoNode(self)
 
-  def __repr__(self):
-    return '<%r %s>' % (self.name, object.__repr__(self))
+    def getPropertiesIds(self):
+        pass  # for container in self.containers.getProperties()
+
+    def __str__(self):
+        return 'Node(%r,%r)' % (self.name, self.processor)
+
+    def __repr__(self):
+        return '<%r %s>' % (self.name, object.__repr__(self))
+
 
 class Graph(FrameworkObject):
-  def __init__(self, pline):
-    self.pline = pline
-    self.__node_count = 0
-    self.topologyChanged = False
-    self.allNodes = dict()#id:Node
 
-  def addNode(self, node):
-    #Repr Check
-    assert node not in self.allNodes.values(), 'node already in this graph'
-    #Add the new node
-    node_id = self.__newNodeId()
-    self.allNodes[node_id] = node
-    node.node_id = node_id
+    def __init__(self, pline):
+        self.pline = pline
+        self.__node_count = 0
+        self.topologyChanged = False
+        self.allNodes = dict()  # id:Node
 
-  def __newNodeId(self):
-    self.__node_count += 1
-    return self.__node_count
+    def addNode(self, node):
+        # Repr Check
+        assert node not in self.allNodes.values(), 'node already in this graph'
+        # Add the new node
+        node_id = self.__newNodeId()
+        self.allNodes[node_id] = node
+        node.node_id = node_id
 
-
+    def __newNodeId(self):
+        self.__node_count += 1
+        return self.__node_count

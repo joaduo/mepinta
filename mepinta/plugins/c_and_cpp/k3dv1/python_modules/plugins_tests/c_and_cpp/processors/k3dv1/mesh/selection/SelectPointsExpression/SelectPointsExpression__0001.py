@@ -21,32 +21,34 @@ along with Mepinta. If not, see <http://www.gnu.org/licenses/>.
 from pipeline_backend.logging.logging import LOG_INFO
 from plugins_tests.base.K3dMeshPluginTest import K3dMeshPluginTest
 
+
 class SelectPointsExpression(K3dMeshPluginTest):
-  def __post_init__(self):
-    import plugins.c_and_cpp.processors.k3dv1.mesh.selection.points.SelectPointsExpression as select
-    self.testedProcessors.append(select)
 
-  def definePluginPipeline(self, test_pline):
-    select = self.testedProcessors[0]
-    select_node = test_pline.append(select)
-    test_pline.setValue(select_node.inputs.weight_expression, 't')
-    test_pline.setValue(select_node.inputs.time_name, 't')
-    test_pline.setValue(select_node.inputs.time, 1)
+    def __post_init__(self):
+        import plugins.c_and_cpp.processors.k3dv1.mesh.selection.points.SelectPointsExpression as select
+        self.testedProcessors.append(select)
 
-  def getTimeParameters(self):
-    return self.time.startEndStepSleep(start=0., end=5., step=0.5, sleep=0.05)
+    def definePluginPipeline(self, test_pline):
+        select = self.testedProcessors[0]
+        select_node = test_pline.append(select)
+        test_pline.setValue(select_node.inputs.weight_expression, 't')
+        test_pline.setValue(select_node.inputs.time_name, 't')
+        test_pline.setValue(select_node.inputs.time, 1)
 
-  def stressPipeline(self, test_pline, time):
-    K3dMeshPluginTest.stressPipeline(self, test_pline, time)
-    select_node = test_pline.getNodesDict()['SelectPointsExpression 1']
-    test_pline.setValue(select_node.inputs.weight_expression, 't')
-    test_pline.setValue(select_node.inputs.time_name, 't')    
+    def getTimeParameters(self):
+        return self.time.startEndStepSleep(start=0., end=5., step=0.5, sleep=0.05)
+
+    def stressPipeline(self, test_pline, time):
+        K3dMeshPluginTest.stressPipeline(self, test_pline, time)
+        select_node = test_pline.getNodesDict()['SelectPointsExpression 1']
+        test_pline.setValue(select_node.inputs.weight_expression, 't')
+        test_pline.setValue(select_node.inputs.time_name, 't')
 #    qslim_node = test_pline.getNodesDict()['QSlim 1']
 #    test_pline.setValue(qslim_node.inputs.face_count, 10*time)
 
 test = SelectPointsExpression
-        
+
 if __name__ == "__main__":
-  from getDefaultContext import getDefaultContext
-  from mepinta.testing.plugins_testing.PluginTestAutoTester import PluginTestAutoTester
-  PluginTestAutoTester(getDefaultContext(LOG_INFO)).test(test)#,gui=False)
+    from getDefaultContext import getDefaultContext
+    from mepinta.testing.plugins_testing.PluginTestAutoTester import PluginTestAutoTester
+    PluginTestAutoTester(getDefaultContext(LOG_INFO)).test(test)  # ,gui=False)

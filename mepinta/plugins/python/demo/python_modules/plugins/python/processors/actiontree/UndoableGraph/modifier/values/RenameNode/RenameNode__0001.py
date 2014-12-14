@@ -21,27 +21,30 @@ along with Mepinta. If not, see <http://www.gnu.org/licenses/>.
 
 from plugins.python.processors.actiontree.UndoableGraph.modifier.base.GraphValueModifierBase import GraphValueModifierBase
 
-class manifest(GraphValueModifierBase):
-  def define(self, inputs, internals, functions, outputs, changeGraphValues):
-    inputs.node_id = 'int'
-    inputs.node_name = 'str'
 
-    changeGraphValues.dpdencies += (inputs.node_id, inputs.newName)
+class manifest(GraphValueModifierBase):
+
+    def define(self, inputs, internals, functions, outputs, changeGraphValues):
+        inputs.node_id = 'int'
+        inputs.node_name = 'str'
+
+        changeGraphValues.dpdencies += (inputs.node_id, inputs.newName)
+
 
 def changeGraphValues(args):
-  from mepinta.pipelineview.actiontree.undoable_graph.UndoableGraphManager import UndoableGraphManager
-  from mepinta.context.MepintaContext import MepintaContext
-  from mepinta_python_sdk.props import getPropValue
-  context_name = getPropValue(args, 'inputs', 'context_name')
-  node_id = getPropValue(args, 'inputs', 'node_id')
-  node_name = getPropValue(args, 'inputs', 'node_name')
-  graph = getPropValue(args, 'outputs', 'graph')
-  graph_manager = UndoableGraphManager(MepintaContext(context_name))
-  node = graph_manager.getNodeById(graph, node_id)
-  node.name = node_name
+    from mepinta.pipelineview.actiontree.undoable_graph.UndoableGraphManager import UndoableGraphManager
+    from mepinta.context.MepintaContext import MepintaContext
+    from mepinta_python_sdk.props import getPropValue
+    context_name = getPropValue(args, 'inputs', 'context_name')
+    node_id = getPropValue(args, 'inputs', 'node_id')
+    node_name = getPropValue(args, 'inputs', 'node_name')
+    graph = getPropValue(args, 'outputs', 'graph')
+    graph_manager = UndoableGraphManager(MepintaContext(context_name))
+    node = graph_manager.getNodeById(graph, node_id)
+    node.name = node_name
 
 if __name__ == "__main__":
-  from getDefaultContext import getDefaultContext
-  from mepinta.testing.plugins_testing.PluginManifestAutoTester import PluginManifestAutoTester
-  #PluginManifestAutoTester(getDefaultContext()).test(manifest)#, gui=True)
-  PluginManifestAutoTester(getDefaultContext()).visualizeXdot(manifest)
+    from getDefaultContext import getDefaultContext
+    from mepinta.testing.plugins_testing.PluginManifestAutoTester import PluginManifestAutoTester
+    # PluginManifestAutoTester(getDefaultContext()).test(manifest)#, gui=True)
+    PluginManifestAutoTester(getDefaultContext()).visualizeXdot(manifest)

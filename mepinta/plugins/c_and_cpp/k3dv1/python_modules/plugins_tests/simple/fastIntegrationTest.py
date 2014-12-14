@@ -22,28 +22,30 @@ from pipeline_backend.logging.logging import LOG_DEBUG
 
 
 def getTestModules():
-  test_modules = []
-  import plugins_tests.c_and_cpp.processors.k3dv1.mesh.modifiers.deformation.BlendDeformation.BlendDeformation__0001 as test_module
+    test_modules = []
+    import plugins_tests.c_and_cpp.processors.k3dv1.mesh.modifiers.deformation.BlendDeformation.BlendDeformation__0001 as test_module
 #  import plugins_tests.c_and_cpp.processors.k3dv1.mesh.modifiers.polyhedron.QSlim.QSlim__0001 as test_module
 #  import plugins_tests.c_and_cpp.processors.k3dv1.mesh.selection.SelectPointsExpression.SelectPointsExpression__0001 as test_module
-  test_modules.append(test_module)
-  return test_modules
+    test_modules.append(test_module)
+    return test_modules
+
 
 def fastIntegrationTestPython(context=None, gui=False):
-  from mepinta.context.MepintaContext import MepintaContext
-  if not context:
-    context = MepintaContext(log_level=LOG_DEBUG)
+    from mepinta.context.MepintaContext import MepintaContext
+    if not context:
+        context = MepintaContext(log_level=LOG_DEBUG)
 #    context = MepintaContext()
-  from mepinta.testing.plugins_testing.PluginTestAutoTester import PluginTestAutoTester
-  test_modules = getTestModules()
-  if gui:
-    PluginTestAutoTester(context).shallowTest(gui, test_modules[0])
-  else:
-    for test_module in test_modules:
-      PluginTestAutoTester(context).shallowTest(gui, test_module)
+    from mepinta.testing.plugins_testing.PluginTestAutoTester import PluginTestAutoTester
+    test_modules = getTestModules()
+    if gui:
+        PluginTestAutoTester(context).shallowTest(gui, test_modules[0])
+    else:
+        for test_module in test_modules:
+            PluginTestAutoTester(context).shallowTest(gui, test_module)
+
 
 def smokeTestModule():
-  fastIntegrationTestPython(gui=True)
+    fastIntegrationTestPython(gui=True)
 
 if __name__ == "__main__":
-  smokeTestModule()
+    smokeTestModule()

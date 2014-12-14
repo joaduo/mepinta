@@ -21,22 +21,27 @@ along with Mepinta. If not, see <http://www.gnu.org/licenses/>.
 from mepinta.pipelineview.graph.data_model import Node
 from common.abstract.FrameworkBase import FrameworkBase
 
+
 class NodeManager(FrameworkBase):
-  def __post_init__(self):
-    self.names_counter = {}
-  def newName(self, processor_name):
-    if processor_name not in self.names_counter:
-      self.names_counter[processor_name] = 0
-    self.names_counter[processor_name] += 1
-    count = self.names_counter[processor_name]
-    return '%s %s' % (processor_name, count)
-  def new(self, processor):
-    #makes a copy of the proxy and assigns values to
-    #its properties (id and node proxy)
-    #and node (id)
-    #adds properties to the context_lo_hi
-    #
-    node_name = self.newName(processor.proxy.name)
-    self.log.debug('Creating a new node %r of type %s' % (node_name, processor))
-    node_proxy = Node(node_name, processor)
-    return node_proxy
+
+    def __post_init__(self):
+        self.names_counter = {}
+
+    def newName(self, processor_name):
+        if processor_name not in self.names_counter:
+            self.names_counter[processor_name] = 0
+        self.names_counter[processor_name] += 1
+        count = self.names_counter[processor_name]
+        return '%s %s' % (processor_name, count)
+
+    def new(self, processor):
+        # makes a copy of the proxy and assigns values to
+        # its properties (id and node proxy)
+        # and node (id)
+        # adds properties to the context_lo_hi
+        #
+        node_name = self.newName(processor.proxy.name)
+        self.log.debug('Creating a new node %r of type %s' %
+                       (node_name, processor))
+        node_proxy = Node(node_name, processor)
+        return node_proxy

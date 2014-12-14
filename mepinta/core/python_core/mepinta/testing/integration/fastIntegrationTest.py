@@ -19,18 +19,20 @@ You should have received a copy of the GNU General Public License
 along with Mepinta. If not, see <http://www.gnu.org/licenses/>.
 '''
 
+
 def fastIntegrationTest(context=None):
-  from getDefaultContext import getDefaultContext
-  if not context:
-    context = getDefaultContext()
-  if context.backend_name == 'python':
-    from plugins_tests.integration.fastIntegrationTest import fastIntegrationTestPython
-    fastIntegrationTestPython(context)
-  else:
-    raise NotImplementedError()
+    from getDefaultContext import getDefaultContext
+    if not context:
+        context = getDefaultContext()
+    if context.backend_name == 'python':
+        from plugins_tests.integration.fastIntegrationTest import fastIntegrationTestPython
+        fastIntegrationTestPython(context)
+    else:
+        raise NotImplementedError()
+
 
 def smokeTestModule():
-  fastIntegrationTest()
+    fastIntegrationTest()
 
 if __name__ == "__main__":
-  smokeTestModule()
+    smokeTestModule()

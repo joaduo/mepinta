@@ -23,58 +23,70 @@ from mepinta.abstract.MepintaError import MepintaError
 from common.abstract.decorators.context_singleton import context_singleton
 from mepinta.pipeline.lo.pipeline_data.data_model import Topology
 
+
 class LibraryManager(object):
-  def loadLibray(self, library, force_reload=False):
-    #librería dice en qué datos depende
-    #en que otras librerías
-    #en qué processors
-    #inputs.function = Function(loadFrom=ManifestBase)
-    #inputs.function = Function().loadFrom('demov1.Geometry2D.modifier.GroovyMove').requiresLibrary('demov1.commonlib')
-    #self.requiresLibrary('demov1.commonlib')
-    pass
-  def unloadLibrary(self, libraryId):
-    pass
+
+    def loadLibray(self, library, force_reload=False):
+        # librería dice en qué datos depende
+        # en que otras librerías
+        # en qué processors
+        #inputs.function = Function(loadFrom=ManifestBase)
+        #inputs.function = Function().loadFrom('demov1.Geometry2D.modifier.GroovyMove').requiresLibrary('demov1.commonlib')
+        # self.requiresLibrary('demov1.commonlib')
+        pass
+
+    def unloadLibrary(self, libraryId):
+        pass
+
 
 class LibraryManifestBase(object):
-  pass
+    pass
+
 
 class manifest(LibraryManifestBase):
-  def define(self):
-    self.requiresLibrary('demov1.SomeOtherLib')
-    self.requiresOsLibrary('libc6')
+
+    def define(self):
+        self.requiresLibrary('demov1.SomeOtherLib')
+        self.requiresOsLibrary('libc6')
+
 
 @context_singleton
 class LibraryGraph(FrameworkObject):
-  def __init__(self, backend_name):
-    self.backend_name = backend_name
-    self.topology = Topology()
-    self.all_libraries = dict() #id:library
-    self.__library_id_count = 0
 
-  def __getNewLibraryId(self):
-    self.__library_id_count += 1
-    return self.__library_id_count
+    def __init__(self, backend_name):
+        self.backend_name = backend_name
+        self.topology = Topology()
+        self.all_libraries = dict()  # id:library
+        self.__library_id_count = 0
 
-  def addLibray(self, library):
-    libraryId = self.__getNewLibraryId()
-    self.all_libraries[libraryId] = library
-    self.topology.addPropId(libraryId)
+    def __getNewLibraryId(self):
+        self.__library_id_count += 1
+        return self.__library_id_count
+
+    def addLibray(self, library):
+        libraryId = self.__getNewLibraryId()
+        self.all_libraries[libraryId] = library
+        self.topology.addPropId(libraryId)
+
 
 class LibraryMetadata(FrameworkObject):
-  def __init__(self, name, path):
-    self.name = name
-    self.path = path
-    self.dpdencies = []
 
-  def setId(self, libraryId):
-    def cannotSetId(libraryId):
-      raise MepintaError('You cannot change a library id once is has been set')
-    self.__library_id = libraryId
-    self.setId = cannotSetId
-  @property
-  def libraryId(self):
-    return self.__library_id
+    def __init__(self, name, path):
+        self.name = name
+        self.path = path
+        self.dpdencies = []
+
+    def setId(self, libraryId):
+        def cannotSetId(libraryId):
+            raise MepintaError(
+                'You cannot change a library id once is has been set')
+        self.__library_id = libraryId
+        self.setId = cannotSetId
+
+    @property
+    def libraryId(self):
+        return self.__library_id
+
 
 class PluginLibrary(LibraryMetadata):
-  pass
-
+    pass

@@ -19,21 +19,19 @@ You should have received a copy of the GNU General Public License
 along with Mepinta. If not, see <http://www.gnu.org/licenses/>.
 '''
 
-from pipeline_backend.logging.logging import  logWarning
+from pipeline_backend.logging.logging import logWarning
+
 
 def solveSymbol(handle, namespace, symbol):
-  '''
-    On python this function looks for a variable "symbol" in the module "handle"
-      We don't use the namespace on python
-    In a shedskin, and thus, in a C counterpart we should look for a symbol named
-      "namspace+symbol" on the library handler (void*) 
-  '''
-  #Beware, when namespace = '', we are searching for a processor function
-  if hasattr(handle, symbol):
-    return getattr(handle, symbol)
-  else:
-    logWarning('Symbol %r not found with lib handler %r for namescape %r'%(symbol,handle,namespace))
-    return None
-
-
-
+    '''
+      On python this function looks for a variable "symbol" in the module "handle"
+        We don't use the namespace on python
+      In a shedskin, and thus, in a C counterpart we should look for a symbol named
+        "namspace+symbol" on the library handler (void*) 
+    '''
+    # Beware, when namespace = '', we are searching for a processor function
+    if hasattr(handle, symbol):
+        return getattr(handle, symbol)
+    else:
+        logWarning('Symbol %r not found with lib handler %r for namescape %r'%(symbol, handle, namespace))
+        return None

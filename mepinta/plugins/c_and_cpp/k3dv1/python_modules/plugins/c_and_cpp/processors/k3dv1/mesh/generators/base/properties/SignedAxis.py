@@ -20,10 +20,12 @@ along with Mepinta. If not, see <http://www.gnu.org/licenses/>.
 '''
 from mepinta.plugins_manifest import GenericEnum
 
+
 class SignedAxis(GenericEnum):
-  def __init__(self):
-    enum_dict = dict(NX=0, PX=1, NY=2, PY=3, NZ=4, PZ=5)
-    GenericEnum.__init__(self, **enum_dict)
-        
+
+    def __init__(self):
+        enum_dict = dict(NX=0, PX=1, NY=2, PY=3, NZ=4, PZ=5)
+        GenericEnum.__init__(self, **enum_dict)
+
 if __name__ == "__main__":
-  pass
+    pass

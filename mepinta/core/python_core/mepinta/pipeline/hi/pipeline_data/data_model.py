@@ -20,13 +20,15 @@ along with Mepinta. If not, see <http://www.gnu.org/licenses/>.
 '''
 from mepinta.pipeline.hi.base import HiBase
 
+
 class Pipeline(HiBase):
-  def __post_init__(self):
-    self.wrapped = self._getWrappedClass()()
+
+    def __post_init__(self):
+        self.wrapped = self._getWrappedClass()()
 
 if __name__ == '__main__':
-  from getDefaultContext import getDefaultContext
-  from mepinta.pipeline.hi.FactoryLo import unwrapLo
-  pline = Pipeline(context=getDefaultContext())
-  debugPrint(pline)
-  debugPrint(unwrapLo(pline))
+    from getDefaultContext import getDefaultContext
+    from mepinta.pipeline.hi.FactoryLo import unwrapLo
+    pline = Pipeline(context=getDefaultContext())
+    debugPrint(pline)
+    debugPrint(unwrapLo(pline))

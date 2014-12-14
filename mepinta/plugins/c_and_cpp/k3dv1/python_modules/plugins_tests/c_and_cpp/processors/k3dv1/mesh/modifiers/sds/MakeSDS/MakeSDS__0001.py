@@ -22,23 +22,25 @@ from pipeline_backend.logging.logging import LOG_INFO
 from plugins_tests.base.K3dMeshPluginTest import K3dMeshPluginTest
 from mepinta.testing.plugins_testing.PluginTestAutoTester import PluginTestAutoTester
 
+
 class MakeSDS(K3dMeshPluginTest):
-  def __post_init__(self):
-    import plugins.c_and_cpp.processors.k3dv1.mesh.modifiers.sds.MakeSDS as sds
-    self.testedProcessors.append(sds)
 
-  def definePluginPipeline(self, test_pline):
-    sds = self.testedProcessors[0]
-    test_pline.append(sds)
+    def __post_init__(self):
+        import plugins.c_and_cpp.processors.k3dv1.mesh.modifiers.sds.MakeSDS as sds
+        self.testedProcessors.append(sds)
 
-  def getTimeParameters(self):
-    return self.time.startEndStepSleep(start=0., end=1., step=0.5, sleep=0.05)
+    def definePluginPipeline(self, test_pline):
+        sds = self.testedProcessors[0]
+        test_pline.append(sds)
 
-  def stressPipeline(self, test_pline, time):
-    K3dMeshPluginTest.stressPipeline(self, test_pline, time)
+    def getTimeParameters(self):
+        return self.time.startEndStepSleep(start=0., end=1., step=0.5, sleep=0.05)
+
+    def stressPipeline(self, test_pline, time):
+        K3dMeshPluginTest.stressPipeline(self, test_pline, time)
 
 test = MakeSDS
-        
+
 if __name__ == "__main__":
-  from getDefaultContext import getDefaultContext
-  PluginTestAutoTester(getDefaultContext(LOG_INFO)).test(test)#,gui=False)
+    from getDefaultContext import getDefaultContext
+    PluginTestAutoTester(getDefaultContext(LOG_INFO)).test(test)  # ,gui=False)

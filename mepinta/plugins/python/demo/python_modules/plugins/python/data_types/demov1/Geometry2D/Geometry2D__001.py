@@ -22,15 +22,17 @@ along with Mepinta. If not, see <http://www.gnu.org/licenses/>.
 from Geometry2D__001_implementation.Geometry2D import Geometry2D
 from copy import deepcopy
 
+
 def new():
-  return Geometry2D()
+    return Geometry2D()
+
 
 def copy(geom2d):
-  return deepcopy(geom2d)
+    return deepcopy(geom2d)
+
 
 def delete(geom2d):
-  pass
+    pass
 
-#def copyTo():
+# def copyTo():
 #  pass
-

@@ -22,22 +22,25 @@ from mepinta_tests.base import MepintaTestBase
 from mepinta.plugins_creation.module_to_cpp.eclipse_project.K3dv1EclipseProjectCreator import K3dv1EclipseProjectCreator
 from mepinta_tests.dummy_classes.PluginManifestDummy import PluginManifestDummy
 
+
 class K3dv1EclipseProjectCreator_test(MepintaTestBase):
-  def run(self):
-    test_instace = K3dv1EclipseProjectCreator(self.context)
-    plugin_manifest = PluginManifestDummy(self.context)
-    projects_root = '/home/jduo/001-Mepinta/EclipseProjects_GitRepo/mepinta_test_folders/EclipseProjects'
-    translation_dict = {}
-    overwrite = False
-    test_instace.create(plugin_manifest, projects_root, translation_dict, overwrite)
-    return True
+
+    def run(self):
+        test_instace = K3dv1EclipseProjectCreator(self.context)
+        plugin_manifest = PluginManifestDummy(self.context)
+        projects_root = '/home/jduo/001-Mepinta/EclipseProjects_GitRepo/mepinta_test_folders/EclipseProjects'
+        translation_dict = {}
+        overwrite = False
+        test_instace.create(
+            plugin_manifest, projects_root, translation_dict, overwrite)
+        return True
+
 
 def testModule():
-  from getDefaultContext import getDefaultContext
-  context = getDefaultContext()
-  test = K3dv1EclipseProjectCreator_test(context=context)
-  return test.run()
+    from getDefaultContext import getDefaultContext
+    context = getDefaultContext()
+    test = K3dv1EclipseProjectCreator_test(context=context)
+    return test.run()
 
 if __name__ == "__main__":
-  testModule()
-
+    testModule()

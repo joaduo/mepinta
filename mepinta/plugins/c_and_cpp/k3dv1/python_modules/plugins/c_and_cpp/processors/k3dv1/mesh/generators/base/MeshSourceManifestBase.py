@@ -22,36 +22,39 @@ along with Mepinta. If not, see <http://www.gnu.org/licenses/>.
 from mepinta.plugins_manifest import DataProperty, FunctionProperty
 from plugins.c_and_cpp.processors.k3dv1.mesh.base.MaterialSinkBase import MaterialSinkBase
 
-#TODO: rename to createMesh and updateMesh
-class MeshSourceManifestBase(MaterialSinkBase):
-  def _superClassDefine(self, inputs, internals, functions, outputs):
-    '''Creates the common topology for MeshSources plugins .'''
-    outputs.mesh = DataProperty('k3d::mesh')
-    functions.updateMeshTopology = FunctionProperty()
-    functions.updateMeshGeometry = FunctionProperty()
-    
-    functions.updateMeshTopology.dpdencies +=[inputs.material,]
-    functions.updateMeshGeometry.dpdencies +=[functions.updateMeshTopology,]
-    
-    outputs.mesh.dpdencies += [functions.updateMeshTopology,
-                               functions.updateMeshGeometry,]
-    return functions.updateMeshTopology,functions.updateMeshGeometry
+# TODO: rename to createMesh and updateMesh
 
-  def define(self, inputs, internals, functions, outputs, updateMeshTopology, updateMeshGeometry):
-    '''
-      Implement this method on children classes.
-      Example:
-        inputs.rows = DataProperty('uint')
-        updateMeshTopology.dpdencies += [inputs.rows]
-    '''
-    pass
+
+class MeshSourceManifestBase(MaterialSinkBase):
+
+    def _superClassDefine(self, inputs, internals, functions, outputs):
+        '''Creates the common topology for MeshSources plugins .'''
+        outputs.mesh = DataProperty('k3d::mesh')
+        functions.updateMeshTopology = FunctionProperty()
+        functions.updateMeshGeometry = FunctionProperty()
+
+        functions.updateMeshTopology.dpdencies += [inputs.material, ]
+        functions.updateMeshGeometry.dpdencies += [functions.updateMeshTopology, ]
+
+        outputs.mesh.dpdencies += [functions.updateMeshTopology,
+                                   functions.updateMeshGeometry, ]
+        return functions.updateMeshTopology, functions.updateMeshGeometry
+
+    def define(self, inputs, internals, functions, outputs, updateMeshTopology, updateMeshGeometry):
+        '''
+          Implement this method on children classes.
+          Example:
+            inputs.rows = DataProperty('uint')
+            updateMeshTopology.dpdencies += [inputs.rows]
+        '''
+        pass
 
 manifest = MeshSourceManifestBase
 
 if __name__ == "__main__":
-  from mepinta.context.MepintaContext import MepintaContext
-  from mepinta.plugins_manifest.PluginManifestTester import PluginManifestAutoTester
-  context = MepintaContext('c_and_cpp')
-  plugin_instance = manifest(context=context)
-  context.log(manifest)
-  PluginManifestAutoTester(context=context).test(plugin_instance)
+    from mepinta.context.MepintaContext import MepintaContext
+    from mepinta.plugins_manifest.PluginManifestTester import PluginManifestAutoTester
+    context = MepintaContext('c_and_cpp')
+    plugin_instance = manifest(context=context)
+    context.log(manifest)
+    PluginManifestAutoTester(context=context).test(plugin_instance)

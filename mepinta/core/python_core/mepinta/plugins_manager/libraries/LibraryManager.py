@@ -21,5 +21,6 @@ along with Mepinta. If not, see <http://www.gnu.org/licenses/>.
 
 from common.abstract.FrameworkBase import FrameworkBase
 
+
 class LibraryManager(FrameworkBase):
-  pass
+    pass

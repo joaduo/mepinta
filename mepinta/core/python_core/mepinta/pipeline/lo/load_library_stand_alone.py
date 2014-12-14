@@ -35,37 +35,44 @@ from pipeline_backend.load_unload_library.load_unload_library import loadLibrary
 
 loaded_libraries = {}
 
+
 def logInfo(msg):
-  sys.stdout.write(msg + '\n')
+    sys.stdout.write(msg + '\n')
+
 
 def logError(msg):
-  sys.stderr.write(msg + '\n')
+    sys.stderr.write(msg + '\n')
+
 
 def loadLibraryStandAlone(path, symbol):
-  #Common code in pipeline_lo_facade (not easy to share because of shedksin)
-  if path in loaded_libraries:
-    symbol = loaded_libraries[path][1]
-    logInfo("Library at %r already loaded with symbol %r" % (path, symbol))
+    # Common code in pipeline_lo_facade (not easy to share because of shedksin)
+    if path in loaded_libraries:
+        symbol = loaded_libraries[path][1]
+        logInfo("Library at %r already loaded with symbol %r" % (path, symbol))
+        return True
+    handle = loadLibrary(path, symbol)
+    if handle == None:
+        logError(
+            "ERROR: Couldn't load the library at %r with symbol %r" % (path, symbol))
+        return False
+    loaded_libraries[path] = (handle, symbol)
+    logInfo("Successfully loaded the library at %r with symbol %r" %
+            (path, symbol))
     return True
-  handle = loadLibrary(path, symbol)
-  if handle == None:
-    logError("ERROR: Couldn't load the library at %r with symbol %r" % (path, symbol))
-    return False
-  loaded_libraries[path] = (handle, symbol)
-  logInfo("Successfully loaded the library at %r with symbol %r" % (path, symbol))
-  return True
+
 
 def unloadLibraryStandAlone(path):
-  #Common code in pipeline_lo_facade (not easy to share because of shedksin)
-  if path not in loaded_libraries:
-    logError("Library at %r was never loaded" % (path))
-    return -1
-  handle, _ = loaded_libraries[path]
-  return unloadLibrary(handle)
+    # Common code in pipeline_lo_facade (not easy to share because of shedksin)
+    if path not in loaded_libraries:
+        logError("Library at %r was never loaded" % (path))
+        return -1
+    handle, _ = loaded_libraries[path]
+    return unloadLibrary(handle)
+
 
 def shedskin_load_library_stand_alone():
-  loadLibraryStandAlone("", "")
-  unloadLibraryStandAlone("/path")
+    loadLibraryStandAlone("", "")
+    unloadLibraryStandAlone("/path")
 
 if __name__ == "__main__":
-  shedskin_load_library_stand_alone()
+    shedskin_load_library_stand_alone()

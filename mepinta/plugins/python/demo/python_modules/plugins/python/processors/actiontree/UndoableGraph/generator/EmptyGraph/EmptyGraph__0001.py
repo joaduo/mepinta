@@ -22,25 +22,28 @@ along with Mepinta. If not, see <http://www.gnu.org/licenses/>.
 from mepinta.plugins_manifest import ProcessorManifestBase, FunctionProperty
 from mepinta.pipelineview.actiontree.undoable_graph.UndoableGraphManager import UndoableGraphManager
 
-class manifest(ProcessorManifestBase):
-  def define(self, inputs, internals, functions, outputs):
-    inputs.context_name = 'str'
-    outputs.graph = 'actiontree.UndoableGraph'
-    functions.changeGraphTopology = FunctionProperty()
 
-    functions.changeGraphTopology.dpdencies += inputs.context_name
-    outputs.graph.dpdencies += functions.changeGraphTopology
+class manifest(ProcessorManifestBase):
+
+    def define(self, inputs, internals, functions, outputs):
+        inputs.context_name = 'str'
+        outputs.graph = 'actiontree.UndoableGraph'
+        functions.changeGraphTopology = FunctionProperty()
+
+        functions.changeGraphTopology.dpdencies += inputs.context_name
+        outputs.graph.dpdencies += functions.changeGraphTopology
+
 
 def changeGraphTopology(args):
-  from mepinta_python_sdk.props import getPropValue
-  from mepinta.context.getMepintaContext import getMepintaContext
+    from mepinta_python_sdk.props import getPropValue
+    from mepinta.context.getMepintaContext import getMepintaContext
 
-  context_name = getPropValue(args, 'inputs', 'context_name')
-  out_graph = getPropValue(args, 'outputs', 'graph')
-  context = getMepintaContext(context_name)
-  UndoableGraphManager(context).initGraph(out_graph)
+    context_name = getPropValue(args, 'inputs', 'context_name')
+    out_graph = getPropValue(args, 'outputs', 'graph')
+    context = getMepintaContext(context_name)
+    UndoableGraphManager(context).initGraph(out_graph)
 
 if __name__ == "__main__":
-  from getDefaultContext import getDefaultContext
-  from mepinta.testing.plugins_testing.PluginManifestAutoTester import PluginManifestAutoTester
-  PluginManifestAutoTester(getDefaultContext()).test(manifest)#, gui=True)
+    from getDefaultContext import getDefaultContext
+    from mepinta.testing.plugins_testing.PluginManifestAutoTester import PluginManifestAutoTester
+    PluginManifestAutoTester(getDefaultContext()).test(manifest)  # , gui=True)

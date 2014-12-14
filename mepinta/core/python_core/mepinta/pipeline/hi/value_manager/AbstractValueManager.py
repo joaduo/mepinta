@@ -23,39 +23,43 @@ from mepinta.pipeline.hi.value_manager.UntypedValueManager import UntypedValueMa
 from mepinta.pipeline.hi.value_manager.ValueManager import ValueManager
 from mepinta.plugins_manifest.proxy.data_model import DataPropertyProxy
 
+
 class AbstractValueManager(FrameworkBase):
-  def __post_init__(self):
-    self.__value_managers = { 'python':UntypedValueManager(self.context),
-                              'c_and_cpp': ValueManager(self.context),
-                            }
 
-  def __checkProp(self, prop):
-    if not isinstance(prop, DataPropertyProxy):
-      raise RuntimeError('You should provide a DataPropertyProxy object. Unsupported object: %r of type %r' % (prop, type(prop)))
+    def __post_init__(self):
+        self.__value_managers = {'python': UntypedValueManager(self.context),
+                                  'c_and_cpp': ValueManager(self.context),
+                                  }
 
-  def __checkProps(self, props):
-    for prop in props:
-      self.__checkProp(prop)
+    def __checkProp(self, prop):
+        if not isinstance(prop, DataPropertyProxy):
+            raise RuntimeError(
+                'You should provide a DataPropertyProxy object. Unsupported object: %r of type %r' % (prop, type(prop)))
 
-  def getValue(self, pline, prop):
-    self.__checkProp(prop)
-    return self.__value_managers[self.context.backend_name].getValue(pline, prop)
+    def __checkProps(self, props):
+        for prop in props:
+            self.__checkProp(prop)
 
-  def setValue(self, pline, prop, value):
-    self.__checkProp(prop)
-    return self.__value_managers[self.context.backend_name].setValue(pline, prop, value)
+    def getValue(self, pline, prop):
+        self.__checkProp(prop)
+        return self.__value_managers[self.context.backend_name].getValue(pline, prop)
 
-  def getValues(self, pline, props):
-    self.__checkProps(props)
-    return self.__value_managers[self.context.backend_name].getValues(pline, props)
+    def setValue(self, pline, prop, value):
+        self.__checkProp(prop)
+        return self.__value_managers[self.context.backend_name].setValue(pline, prop, value)
 
-  def setValues(self, pline, props, values):
-    self.__checkProps(props)
-    return self.__value_managers[self.context.backend_name].setValues(pline, props, values)
+    def getValues(self, pline, props):
+        self.__checkProps(props)
+        return self.__value_managers[self.context.backend_name].getValues(pline, props)
+
+    def setValues(self, pline, props, values):
+        self.__checkProps(props)
+        return self.__value_managers[self.context.backend_name].setValues(pline, props, values)
+
 
 def testModule():
-  from getDefaultContext import getDefaultContext
-  context = getDefaultContext()
+    from getDefaultContext import getDefaultContext
+    context = getDefaultContext()
 
 if __name__ == "__main__":
-  testModule()
+    testModule()

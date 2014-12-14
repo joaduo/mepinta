@@ -23,28 +23,30 @@ from mepinta.plugins_manifest import DataProperty, GenericEnum
 from plugins.c_and_cpp.processors.k3dv1.mesh.generators.base.MeshSourceManifestBase import MeshSourceManifestBase
 from plugins.c_and_cpp.processors.k3dv1.mesh.generators.base.properties.SignedAxis import SignedAxis
 
+
 class PolyGrid(MeshSourceManifestBase):
-  def define(self, inputs, internals, functions, outputs, updateMeshTopology, updateMeshGeometry):
-    inputs.columns = DataProperty('k3d::int32_t')
-    inputs.rows = DataProperty('k3d::int32_t')
-    inputs.width = DataProperty('k3d::double_t')
-    inputs.height = DataProperty('k3d::double_t')
-    inputs.orientation = SignedAxis().setDefault('PZ')
-    
-    updateMeshTopology.dpdencies += [inputs.columns,
-                                     inputs.rows,]
-    updateMeshGeometry.dpdencies += [inputs.columns,
-                                     inputs.rows,
-                                     inputs.width,
-                                     inputs.height,
-                                     inputs.orientation,]
+
+    def define(self, inputs, internals, functions, outputs, updateMeshTopology, updateMeshGeometry):
+        inputs.columns = DataProperty('k3d::int32_t')
+        inputs.rows = DataProperty('k3d::int32_t')
+        inputs.width = DataProperty('k3d::double_t')
+        inputs.height = DataProperty('k3d::double_t')
+        inputs.orientation = SignedAxis().setDefault('PZ')
+
+        updateMeshTopology.dpdencies += [inputs.columns,
+                                         inputs.rows, ]
+        updateMeshGeometry.dpdencies += [inputs.columns,
+                                         inputs.rows,
+                                         inputs.width,
+                                         inputs.height,
+                                         inputs.orientation, ]
 
 manifest = PolyGrid
 
 if __name__ == "__main__":
-  from mepinta.context.MepintaContext import MepintaContext
-  from mepinta.plugins_manifest.PluginManifestTester import PluginManifestTester
-  context = MepintaContext('c_and_cpp')
-  plugin_instance = manifest(context=context)
-  context.log(manifest)
-  PluginManifestTester(context=context).test(plugin_instance)
+    from mepinta.context.MepintaContext import MepintaContext
+    from mepinta.plugins_manifest.PluginManifestTester import PluginManifestTester
+    context = MepintaContext('c_and_cpp')
+    plugin_instance = manifest(context=context)
+    context.log(manifest)
+    PluginManifestTester(context=context).test(plugin_instance)

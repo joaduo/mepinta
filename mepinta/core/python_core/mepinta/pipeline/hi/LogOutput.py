@@ -20,7 +20,8 @@ along with Mepinta. If not, see <http://www.gnu.org/licenses/>.
 '''
 from mepinta.pipeline.hi.base import HiBase
 
-class LogOutput(HiBase):
-  def __post_init__(self):
-    self.wrapped = self._getWrappedClass()()
 
+class LogOutput(HiBase):
+
+    def __post_init__(self):
+        self.wrapped = self._getWrappedClass()()

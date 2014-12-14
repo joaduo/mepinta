@@ -22,12 +22,12 @@ from mepinta.testing.plugins_testing.ProcessorPluginTestRunner import ProcessorP
 from getDefaultContext import getDefaultContext
 from pipeline_backend.logging.logging import LOG_INFO, LOG_DEBUG
 from mepinta.testing.plugins_testing.test_pipeline.InotifySimpleTestPipeline import InotifySimpleTestPipeline
-        
+
 if __name__ == "__main__":
-#  context = getDefaultContext(LOG_DEBUG)
-  context = getDefaultContext(LOG_INFO)  
-  import plugins_tests.inotify_tests.MorphPoints_test as MorphPoints
-  
-  ptr = ProcessorPluginTestRunner(context)
-  ptr.blockListeningEvents(MorphPoints)
-  #ptr.blockListeningEvents(MorphPoints, gui=False)
+    #  context = getDefaultContext(LOG_DEBUG)
+    context = getDefaultContext(LOG_INFO)
+    import plugins_tests.inotify_tests.MorphPoints_test as MorphPoints
+
+    ptr = ProcessorPluginTestRunner(context)
+    ptr.blockListeningEvents(MorphPoints)
+    #ptr.blockListeningEvents(MorphPoints, gui=False)

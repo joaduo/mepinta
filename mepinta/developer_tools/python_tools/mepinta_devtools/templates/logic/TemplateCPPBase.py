@@ -20,18 +20,23 @@ along with Mepinta. If not, see <http://www.gnu.org/licenses/>.
 '''
 from mepinta_devtools.templates.logic.base import TemplateLogicBase
 from mepinta.plugins_manifest.proxy.data_model import DataPropertyProxy, \
-  FunctumPropertyProxy
+    FunctumPropertyProxy
+
 
 class TemplateCPPBase(TemplateLogicBase):
-  _file_ext = 'cpp'
-  def _requiredDataTypes(self, plugin_manifest):
-    required_data_types = plugin_manifest.getRequiredDataTypes(types_classes=[DataPropertyProxy, FunctumPropertyProxy])
-    # self.log('Using data type minor version from eclipse projects.') #TODO
-    return required_data_types.keys()
+    _file_ext = 'cpp'
+
+    def _requiredDataTypes(self, plugin_manifest):
+        required_data_types = plugin_manifest.getRequiredDataTypes(
+            types_classes=[DataPropertyProxy, FunctumPropertyProxy])
+        # self.log('Using data type minor version from eclipse projects.')
+        # #TODO
+        return required_data_types.keys()
+
 
 def testModule():
-  from getDefaultContext import getDefaultContext
-  context = getDefaultContext()
+    from getDefaultContext import getDefaultContext
+    context = getDefaultContext()
 
 if __name__ == "__main__":
-  testModule()
+    testModule()

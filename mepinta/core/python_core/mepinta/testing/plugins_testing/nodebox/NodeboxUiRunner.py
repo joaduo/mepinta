@@ -20,23 +20,30 @@ along with Mepinta. If not, see <http://www.gnu.org/licenses/>.
 '''
 from nodebox.graphics.context import canvas, background, translate
 
+
 def onMouseEnter(self, mouse):
-  if self.fps == "pause":
-    if hasattr(self, "prior_fps"):
-      self.fps = self.prior_fps
-    else:
-      self.fps = None
+    if self.fps == "pause":
+        if hasattr(self, "prior_fps"):
+            self.fps = self.prior_fps
+        else:
+            self.fps = None
+
+
 def onMouseLeave(self, mouse):
-  self.prior_fps = self.fps
-  self.fps = "pause"
+    self.prior_fps = self.fps
+    self.fps = "pause"
+
+
 def onMouseMotion(self, mouse):
-  self.moving = True
-  if self.fps == "pause":
-    self.fps = 10
+    self.moving = True
+    if self.fps == "pause":
+        self.fps = 10
+
+
 def onMousePress(self, mouse):
-  self.moving = True
-  if self.fps == "pause":
-    self.fps = 10
+    self.moving = True
+    if self.fps == "pause":
+        self.fps = 10
 
 canvas.moving = False
 
@@ -45,60 +52,69 @@ canvas.onMousePress = onMousePress
 canvas.onMouseEnter = onMouseEnter
 canvas.onMouseLeave = onMouseLeave
 
-class NodeboxBase(object): #TODO: remove?
-  pass
 
-class NodeboxContext(NodeboxBase): #TODO: remove?
-  def __init__(self, canvas):
-    self.canvas = canvas
+class NodeboxBase(object):  # TODO: remove?
+    pass
+
+
+class NodeboxContext(NodeboxBase):  # TODO: remove?
+
+    def __init__(self, canvas):
+        self.canvas = canvas
 
 wrapped_method = None
-def draw(canvas): #This is necessary, the function called must be a global function (it seems to)
-  wrapped_method(canvas)
+
+
+def draw(canvas):  # This is necessary, the function called must be a global function (it seems to)
+    wrapped_method(canvas)
+
 
 class NodeboxUiRunner(NodeboxBase):
-  '''
-  Simple helper class to register functions while doing the Nodebox frame update.
-  Since the draw function should be a global function (not a method) this class
-    makes it easy to register it.
-  Also let the programmer register functions for the frame update time.
-  '''
-  def __init__(self, canvas_x, canvas_y):
-    self.size = canvas_x, canvas_y
-    self.canvas = canvas
-    self.nodebox_context = NodeboxContext(self.canvas) #TODO: remove?
-    self.__setupContext()
-    self.draw_functions = []
 
-  def appendDrawFunction(self, function, *args, **kwargs):
-    self.draw_functions.append((function, args, kwargs))
+    '''
+    Simple helper class to register functions while doing the Nodebox frame update.
+    Since the draw function should be a global function (not a method) this class
+      makes it easy to register it.
+    Also let the programmer register functions for the frame update time.
+    '''
 
-  def __callDrawFunctions(self):
-    for function, args, kwargs in self.draw_functions:
-      function(*args, **kwargs)
+    def __init__(self, canvas_x, canvas_y):
+        self.size = canvas_x, canvas_y
+        self.canvas = canvas
+        self.nodebox_context = NodeboxContext(self.canvas)  # TODO: remove?
+        self.__setupContext()
+        self.draw_functions = []
 
-  def __setupContext(self):
-    self.canvas.size = self.size
+    def appendDrawFunction(self, function, *args, **kwargs):
+        self.draw_functions.append((function, args, kwargs))
 
-  def run(self):
-    canvas.run(self.getDrawMethod())
+    def __callDrawFunctions(self):
+        for function, args, kwargs in self.draw_functions:
+            function(*args, **kwargs)
 
-  def getDrawMethod(self):
-    global wrapped_method
-    wrapped_method = self.__draw
-    return draw
+    def __setupContext(self):
+        self.canvas.size = self.size
 
-  def __draw(self, canvas):
-    canvas.clear()
-    background(1)
-    translate(self.size[0] / 2., self.size[1] / 2.)
-    self.__callDrawFunctions()
+    def run(self):
+        canvas.run(self.getDrawMethod())
+
+    def getDrawMethod(self):
+        global wrapped_method
+        wrapped_method = self.__draw
+        return draw
+
+    def __draw(self, canvas):
+        canvas.clear()
+        background(1)
+        translate(self.size[0] / 2., self.size[1] / 2.)
+        self.__callDrawFunctions()
 
 if __name__ == '__main__':
-  from nodebox.graphics import rect
-  def func():
-    rect(x= -100, y= -100, width=300, height=max(100, canvas.mouse.y))
+    from nodebox.graphics import rect
 
-  nuir = NodeboxUiRunner(400, 400)
-  nuir.appendDrawFunction(func)
-  nuir.run()
+    def func():
+        rect(x=-100, y=-100, width=300, height=max(100, canvas.mouse.y))
+
+    nuir = NodeboxUiRunner(400, 400)
+    nuir.appendDrawFunction(func)
+    nuir.run()

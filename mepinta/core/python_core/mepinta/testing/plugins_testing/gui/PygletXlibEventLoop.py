@@ -26,73 +26,77 @@ import select
 displays = pyglet.app.displays
 windows = pyglet.app.windows
 
-#TODO: Win32 and Mac support
+# TODO: Win32 and Mac support
+
+
 class PygletXlibEventLoop(BaseEventLoop):
-  '''Modified copy of XlibEventLoop from pyglet.
-  This version supports coexistence with an 'InotifyActionManager' through the
-  select function. (posix)
-  '''
-  def __init__(self, inotify_mngr):
-    BaseEventLoop.__init__(self)
-    self.inotify_mngr = inotify_mngr
-  def select(self, rlist, wlist, xlist, timeout):
-    rlist.append(self.inotify_mngr.fd)
-    rlist, wlist, xlist = select.select(rlist, wlist, xlist, timeout)
-    if self.inotify_mngr.fd in rlist:
-      rlist.remove(self.inotify_mngr.fd)
-      self.inotify_mngr.dispatchEvents() 
-    return rlist, wlist, xlist 
-  def run(self):
-      self._setup()
 
-      e = xlib.XEvent()
-      #t = 0
-      sleep_time = 0.
+    '''Modified copy of XlibEventLoop from pyglet.
+    This version supports coexistence with an 'InotifyActionManager' through the
+    select function. (posix)
+    '''
 
-      self.dispatch_event('on_enter')
+    def __init__(self, inotify_mngr):
+        BaseEventLoop.__init__(self)
+        self.inotify_mngr = inotify_mngr
 
-      while not self.has_exit:
-          # Check for already pending events
-          for display in displays:
-              if xlib.XPending(display._display):
-                  pending_displays = (display,)
-                  break
-          else:
-              # None found; select on all file descriptors or timeout
-              iwtd = self.getSelectFiles()
-              pending_displays, _, _ = self.select(iwtd, (), (), sleep_time)
+    def select(self, rlist, wlist, xlist, timeout):
+        rlist.append(self.inotify_mngr.fd)
+        rlist, wlist, xlist = select.select(rlist, wlist, xlist, timeout)
+        if self.inotify_mngr.fd in rlist:
+            rlist.remove(self.inotify_mngr.fd)
+            self.inotify_mngr.dispatchEvents()
+        return rlist, wlist, xlist
 
-          # Dispatch platform events
-          for display in pending_displays:
-              while xlib.XPending(display._display):
-                  xlib.XNextEvent(display._display, e)
+    def run(self):
+        self._setup()
 
-                  # Key events are filtered by the xlib window event
-                  # handler so they get a shot at the prefiltered event.
-                  if e.xany.type not in (xlib.KeyPress, xlib.KeyRelease):
-                      if xlib.XFilterEvent(e, e.xany.window):
-                          continue
-                  try:
-                      window = display._window_map[e.xany.window]
-                  except KeyError:
-                      continue
+        e = xlib.XEvent()
+        #t = 0
+        sleep_time = 0.
 
-                  window.dispatch_platform_event(e)
+        self.dispatch_event('on_enter')
 
-          # Dispatch resize events
-          for window in windows:
-              if window._needs_resize:
-                  window.switch_to()
-                  window.dispatch_event('on_resize',
-                                        window._width, window._height)
-                  window.dispatch_event('on_expose')
-                  window._needs_resize = False
+        while not self.has_exit:
+            # Check for already pending events
+            for display in displays:
+                if xlib.XPending(display._display):
+                    pending_displays = (display,)
+                    break
+            else:
+                # None found; select on all file descriptors or timeout
+                iwtd = self.getSelectFiles()
+                pending_displays, _, _ = self.select(iwtd, (), (), sleep_time)
 
-          sleep_time = self.idle()
+            # Dispatch platform events
+            for display in pending_displays:
+                while xlib.XPending(display._display):
+                    xlib.XNextEvent(display._display, e)
 
-      self.dispatch_event('on_exit')
+                    # Key events are filtered by the xlib window event
+                    # handler so they get a shot at the prefiltered event.
+                    if e.xany.type not in (xlib.KeyPress, xlib.KeyRelease):
+                        if xlib.XFilterEvent(e, e.xany.window):
+                            continue
+                    try:
+                        window = display._window_map[e.xany.window]
+                    except KeyError:
+                        continue
 
-  def getSelectFiles(self):
-      return list(displays)
+                    window.dispatch_platform_event(e)
 
+            # Dispatch resize events
+            for window in windows:
+                if window._needs_resize:
+                    window.switch_to()
+                    window.dispatch_event('on_resize',
+                                          window._width, window._height)
+                    window.dispatch_event('on_expose')
+                    window._needs_resize = False
 
+            sleep_time = self.idle()
+
+        self.dispatch_event('on_exit')
+
+    def getSelectFiles(self):
+        return list(displays)

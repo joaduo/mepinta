@@ -19,9 +19,9 @@ You should have received a copy of the GNU General Public License
 along with Mepinta. If not, see <http://www.gnu.org/licenses/>.
 '''
 
-NULL_UID = 0x0 #NULL_UNIVERSAL ID
+NULL_UID = 0x0  # NULL_UNIVERSAL ID
 
-#TODO: synch automatically with sdkdef.h
+# TODO: synch automatically with sdkdef.h
 INPUT_PROPS = 1
 OUTPUT_PROPS = 2
 INPUT_OUTPUT_PROPS = 3
@@ -36,17 +36,17 @@ PROCESSOR_EXIT_NORMAL = 0
 PROCESSOR_EXIT_FAILURE = 1
 PROCESSOR_FUNC_NULL = 100
 
-#TODO: Rename to FLAG
-#TODO: INPUT OUTPUT INTERNAL should be DATA_PROPERTY_TYPE
-INPUT_PROPERTY_FLAG =        0b1
-INTERNAL_PROPERTY_FLAG =     0b10
-OUTPUT_PROPERTY_FLAG =       0b100
-FUNCTION_PROPERTY_FLAG =     0b1000
-FUNCTUM_PROPERTY_FLAG =      0b10000
-CUSTOM_PROPERTY_FLAG =       0b100000000
+# TODO: Rename to FLAG
+# TODO: INPUT OUTPUT INTERNAL should be DATA_PROPERTY_TYPE
+INPUT_PROPERTY_FLAG = 0b1
+INTERNAL_PROPERTY_FLAG = 0b10
+OUTPUT_PROPERTY_FLAG = 0b100
+FUNCTION_PROPERTY_FLAG = 0b1000
+FUNCTUM_PROPERTY_FLAG = 0b10000
+CUSTOM_PROPERTY_FLAG = 0b100000000
+
 
 def hasFlags(prop_type, flags):
-  return prop_type & flags != 0
+    return prop_type & flags != 0
 
-MEPINTA_C_NAMESPACE_PREFIX="MP_"
-
+MEPINTA_C_NAMESPACE_PREFIX = "MP_"

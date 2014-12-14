@@ -20,8 +20,9 @@ along with Mepinta. If not, see <http://www.gnu.org/licenses/>.
 '''
 from mepinta.plugins_creation.templates.base import ManifestAndFileTemplateBase
 
+
 class WrappersH(ManifestAndFileTemplateBase):
-  pass
-        
+    pass
+
 if __name__ == "__main__":
-  pass
+    pass

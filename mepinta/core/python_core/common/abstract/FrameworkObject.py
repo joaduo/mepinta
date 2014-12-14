@@ -19,8 +19,10 @@ You should have received a copy of the GNU General Public License
 along with Mepinta. If not, see <http://www.gnu.org/licenses/>.
 '''
 
+
 class FrameworkObject(object):
-  '''
-  Base object for data classes in the framework.
-  (perhaps a bad design decision since object could fit)
-  '''
+
+    '''
+    Base object for data classes in the framework.
+    (perhaps a bad design decision since object could fit)
+    '''

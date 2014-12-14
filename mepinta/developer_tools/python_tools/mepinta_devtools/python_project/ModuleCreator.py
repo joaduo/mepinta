@@ -22,19 +22,21 @@ from common.abstract.FrameworkBase import FrameworkBase
 from mepinta_devtools.templates.DictionaryBasedTranslator import DictionaryBasedTranslator
 from mepinta_devtools.ide_projects.FileManager import FileManager
 
+
 class ModuleCreator(FrameworkBase):
-  def __post_init__(self):
-    self.file_manager = FileManager(self.context)
 
-  def getContent(self, template, translation_dict):
-    if template != None:
-      return DictionaryBasedTranslator(self.context).getContent(template, translation_dict)
-    else:
-      return ''
+    def __post_init__(self):
+        self.file_manager = FileManager(self.context)
 
-  def create(self, path, template=None, translation_dict={}, overwrite=False):
-    if not path.lower().endswith('.py'):
-      path = '%s.py' % path
-    self.log.d('Creating module at %r' % (path))
-    module_content = self.getContent(template, translation_dict)
-    self.file_manager.saveTextFile(path, module_content, overwrite)
+    def getContent(self, template, translation_dict):
+        if template != None:
+            return DictionaryBasedTranslator(self.context).getContent(template, translation_dict)
+        else:
+            return ''
+
+    def create(self, path, template=None, translation_dict={}, overwrite=False):
+        if not path.lower().endswith('.py'):
+            path = '%s.py' % path
+        self.log.d('Creating module at %r' % (path))
+        module_content = self.getContent(template, translation_dict)
+        self.file_manager.saveTextFile(path, module_content, overwrite)

@@ -24,28 +24,30 @@ from ModuleCreator import ModuleCreator
 from common.path import joinPath
 import os
 
-class PackageCreator(FrameworkBase):
-  def __post_init__(self):
-    self.module_creator = ModuleCreator(context=self.context)
 
-  def create(self, split_path):
-    full_path = joinPath(split_path)
-    self.log.d('Creating package in: %r' % full_path)
-    os.makedirs(full_path)
-    length = len(split_path)
-    for index in range(length - 1):
-      init_file = joinPath(split_path[:length - index] + ['__init__.py'])
-      self.log.d('Checking %r' % (init_file))
-      if os.access(init_file, os.R_OK):
-        break
-      else:
-        self.module_creator.create(init_file)
+class PackageCreator(FrameworkBase):
+
+    def __post_init__(self):
+        self.module_creator = ModuleCreator(context=self.context)
+
+    def create(self, split_path):
+        full_path = joinPath(split_path)
+        self.log.d('Creating package in: %r' % full_path)
+        os.makedirs(full_path)
+        length = len(split_path)
+        for index in range(length - 1):
+            init_file = joinPath(split_path[:length - index] + ['__init__.py'])
+            self.log.d('Checking %r' % (init_file))
+            if os.access(init_file, os.R_OK):
+                break
+            else:
+                self.module_creator.create(init_file)
+
 
 def smokeTestModule():
-  from common.log.debugPrint import debugPrint
-  context = MepintaContext('python')
-  pc = PackageCreator(context=context)
+    from common.log.debugPrint import debugPrint
+    context = MepintaContext('python')
+    pc = PackageCreator(context=context)
 
 if __name__ == "__main__":
-  smokeTestModule()
-
+    smokeTestModule()

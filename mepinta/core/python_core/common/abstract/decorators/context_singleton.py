@@ -19,30 +19,33 @@ You should have received a copy of the GNU General Public License
 along with Mepinta. If not, see <http://www.gnu.org/licenses/>.
 '''
 
-class context_singleton(object):
-  '''
-    Singleton pattern decorator.
-    It provides a singleton for a determined class_ in a determined Context.
-    So for each Context there will be only one instance of the decorated class.
-  '''
-  def __init__(self, class_):
-    '''
-    :param class_: class to be converted in singleton (means you cannot
-    inherit from it anymore)
-    '''
-    self.class_ = class_
 
-  def __call__(self, context=None, *a, **ad):
+class context_singleton(object):
+
     '''
-    Initialize class if not yet initialized for the context given.
-    Return instance.
-    :param context: context (you must always provide one)
+      Singleton pattern decorator.
+      It provides a singleton for a determined class_ in a determined Context.
+      So for each Context there will be only one instance of the decorated class.
     '''
-    if context == None:
-      msg = ("You should always provide a context for class: %r" %
-             self.class_.__class__.__name__)
-      raise RuntimeError(msg)
-    if not context.hasConfig('singleton', self.class_):
-      context.setConfig('singleton', self.class_(context=context, *a, **ad),
-                        self.class_)
-    return context.getConfig('singleton', self.class_)
+
+    def __init__(self, class_):
+        '''
+        :param class_: class to be converted in singleton (means you cannot
+        inherit from it anymore)
+        '''
+        self.class_ = class_
+
+    def __call__(self, context=None, *a, **ad):
+        '''
+        Initialize class if not yet initialized for the context given.
+        Return instance.
+        :param context: context (you must always provide one)
+        '''
+        if context == None:
+            msg = ("You should always provide a context for class: %r" %
+                   self.class_.__class__.__name__)
+            raise RuntimeError(msg)
+        if not context.hasConfig('singleton', self.class_):
+            context.setConfig('singleton', self.class_(context=context, *a, **ad),
+                              self.class_)
+        return context.getConfig('singleton', self.class_)

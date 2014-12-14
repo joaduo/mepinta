@@ -22,18 +22,22 @@ from mepinta.plugins_creation.templates.base import PluginTemplatesBase
 from mepinta.plugins_creation.module_to_cpp.templates.processor_plugin.ProcessorCPP import ProcessorCPP
 from mepinta.plugins_creation.module_to_cpp.qt_project.templates.ProcessorPRO import ProcessorPRO
 
+
 class QtProjectTemplates(PluginTemplatesBase):
-  '''Maps the templates files and their corresponding translators classes to the
-  path for the final translated file.
-  '''
-  def _getTemplatesRoot(self):
-    import mepinta.plugins_creation.module_to_cpp.qt_project as qt_project
-    return self._buildTemplateRoot(qt_project, ['repository','k3dv1'])
-  def _getMapDict(self, plugin_name):
-    return {
-            (ProcessorCPP,'src/processor.cpp'):'src/%s.cpp'%plugin_name,
-            (ProcessorPRO,'processor.pro'):'%s.pro'%plugin_name,
-           }
+
+    '''Maps the templates files and their corresponding translators classes to the
+    path for the final translated file.
+    '''
+
+    def _getTemplatesRoot(self):
+        import mepinta.plugins_creation.module_to_cpp.qt_project as qt_project
+        return self._buildTemplateRoot(qt_project, ['repository', 'k3dv1'])
+
+    def _getMapDict(self, plugin_name):
+        return {
+                (ProcessorCPP, 'src/processor.cpp'): 'src/%s.cpp'%plugin_name,
+                (ProcessorPRO, 'processor.pro'): '%s.pro'%plugin_name,
+        }
 
 if __name__ == "__main__":
-  pass
+    pass

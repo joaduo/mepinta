@@ -21,29 +21,31 @@ along with Mepinta. If not, see <http://www.gnu.org/licenses/>.
 from plugins_tests.python.processors.demov1.Geometry2D.modifier.base.Geometry2DPluginTest import Geometry2DPluginTest
 from unittest import TestCase
 
+
 class DeformationExpression(Geometry2DPluginTest, TestCase):
-  def __post_init__(self):
-    import plugins.python.processors.demov1.Geometry2D.modifier.DeformationExpression as deformation_expression
-    self.testedProcessors.append(deformation_expression)
 
-  def definePluginPipeline(self, test_pline):
-    deformation_expression = self.testedProcessors[0]
-    deformation_node = test_pline.append(deformation_expression)
-    test_pline.setValue(deformation_node.inputs.x_expression, 'x*t')
-    test_pline.setValue(deformation_node.inputs.y_expression, 'y*t')
-    test_pline.setValue(deformation_node.inputs.time, 1.0)
+    def __post_init__(self):
+        import plugins.python.processors.demov1.Geometry2D.modifier.DeformationExpression as deformation_expression
+        self.testedProcessors.append(deformation_expression)
 
-  def getTimeParameters(self):
-    return self.time.startEndStepSleep(start=0., end=3., step=0.5, sleep=0.05)
+    def definePluginPipeline(self, test_pline):
+        deformation_expression = self.testedProcessors[0]
+        deformation_node = test_pline.append(deformation_expression)
+        test_pline.setValue(deformation_node.inputs.x_expression, 'x*t')
+        test_pline.setValue(deformation_node.inputs.y_expression, 'y*t')
+        test_pline.setValue(deformation_node.inputs.time, 1.0)
 
-  def stressPipeline(self, test_pline, time):
-    Geometry2DPluginTest.stressPipeline(self, test_pline, time)
-    deformation_node = test_pline.getNodesDict()['DeformationExpression 1']
-    test_pline.setValue(deformation_node.inputs.time, 10 * time)
+    def getTimeParameters(self):
+        return self.time.startEndStepSleep(start=0., end=3., step=0.5, sleep=0.05)
+
+    def stressPipeline(self, test_pline, time):
+        Geometry2DPluginTest.stressPipeline(self, test_pline, time)
+        deformation_node = test_pline.getNodesDict()['DeformationExpression 1']
+        test_pline.setValue(deformation_node.inputs.time, 10 * time)
 
 if __name__ == "__main__":
-#  import unittest
-#  unittest.main()
-  from mepinta.testing.plugins_testing.PluginTestAutoTester import PluginTestAutoTester
-  from mepinta.context.MepintaContext import MepintaContext
-  PluginTestAutoTester(context=MepintaContext()).test()
+    #  import unittest
+    #  unittest.main()
+    from mepinta.testing.plugins_testing.PluginTestAutoTester import PluginTestAutoTester
+    from mepinta.context.MepintaContext import MepintaContext
+    PluginTestAutoTester(context=MepintaContext()).test()

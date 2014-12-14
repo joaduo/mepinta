@@ -25,111 +25,120 @@ from unittest import TestCase
 from pipeline_backend.logging.logging import LOG_ERROR
 
 tests_context = None
+
+
 class ProcessorPluginTestBase(FrameworkBase):
-  '''Base class for plugins' test modules.
 
-  Tests inheriting this class should re-implement the defilePipeline and
-  stressPipeline method.
-  Optionally they also can reimplement getTimeParameters method.
+    '''Base class for plugins' test modules.
 
-  In general concrete class test won't inherit from this class, but will inherit
-  from an intermediate abstract class that prepares the input and output
-  automatically
+    Tests inheriting this class should re-implement the defilePipeline and
+    stressPipeline method.
+    Optionally they also can reimplement getTimeParameters method.
 
-  For an intermediate class example, check:
-   mepinta.testing.plugins_testing.processor.K3dMeshPluginTest.K3dMeshPluginTest
-  '''
-  def __init__(self, context=None):
-    #Initialize the class if inheriting from TestCase
-    if isinstance(self, TestCase): #If using unittest, then initialize the class
-      #Keep signature
-      if isinstance(context, str):
-        methodName = context
-        context = None
-        TestCase.__init__(self, methodName)
-      else:
-        TestCase.__init__(self)
+    In general concrete class test won't inherit from this class, but will inherit
+    from an intermediate abstract class that prepares the input and output
+    automatically
 
-    #Solve context if not provided #TODO: fix global variable use?
-    global tests_context
-    if context == None:
-      if tests_context == None: #To enable context free initialization supporting unittest.TestCase
-        from getDefaultContext import getDefaultContext
-        tests_context = getDefaultContext(log_level=LOG_ERROR)
-      context = tests_context
-    FrameworkBase.__init__(self, context)
-
-  def __post_init__(self):
-    #list of tested processors (target of the test class)
-    self.__tested_processors = []
-    self.__time = TestTime()
-
-  @property
-  def time(self): #TODO: rename it to test_time or time_specifier
-    '''Time helper instance.'''
-    return self.__time
-
-  @property
-  def testedProcessors(self):
-    '''List of processors (modules) target of this test case.'''
-    return self.__tested_processors
-
-  def getWatchedProcessors(self):
-    '''Returns a list of the processors (modules) to be watched in the interac-
-    tive tests. (i.e. when running this test in interactive mode)
-    In general the watched processors will be the tested processors, but may or
-    may include other processors.
-    You probably will not re-implement this method.
-    When a processors is being watched means that it's implementation is being
-    watched for changes (through Inotify in Linux)
+    For an intermediate class example, check:
+     mepinta.testing.plugins_testing.processor.K3dMeshPluginTest.K3dMeshPluginTest
     '''
-    if not self.testedProcessors:
-      raise MepintaError('You should set self.testedProcessors on test __post_init__ method.')
-    return self.testedProcessors
 
-  define_once = True
-  def definePipeline(self, test_pline):
-    '''Defines the pipeline for testing a processor.
-    In other words, it defines the inputs for the tested processor.
-    Also may define a 'tail' pipeline to process the output to check its
-    validity. (visually, in the case of an interactive test)
-    '''
-    raise NotImplementedError('You should implement %s on children classes' % self.definePipeline)
+    def __init__(self, context=None):
+        # Initialize the class if inheriting from TestCase
+        # If using unittest, then initialize the class
+        if isinstance(self, TestCase):
+            # Keep signature
+            if isinstance(context, str):
+                methodName = context
+                context = None
+                TestCase.__init__(self, methodName)
+            else:
+                TestCase.__init__(self)
 
-  def getTimeParameters(self):
-    '''
-      Returns a dict or a tuple of time start, time end, time step and time sleep
-      Example:
-        def getTimeParameters(self):
-          return dict(start=0., end=100., step=1., sleep=0.05)
-      The same as
-        def getTimeParameter(self):
-          return 0,100,1,0.05
-    '''
-    return None
+        # Solve context if not provided #TODO: fix global variable use?
+        global tests_context
+        if context == None:
+            # To enable context free initialization supporting unittest.TestCase
+            if tests_context == None:
+                from getDefaultContext import getDefaultContext
+                tests_context = getDefaultContext(log_level=LOG_ERROR)
+            context = tests_context
+        FrameworkBase.__init__(self, context)
 
-  def stressStart(self, test_pline, time):
-    '''Called just before the first frame of the stress test.(time=start time)'''
-    pass
+    def __post_init__(self):
+        # list of tested processors (target of the test class)
+        self.__tested_processors = []
+        self.__time = TestTime()
 
-  def stressEnd(self, test_pline, time):
-    '''Called just after the last frame of the stress test. (time= end time)'''
-    pass
+    @property
+    def time(self):  # TODO: rename it to test_time or time_specifier
+        '''Time helper instance.'''
+        return self.__time
 
-  def stressPipeline(self, test_pline, time):
-    '''This function receives the pipeline previously defined in 'definePipeline'
-    method and a time value. With that, the end user can define a pertinent test
-    to the target processor/s.
+    @property
+    def testedProcessors(self):
+        '''List of processors (modules) target of this test case.'''
+        return self.__tested_processors
 
-    The time can be manipulated re-implementing the 'getTimeParameters' method.
-    '''
-    pass
+    def getWatchedProcessors(self):
+        '''Returns a list of the processors (modules) to be watched in the interac-
+        tive tests. (i.e. when running this test in interactive mode)
+        In general the watched processors will be the tested processors, but may or
+        may include other processors.
+        You probably will not re-implement this method.
+        When a processors is being watched means that it's implementation is being
+        watched for changes (through Inotify in Linux)
+        '''
+        if not self.testedProcessors:
+            raise MepintaError(
+                'You should set self.testedProcessors on test __post_init__ method.')
+        return self.testedProcessors
 
-  def runTest(self):
-    from mepinta.testing.plugins_testing.test_pipeline.InotifySimpleTestPipeline import InotifySimpleTestPipeline
-    test_pline = InotifySimpleTestPipeline(self.context)
-    self.definePipeline(test_pline)
-    test_pline.evaluateProp()
+    define_once = True
+
+    def definePipeline(self, test_pline):
+        '''Defines the pipeline for testing a processor.
+        In other words, it defines the inputs for the tested processor.
+        Also may define a 'tail' pipeline to process the output to check its
+        validity. (visually, in the case of an interactive test)
+        '''
+        raise NotImplementedError(
+            'You should implement %s on children classes' % self.definePipeline)
+
+    def getTimeParameters(self):
+        '''
+          Returns a dict or a tuple of time start, time end, time step and time sleep
+          Example:
+            def getTimeParameters(self):
+              return dict(start=0., end=100., step=1., sleep=0.05)
+          The same as
+            def getTimeParameter(self):
+              return 0,100,1,0.05
+        '''
+        return None
+
+    def stressStart(self, test_pline, time):
+        '''Called just before the first frame of the stress test.(time=start time)'''
+        pass
+
+    def stressEnd(self, test_pline, time):
+        '''Called just after the last frame of the stress test. (time= end time)'''
+        pass
+
+    def stressPipeline(self, test_pline, time):
+        '''This function receives the pipeline previously defined in 'definePipeline'
+        method and a time value. With that, the end user can define a pertinent test
+        to the target processor/s.
+
+        The time can be manipulated re-implementing the 'getTimeParameters' method.
+        '''
+        pass
+
+    def runTest(self):
+        from mepinta.testing.plugins_testing.test_pipeline.InotifySimpleTestPipeline import InotifySimpleTestPipeline
+        test_pline = InotifySimpleTestPipeline(self.context)
+        self.definePipeline(test_pline)
+        test_pline.evaluateProp()
 
 if __name__ == "__main__":
-  pass
+    pass

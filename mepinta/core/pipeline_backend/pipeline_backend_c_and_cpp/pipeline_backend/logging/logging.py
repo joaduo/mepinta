@@ -25,58 +25,68 @@ Created on Sep 15, 2011
 '''
 import sys
 
-LOG_CRITICAL=1
-LOG_ERROR=10
-LOG_WARNING=20
-LOG_INFO=30
-LOG_VERBOSE=40
-LOG_DEBUG=50
-LOG_DEBUG_TRACE=60
-LOG_ALL_TRACE=70
+LOG_CRITICAL = 1
+LOG_ERROR = 10
+LOG_WARNING = 20
+LOG_INFO = 30
+LOG_VERBOSE = 40
+LOG_DEBUG = 50
+LOG_DEBUG_TRACE = 60
+LOG_ALL_TRACE = 70
 
-log_level=LOG_INFO
+log_level = LOG_INFO
+
+
 def setLogLevel(level):
-  global log_level
-  log_level = level
+    global log_level
+    log_level = level
 
-def printLog(level,msg):
-  pass
+
+def printLog(level, msg):
+    pass
+
 
 def printTrace(output=''):
-  pass
+    pass
+
 
 def logCritical(msg):
-  printLog(LOG_CRITICAL,msg)
+    printLog(LOG_CRITICAL, msg)
+
 
 def logError(msg):
-  printLog(LOG_ERROR,msg)
-    
+    printLog(LOG_ERROR, msg)
+
+
 def logWarning(msg):
-  printLog(LOG_WARNING,msg)
+    printLog(LOG_WARNING, msg)
+
 
 def logInfo(msg):
-  printLog(LOG_INFO,msg)
+    printLog(LOG_INFO, msg)
+
 
 def logVerbose(msg):
-  printLog(LOG_VERBOSE,msg)
+    printLog(LOG_VERBOSE, msg)
+
 
 def logDebug(msg):
-  printLog(LOG_DEBUG,msg)
+    printLog(LOG_DEBUG, msg)
+
 
 def shedskin_logging():
-  msg = 'Something to log'
-  logCritical(msg)
-  logError(msg)
-  logWarning(msg)
-  logInfo(msg)
-  logVerbose(msg)
-  logDebug(msg)
+    msg = 'Something to log'
+    logCritical(msg)
+    logError(msg)
+    logWarning(msg)
+    logInfo(msg)
+    logVerbose(msg)
+    logDebug(msg)
 
 if __name__ == '__main__':
-  setLogLevel(LOG_ERROR)
-  logInfo('Info shouldn\'t be printed')
-  setLogLevel(LOG_INFO)
-  logInfo('Info should be printed')
-  setLogLevel(LOG_ALL_TRACE)
-  logInfo('REALLY VERBOSE')
-
+    setLogLevel(LOG_ERROR)
+    logInfo('Info shouldn\'t be printed')
+    setLogLevel(LOG_INFO)
+    logInfo('Info should be printed')
+    setLogLevel(LOG_ALL_TRACE)
+    logInfo('REALLY VERBOSE')

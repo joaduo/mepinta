@@ -19,8 +19,9 @@ You should have received a copy of the GNU General Public License
 along with Mepinta. If not, see <http://www.gnu.org/licenses/>.
 '''
 
+
 class plugins_creation.templates.c_and_cpp.data_type_plugin.DataTypeH:
-  pass
-        
+    pass
+
 if __name__ == "__main__":
-  pass
+    pass

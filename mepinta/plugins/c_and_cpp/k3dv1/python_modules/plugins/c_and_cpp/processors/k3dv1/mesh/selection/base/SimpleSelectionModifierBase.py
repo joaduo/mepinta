@@ -19,33 +19,35 @@ You should have received a copy of the GNU General Public License
 along with Mepinta. If not, see <http://www.gnu.org/licenses/>.
 '''
 from mepinta.plugins_manifest import ProcessorManifestBase, DataProperty, FunctionProperty,\
-  Functum, directed
+    Functum, directed
+
 
 class SimpleSelectionModifierBase(ProcessorManifestBase):
-  def _superClassDefine(self, inputs, internals, functions, outputs):
-    '''
-      Creates a common topology pipeline for mesh modifiers. 
-      (demuxing the mesh Topology and Geometry updates signals)
-    '''
-    inputs.mesh = DataProperty('k3d::mesh')
-    outputs.mesh = DataProperty('k3d::mesh')
-    functions.updateSelection = FunctionProperty()
-    
-    functions.updateSelection.dpdencies +=[inputs.mesh,]
-    
-    outputs.mesh.dpdencies += [functions.updateSelection,]
-    
-    return functions.updateSelection
 
-  def define(self, inputs, internals, functions, outputs, updateSelection):
-    '''
-      Implement this method on children classes.
-      Example:
-        inputs.rows = DataProperty('uint')
-        updateSelection.dpdencies += [inputs.rows]
-    '''
-    pass
-  
-        
+    def _superClassDefine(self, inputs, internals, functions, outputs):
+        '''
+          Creates a common topology pipeline for mesh modifiers. 
+          (demuxing the mesh Topology and Geometry updates signals)
+        '''
+        inputs.mesh = DataProperty('k3d::mesh')
+        outputs.mesh = DataProperty('k3d::mesh')
+        functions.updateSelection = FunctionProperty()
+
+        functions.updateSelection.dpdencies += [inputs.mesh, ]
+
+        outputs.mesh.dpdencies += [functions.updateSelection, ]
+
+        return functions.updateSelection
+
+    def define(self, inputs, internals, functions, outputs, updateSelection):
+        '''
+          Implement this method on children classes.
+          Example:
+            inputs.rows = DataProperty('uint')
+            updateSelection.dpdencies += [inputs.rows]
+        '''
+        pass
+
+
 if __name__ == "__main__":
-  pass
+    pass

@@ -19,8 +19,8 @@ You should have received a copy of the GNU General Public License
 along with Mepinta. If not, see <http://www.gnu.org/licenses/>.
 '''
 
-def solveSymbol(handle, namespace, symbol):
-  complete_symbol = namespace + symbol
-  #void *dlsym(void *handle, const char *symbol);
-  return None
 
+def solveSymbol(handle, namespace, symbol):
+    complete_symbol = namespace + symbol
+    # void *dlsym(void *handle, const char *symbol);
+    return None

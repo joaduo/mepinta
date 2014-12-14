@@ -18,30 +18,35 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with Mepinta. If not, see <http://www.gnu.org/licenses/>.
 '''
-from mepinta.pipeline.hi.base import  HiAutoBase, unwrap_decorator
+from mepinta.pipeline.hi.base import HiAutoBase, unwrap_decorator
+
 
 class PipelineEvaluatorFunctum(HiAutoBase):
-  def __post_init__(self):
-    self.ppgation_mngr = self._getWrappedClass("SimplePropagationManager")(self.wrapped)
-  @unwrap_decorator
-  def propagateChanges(self, pline):
-    self.ppgation_mngr.propagateChanges(pline)
-  @unwrap_decorator
-  def evaluateProp(self, pline, prop_id):
-    if prop_id in pline.getTopology().properties:
-      #pline.startTopologyChangeSet() #TODO: review
-      self.ppgation_mngr.propagateChanges(pline)
-      return self.wrapped.evaluateProp(pline, prop_id)
-    else:
-      self.log.warning('Property is not in the current topology. Not evaluating')
+
+    def __post_init__(self):
+        self.ppgation_mngr = self._getWrappedClass(
+            "SimplePropagationManager")(self.wrapped)
+
+    @unwrap_decorator
+    def propagateChanges(self, pline):
+        self.ppgation_mngr.propagateChanges(pline)
+
+    @unwrap_decorator
+    def evaluateProp(self, pline, prop_id):
+        if prop_id in pline.getTopology().properties:
+            # pline.startTopologyChangeSet() #TODO: review
+            self.ppgation_mngr.propagateChanges(pline)
+            return self.wrapped.evaluateProp(pline, prop_id)
+        else:
+            self.log.warning(
+                'Property is not in the current topology. Not evaluating')
 
 
 def testModule():
-  from getDefaultContext import getDefaultContext
-  context = getDefaultContext()
-  pe = PipelineEvaluatorFunctum(context=context)
-  context.log(pe)
+    from getDefaultContext import getDefaultContext
+    context = getDefaultContext()
+    pe = PipelineEvaluatorFunctum(context=context)
+    context.log(pe)
 
 if __name__ == '__main__':
-  testModule()
-
+    testModule()

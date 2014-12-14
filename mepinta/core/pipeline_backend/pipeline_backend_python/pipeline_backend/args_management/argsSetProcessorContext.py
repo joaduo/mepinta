@@ -19,14 +19,15 @@ You should have received a copy of the GNU General Public License
 along with Mepinta. If not, see <http://www.gnu.org/licenses/>.
 '''
 
+
 def argsSetProcessorContext(args, processor_context):
-  ''' What is this function for?
-      Given a specific context a processor could use what?
-      For logging for example.
-      Maybe also useful when making calls to the graph (less possible)
-  '''
-  pass
+    ''' What is this function for?
+        Given a specific context a processor could use what?
+        For logging for example.
+        Maybe also useful when making calls to the graph (less possible)
+    '''
+    pass
+
 
 def shedskin_args_management_argsSetProcessorContext():
-  pass
-
+    pass

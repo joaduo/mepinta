@@ -25,49 +25,57 @@ from common.path import getPackagePath, joinPath, getObjectModulePath
 from mepinta_devtools.templates.FileBasedTemplate import FileBasedTemplate
 import os
 
+
 class FileToFileMap(MapperBase):
-  def __init__(self, template, dst_path, overwrite=False, repo_package=None, template_set=None):
-    if isinstance(template, TemplateLogicBase):
-      self.template_logic = template
-    elif isinstance(template, str):
-      self.template_logic = None
-      self.__template_path = template
-    else:
-      raise MepintaError('Template %r of invalid type (should be str or TemplateLogicBase).' % template)
-    self.dst_path = dst_path
-    self.overwrite = overwrite
-    self.repo_package = repo_package
-    self.template_set = template_set
 
-  def setRepoPackageAndTemplateSet(self, repo_package, template_set):
-    #TODO: make clear that is one time (or delete the method?)
-    if self.repo_package == None:
-      self.repo_package = repo_package
-    if self.template_set == None:
-      self.template_set = template_set
+    def __init__(self, template, dst_path, overwrite=False, repo_package=None, template_set=None):
+        if isinstance(template, TemplateLogicBase):
+            self.template_logic = template
+        elif isinstance(template, str):
+            self.template_logic = None
+            self.__template_path = template
+        else:
+            raise MepintaError(
+                'Template %r of invalid type (should be str or TemplateLogicBase).' % template)
+        self.dst_path = dst_path
+        self.overwrite = overwrite
+        self.repo_package = repo_package
+        self.template_set = template_set
 
-  def _getAbsolutSrcFilePath(self, file_path):
-    if self.repo_package == None or self.template_set == None:
-      raise MepintaError('For %r repo_package or template_set wasn\'t set' % self)
-    #TODO: remove return joinPath(splitPath(getPackagePath(self.repo_package)) + [self.template_set, file_path])
-    return joinPath(getPackagePath(self.repo_package), self.template_set, file_path)
+    def setRepoPackageAndTemplateSet(self, repo_package, template_set):
+        # TODO: make clear that is one time (or delete the method?)
+        if self.repo_package == None:
+            self.repo_package = repo_package
+        if self.template_set == None:
+            self.template_set = template_set
 
-  def getTemplatePath(self):
-    if self.template_logic == None:
-      return self._getAbsolutSrcFilePath(self.__template_path)
-    else:
-      file_dir = os.path.dirname(getObjectModulePath(self.template_logic))
-      return joinPath(file_dir, self.template_logic.getFileName())
+    def _getAbsolutSrcFilePath(self, file_path):
+        if self.repo_package == None or self.template_set == None:
+            raise MepintaError(
+                'For %r repo_package or template_set wasn\'t set' % self)
+        # TODO: remove return
+        # joinPath(splitPath(getPackagePath(self.repo_package)) +
+        # [self.template_set, file_path])
+        return joinPath(getPackagePath(self.repo_package), self.template_set, file_path)
 
-  def getTemplate(self):
-    return str(FileBasedTemplate(self.getTemplatePath()))
+    def getTemplatePath(self):
+        if self.template_logic == None:
+            return self._getAbsolutSrcFilePath(self.__template_path)
+        else:
+            file_dir = os.path.dirname(
+                getObjectModulePath(self.template_logic))
+            return joinPath(file_dir, self.template_logic.getFileName())
 
-  template_path = property(getTemplatePath, None, None, None)
-  template = property(getTemplate, None, None, None)
+    def getTemplate(self):
+        return str(FileBasedTemplate(self.getTemplatePath()))
+
+    template_path = property(getTemplatePath, None, None, None)
+    template = property(getTemplate, None, None, None)
+
 
 def testModule():
-  from getDefaultContext import getDefaultContext
-  context = getDefaultContext()
+    from getDefaultContext import getDefaultContext
+    context = getDefaultContext()
 
 if __name__ == "__main__":
-  testModule()
+    testModule()

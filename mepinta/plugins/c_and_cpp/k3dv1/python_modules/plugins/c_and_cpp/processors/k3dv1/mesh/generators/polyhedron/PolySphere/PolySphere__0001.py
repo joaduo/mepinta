@@ -22,30 +22,33 @@ along with Mepinta. If not, see <http://www.gnu.org/licenses/>.
 from mepinta.plugins_manifest import DataProperty, GenericEnum
 from plugins.c_and_cpp.processors.k3dv1.mesh.generators.base.MeshSourceManifestBase import MeshSourceManifestBase
 
-class PolySphere(MeshSourceManifestBase):
-  def define(self, inputs, internals, functions, outputs, updateMeshTopology, updateMeshGeometry):
-    inputs.u_segments = 'k3d::int32_t'
-    inputs.v_segments = 'k3d::int32_t'
-    inputs.radius = 'k3d::double_t'
-    inputs.u_power = 'k3d::double_t'
-    inputs.v_power = 'k3d::double_t'
-    inputs.primitive = GenericEnum(SPHERE=0, QUAD_ONLY_SPHERE=1, SPHEREIZED_CYLINDER=2).setDefault('SPHERE')
 
-    updateMeshTopology.dpdencies += [inputs.u_segments,
-                                     inputs.v_segments,
-                                     inputs.primitive, ]
-    updateMeshGeometry.dpdencies += [inputs.u_segments,
-                                     inputs.v_segments,
-                                     inputs.radius,
-                                     inputs.u_power,
-                                     inputs.v_power,
-                                     inputs.primitive, ]
+class PolySphere(MeshSourceManifestBase):
+
+    def define(self, inputs, internals, functions, outputs, updateMeshTopology, updateMeshGeometry):
+        inputs.u_segments = 'k3d::int32_t'
+        inputs.v_segments = 'k3d::int32_t'
+        inputs.radius = 'k3d::double_t'
+        inputs.u_power = 'k3d::double_t'
+        inputs.v_power = 'k3d::double_t'
+        inputs.primitive = GenericEnum(
+            SPHERE=0, QUAD_ONLY_SPHERE=1, SPHEREIZED_CYLINDER=2).setDefault('SPHERE')
+
+        updateMeshTopology.dpdencies += [inputs.u_segments,
+                                         inputs.v_segments,
+                                         inputs.primitive, ]
+        updateMeshGeometry.dpdencies += [inputs.u_segments,
+                                         inputs.v_segments,
+                                         inputs.radius,
+                                         inputs.u_power,
+                                         inputs.v_power,
+                                         inputs.primitive, ]
 
 manifest = PolySphere
 
 if __name__ == "__main__":
-  from mepinta.context.MepintaContext import MepintaContext
-  from mepinta.testing.plugins_testing.PluginManifestAutoTester import PluginManifestAutoTester
-  context = MepintaContext('c_and_cpp')
-  context.log(manifest)
-  PluginManifestAutoTester(context=context).test(manifest)
+    from mepinta.context.MepintaContext import MepintaContext
+    from mepinta.testing.plugins_testing.PluginManifestAutoTester import PluginManifestAutoTester
+    context = MepintaContext('c_and_cpp')
+    context.log(manifest)
+    PluginManifestAutoTester(context=context).test(manifest)

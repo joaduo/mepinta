@@ -25,32 +25,35 @@ from mepinta.context.MepintaContext import MepintaContext
 
 from mepinta.plugins_manifest import DataTypeManifestBase
 
-class manifest(DataTypeManifestBase):
-  pass
 
-    
+class manifest(DataTypeManifestBase):
+    pass
+
 
 def new():
-  return UndoableGraph()
+    return UndoableGraph()
+
 
 def copy(u_graph):
-  raise NotImplementedError('You cannot copy an UndoableGraph. Is a non_cached forced.')
+    raise NotImplementedError(
+        'You cannot copy an UndoableGraph. Is a non_cached forced.')
+
 
 def delete(u_graph):
-  pass
+    pass
+
 
 def copyTo(to_graph, from_graph):
-  #create the obvious context
-  context = MepintaContext('python')
-  #Make sure to propagate changes (avoid inconsistencies)
-  PipelineEvaluatorFunctum(context).propagateChanges(from_graph.pline)
-  #pass the common data between undoable graphs
-  to_graph.setGraph(from_graph.graph)
-  #We start a topology change set, so we haven't done anything yet
-  to_graph.topologyChanged = False
-  #return the copy
-  return to_graph
+    # create the obvious context
+    context = MepintaContext('python')
+    # Make sure to propagate changes (avoid inconsistencies)
+    PipelineEvaluatorFunctum(context).propagateChanges(from_graph.pline)
+    # pass the common data between undoable graphs
+    to_graph.setGraph(from_graph.graph)
+    # We start a topology change set, so we haven't done anything yet
+    to_graph.topologyChanged = False
+    # return the copy
+    return to_graph
 
-#def checkRepr(u_graph):
+# def checkRepr(u_graph):
 #  return u_graph.checkRepr()
-

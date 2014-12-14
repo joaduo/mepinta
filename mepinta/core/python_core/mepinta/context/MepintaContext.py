@@ -29,82 +29,88 @@ import os
 import re
 
 
-
 class singleton_autocontext(arg_singleton_and_wrap):
-  '''
-  We would like to select context based on the package that is calling the
-    context.
-  '''
-  def __call__(self, name=None, *args, **kwargs):
-    if not name:
-      path = self._getCallerFilePath()
-      name = self.solveContextName(path)
-    return super(singleton_autocontext, self).__call__(name, *args, **kwargs)
 
-  def _getCallerFilePath(self):
-    frame = self._getFrame(back=3)
-    return frame.f_code.co_filename
+    '''
+    We would like to select context based on the package that is calling the
+      context.
+    '''
 
-  def _getFrame(self, back):
-    frame = currentframe()
-    for _ in range(back):
-        frame = frame.f_back
-    return frame
+    def __call__(self, name=None, *args, **kwargs):
+        if not name:
+            path = self._getCallerFilePath()
+            name = self.solveContextName(path)
+        return super(singleton_autocontext, self).__call__(name, *args, **kwargs)
 
-  def solveContextName(self, path):
-    #TODO: solve based on the main script also (if this method fails)
-    regex = r'plugins.(?P<backend>(?:python)|(?:c_and_cpp)).(?:[a-z_0-9]+).python_modules'
-    regex = regex.replace('.', os.path.sep)
-    m = re.search(regex, path)
-    if m:
-      name = m.group('backend')
-      return name
-    else:
-      raise MepintaError('Could not resolve backend automatically by path %r '
-                         '(specify backend name explicitly)' % path)
+    def _getCallerFilePath(self):
+        frame = self._getFrame(back=3)
+        return frame.f_code.co_filename
+
+    def _getFrame(self, back):
+        frame = currentframe()
+        for _ in range(back):
+            frame = frame.f_back
+        return frame
+
+    def solveContextName(self, path):
+        # TODO: solve based on the main script also (if this method fails)
+        regex = r'plugins.(?P<backend>(?:python)|(?:c_and_cpp)).(?:[a-z_0-9]+).python_modules'
+        regex = regex.replace('.', os.path.sep)
+        m = re.search(regex, path)
+        if m:
+            name = m.group('backend')
+            return name
+        else:
+            raise MepintaError('Could not resolve backend automatically by path %r '
+                               '(specify backend name explicitly)' % path)
+
 
 @singleton_autocontext
 class MepintaContext(ContextBase):
-  '''
-  Specializes the "encapsulated context pattern" for a Mepinta environment.
-  This means:
-    -having a 'backend_name' property
-    -initializing lower level 'ContextLo' based on backend
-    -setting logging output to the based on backend and specific for mepinta
-  '''
-  def __init__(self, name, log_level=LOG_INFO):
-    ContextBase.__init__(self, name)
-    self._initConfig(log_level)
 
-  def _initConfig(self, log_level):
-    context = self
-    deployment_path = self.getConfig('deployment_config').deployment_path
-    context_lo = ContextLo(context=context, deployment_path=deployment_path)
-    context.setConfig('context_lo', context_lo)
-    logger = context.getConfig('log')
-    logger.setOutput(LogOutput(context=context))
-    logger.setLevel(log_level)
+    '''
+    Specializes the "encapsulated context pattern" for a Mepinta environment.
+    This means:
+      -having a 'backend_name' property
+      -initializing lower level 'ContextLo' based on backend
+      -setting logging output to the based on backend and specific for mepinta
+    '''
 
-  def _getDefaultConfig(self, name):
-    from mepinta_config import mepinta_config
-    config = mepinta_config()
-    if not hasattr(config, 'backend_name'):
-      if 'python' in name:
-        config.backend_name = 'python'
-      elif 'cpp' in name:
-        config.backend_name = 'c_and_cpp'
-      else:
-        raise LookupError('Cannot find backend name for context name')
-    return config
+    def __init__(self, name, log_level=LOG_INFO):
+        ContextBase.__init__(self, name)
+        self._initConfig(log_level)
+
+    def _initConfig(self, log_level):
+        context = self
+        deployment_path = self.getConfig('deployment_config').deployment_path
+        context_lo = ContextLo(
+            context=context, deployment_path=deployment_path)
+        context.setConfig('context_lo', context_lo)
+        logger = context.getConfig('log')
+        logger.setOutput(LogOutput(context=context))
+        logger.setLevel(log_level)
+
+    def _getDefaultConfig(self, name):
+        from mepinta_config import mepinta_config
+        config = mepinta_config()
+        if not hasattr(config, 'backend_name'):
+            if 'python' in name:
+                config.backend_name = 'python'
+            elif 'cpp' in name:
+                config.backend_name = 'c_and_cpp'
+            else:
+                raise LookupError('Cannot find backend name for context name')
+        return config
+
 
 def smokeTestModule():
-  #context = MepintaContext('python')
-  context = MepintaContext('c_and_cpp')
-  from common.log.debugPrint import debugPrint
-  pprint = debugPrint
-  pprint(context.getConfig('backend_name'))
-  pprint(context.getConfig('plugin_build_targets'))
-  pprint(context.getConfigDict())
+    #context = MepintaContext('python')
+    context = MepintaContext('c_and_cpp')
+    from common.log.debugPrint import debugPrint
+    pprint = debugPrint
+    pprint(context.getConfig('backend_name'))
+    pprint(context.getConfig('plugin_build_targets'))
+    pprint(context.getConfigDict())
 
 if __name__ == "__main__":
-  smokeTestModule()
+    smokeTestModule()

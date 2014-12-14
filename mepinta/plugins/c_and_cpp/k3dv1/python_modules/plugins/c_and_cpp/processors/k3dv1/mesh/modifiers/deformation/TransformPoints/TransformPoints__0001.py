@@ -21,25 +21,25 @@ along with Mepinta. If not, see <http://www.gnu.org/licenses/>.
 
 from mepinta.plugins_manifest import ProcessorManifestBase, DataProperty, FunctionProperty
 
+
 class TransformPoints(ProcessorManifestBase):
-  def define(self, inputs, internals, functions, outputs):
-    inputs.mesh = DataProperty('k3dv1_Mesh')
-    inputs.matrix = DataProperty('k3dv1_Matrix4')
-    
-    outputs.mesh = DataProperty('k3dv1_Mesh')
-    functions.on_deform_mesh = FunctionProperty()
-    
-    functions.on_deform_mesh.dpdencies += [ inputs.mesh
-                                          , inputs.matrix]
-    outputs.mesh.dpdencies += [functions.on_deform_mesh,]
+
+    def define(self, inputs, internals, functions, outputs):
+        inputs.mesh = DataProperty('k3dv1_Mesh')
+        inputs.matrix = DataProperty('k3dv1_Matrix4')
+
+        outputs.mesh = DataProperty('k3dv1_Mesh')
+        functions.on_deform_mesh = FunctionProperty()
+
+        functions.on_deform_mesh.dpdencies += [inputs.mesh                                               , inputs.matrix]
+        outputs.mesh.dpdencies += [functions.on_deform_mesh, ]
 
 manifest = TransformPoints
 
 if __name__ == "__main__":
-  from mepinta.context.MepintaContext import MepintaContext
-  from mepinta.plugins_manifest.PluginManifestTester import PluginManifestTester
-  context = MepintaContext('c_and_cpp')
-  plugin_instance = manifest(context=context)
-  context.log(manifest)
-  PluginManifestTester(context=context).test(plugin_instance)
-
+    from mepinta.context.MepintaContext import MepintaContext
+    from mepinta.plugins_manifest.PluginManifestTester import PluginManifestTester
+    context = MepintaContext('c_and_cpp')
+    plugin_instance = manifest(context=context)
+    context.log(manifest)
+    PluginManifestTester(context=context).test(plugin_instance)

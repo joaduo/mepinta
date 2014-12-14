@@ -20,18 +20,21 @@ along with Mepinta. If not, see <http://www.gnu.org/licenses/>.
 '''
 from plugins.python.processors.actiontree.UndoableGraph.output.base.UndoableGraphRendererBase import UndoableGraphRendererBase
 
+
 class manifest(UndoableGraphRendererBase):
-  pass
+    pass
 
 from mepinta_python_sdk.props import getPropValue
+
+
 def render(args):
-  from pipeline_backend.logging.logging import logInfo
-  #Inputs
-  graph = getPropValue(args, 'inputs', 'graph')
-  logInfo(str(graph))
+    from pipeline_backend.logging.logging import logInfo
+    # Inputs
+    graph = getPropValue(args, 'inputs', 'graph')
+    logInfo(str(graph))
 
 if __name__ == "__main__":
-  from getDefaultContext import getDefaultContext
-  from mepinta.testing.plugins_testing.PluginManifestAutoTester import PluginManifestAutoTester
-  context = getDefaultContext()
-  PluginManifestAutoTester(context=context).test(manifest)
+    from getDefaultContext import getDefaultContext
+    from mepinta.testing.plugins_testing.PluginManifestAutoTester import PluginManifestAutoTester
+    context = getDefaultContext()
+    PluginManifestAutoTester(context=context).test(manifest)

@@ -20,12 +20,14 @@ along with Mepinta. If not, see <http://www.gnu.org/licenses/>.
 '''
 from mepinta.testing.plugins_testing.base import ModuleAutoTesterBase
 
+
 class ModuleAutoTesterUtil(ModuleAutoTesterBase):
-  pass
+    pass
+
 
 def testModule():
-  from getDefaultContext import getDefaultContext
-  context = getDefaultContext()
+    from getDefaultContext import getDefaultContext
+    context = getDefaultContext()
 
 if __name__ == "__main__":
-  testModule()
+    testModule()

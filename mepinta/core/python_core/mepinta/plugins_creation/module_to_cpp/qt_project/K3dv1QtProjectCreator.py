@@ -21,18 +21,21 @@ along with Mepinta. If not, see <http://www.gnu.org/licenses/>.
 from mepinta.plugins_creation.base import ProjectCreatorBase
 from mepinta.plugins_creation.module_to_cpp.qt_project.QtProjectTemplates import QtProjectTemplates
 
+
 class K3dv1QtProjectCreator(ProjectCreatorBase):
-  '''
-    Create a Qt Project from a plugin manifest and a given path to place 
-    the project (could be the Eclipse workspace).
-    Uses a template based creation. Right now there are templates for k3d plugins.
-    But more could be added.
-  '''
-  def _getTemplates(self, plugin_manifest, target_root):
-    templates = QtProjectTemplates(context=self.context).getTemplatePerPath(plugin_manifest, target_root)
-    return templates
+
+    '''
+      Create a Qt Project from a plugin manifest and a given path to place 
+      the project (could be the Eclipse workspace).
+      Uses a template based creation. Right now there are templates for k3d plugins.
+      But more could be added.
+    '''
+
+    def _getTemplates(self, plugin_manifest, target_root):
+        templates = QtProjectTemplates(context=self.context).getTemplatePerPath(
+            plugin_manifest, target_root)
+        return templates
 
 if __name__ == "__main__":
-  from mepinta.context.MepintaContext import MepintaContext
-  context = MepintaContext('python')  
-
+    from mepinta.context.MepintaContext import MepintaContext
+    context = MepintaContext('python')

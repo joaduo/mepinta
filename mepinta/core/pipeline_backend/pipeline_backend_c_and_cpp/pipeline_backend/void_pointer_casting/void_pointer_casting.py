@@ -20,98 +20,122 @@ along with Mepinta. If not, see <http://www.gnu.org/licenses/>.
 '''
 
 from mepinta.pipeline.lo.pipeline_data.hidden_data_types import FunctionPropertyValue, \
-  FunctumPropertyValue
+    FunctumPropertyValue
 
-#Functions prototypes
+# Functions prototypes
+
+
 def func_arg_void():
-  return None
+    return None
+
 
 def func_arg_voidp(voidp):
-  return None
+    return None
+
 
 def processor_func(args_voidp):
-  return 0
+    return 0
+
 
 def copyToFunc(to_voidp, from_voidp):
-  return None
+    return None
 
-#Data
-def intToVoidp(int_v):#TODO: remove
-  return None
+# Data
+
+def intToVoidp(int_v):  # TODO: remove
+    return None
+
 
 def doubleToVoidp(float_v):
-  return None
+    return None
+
 
 def strToVoidp(str_):
-  return None
+    return None
+
 
 def strCharpToVoidp(str_):
-  return None
+    return None
+
 
 def strStringToVoidp(str_):
-  return None
+    return None
+
 
 def anyPtrToVoidp(anything):
-  return None
+    return None
+
 
 def voidpToInt(voidp):
-  return 1
+    return 1
+
 
 def voidpToDouble(voidp):
-  return 1.1
+    return 1.1
+
 
 def voidpToStr(voidp):
-  return ''
+    return ''
+
 
 def voidpCharpToStr(voidp):
-  return ''
+    return ''
+
 
 def voidpStringToStr(voidp):
-  return ''
+    return ''
+
 
 def voidpToListInt(voidp):
-  return [1]
+    return [1]
+
 
 def voidp_to_FunctionPropertyValue(voidp):
-  return FunctionPropertyValue()
+    return FunctionPropertyValue()
+
 
 def voidp_to_FunctumPropertyValue(voidp):
-  return FunctumPropertyValue()
+    return FunctumPropertyValue()
 
-#Functions pointers
+# Functions pointers
+
+
 def voidpToFuncArgVoid(voidp):
-  func_arg_void()
-  return func_arg_void
+    func_arg_void()
+    return func_arg_void
+
 
 def voidpToFuncArgVoidp(voidp):
-  func_arg_voidp(None)
-  return func_arg_voidp
+    func_arg_voidp(None)
+    return func_arg_voidp
+
 
 def voidpToProcessorFunc(voidp):
-  processor_func(None)
-  return processor_func
+    processor_func(None)
+    return processor_func
+
 
 def voidpToCopyToFunc(voidp):
-  copyToFunc(None, None)
-  return copyToFunc
+    copyToFunc(None, None)
+    return copyToFunc
+
 
 def shedskin_void_pointer_casting():
-  voidp = None
-  voidpToFuncArgVoid(voidp)
-  voidpToFuncArgVoidp(voidp)
-  voidpToProcessorFunc(voidp)
-  voidpToCopyToFunc(voidp)
+    voidp = None
+    voidpToFuncArgVoid(voidp)
+    voidpToFuncArgVoidp(voidp)
+    voidpToProcessorFunc(voidp)
+    voidpToCopyToFunc(voidp)
 
-  voidpToInt(voidp)
-  voidpToStr(voidp)
-  voidpToDouble(voidp)
-  voidpToListInt(voidp)
+    voidpToInt(voidp)
+    voidpToStr(voidp)
+    voidpToDouble(voidp)
+    voidpToListInt(voidp)
 
-  anyPtrToVoidp(voidp)
-  intToVoidp(1)
-  doubleToVoidp(10.0)
-  strToVoidp('')
+    anyPtrToVoidp(voidp)
+    intToVoidp(1)
+    doubleToVoidp(10.0)
+    strToVoidp('')
 
 if __name__ == '__main__':
-  shedskin_void_pointer_casting()
-
+    shedskin_void_pointer_casting()

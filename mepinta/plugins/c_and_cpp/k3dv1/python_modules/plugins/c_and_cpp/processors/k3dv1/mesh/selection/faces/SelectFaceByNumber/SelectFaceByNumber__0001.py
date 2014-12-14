@@ -22,19 +22,20 @@ along with Mepinta. If not, see <http://www.gnu.org/licenses/>.
 from mepinta.plugins_manifest import DataProperty
 from plugins.c_and_cpp.processors.k3dv1.mesh.selection.base.SimpleSelectionModifierBase import SimpleSelectionModifierBase
 
-class SelectFaceByNumber(SimpleSelectionModifierBase):
-  def define(self, inputs, internals, functions, outputs, updateSelection):
-    #Inputs
-    inputs.primitive_number = DataProperty('k3d::int32_t')
-    inputs.face_index = DataProperty('k3d::int32_t')
 
-    #Functions
-    updateSelection.dpdencies += inputs.primitive_number, inputs.face_index
- 
+class SelectFaceByNumber(SimpleSelectionModifierBase):
+
+    def define(self, inputs, internals, functions, outputs, updateSelection):
+        # Inputs
+        inputs.primitive_number = DataProperty('k3d::int32_t')
+        inputs.face_index = DataProperty('k3d::int32_t')
+
+        # Functions
+        updateSelection.dpdencies += inputs.primitive_number, inputs.face_index
+
 manifest = SelectFaceByNumber
 
 if __name__ == "__main__":
-  from getDefaultContext import getDefaultContext
-  from mepinta.testing.plugins_testing.PluginManifestAutoTester import PluginManifestAutoTester
-  PluginManifestAutoTester(getDefaultContext()).test(manifest)#, gui=True)
-
+    from getDefaultContext import getDefaultContext
+    from mepinta.testing.plugins_testing.PluginManifestAutoTester import PluginManifestAutoTester
+    PluginManifestAutoTester(getDefaultContext()).test(manifest)  # , gui=True)

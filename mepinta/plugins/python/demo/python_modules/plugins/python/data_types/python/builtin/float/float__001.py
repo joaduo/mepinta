@@ -22,16 +22,18 @@ along with Mepinta. If not, see <http://www.gnu.org/licenses/>.
 
 from mepinta.plugins_manifest import DataTypeManifestBase
 
-class manifest(DataTypeManifestBase):
-  pass
 
-    
+class manifest(DataTypeManifestBase):
+    pass
+
 
 def new():
-  return float()
+    return float()
+
 
 def copy(float_):
-  return float_
+    return float_
+
 
 def delete(float_):
-  pass
+    pass

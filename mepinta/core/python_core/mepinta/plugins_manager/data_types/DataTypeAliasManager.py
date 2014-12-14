@@ -20,99 +20,102 @@ along with Mepinta. If not, see <http://www.gnu.org/licenses/>.
 '''
 from common.abstract.FrameworkBase import FrameworkBase
 
+
 class DataTypeAliasManager(FrameworkBase):
-  def __getAliasDict(self, backend_name):
-    if backend_name == 'python':
-      return self._getPythonAliasDict()
-    elif backend_name == 'c_and_cpp':
-      return self._getCAndCppAliasDict()
-    else:
-      return self._getPythonAliasDict()
 
-  def getFunctumAliases(self):
-    functum_aliases = []
-    alias_dict = self.__getAliasDict(self.context.backend_name)
-    functum_name = alias_dict['functum']
-    for alias, name in alias_dict.items():
-      if name == functum_name:
-        functum_aliases.append(alias)
-    return functum_aliases
+    def __getAliasDict(self, backend_name):
+        if backend_name == 'python':
+            return self._getPythonAliasDict()
+        elif backend_name == 'c_and_cpp':
+            return self._getCAndCppAliasDict()
+        else:
+            return self._getPythonAliasDict()
 
-  def _getPythonAliasDict(self):
-    alias_dict = {
-                  'int':'python.builtin.int',
-                  'float':'python.builtin.float',
-                  'str':'python.builtin.str',
-                  'list':'python.builtin.list',
-                  'dict':'python.builtin.dict',
-                  'actiontree.Processor':'python.builtin.str',
-                  'actiontree.NodesSelection':'python.builtin.list',
-                  'functum':'mepinta.functum',
-                  #'internal_any':'mepinta.internal_any', #TODO review
-                  }
-    return alias_dict
+    def getFunctumAliases(self):
+        functum_aliases = []
+        alias_dict = self.__getAliasDict(self.context.backend_name)
+        functum_name = alias_dict['functum']
+        for alias, name in alias_dict.items():
+            if name == functum_name:
+                functum_aliases.append(alias)
+        return functum_aliases
 
-  def _getCAndCppAliasDict(self):
-    alias_dict = {
-                  'std::string':'cpp.std.string',
-                  ##
-                  'MP_generic_enum':'c.builtin.int',
-                  'mepinta::generic_enum':'c.builtin.int',#'mepinta.generic_enum', #MP_generic_enum
-                  'functum':'mepinta.functum', #MP_functum
-                  'MP_functum':'mepinta.functum', #MP_functum
-                  'mepinta::functum':'mepinta.functum', #MP_functum
-                  'MP_internal_any':'mepinta.internal_any', #MP_internal_any
-                  'mepinta::internal_any':'mepinta.internal_any', #MP_internal_any
-                  #k3d
-                  'k3d::mesh':'k3dv1.mesh',#'k3dv1.mesh',
-                  #'k3d::filesystem::path':'k3dv1_FilesystemPath',#'k3dv1.filesystem.path',
-                  'k3d::filesystem::path':'c.builtin.charp',#'k3dv1.filesystem.path',
-                  'k3d::imaterial':'k3dv1.imaterial', #k3dv1.imaterial
-                  #####==========Correct ones!
-                  'int':'c.builtin.int',
-                  'double':'c.builtin.double',
-                  'uint':'c.builtin.uint',
-                  'char*':'c.builtin.charp',#'c.boehm_gc.charp',
-                  'charp':'c.builtin.charp',#'c.boehm_gc.charp',
-                  'std::string*':'cpp.std.string',
-                  ##
-                  'MP_generic_enum*':'c.builtin.int',
-                  'mepinta::generic_enum*':'c.builtin.int',#'mepinta.generic_enum', #MP_generic_enum
-                  'MP_functum*':'mepinta.functum', #MP_functum
-                  'mepinta::functum*':'mepinta.functum', #MP_functum
-                  'MP_internal_any*':'mepinta.internal_any', #MP_internal_any
-                  'internal_any':'mepinta.internal_any', #MP_internal_any
-                  'mepinta::internal_any*':'mepinta.internal_any', #MP_internal_any
-                  ##
-                  'k3d::int32_t':'c.builtin.int', #'c_builtin.int'
-                  'k3d::double_t':'c.builtin.double',
-                  'k3d::string_t':'cpp.std.string', #'std.string'
-                  'k3d::bool_t':'c.builtin.int',
-                  ##
-                  'k3d::mesh*':'k3dv1.mesh',#'k3dv1.mesh',
-                  #'k3d::filesystem::path':'k3dv1_FilesystemPath',#'k3dv1.filesystem.path',
-                  'k3d::filesystem::path*':'c.builtin.charp',#'k3dv1.filesystem.path',
-                  'k3d::imaterial*':'k3dv1.imaterial', #k3dv1.imaterial
-                 }
-    return alias_dict
+    def _getPythonAliasDict(self):
+        alias_dict = {
+            'int': 'python.builtin.int',
+                      'float': 'python.builtin.float',
+                      'str': 'python.builtin.str',
+                      'list': 'python.builtin.list',
+                      'dict': 'python.builtin.dict',
+                      'actiontree.Processor': 'python.builtin.str',
+                      'actiontree.NodesSelection': 'python.builtin.list',
+                      'functum': 'mepinta.functum',
+                      # 'internal_any':'mepinta.internal_any', #TODO review
+        }
+        return alias_dict
 
-  def getRealName(self, data_type_alias):
-    '''
-      Support data_type aliases. (avoiding redundant data types)
-    '''
-    if data_type_alias == 'k3d::filesystem::path*':
-      self.log.w('Conversion of %s is to char*.(this is wrong and is just a '
-                 'hack) WIP...' % data_type_alias)
+    def _getCAndCppAliasDict(self):
+        alias_dict = {
+            'std::string': 'cpp.std.string',
+                      ##
+                      'MP_generic_enum': 'c.builtin.int',
+                      'mepinta::generic_enum': 'c.builtin.int',  # 'mepinta.generic_enum', #MP_generic_enum
+                      'functum': 'mepinta.functum',  # MP_functum
+                      'MP_functum': 'mepinta.functum',  # MP_functum
+                      'mepinta::functum': 'mepinta.functum',  # MP_functum
+                      'MP_internal_any': 'mepinta.internal_any',  # MP_internal_any
+                      'mepinta::internal_any': 'mepinta.internal_any',  # MP_internal_any
+                      # k3d
+                      'k3d::mesh': 'k3dv1.mesh',  # 'k3dv1.mesh',
+                      # 'k3d::filesystem::path':'k3dv1_FilesystemPath',#'k3dv1.filesystem.path',
+                      'k3d::filesystem::path': 'c.builtin.charp',  # 'k3dv1.filesystem.path',
+                      'k3d::imaterial': 'k3dv1.imaterial',  # k3dv1.imaterial
+                      # ==========Correct ones!
+                      'int': 'c.builtin.int',
+                      'double': 'c.builtin.double',
+                      'uint': 'c.builtin.uint',
+                      'char*': 'c.builtin.charp',  # 'c.boehm_gc.charp',
+                      'charp': 'c.builtin.charp',  # 'c.boehm_gc.charp',
+                      'std::string*': 'cpp.std.string',
+                      ##
+                      'MP_generic_enum*': 'c.builtin.int',
+                      'mepinta::generic_enum*': 'c.builtin.int',  # 'mepinta.generic_enum', #MP_generic_enum
+                      'MP_functum*': 'mepinta.functum',  # MP_functum
+                      'mepinta::functum*': 'mepinta.functum',  # MP_functum
+                      'MP_internal_any*': 'mepinta.internal_any',  # MP_internal_any
+                      'internal_any': 'mepinta.internal_any',  # MP_internal_any
+                      'mepinta::internal_any*': 'mepinta.internal_any',  # MP_internal_any
+                      ##
+                      'k3d::int32_t': 'c.builtin.int',  # 'c_builtin.int'
+                      'k3d::double_t': 'c.builtin.double',
+                      'k3d::string_t': 'cpp.std.string',  # 'std.string'
+                      'k3d::bool_t': 'c.builtin.int',
+                      ##
+                      'k3d::mesh*': 'k3dv1.mesh',  # 'k3dv1.mesh',
+                      # 'k3d::filesystem::path':'k3dv1_FilesystemPath',#'k3dv1.filesystem.path',
+                      'k3d::filesystem::path*': 'c.builtin.charp',  # 'k3dv1.filesystem.path',
+                      'k3d::imaterial*': 'k3dv1.imaterial',  # k3dv1.imaterial
+        }
+        return alias_dict
 
-    alias_dict = self.__getAliasDict(self.context.backend_name)
-    if data_type_alias in alias_dict:
-      return alias_dict[data_type_alias]
-    else:
-      return data_type_alias
+    def getRealName(self, data_type_alias):
+        '''
+          Support data_type aliases. (avoiding redundant data types)
+        '''
+        if data_type_alias == 'k3d::filesystem::path*':
+            self.log.w('Conversion of %s is to char*.(this is wrong and is just a '
+                       'hack) WIP...' % data_type_alias)
+
+        alias_dict = self.__getAliasDict(self.context.backend_name)
+        if data_type_alias in alias_dict:
+            return alias_dict[data_type_alias]
+        else:
+            return data_type_alias
+
 
 def testModule():
-  from getDefaultContext import getDefaultContext
-  context = getDefaultContext()
+    from getDefaultContext import getDefaultContext
+    context = getDefaultContext()
 
 if __name__ == "__main__":
-  testModule()
+    testModule()

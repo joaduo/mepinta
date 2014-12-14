@@ -19,27 +19,34 @@ You should have received a copy of the GNU General Public License
 along with Mepinta. If not, see <http://www.gnu.org/licenses/>.
 '''
 
+
 class FunctionPropertyValue(object):
-  def __init__(self,func_id):
-    self.func_id = func_id
-    self.args = None
+
+    def __init__(self, func_id):
+        self.func_id = func_id
+        self.args = None
+
 
 class FunctumPropertyValue(FunctionPropertyValue):
-  def __init__(self, func_id, functum_prop):
-    FunctionPropertyValue.__init__(self,func_id)
-    self.functum_prop = functum_prop
-  def setFunctumProp(self, functum_prop):
-    self.functum_prop = functum_prop
-  def getFunctumProp(self):
-    return self.functum_prop
-  
+
+    def __init__(self, func_id, functum_prop):
+        FunctionPropertyValue.__init__(self, func_id)
+        self.functum_prop = functum_prop
+
+    def setFunctumProp(self, functum_prop):
+        self.functum_prop = functum_prop
+
+    def getFunctumProp(self):
+        return self.functum_prop
+
+
 def shedskin_hidden_data_types(prop):
-  func_id = 100
-  fpv= FunctionPropertyValue(func_id)
-  fumpv =FunctumPropertyValue(func_id, prop)
-  fumpv.setFunctumProp(functum_prop=prop)
-  fumpv.getFunctumProp()
-  return fpv
+    func_id = 100
+    fpv = FunctionPropertyValue(func_id)
+    fumpv = FunctumPropertyValue(func_id, prop)
+    fumpv.setFunctumProp(functum_prop=prop)
+    fumpv.getFunctumProp()
+    return fpv
 
 if __name__ == "__main__":
-  pass
+    pass

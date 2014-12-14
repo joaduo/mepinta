@@ -20,13 +20,15 @@ along with Mepinta. If not, see <http://www.gnu.org/licenses/>.
 '''
 from mepinta_devtools.ide_projects.qtcreator.QtProjectPluginCreator import QtProjectPluginCreatorBase
 
+
 class PluginProjectCreator(QtProjectPluginCreatorBase):
-  pass
+    pass
+
 
 def smokeTestModule():
-#  from getDefaultContext import getDefaultContext
-#  context = getDefaultContext()
-  raise RuntimeWarning('No smoke test')
+    #  from getDefaultContext import getDefaultContext
+    #  context = getDefaultContext()
+    raise RuntimeWarning('No smoke test')
 
 if __name__ == "__main__":
-  smokeTestModule()
+    smokeTestModule()

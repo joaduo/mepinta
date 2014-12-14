@@ -20,17 +20,19 @@ along with Mepinta. If not, see <http://www.gnu.org/licenses/>.
 '''
 from mepinta.plugins_manifest import ProcessorManifestBase, DataProperty
 
+
 class MaterialSinkBase(ProcessorManifestBase):
-  def _superClassDefine(self, inputs, internals, functions, outputs):
-    '''Adds the material property to a node. '''
-    inputs.material = DataProperty('k3d::imaterial')
+
+    def _superClassDefine(self, inputs, internals, functions, outputs):
+        '''Adds the material property to a node. '''
+        inputs.material = DataProperty('k3d::imaterial')
 
 manifest = MaterialSinkBase
 
 if __name__ == "__main__":
-  from mepinta.context.MepintaContext import MepintaContext
-  from mepinta.plugins_manifest.PluginManifestTester import PluginManifestTester
-  context = MepintaContext('c_and_cpp')
-  plugin_instance = manifest(context=context)
-  context.log(manifest)
-  PluginManifestTester(context=context).test(plugin_instance)
+    from mepinta.context.MepintaContext import MepintaContext
+    from mepinta.plugins_manifest.PluginManifestTester import PluginManifestTester
+    context = MepintaContext('c_and_cpp')
+    plugin_instance = manifest(context=context)
+    context.log(manifest)
+    PluginManifestTester(context=context).test(plugin_instance)

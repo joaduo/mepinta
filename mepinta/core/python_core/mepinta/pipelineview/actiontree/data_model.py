@@ -22,35 +22,42 @@ from common.abstract.FrameworkBase import FrameworkBase
 from mepinta.pipelineview.graph.data_model import Graph
 from mepinta.pipeline.hi.pipeline_data.data_model import Pipeline
 
-class ActionRootNode(object):
-  def __init__(self):
-    self.parent = None
-    self.children = []
 
-  def newChild(self, graph_node):
-    node = ActionNode(self, graph_node)
-    self.children.append(node)
-    return node
+class ActionRootNode(object):
+
+    def __init__(self):
+        self.parent = None
+        self.children = []
+
+    def newChild(self, graph_node):
+        node = ActionNode(self, graph_node)
+        self.children.append(node)
+        return node
+
 
 class ActionNode(ActionRootNode):
-  def __init__(self, parent, graph_node):
-    self.parent = parent
-    self.graph_node = graph_node
-    self.children = []
+
+    def __init__(self, parent, graph_node):
+        self.parent = parent
+        self.graph_node = graph_node
+        self.children = []
+
 
 class ActionTree(FrameworkBase):
-  def __post_init__(self):
-    self.root_node = ActionRootNode()
-    self.current_node = self.root_node
-    self.meta_graph = Graph(Pipeline(self.context))
 
-  def appendActionNode(self, graph_node):
-    self.current_node = self.current_node.newChild(graph_node)
+    def __post_init__(self):
+        self.root_node = ActionRootNode()
+        self.current_node = self.root_node
+        self.meta_graph = Graph(Pipeline(self.context))
+
+    def appendActionNode(self, graph_node):
+        self.current_node = self.current_node.newChild(graph_node)
+
 
 def testModule():
-  from getDefaultContext import getDefaultContext
-  context = getDefaultContext()
-  context.log(ActionTree(context))
+    from getDefaultContext import getDefaultContext
+    context = getDefaultContext()
+    context.log(ActionTree(context))
 
 if __name__ == "__main__":
-  testModule()
+    testModule()

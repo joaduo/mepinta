@@ -22,16 +22,20 @@ from common.abstract.FrameworkBase import FrameworkBase
 import shlex
 import subprocess
 
+
 class CommandRunner(FrameworkBase):
-  def run(self, cmd):
-    process_open = subprocess.Popen(shlex.split(cmd), stderr=subprocess.PIPE, stdout=subprocess.PIPE)
-    stdout, stdin = process_open.stdout.read(), process_open.stderr.read()
-    return stdout, stdin
+
+    def run(self, cmd):
+        process_open = subprocess.Popen(
+            shlex.split(cmd), stderr=subprocess.PIPE, stdout=subprocess.PIPE)
+        stdout, stdin = process_open.stdout.read(), process_open.stderr.read()
+        return stdout, stdin
+
 
 def testModule():
-  from getDefaultContext import getDefaultContext
-  context = getDefaultContext()
-  debugPrint(CommandRunner(context).run('ls -alh'))
+    from getDefaultContext import getDefaultContext
+    context = getDefaultContext()
+    debugPrint(CommandRunner(context).run('ls -alh'))
 
 if __name__ == "__main__":
-  testModule()
+    testModule()

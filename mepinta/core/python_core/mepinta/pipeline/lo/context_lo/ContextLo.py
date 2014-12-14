@@ -20,23 +20,28 @@ along with Mepinta. If not, see <http://www.gnu.org/licenses/>.
 '''
 from mepinta.pipeline.lo.pipeline_data.data_model import DataType, ProcessorFunction
 
+
 class ContextLo(object):
-  def __init__(self):
-    self.data_types = {} #id:(data_type object)
-    self.data_types_paths = {} #path:(void*)handle #TODO: this should go to the PluginLoader? uhm... no
-    self.functions = {} #id:(void*)func_pointer
-    self.processors_paths = {}#path:(void*)handle
-    #We create this dummy data type for all those props without it
-    self.data_types[0] = DataType('Zero_Data_Type', None)
-    self.functions[0] = ProcessorFunction('Zero_Function', None)
-    self.data_type_aliases = {} #str:str
-  def appendDataTypeAlias(self, data_type_name, data_type_alias):
-    #TODO: review usage, should be on plugins data type validation?
-    if data_type_name not in self.data_type_aliases:
-      self.data_type_aliases[data_type_name] = []
-    self.data_type_aliases[data_type_name].append(data_type_alias)
+
+    def __init__(self):
+        self.data_types = {}  # id:(data_type object)
+        # path:(void*)handle #TODO: this should go to the PluginLoader? uhm... no
+        self.data_types_paths = {}
+        self.functions = {}  # id:(void*)func_pointer
+        self.processors_paths = {}  # path:(void*)handle
+        # We create this dummy data type for all those props without it
+        self.data_types[0] = DataType('Zero_Data_Type', None)
+        self.functions[0] = ProcessorFunction('Zero_Function', None)
+        self.data_type_aliases = {}  # str:str
+
+    def appendDataTypeAlias(self, data_type_name, data_type_alias):
+        # TODO: review usage, should be on plugins data type validation?
+        if data_type_name not in self.data_type_aliases:
+            self.data_type_aliases[data_type_name] = []
+        self.data_type_aliases[data_type_name].append(data_type_alias)
+
 
 def shedskin_ContextLo():
-  context_lo = ContextLo()
-  context_lo.appendDataTypeAlias('int', 'int32_t')
-  return context_lo
+    context_lo = ContextLo()
+    context_lo.appendDataTypeAlias('int', 'int32_t')
+    return context_lo

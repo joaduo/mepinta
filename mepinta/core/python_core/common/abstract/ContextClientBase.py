@@ -24,50 +24,56 @@ from common.context.Context import ContextBase
 
 
 class ContextClientBase(object):
-  '''
-    Makes sure that every context object is wrapped by
-    :class:`common.config.ContextWrapper.ContextWrapper`
-  '''
-  def __init__(self, context=None):
-    '''
-    Wrap context if not wrapped yet.
-    :param context: context, instance of :class:`from common.context.Context.ContextBase`
-    '''
-    self.context = self.__setContext(context)
 
-  def __setContext(self, context):
     '''
-    Wrap context if not wrapped yet.
-    :param context: context, instance of :class:`from common.context.Context.ContextBase`
+      Makes sure that every context object is wrapped by
+      :class:`common.config.ContextWrapper.ContextWrapper`
     '''
-    if context == None:
-      raise RuntimeError("You should provide a Context for this object since it"
-                         " is an instance of %r" % self.__class__)
-    elif not (isinstance(context, ContextWrapper) \
-    or isinstance(context, ContextBase)): #healthy
-      raise RuntimeError('Provided context %r is of incorrect type' % context)
-    else:
-      #The context need to be wrapped in order to have easier access to the global config
-      if not isinstance(context, ContextWrapper):
-        context = ContextWrapper(context)
-    return context
+
+    def __init__(self, context=None):
+        '''
+        Wrap context if not wrapped yet.
+        :param context: context, instance of :class:`from common.context.Context.ContextBase`
+        '''
+        self.context = self.__setContext(context)
+
+    def __setContext(self, context):
+        '''
+        Wrap context if not wrapped yet.
+        :param context: context, instance of :class:`from common.context.Context.ContextBase`
+        '''
+        if context == None:
+            raise RuntimeError("You should provide a Context for this object since it"
+                               " is an instance of %r" % self.__class__)
+        elif not (isinstance(context, ContextWrapper)
+                  or isinstance(context, ContextBase)):  # healthy
+            raise RuntimeError(
+                'Provided context %r is of incorrect type' % context)
+        else:
+            # The context need to be wrapped in order to have easier access to
+            # the global config
+            if not isinstance(context, ContextWrapper):
+                context = ContextWrapper(context)
+        return context
 
 
 def smokeTestModule():
-  from common.context.Context import Context
-  from common.log.debugPrint import debugPrint
-  class Client(ContextClientBase):
-    def example(self):
-      self.processors = {}
-  ctx = Context('python')
-  client = Client(context=ctx)
-  debugPrint(client.context)
-  client.context.hola = 'valor'
-  debugPrint(client.context.hola)
-  try:
-    client.context.context = 'bla'
-  except Exception as e:
-    debugPrint(e)
+    from common.context.Context import Context
+    from common.log.debugPrint import debugPrint
+
+    class Client(ContextClientBase):
+
+        def example(self):
+            self.processors = {}
+    ctx = Context('python')
+    client = Client(context=ctx)
+    debugPrint(client.context)
+    client.context.hola = 'valor'
+    debugPrint(client.context.hola)
+    try:
+        client.context.context = 'bla'
+    except Exception as e:
+        debugPrint(e)
 
 if __name__ == '__main__':
-  smokeTestModule()
+    smokeTestModule()

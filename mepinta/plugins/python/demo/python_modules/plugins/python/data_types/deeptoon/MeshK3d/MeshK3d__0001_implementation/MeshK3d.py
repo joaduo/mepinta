@@ -19,25 +19,31 @@ You should have received a copy of the GNU General Public License
 along with Mepinta. If not, see <http://www.gnu.org/licenses/>.
 '''
 
+
 class Primitive(object):
-  pass
+    pass
+
 
 class Table(object):
-  pass
+    pass
+
 
 class NamedArrays(object):
-  pass
+    pass
+
 
 class NamedTables(object):
-  pass
+    pass
+
 
 class MeshK3d(object):
-  def __initDataModel(self):
-    self.points = []
+
+    def __initDataModel(self):
+        self.points = []
 
 
 def testModule():
-  pass
+    pass
 
 if __name__ == "__main__":
-  testModule()
+    testModule()

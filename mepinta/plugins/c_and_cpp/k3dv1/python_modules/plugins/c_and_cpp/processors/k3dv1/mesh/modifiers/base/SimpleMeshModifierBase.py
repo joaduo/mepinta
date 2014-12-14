@@ -20,32 +20,34 @@ along with Mepinta. If not, see <http://www.gnu.org/licenses/>.
 '''
 from mepinta.plugins_manifest import ProcessorManifestBase, DataProperty, FunctionProperty
 
-class SimpleMeshModifierBase(ProcessorManifestBase):
-  def _superClassDefine(self, inputs, internals, functions, outputs):
-    '''
-      Creates a common topology pipeline for simple mesh modifiers. 
-      (no demuxing is necessary)
-    '''
-    #properties
-    inputs.mesh = DataProperty('k3d::mesh')
-    outputs.mesh = DataProperty('k3d::mesh')
-    functions.createMesh = FunctionProperty()
-    #functions
-    functions.createMesh.dpdencies += inputs.mesh
-    #output
-    outputs.mesh.dpdencies += functions.createMesh
-    #return the new argument for define
-    return functions.createMesh
 
-  def define(self, inputs, internals, functions, outputs, createMesh):
-    '''
-      Implement this method on children classes.
-      Example:
-        inputs.rows = DataProperty('uint')
-        createMesh.dpdencies += [inputs.rows]
-    '''
-    pass
-  
-        
+class SimpleMeshModifierBase(ProcessorManifestBase):
+
+    def _superClassDefine(self, inputs, internals, functions, outputs):
+        '''
+          Creates a common topology pipeline for simple mesh modifiers. 
+          (no demuxing is necessary)
+        '''
+        # properties
+        inputs.mesh = DataProperty('k3d::mesh')
+        outputs.mesh = DataProperty('k3d::mesh')
+        functions.createMesh = FunctionProperty()
+        # functions
+        functions.createMesh.dpdencies += inputs.mesh
+        # output
+        outputs.mesh.dpdencies += functions.createMesh
+        # return the new argument for define
+        return functions.createMesh
+
+    def define(self, inputs, internals, functions, outputs, createMesh):
+        '''
+          Implement this method on children classes.
+          Example:
+            inputs.rows = DataProperty('uint')
+            createMesh.dpdencies += [inputs.rows]
+        '''
+        pass
+
+
 if __name__ == "__main__":
-  pass
+    pass

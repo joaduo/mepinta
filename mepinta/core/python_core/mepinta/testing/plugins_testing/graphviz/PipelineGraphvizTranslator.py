@@ -21,34 +21,39 @@ along with Mepinta. If not, see <http://www.gnu.org/licenses/>.
 from common.abstract.FrameworkBase import FrameworkBase
 from mepinta.pipeline.lo.constants import NULL_UID
 
+
 class PipelineGraphvizTranslator(FrameworkBase):
-  def __getNodesStr(self, pline):
-    topo = pline.getTopology()
-    nodes_str = ''
-    for p_id in topo.properties:
-      nodes_str += '  %s [label="%s\\n%s"] \n' % (p_id, p_id, pline.all_properties[p_id])
-    return nodes_str
 
-  def __getConnectionsStr(self, pline):
-    connections_str = ''
-    topo = pline.getTopology()
-    dpdencies_iterator = topo.connections.dpdencies.getSsIterator()
-    p_id_dent, p_id_dency = dpdencies_iterator.next()
-    while p_id_dent != NULL_UID:
-      connections_str += '  %s -> %s \n' % (p_id_dent, p_id_dency)
-      p_id_dent, p_id_dency = dpdencies_iterator.next()
-    return connections_str
+    def __getNodesStr(self, pline):
+        topo = pline.getTopology()
+        nodes_str = ''
+        for p_id in topo.properties:
+            nodes_str += '  %s [label="%s\\n%s"] \n' % (
+                p_id, p_id, pline.all_properties[p_id])
+        return nodes_str
 
-  def translate(self, pline):
-    graphviz_str = 'digraph {\n%s\n%s} ' % (self.__getNodesStr(pline), self.__getConnectionsStr(pline))
-    return graphviz_str
+    def __getConnectionsStr(self, pline):
+        connections_str = ''
+        topo = pline.getTopology()
+        dpdencies_iterator = topo.connections.dpdencies.getSsIterator()
+        p_id_dent, p_id_dency = dpdencies_iterator.next()
+        while p_id_dent != NULL_UID:
+            connections_str += '  %s -> %s \n' % (p_id_dent, p_id_dency)
+            p_id_dent, p_id_dency = dpdencies_iterator.next()
+        return connections_str
 
-  def renderAscii(self, pline):
-    pass
+    def translate(self, pline):
+        graphviz_str = 'digraph {\n%s\n%s} ' % (
+            self.__getNodesStr(pline), self.__getConnectionsStr(pline))
+        return graphviz_str
+
+    def renderAscii(self, pline):
+        pass
+
 
 def testModule():
-  from getDefaultContext import getDefaultContext
-  context = getDefaultContext()
+    from getDefaultContext import getDefaultContext
+    context = getDefaultContext()
 
 if __name__ == "__main__":
-  testModule()
+    testModule()

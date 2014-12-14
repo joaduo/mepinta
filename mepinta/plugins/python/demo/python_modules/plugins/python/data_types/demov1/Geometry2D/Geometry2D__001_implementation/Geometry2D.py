@@ -20,35 +20,43 @@ along with Mepinta. If not, see <http://www.gnu.org/licenses/>.
 '''
 import random
 
+
 class Base2D(object):
-  pass
+    pass
+
 
 class Point2D(Base2D):
-  def __init__(self, x=0., y=0.):
-    self.x = 0.
-    self.y = 0.
-  def __getitem__(self, index): #TODO set item, etc
-    if index == 0:
-      return self.x
-    elif index == 1:
-      return self.y
+
+    def __init__(self, x=0., y=0.):
+        self.x = 0.
+        self.y = 0.
+
+    def __getitem__(self, index):  # TODO set item, etc
+        if index == 0:
+            return self.x
+        elif index == 1:
+            return self.y
+
 
 class Path2D(list):
-  pass
+    pass
 #  def __init__(self):
 #    self.points_indexes = []
 
+
 class Geometry2D(Base2D):
-  def __init__(self):
-    self.points = []
-    self.bezier_paths = []
+
+    def __init__(self):
+        self.points = []
+        self.bezier_paths = []
 
 
 def createDemoData():
-  geom2d = Geometry2D()
-  for i in xrange(50):
-    #geom2d.points.append((float(i*100),float(i*100)))
-    geom2d.points.append([random.random() * 100 - 50, random.random() * 100 - 50])
-  geom2d.bezier_paths.append([random.randint(0, len(geom2d.points) - 1) for i in xrange(30)])
-  return geom2d
-
+    geom2d = Geometry2D()
+    for i in xrange(50):
+        # geom2d.points.append((float(i*100),float(i*100)))
+        geom2d.points.append(
+            [random.random() * 100 - 50, random.random() * 100 - 50])
+    geom2d.bezier_paths.append(
+        [random.randint(0, len(geom2d.points) - 1) for i in xrange(30)])
+    return geom2d

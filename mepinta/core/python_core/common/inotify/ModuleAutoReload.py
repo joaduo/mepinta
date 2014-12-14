@@ -22,52 +22,54 @@ from common.inotify.base import ModuleReloadBase
 from common.inotify.InotifyActionManager import InotifyActionManager
 from common.type_checking.isiterable import isiterable
 from common.inotify.actions.PathAction import PathAction
-from common.inotify.mask import IN_CLOSE_WRITE#, IN_ALL_EVENTS
+from common.inotify.mask import IN_CLOSE_WRITE  # , IN_ALL_EVENTS
+
 
 class ModuleAutoReload(ModuleReloadBase):
-  def __post_init__(self):
-    self.inotify_mngr = InotifyActionManager(self.context)
-    self._watched_modules = []
 
-  def registerModules(self, modules, functions):
-    #is it one module or a list of modules?
-    if not isiterable(modules):
-      modules = [modules]
-    if not isiterable(functions):
-      functions = [functions]
-    #regiter each provided module
-    for module, function in zip(modules, functions):
-      self._createModuleAction(module, function)
-      #append to the list
-      self._watched_modules.append(module)
-    
-  def _createModuleAction(self, module, function):
-    #define the action function
-    def moduleFunction(event, action, manager):
-      try:
-        reloaded_module = self._reloadModule(module)
-      except Exception as e:
-        action.log.error('Could\'t reload %s exception %s.'%(module, e))
-        return
-      action.log.debug('event: %s'%event)
-      action.log.debug('calling: %s'%function)
-      function(reloaded_module, event, action, manager)
-      action.log.debug('finished: %s'%function)
-    #define the action for the module file
-    path_action = PathAction(self.context, path=module.__file__)
-    #append function
-    path_action.appendFunction(moduleFunction, mask=IN_CLOSE_WRITE)
-    #add it to the inotify manager
-    self.inotify_mngr.registerAction(path_action)
-    
-  def blockListeningEvents(self, modules=[], functions=[], timeout=None):
-    #register modules, if any
-    self.registerModules(modules, functions)
-    #check that there are modules
-    if not len(self._watched_modules):
-      raise RuntimeError('Should should at least watch one module.')
-    #listen to events
-    self.inotify_mngr.blockListeningEvents(timeout)
-        
+    def __post_init__(self):
+        self.inotify_mngr = InotifyActionManager(self.context)
+        self._watched_modules = []
+
+    def registerModules(self, modules, functions):
+        # is it one module or a list of modules?
+        if not isiterable(modules):
+            modules = [modules]
+        if not isiterable(functions):
+            functions = [functions]
+        # regiter each provided module
+        for module, function in zip(modules, functions):
+            self._createModuleAction(module, function)
+            # append to the list
+            self._watched_modules.append(module)
+
+    def _createModuleAction(self, module, function):
+        # define the action function
+        def moduleFunction(event, action, manager):
+            try:
+                reloaded_module = self._reloadModule(module)
+            except Exception as e:
+                action.log.error('Could\'t reload %s exception %s.' % (module, e))
+                return
+            action.log.debug('event: %s' % event)
+            action.log.debug('calling: %s' % function)
+            function(reloaded_module, event, action, manager)
+            action.log.debug('finished: %s' % function)
+        # define the action for the module file
+        path_action = PathAction(self.context, path=module.__file__)
+        # append function
+        path_action.appendFunction(moduleFunction, mask=IN_CLOSE_WRITE)
+        # add it to the inotify manager
+        self.inotify_mngr.registerAction(path_action)
+
+    def blockListeningEvents(self, modules=[], functions=[], timeout=None):
+        # register modules, if any
+        self.registerModules(modules, functions)
+        # check that there are modules
+        if not len(self._watched_modules):
+            raise RuntimeError('Should should at least watch one module.')
+        # listen to events
+        self.inotify_mngr.blockListeningEvents(timeout)
+
 if __name__ == "__main__":
-  pass
+    pass

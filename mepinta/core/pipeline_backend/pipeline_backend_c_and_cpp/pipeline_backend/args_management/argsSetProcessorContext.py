@@ -19,9 +19,10 @@ You should have received a copy of the GNU General Public License
 along with Mepinta. If not, see <http://www.gnu.org/licenses/>.
 '''
 
+
 def argsSetProcessorContext(args, processor_context):
-  args.processor_context = processor_context
+    args.processor_context = processor_context
+
 
 def shedskin_args_management_argsSetProcessorContext(processor_context):
-  argsSetProcessorContext(None, processor_context)
-
+    argsSetProcessorContext(None, processor_context)

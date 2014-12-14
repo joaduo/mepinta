@@ -22,15 +22,19 @@ from pipeline_backend.logging.logging import logDebug
 from mepinta.pipeline.lo.context_lo.ContextLo import ContextLo
 from mepinta.pipeline.lo.pipeline_evaluator.base import PipelineEvaluatorBase
 
+
 def isDataTypeAlias(processor_context, data_type_name, data_type_alias):
-  logDebug('Checking if data type %s is an alias of %s'%(data_type_alias,data_type_name))
-  return data_type_alias in processor_context.context_lo.data_type_aliases[data_type_name]
+    logDebug('Checking if data type %s is an alias of %s' %(data_type_alias, data_type_name))
+    return data_type_alias in processor_context.context_lo.data_type_aliases[data_type_name]
+
 
 def evaluateProp(processor_context, prop_id):
-  logDebug('Evaluating prop_id %s in reentrant mode.'%prop_id)
-  dency_id, dency_prop = processor_context.pline_evaluator.evaluateProp(processor_context.pline, prop_id)
-  return dency_id, dency_prop.getValuePtr().getValue()
+    logDebug('Evaluating prop_id %s in reentrant mode.' % prop_id)
+    dency_id, dency_prop = processor_context.pline_evaluator.evaluateProp(
+        processor_context.pline, prop_id)
+    return dency_id, dency_prop.getValuePtr().getValue()
+
 
 def shedskin_reentrant(processor_context):
-  isDataTypeAlias(processor_context, "int", "int32_t")
-  evaluateProp(processor_context, prop_id=1)
+    isDataTypeAlias(processor_context, "int", "int32_t")
+    evaluateProp(processor_context, prop_id=1)

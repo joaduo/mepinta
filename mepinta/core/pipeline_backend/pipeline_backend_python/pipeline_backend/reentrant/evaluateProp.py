@@ -20,8 +20,10 @@ along with Mepinta. If not, see <http://www.gnu.org/licenses/>.
 '''
 from mepinta.pipeline.lo.reentrant.reentrant import evaluateProp as evaluateProp_implementation
 
+
 def evaluateProp(processor_context, prop_id, dency_id):
-  return evaluateProp_implementation(processor_context, prop_id)
+    return evaluateProp_implementation(processor_context, prop_id)
+
 
 def shedskin_backend_reentrant_evaluateProp(processor_context):
-  evaluateProp(processor_context, prop_id=1, dency_id=None)
+    evaluateProp(processor_context, prop_id=1, dency_id=None)

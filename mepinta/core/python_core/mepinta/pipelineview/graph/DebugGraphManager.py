@@ -21,28 +21,31 @@ along with Mepinta. If not, see <http://www.gnu.org/licenses/>.
 from common.abstract.FrameworkBase import FrameworkBase
 from mepinta.pipelineview.graph.GraphManager import GraphManager
 
+
 class DebugGraphManager(FrameworkBase):
-  def __post_init__(self):
-    self.graph_mngr = GraphManager(self.context)
 
-  def __checkRepr(self, graph, node):
-    assert node in graph.allNodes.keys()
-    #every prop has its id in the pipeline and in the topology
-    #assert node.
-  def createNode(self, graph, processor): #TODO: add support for debugging version
-    node = self.graph_mngr.createNode(graph, processor)
-    #return new node
-    return node
+    def __post_init__(self):
+        self.graph_mngr = GraphManager(self.context)
 
-  def deleteNode(self, graph, node):
-    ret_val = self.deleteNode(graph, node)
-    raise ret_val
+    def __checkRepr(self, graph, node):
+        assert node in graph.allNodes.keys()
+        # every prop has its id in the pipeline and in the topology
+        # assert node.
 
-  def connect(self, graph, dent_prop, dency_prop):
-    return self.graph_mngr.connect(graph, dent_prop, dency_prop)
+    def createNode(self, graph, processor):  # TODO: add support for debugging version
+        node = self.graph_mngr.createNode(graph, processor)
+        # return new node
+        return node
 
-  def disconnect(self, graph, dent_prop, dency_prop=None):
-    return self.graph_mngr.disconnect(graph, dent_prop, dency_prop)
+    def deleteNode(self, graph, node):
+        ret_val = self.deleteNode(graph, node)
+        raise ret_val
 
-  def autoConnect(self, graph, dent_node, dency_node):
-    return self.graph_mngr.autoConnect(graph, dent_node, dency_node)
+    def connect(self, graph, dent_prop, dency_prop):
+        return self.graph_mngr.connect(graph, dent_prop, dency_prop)
+
+    def disconnect(self, graph, dent_prop, dency_prop=None):
+        return self.graph_mngr.disconnect(graph, dent_prop, dency_prop)
+
+    def autoConnect(self, graph, dent_node, dency_node):
+        return self.graph_mngr.autoConnect(graph, dent_node, dency_node)

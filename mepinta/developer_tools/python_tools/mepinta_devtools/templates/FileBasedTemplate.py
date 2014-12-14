@@ -20,26 +20,30 @@ along with Mepinta. If not, see <http://www.gnu.org/licenses/>.
 '''
 from common.abstract.FrameworkObject import FrameworkObject
 
+
 class FileBasedTemplate(FrameworkObject):
-  '''
-    Template based on file. Acts as a str.
-  '''
-  def __init__(self, path):
-    self.path = path
 
-  def getContent(self):
-    template_file = open(self.path, 'r')
-    template = template_file.read()
-    template_file.close()
-    return template
+    '''
+      Template based on file. Acts as a str.
+    '''
 
-  def __str__(self):
-    '''Use the str operator to mimic a string.'''
-    return self.getContent()
+    def __init__(self, path):
+        self.path = path
+
+    def getContent(self):
+        template_file = open(self.path, 'r')
+        template = template_file.read()
+        template_file.close()
+        return template
+
+    def __str__(self):
+        '''Use the str operator to mimic a string.'''
+        return self.getContent()
+
 
 def testModule():
-  from getDefaultContext import getDefaultContext
-  context = getDefaultContext()
+    from getDefaultContext import getDefaultContext
+    context = getDefaultContext()
 
 if __name__ == "__main__":
-  testModule()
+    testModule()

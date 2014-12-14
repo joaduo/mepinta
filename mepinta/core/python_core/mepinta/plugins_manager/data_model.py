@@ -20,53 +20,60 @@ along with Mepinta. If not, see <http://www.gnu.org/licenses/>.
 '''
 from common.abstract.FrameworkObject import FrameworkObject
 
+
 class PluginMetadata(FrameworkObject):
-  def __init__(self, name, build_name, version):
-    self.name = name
-    #TODO: rename build_name to minor_name?
-    self.build_name = build_name
-    self.version = version
-    #TODO: review #To be initialized #TODO: make a decorator to make sure they are initialized
-    #self.info = None
 
-  def __str__(self):
-    return self.name
+    def __init__(self, name, build_name, version):
+        self.name = name
+        # TODO: rename build_name to minor_name?
+        self.build_name = build_name
+        self.version = version
+        # TODO: review #To be initialized #TODO: make a decorator to make sure they are initialized
+        #self.info = None
 
-  def __repr__(self):
-    return '%r,%r' % (self.name, self.version)
+    def __str__(self):
+        return self.name
 
-  #TODO: add module to DataType,  and call manifest to solve this
-  def getPreLoadPostUnload(self):
-    return {}
+    def __repr__(self):
+        return '%r,%r' % (self.name, self.version)
+
+    # TODO: add module to DataType,  and call manifest to solve this
+    def getPreLoadPostUnload(self):
+        return {}
+
 
 class DataTypeMetadata(PluginMetadata):
-  def __init__(self, name, build_name, version):
-    PluginMetadata.__init__(self, name, build_name, version)
-    #Initialize
-    self.processors = []
-    self.property_id = None
 
-  def __wrapped_lo__(self):
-    if self.property_id != None:
-      return self.property_id
-    else:
-      raise RuntimeError('Property: %s has no property_id defined' % self.name)
+    def __init__(self, name, build_name, version):
+        PluginMetadata.__init__(self, name, build_name, version)
+        # Initialize
+        self.processors = []
+        self.property_id = None
 
-  def getShortName(self):
-    return  self.name.split('.')[-1]
+    def __wrapped_lo__(self):
+        if self.property_id != None:
+            return self.property_id
+        else:
+            raise RuntimeError(
+                'Property: %s has no property_id defined' % self.name)
 
-  def getCNamespace(self):
-    if self.name.startswith('c.') or self.name.startswith('mepinta.'):
-      return self.getShortName()
-    return self.name.replace('.', '_')
+    def getShortName(self):
+        return self.name.split('.')[-1]
 
-  c_namespace = property(getCNamespace)
+    def getCNamespace(self):
+        if self.name.startswith('c.') or self.name.startswith('mepinta.'):
+            return self.getShortName()
+        return self.name.replace('.', '_')
+
+    c_namespace = property(getCNamespace)
+
 
 class ProcessorMetadata(PluginMetadata):
-  def __init__(self, name, build_name, version):
-    PluginMetadata.__init__(self, name, build_name, version)
-    #We need to keep the functions ids across reloads #name:property_id
-    self.functions = {}
 
-  def getFollowLibraryPath(self):
-    pass
+    def __init__(self, name, build_name, version):
+        PluginMetadata.__init__(self, name, build_name, version)
+        # We need to keep the functions ids across reloads #name:property_id
+        self.functions = {}
+
+    def getFollowLibraryPath(self):
+        pass

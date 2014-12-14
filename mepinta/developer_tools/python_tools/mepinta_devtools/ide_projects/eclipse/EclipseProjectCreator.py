@@ -22,50 +22,61 @@ from common.abstract.FrameworkBase import FrameworkBase
 from mepinta_devtools.ide_projects.ProjectCreator import ProjectCreator
 from mepinta_devtools.templates.mappers.FileToFileMap import FileToFileMap
 
+
 class EclipseProjectCreator(FrameworkBase):
-  ''' Create a Eclipse Pydev Project. (given it's name in config_dict and target root) '''
-  def __post_init__(self):
-    self.project_creator = ProjectCreator(self.context)
 
-  def _setTemplateSet(self, templates_config, template_set):
-    import mepinta_devtools.ide_projects.eclipse.repository as repo_package
-    for map_config in templates_config:
-      if isinstance(map_config, FileToFileMap):
-        map_config.setRepoPackageAndTemplateSet(repo_package, template_set)
+    ''' Create a Eclipse Pydev Project. (given it's name in config_dict and target root) '''
 
-  def _getTranslationDict(self, project_name, translation_dict):
-    local_translation_dict = dict(projectName=project_name)
-    local_translation_dict.update(translation_dict)
-    return local_translation_dict
+    def __post_init__(self):
+        self.project_creator = ProjectCreator(self.context)
 
-  def _createSrcDir(self, projects_dir, project_name, create_src):
-    if create_src:
-      self.project_creator.createProjectDirs(projects_dir, project_name, 'src')
-    else:
-      self.project_creator.createProjectDirs(projects_dir, project_name)
+    def _setTemplateSet(self, templates_config, template_set):
+        import mepinta_devtools.ide_projects.eclipse.repository as repo_package
+        for map_config in templates_config:
+            if isinstance(map_config, FileToFileMap):
+                map_config.setRepoPackageAndTemplateSet(
+                    repo_package, template_set)
 
-  def _appendTemplatesConfig(self, templates_config, *templates):
-    return templates_config + list(templates)
+    def _getTranslationDict(self, project_name, translation_dict):
+        local_translation_dict = dict(projectName=project_name)
+        local_translation_dict.update(translation_dict)
+        return local_translation_dict
 
-  def createProject(self, projects_dir, project_name, config_dict, translation_dict, templates_config, overwrite, create_src, template_set):
-    translation_dict = self._getTranslationDict(project_name, translation_dict)
-    self._setTemplateSet(templates_config, template_set)
-    self._createSrcDir(projects_dir, project_name, create_src)
-    self.project_creator.create(projects_dir, project_name, templates_config, config_dict, translation_dict, overwrite)
+    def _createSrcDir(self, projects_dir, project_name, create_src):
+        if create_src:
+            self.project_creator.createProjectDirs(
+                projects_dir, project_name, 'src')
+        else:
+            self.project_creator.createProjectDirs(projects_dir, project_name)
 
-  def createPydev(self, projects_dir, project_name, config_dict={}, translation_dict={}, templates_config=[], overwrite=False, create_src=True, template_set='python_default'):
-    templates_config = self._appendTemplatesConfig(templates_config,
-      FileToFileMap('project.xml', '.project',),
-      FileToFileMap('pydevproject.xml', '.pydevproject',),
-    )
-    self.createProject(projects_dir, project_name, config_dict, translation_dict, templates_config, overwrite, create_src, template_set)
+    def _appendTemplatesConfig(self, templates_config, *templates):
+        return templates_config + list(templates)
 
-  def createCDT(self, projects_dir, project_name, config_dict={}, translation_dict={}, templates_config=[], overwrite=False, create_src=True, template_set='cdt_default'):
-    templates_config = self._appendTemplatesConfig(templates_config,
-      FileToFileMap('project.xml', '.project'),
-    )
-    self.createProject(projects_dir, project_name, config_dict, translation_dict, templates_config, overwrite, create_src, template_set)
+    def createProject(self, projects_dir, project_name, config_dict, translation_dict, templates_config, overwrite, create_src, template_set):
+        translation_dict = self._getTranslationDict(
+            project_name, translation_dict)
+        self._setTemplateSet(templates_config, template_set)
+        self._createSrcDir(projects_dir, project_name, create_src)
+        self.project_creator.create(
+            projects_dir, project_name, templates_config, config_dict, translation_dict, overwrite)
+
+    def createPydev(self, projects_dir, project_name, config_dict={}, translation_dict={}, templates_config=[], overwrite=False, create_src=True, template_set='python_default'):
+        templates_config = self._appendTemplatesConfig(templates_config,
+                                                       FileToFileMap(
+                                                           'project.xml', '.project',),
+                                                       FileToFileMap('pydevproject.xml', '.pydevproject',),
+        )
+        self.createProject(projects_dir, project_name, config_dict,
+                           translation_dict, templates_config, overwrite, create_src, template_set)
+
+    def createCDT(self, projects_dir, project_name, config_dict={}, translation_dict={}, templates_config=[], overwrite=False, create_src=True, template_set='cdt_default'):
+        templates_config = self._appendTemplatesConfig(templates_config,
+                                                       FileToFileMap(
+                                                           'project.xml', '.project'),
+                                                       )
+        self.createProject(projects_dir, project_name, config_dict,
+                           translation_dict, templates_config, overwrite, create_src, template_set)
 
 
 if __name__ == "__main__":
-  pass
+    pass

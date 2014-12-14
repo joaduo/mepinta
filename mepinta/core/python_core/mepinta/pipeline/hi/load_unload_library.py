@@ -23,39 +23,43 @@ from mepinta.abstract.MepintaError import MepintaError
 
 path_mod = {}
 
+
 def _getCachedFunction(path, name, primitive_lib):
-  if path not in path_mod:
-    path_mod[path] = _getFunction(name, primitive_lib)
-  mod, name = path_mod[path]
-  return getattr(mod, name)
+    if path not in path_mod:
+        path_mod[path] = _getFunction(name, primitive_lib)
+    mod, name = path_mod[path]
+    return getattr(mod, name)
 
 
 def _getFunction(name, primitive_lib):
-  lo_facade = 'mepinta.pipeline.lo_cpp.pipeline_lo_facade'
-  if lo_facade in sys.modules and not primitive_lib:
-    from mepinta.pipeline.lo_cpp.pipeline_lo_facade import FactoryLo
-    mod = FactoryLo()
-  elif primitive_lib:
-    import mepinta.pipeline.lo_cpp.load_library_stand_alone as mod
-    name += 'StandAlone'
-  else:
-    msg = ('You can\'t load a non-primitive lib without pipeline_lo_facade '
-           'module loaded. If it is a primitive lib mark it as such')
-    raise MepintaError(msg)
-  return mod, name
+    lo_facade = 'mepinta.pipeline.lo_cpp.pipeline_lo_facade'
+    if lo_facade in sys.modules and not primitive_lib:
+        from mepinta.pipeline.lo_cpp.pipeline_lo_facade import FactoryLo
+        mod = FactoryLo()
+    elif primitive_lib:
+        import mepinta.pipeline.lo_cpp.load_library_stand_alone as mod
+        name += 'StandAlone'
+    else:
+        msg = ('You can\'t load a non-primitive lib without pipeline_lo_facade '
+               'module loaded. If it is a primitive lib mark it as such')
+        raise MepintaError(msg)
+    return mod, name
+
 
 def loadLibrary(path, symbol, primitive_lib=False):
-  function = _getCachedFunction(path, 'loadLibrary', primitive_lib)
-  return function(path, symbol)
+    function = _getCachedFunction(path, 'loadLibrary', primitive_lib)
+    return function(path, symbol)
+
 
 def unloadLibrary(path, primitive_lib=False):
-  function = _getCachedFunction(path, 'unloadLibrary', primitive_lib)
-  return function(path)
+    function = _getCachedFunction(path, 'unloadLibrary', primitive_lib)
+    return function(path)
+
 
 def smokeTestModule():
-#  from getDefaultContext import getDefaultContext
-#  context = getDefaultContext()
-  raise RuntimeWarning('No smoke test')
+    #  from getDefaultContext import getDefaultContext
+    #  context = getDefaultContext()
+    raise RuntimeWarning('No smoke test')
 
 if __name__ == "__main__":
-  smokeTestModule()
+    smokeTestModule()

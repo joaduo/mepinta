@@ -21,31 +21,36 @@ along with Mepinta. If not, see <http://www.gnu.org/licenses/>.
 from common.abstract.FrameworkBase import FrameworkBase
 from mepinta.pipeline.hi.FactoryLo import FactoryLo
 
-class ContextLo(FrameworkBase):
-  def __post_init__(self, deployment_path):
-    flo = FactoryLo(context=self.context, deployment_path=deployment_path)
-    self.wrapped = flo.getClass('ContextLo')()
 
-  def __getLo(self):
-    return self.wrapped
-  def __hasattr(self, instance, name):
-    try:
-      object.__getattribute__(instance, name)
-      return True
-    except:
-      return False
-  def __getattr__(self, name):
-    #TODO: add filters here?
-    if self.__hasattr(self.wrapped, name) and not self.__hasattr(self, name):
-      return object.__getattribute__(self.wrapped, name)
-    else:
-      return object.__getattribute__(self, name)
-  def __wrapped_lo__(self):
-    return self.__getLo()
+class ContextLo(FrameworkBase):
+
+    def __post_init__(self, deployment_path):
+        flo = FactoryLo(context=self.context, deployment_path=deployment_path)
+        self.wrapped = flo.getClass('ContextLo')()
+
+    def __getLo(self):
+        return self.wrapped
+
+    def __hasattr(self, instance, name):
+        try:
+            object.__getattribute__(instance, name)
+            return True
+        except:
+            return False
+
+    def __getattr__(self, name):
+        # TODO: add filters here?
+        if self.__hasattr(self.wrapped, name) and not self.__hasattr(self, name):
+            return object.__getattribute__(self.wrapped, name)
+        else:
+            return object.__getattribute__(self, name)
+
+    def __wrapped_lo__(self):
+        return self.__getLo()
 
 if __name__ == '__main__':
-  from common.context.Context import Context
-  ctxp = Context('python')
-  ctxlo = ContextLo(context=ctxp)
-  from common.log.debugPrint import debugPrint
-  debugPrint(ctxlo)
+    from common.context.Context import Context
+    ctxp = Context('python')
+    ctxlo = ContextLo(context=ctxp)
+    from common.log.debugPrint import debugPrint
+    debugPrint(ctxlo)

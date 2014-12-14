@@ -20,18 +20,22 @@ along with Mepinta. If not, see <http://www.gnu.org/licenses/>.
 '''
 from common.abstract.FrameworkBase import FrameworkBase
 
+
 class DataTypesIndex(FrameworkBase):
-  def __post_init__(self):
-    pass
-  def generateIndex(self):
-    #for each group package or data type package list its internal modules
-    #and packages
-    #for importer, modname, ispkg in pkgutil .iter_modules(plugin_package.__path__, prefix):
-    #si son todos paquetes, entonces es un grupo?
-    #si hay un módulo que comienza con el nombre del paquet y además implementa un plugin?
-    #si quieren hacer un override entonces en __init__.py tienen que poner is_plugin_group=True
-    pass
-  
-        
+
+    def __post_init__(self):
+        pass
+
+    def generateIndex(self):
+        # for each group package or data type package list its internal modules
+        # and packages
+        # for importer, modname, ispkg in pkgutil .iter_modules(plugin_package.__path__, prefix):
+        # si son todos paquetes, entonces es un grupo?
+        # si hay un módulo que comienza con el nombre del paquet y además implementa un plugin?
+        # si quieren hacer un override entonces en __init__.py tienen que poner
+        # is_plugin_group=True
+        pass
+
+
 if __name__ == "__main__":
-  pass
+    pass

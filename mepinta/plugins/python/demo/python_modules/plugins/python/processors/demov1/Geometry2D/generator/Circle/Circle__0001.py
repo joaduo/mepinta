@@ -20,51 +20,55 @@ along with Mepinta. If not, see <http://www.gnu.org/licenses/>.
 '''
 from mepinta.plugins_manifest import ProcessorManifestBase, FunctionProperty
 
+
 class manifest(ProcessorManifestBase):
-  def define(self, inputs, internals, functions, outputs):
-    #Inputs
-    inputs.geometry = 'demov1.Geometry2D' #TODO: review if necessary for nonCached
-    inputs.radius = 'float'
-    inputs.segments = 'int'
-    #Outputs
-    outputs.geometry = 'demov1.Geometry2D'
-    functions.createGeometry = FunctionProperty()
 
-    #Set sinks & dpdencies
-    outputs.geometry.dpdencies += [functions.createGeometry]
-    functions.createGeometry.dpdencies += [ inputs.geometry,
-                                             inputs.radius,
-                                             inputs.segments, ]
+    def define(self, inputs, internals, functions, outputs):
+        # Inputs
+        # TODO: review if necessary for nonCached
+        inputs.geometry = 'demov1.Geometry2D'
+        inputs.radius = 'float'
+        inputs.segments = 'int'
+        # Outputs
+        outputs.geometry = 'demov1.Geometry2D'
+        functions.createGeometry = FunctionProperty()
 
-    #We can work directly on the output
-    self.nonCached(outputs.geometry)
+        # Set sinks & dpdencies
+        outputs.geometry.dpdencies += [functions.createGeometry]
+        functions.createGeometry.dpdencies += [inputs.geometry,
+                                               inputs.radius,
+                                               inputs.segments, ]
+
+        # We can work directly on the output
+        self.nonCached(outputs.geometry)
 
 import math
 from mepinta_python_sdk.props import getPropValue
 
+
 def createGeometry(args):
-  #Inputs
-  radius = getPropValue(args, 'inputs', 'radius')
-  segments = getPropValue(args, 'inputs', 'segments')
-  #Outputs
-  geometry = getPropValue(args, 'outputs', 'geometry')
-  #Big deal!!
-  segments = int(segments)
-  if segments < 2:
-    segments = 2
-  points = segments * 3
-  delta = math.pi * 2 / points
-  for point_i in range(points):
-    #TODO: use the correct approximation of a circle's arc with a cubic function
-    p = [ math.cos(point_i * delta) * radius
-         , math.sin(point_i * delta) * radius]
-    geometry.points.append(p)
-  geometry.bezier_paths.append(range(points) + [0])
+    # Inputs
+    radius = getPropValue(args, 'inputs', 'radius')
+    segments = getPropValue(args, 'inputs', 'segments')
+    # Outputs
+    geometry = getPropValue(args, 'outputs', 'geometry')
+    # Big deal!!
+    segments = int(segments)
+    if segments < 2:
+        segments = 2
+    points = segments * 3
+    delta = math.pi * 2 / points
+    for point_i in range(points):
+        # TODO: use the correct approximation of a circle's arc with a cubic
+        # function
+        p = [math.cos(point_i * delta) * radius             , math.sin(point_i * delta) * radius]
+        geometry.points.append(p)
+    geometry.bezier_paths.append(range(points) + [0])
 
 if __name__ == "__main__":
-  from mepinta.testing.plugins_testing.PluginManifestAutoTester import PluginManifestAutoTester
-  from mepinta.context.MepintaContext import MepintaContext
-  from pipeline_backend.logging.logging import LOG_INFO
-  context = MepintaContext('python')
+    from mepinta.testing.plugins_testing.PluginManifestAutoTester import PluginManifestAutoTester
+    from mepinta.context.MepintaContext import MepintaContext
+    from pipeline_backend.logging.logging import LOG_INFO
+    context = MepintaContext('python')
 #  context.log.setLevel(LOG_INFO)
-  PluginManifestAutoTester(context).test(manifest, gui=False)
+    PluginManifestAutoTester(context).test(manifest, gui=False)

@@ -20,8 +20,10 @@ along with Mepinta. If not, see <http://www.gnu.org/licenses/>.
 '''
 from mepinta.pipeline.lo.reentrant.reentrant import isDataTypeAlias as isDataTypeAlias_implementation
 
+
 def isDataTypeAlias(processor_context, data_type_name, data_type_alias):
-  return isDataTypeAlias_implementation(processor_context, data_type_name, data_type_alias)
+    return isDataTypeAlias_implementation(processor_context, data_type_name, data_type_alias)
+
 
 def shedskin_backend_reentrant_isDataTypeAlias(processor_context):
-  isDataTypeAlias(processor_context, "int", "int32_t")
+    isDataTypeAlias(processor_context, "int", "int32_t")

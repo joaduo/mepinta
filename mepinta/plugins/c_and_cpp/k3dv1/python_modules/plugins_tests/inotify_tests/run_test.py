@@ -20,14 +20,12 @@ along with Mepinta. If not, see <http://www.gnu.org/licenses/>.
 '''
 from mepinta.testing.plugins_testing.ProcessorPluginTestRunner import ProcessorPluginTestRunner
 from getDefaultContext import getDefaultContext
-from pipeline_backend.logging.logging import LOG_INFO#, LOG_DEBUG
-        
+from pipeline_backend.logging.logging import LOG_INFO  # , LOG_DEBUG
+
 if __name__ == "__main__":
-  #context = getDefaultContext(LOG_DEBUG)
-  context = getDefaultContext(LOG_INFO)  
-  import plugins_tests.inotify_tests.SelectFaceByNumber_test as SelectFaceByNumber
-  
-  ptr = ProcessorPluginTestRunner(context)
-  ptr.blockListeningEvents(SelectFaceByNumber)
+    #context = getDefaultContext(LOG_DEBUG)
+    context = getDefaultContext(LOG_INFO)
+    import plugins_tests.inotify_tests.SelectFaceByNumber_test as SelectFaceByNumber
 
-
+    ptr = ProcessorPluginTestRunner(context)
+    ptr.blockListeningEvents(SelectFaceByNumber)

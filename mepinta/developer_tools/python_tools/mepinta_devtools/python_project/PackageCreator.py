@@ -25,37 +25,40 @@ import os
 from common.path import joinPath, splitPath
 from mepinta_devtools.ide_projects.FileManager import FileManager
 
+
 class PackageCreator(FrameworkBase):
-  def __post_init__(self):
-    self.module_creator = ModuleCreator(context=self.context)
-    self.file_manager = FileManager(self.context)
+
+    def __post_init__(self):
+        self.module_creator = ModuleCreator(context=self.context)
+        self.file_manager = FileManager(self.context)
 
 #  def validatePackagePath(self, type_, package_path):
 #    pass
 
-  def createSimple(self, path, overwrite=False):
-    self.file_manager.mkdir(path, overwrite)
-    self.module_creator.create(joinPath(path, '__init__.py'),
-                               overwrite=overwrite)
+    def createSimple(self, path, overwrite=False):
+        self.file_manager.mkdir(path, overwrite)
+        self.module_creator.create(joinPath(path, '__init__.py'),
+                                   overwrite=overwrite)
 
-  def create(self, path): #TODO overwrite=False
-    #TODO: review, this code is ugly
-    if isinstance(path, list):
-      full_path = joinPath(path)
-      split_path = path
-    else:
-      split_path = splitPath(path)
-      full_path = path
-    self.log.verbose('Creating package in: %r' % full_path)
-    os.makedirs(full_path)
-    for index in range(len(split_path) - 1):
-      init_file = joinPath(split_path[:len(split_path) - index], '__init__.py')
-      self.log.debug('Checking %r' % (init_file))
-      if os.access(init_file, os.R_OK):
-        break
-      else:
-        self.module_creator.create(init_file)
+    def create(self, path):  # TODO overwrite=False
+        # TODO: review, this code is ugly
+        if isinstance(path, list):
+            full_path = joinPath(path)
+            split_path = path
+        else:
+            split_path = splitPath(path)
+            full_path = path
+        self.log.verbose('Creating package in: %r' % full_path)
+        os.makedirs(full_path)
+        for index in range(len(split_path) - 1):
+            init_file = joinPath(
+                split_path[:len(split_path) - index], '__init__.py')
+            self.log.debug('Checking %r' % (init_file))
+            if os.access(init_file, os.R_OK):
+                break
+            else:
+                self.module_creator.create(init_file)
 
 if __name__ == "__main__":
-  context = MepintaContext('python')
-  pc = PackageCreator(context=context)
+    context = MepintaContext('python')
+    pc = PackageCreator(context=context)

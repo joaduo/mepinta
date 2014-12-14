@@ -21,30 +21,32 @@ along with Mepinta. If not, see <http://www.gnu.org/licenses/>.
 
 from mepinta.plugins_manifest import ProcessorManifestBase, FunctionProperty
 
+
 class UndoableGraphRendererBase(ProcessorManifestBase):
-  def _superClassDefine(self, inputs, internals, functions, outputs):
-    #Inputs
-    inputs.graph = 'actiontree.UndoableGraph'
-    inputs.context_name = 'str'
-    #Outputs
-    functions.render = FunctionProperty()
 
-    #Set sinks & dpdencies
-    functions.render.dpdencies += (inputs.graph,
-                                   inputs.context_name,)
-    #Return the last arguments of 'define' method
-    return functions.render
+    def _superClassDefine(self, inputs, internals, functions, outputs):
+        # Inputs
+        inputs.graph = 'actiontree.UndoableGraph'
+        inputs.context_name = 'str'
+        # Outputs
+        functions.render = FunctionProperty()
 
-  def define(self, inputs, internals, functions, outputs, render):
-    '''
-      Implement this method on children classes.
-      Example:
-        inputs.graph_nodes = 'list'
-        render.dpdencies += [inputs.graph_nodes]
-    '''
-    pass
+        # Set sinks & dpdencies
+        functions.render.dpdencies += (inputs.graph,
+                                       inputs.context_name,)
+        # Return the last arguments of 'define' method
+        return functions.render
+
+    def define(self, inputs, internals, functions, outputs, render):
+        '''
+          Implement this method on children classes.
+          Example:
+            inputs.graph_nodes = 'list'
+            render.dpdencies += [inputs.graph_nodes]
+        '''
+        pass
 
 
 if __name__ == "__main__":
-  #TODO: add tests
-  pass
+    # TODO: add tests
+    pass

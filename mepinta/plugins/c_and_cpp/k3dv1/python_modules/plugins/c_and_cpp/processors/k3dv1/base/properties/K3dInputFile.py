@@ -20,14 +20,18 @@ along with Mepinta. If not, see <http://www.gnu.org/licenses/>.
 '''
 from mepinta.plugins_manifest import InotifyPropertyBase
 
+
 class K3dInputFile(InotifyPropertyBase):
-  def __init__(self):
-    InotifyPropertyBase.__init__(self, 'k3d::filesystem::path')
-  def getPath(self, pline, context):
-    #TODO: later use a plugin to extract the charp or std::string and get the value
-    from mepinta.pipeline.hi.value_manager.ValueManager import ValueManager
-    value_mngr = ValueManager(context)
-    return value_mngr.getValue(pline, self)
-        
+
+    def __init__(self):
+        InotifyPropertyBase.__init__(self, 'k3d::filesystem::path')
+
+    def getPath(self, pline, context):
+        # TODO: later use a plugin to extract the charp or std::string and get
+        # the value
+        from mepinta.pipeline.hi.value_manager.ValueManager import ValueManager
+        value_mngr = ValueManager(context)
+        return value_mngr.getValue(pline, self)
+
 if __name__ == "__main__":
-  pass
+    pass

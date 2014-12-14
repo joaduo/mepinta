@@ -20,72 +20,80 @@ along with Mepinta. If not, see <http://www.gnu.org/licenses/>.
 '''
 from plugins.python.processors.actiontree.UndoableGraph.modifier.base.GraphTopologyModifierBase import GraphTopologyModifierBase
 
+
 class manifest(GraphTopologyModifierBase):
-  def define(self, inputs, internals, functions, outputs, changeGraphValues, changeGraphTopology):
-    inputs.processor_name = 'actiontree.Processor'
-    inputs.node_name = 'str'
-    #Topology changes dependencies
-    changeGraphTopology.dpdencies += inputs.processor_name
-    #Values changes dependencies
-    changeGraphValues.dpdencies += inputs.node_name
+
+    def define(self, inputs, internals, functions, outputs, changeGraphValues, changeGraphTopology):
+        inputs.processor_name = 'actiontree.Processor'
+        inputs.node_name = 'str'
+        # Topology changes dependencies
+        changeGraphTopology.dpdencies += inputs.processor_name
+        # Values changes dependencies
+        changeGraphValues.dpdencies += inputs.node_name
+
 
 def demuxSignal(args):
-  '''
-  A graph could have topology changed or values changed. Demux this signals and
-  call the appropriate functums.
-  :param args: Opaque args to be used by the functions in mepinta_python_sdk.props
-  '''
-  from mepinta_python_sdk.props import getPropValue
-  #Get the inputs
-  #The graph to demux the signal from
-  in_graph = getPropValue(args, 'inputs', 'graph')
-  #Get the functums to be initialized
-  changeGraphTopology = getPropValue(args, 'inputs', 'changeGraphTopology')
-  changeGraphValues = getPropValue(args, 'inputs', 'changeGraphValues')
-  #output
-  out_graph = getPropValue(args, 'outputs', 'graph')
-  #DemuxSignal
-  if in_graph.topologyChanged:
-    #We have a new topology, then start from this new topology
-    out_graph.resetTopology(in_graph)
-    #Modify the topology on the new given topology
-    changeGraphTopology.function_ptr(changeGraphTopology.args)
-  #Set the necessary values
-  changeGraphValues.function_ptr(changeGraphValues.args)
+    '''
+    A graph could have topology changed or values changed. Demux this signals and
+    call the appropriate functums.
+    :param args: Opaque args to be used by the functions in mepinta_python_sdk.props
+    '''
+    from mepinta_python_sdk.props import getPropValue
+    # Get the inputs
+    # The graph to demux the signal from
+    in_graph = getPropValue(args, 'inputs', 'graph')
+    # Get the functums to be initialized
+    changeGraphTopology = getPropValue(args, 'inputs', 'changeGraphTopology')
+    changeGraphValues = getPropValue(args, 'inputs', 'changeGraphValues')
+    # output
+    out_graph = getPropValue(args, 'outputs', 'graph')
+    # DemuxSignal
+    if in_graph.topologyChanged:
+        # We have a new topology, then start from this new topology
+        out_graph.resetTopology(in_graph)
+        # Modify the topology on the new given topology
+        changeGraphTopology.function_ptr(changeGraphTopology.args)
+    # Set the necessary values
+    changeGraphValues.function_ptr(changeGraphValues.args)
+
 
 def changeGraphValues(args):
-  from mepinta.pipelineview.actiontree.undoable_graph.UndoableGraphManager import UndoableGraphManager
-  from mepinta.context.MepintaContext import MepintaContext
-  from mepinta_python_sdk.props import getPropValue
-  context_name = getPropValue(args, 'inputs', 'context_name')
-  node_name = getPropValue(args, 'inputs', 'node_name')
-  graph = getPropValue(args, 'outputs', 'graph')
-  context = MepintaContext(context_name)
+    from mepinta.pipelineview.actiontree.undoable_graph.UndoableGraphManager import UndoableGraphManager
+    from mepinta.context.MepintaContext import MepintaContext
+    from mepinta_python_sdk.props import getPropValue
+    context_name = getPropValue(args, 'inputs', 'context_name')
+    node_name = getPropValue(args, 'inputs', 'node_name')
+    graph = getPropValue(args, 'outputs', 'graph')
+    context = MepintaContext(context_name)
 
-  if len(graph.createdNodes) == 1:
-    node = graph.createdNodes[0]
-    node.name = node_name
-  else:
-    context.log.e('There shouldn\'t be more than one node created by this plugin. Nodes: %r.' % graph.createdNodes)
+    if len(graph.createdNodes) == 1:
+        node = graph.createdNodes[0]
+        node.name = node_name
+    else:
+        context.log.e(
+            'There shouldn\'t be more than one node created by this plugin. Nodes: %r.' % graph.createdNodes)
+
 
 def changeGraphTopology(args):
-  from mepinta.pipelineview.actiontree.undoable_graph.UndoableGraphManager import UndoableGraphManager
-  from mepinta.context.MepintaContext import MepintaContext
-  from mepinta_python_sdk.props import getPropValue
-  context_name = getPropValue(args, 'inputs', 'context_name')
-  processor_name = getPropValue(args, 'inputs', 'processor_name')
-  graph = getPropValue(args, 'outputs', 'graph')
-  graph_manager = UndoableGraphManager(MepintaContext(context_name))
+    from mepinta.pipelineview.actiontree.undoable_graph.UndoableGraphManager import UndoableGraphManager
+    from mepinta.context.MepintaContext import MepintaContext
+    from mepinta_python_sdk.props import getPropValue
+    context_name = getPropValue(args, 'inputs', 'context_name')
+    processor_name = getPropValue(args, 'inputs', 'processor_name')
+    graph = getPropValue(args, 'outputs', 'graph')
+    graph_manager = UndoableGraphManager(MepintaContext(context_name))
 
-  graph_manager.createNode(graph, processor_name)
+    graph_manager.createNode(graph, processor_name)
+
 
 def testModule():
-  from getDefaultContext import getDefaultContext
-  from mepinta.testing.plugins_testing.PluginManifestAutoTester import PluginManifestAutoTester
-  #PluginManifestAutoTester(getDefaultContext()).test(manifest)#, gui=True)
-  PluginManifestAutoTester(getDefaultContext()).visualizeXdot(manifest)#, gui=True)
-  #PluginManifestAutoTester(getDefaultContext()).test(manifest, gui=False)
+    from getDefaultContext import getDefaultContext
+    from mepinta.testing.plugins_testing.PluginManifestAutoTester import PluginManifestAutoTester
+    # PluginManifestAutoTester(getDefaultContext()).test(manifest)#, gui=True)
+    PluginManifestAutoTester(getDefaultContext()).visualizeXdot(
+        manifest)  # , gui=True)
+    #PluginManifestAutoTester(getDefaultContext()).test(manifest, gui=False)
 
 if __name__ == "__main__":
-  testModule()
-  #import ftest
+    testModule()
+    #import ftest

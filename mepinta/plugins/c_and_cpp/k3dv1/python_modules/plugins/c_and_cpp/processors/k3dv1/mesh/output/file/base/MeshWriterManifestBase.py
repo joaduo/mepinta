@@ -22,32 +22,35 @@ along with Mepinta. If not, see <http://www.gnu.org/licenses/>.
 from mepinta.plugins_manifest import ProcessorManifestBase, DataProperty, FunctionProperty
 from plugins.c_and_cpp.processors.k3dv1.base.properties.K3dOutputFile import K3dOutputFile
 
+
 class MeshWriterManifestBase(ProcessorManifestBase):
-  def _superClassDefine(self, inputs, internals, functions, outputs):
-    '''Creates the common topology for MeshSources.'''
-    inputs.file = K3dOutputFile()
-    inputs.mesh = 'k3d::mesh'
-    functions.writeMesh = FunctionProperty()
 
-    functions.writeMesh.dpdencies += [inputs.file,
-                                    inputs.mesh, ]
+    def _superClassDefine(self, inputs, internals, functions, outputs):
+        '''Creates the common topology for MeshSources.'''
+        inputs.file = K3dOutputFile()
+        inputs.mesh = 'k3d::mesh'
+        functions.writeMesh = FunctionProperty()
 
-    return functions.writeMesh
-  def define(self, inputs, internals, functions, outputs, writeMesh):
-    '''
-      Implement this method on children classes.
-      Example:
-        inputs.count = DataProperty('k3d::uint32_t')
-        writeMesh.dpdencies += [inputs.count]
-    '''
-    pass
+        functions.writeMesh.dpdencies += [inputs.file,
+                                          inputs.mesh, ]
+
+        return functions.writeMesh
+
+    def define(self, inputs, internals, functions, outputs, writeMesh):
+        '''
+          Implement this method on children classes.
+          Example:
+            inputs.count = DataProperty('k3d::uint32_t')
+            writeMesh.dpdencies += [inputs.count]
+        '''
+        pass
 
 manifest = MeshWriterManifestBase
 
 if __name__ == "__main__":
-  from mepinta.context.MepintaContext import MepintaContext
-  from mepinta.plugins_manifest.PluginManifestTester import PluginManifestTester
-  context = MepintaContext('c_and_cpp')
-  plugin_instance = manifest(context=context)
-  context.log(manifest)
-  PluginManifestTester(context=context).test(plugin_instance)
+    from mepinta.context.MepintaContext import MepintaContext
+    from mepinta.plugins_manifest.PluginManifestTester import PluginManifestTester
+    context = MepintaContext('c_and_cpp')
+    plugin_instance = manifest(context=context)
+    context.log(manifest)
+    PluginManifestTester(context=context).test(plugin_instance)

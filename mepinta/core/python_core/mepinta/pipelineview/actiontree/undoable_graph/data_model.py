@@ -21,62 +21,70 @@ along with Mepinta. If not, see <http://www.gnu.org/licenses/>.
 from common.abstract.FrameworkObject import FrameworkObject
 from mepinta.pipeline.lo.constants import NULL_UID
 
+
 class UndoableGraph(FrameworkObject):
-  def __init__(self):
-    self.__graph = None
-    self.topologyChanged = False
-    self.__created_nodes = list() #(node)
-    self.old_properties = dict() #prop_id:value
-    self.topology_id = NULL_UID #graph.growTopologies()
 
-  def startTopologyChangeSet(self):
-    if self.topology_id == NULL_UID:
-      self.topology_id = self.__graph.pline.startTopologyChangeSet()
+    def __init__(self):
+        self.__graph = None
+        self.topologyChanged = False
+        self.__created_nodes = list()  # (node)
+        self.old_properties = dict()  # prop_id:value
+        self.topology_id = NULL_UID  # graph.growTopologies()
 
-  def resetTopology(self, u_graph):
-    pline = u_graph.pline
-    if pline.pendingChanges(): #TODO: remove?
-      raise RuntimeError('There are pending changes you should propagate changes')
-    copied_topo = pline.getTopology()
-    topo = pline.getTopology(self.topology_id)
-    topo.copyFrom(copied_topo)
-    pline.setCurrentTopologyId(self.topology_id)
+    def startTopologyChangeSet(self):
+        if self.topology_id == NULL_UID:
+            self.topology_id = self.__graph.pline.startTopologyChangeSet()
 
-  def addNode(self, node):
-    self.__created_nodes.append(node)
-    self.__graph.addNode(node)
+    def resetTopology(self, u_graph):
+        pline = u_graph.pline
+        if pline.pendingChanges():  # TODO: remove?
+            raise RuntimeError(
+                'There are pending changes you should propagate changes')
+        copied_topo = pline.getTopology()
+        topo = pline.getTopology(self.topology_id)
+        topo.copyFrom(copied_topo)
+        pline.setCurrentTopologyId(self.topology_id)
 
-  def deleteNode(self, node):
-    if node in self.__created_nodes and \
-       node in self.__graph.allNodes:
-      self.__created_nodes.remove(node)
-      self.__graph.allNodes.removeNode(node)
-    raise KeyError('Node %r seems not to be consistent in the __graph' % node)
+    def addNode(self, node):
+        self.__created_nodes.append(node)
+        self.__graph.addNode(node)
 
-  @property
-  def allNodes(self):
-    return self.__graph.allNodes
-  @property
-  def pline(self):
-    return self.__graph.pline
-  @property
-  def graph(self):
-    return self.__graph
-  @property
-  def createdNodes(self):
-    return self.__created_nodes
+    def deleteNode(self, node):
+        if node in self.__created_nodes and \
+           node in self.__graph.allNodes:
+            self.__created_nodes.remove(node)
+            self.__graph.allNodes.removeNode(node)
+        raise KeyError(
+            'Node %r seems not to be consistent in the __graph' % node)
 
+    @property
+    def allNodes(self):
+        return self.__graph.allNodes
 
-  def setGraph(self, graph):
-    if self.__graph == None:
-      self.__graph = graph
-      self.startTopologyChangeSet()
-    elif self.__graph != graph:
-      raise RuntimeError('Graph should always be the same')  #TODO: remove?
+    @property
+    def pline(self):
+        return self.__graph.pline
+
+    @property
+    def graph(self):
+        return self.__graph
+
+    @property
+    def createdNodes(self):
+        return self.__created_nodes
+
+    def setGraph(self, graph):
+        if self.__graph == None:
+            self.__graph = graph
+            self.startTopologyChangeSet()
+        elif self.__graph != graph:
+            # TODO: remove?
+            raise RuntimeError('Graph should always be the same')
+
 
 def testModule():
-  from getDefaultContext import getDefaultContext
-  context = getDefaultContext()
+    from getDefaultContext import getDefaultContext
+    context = getDefaultContext()
 
 if __name__ == "__main__":
-  testModule()
+    testModule()

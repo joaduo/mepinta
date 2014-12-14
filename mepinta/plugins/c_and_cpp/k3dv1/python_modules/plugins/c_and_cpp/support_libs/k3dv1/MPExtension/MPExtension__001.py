@@ -21,7 +21,6 @@ along with Mepinta. If not, see <http://www.gnu.org/licenses/>.
 
 from mepinta.plugins_manifest import SupportLibManifestBase
 
+
 class manifest(SupportLibManifestBase):
-  pass
-
-
+    pass
