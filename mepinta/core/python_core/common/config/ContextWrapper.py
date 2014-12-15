@@ -62,6 +62,12 @@ class ContextWrapper(object):
             raise AttributeError(
                 'There is no global config named %r ' % (name))
 
+    def get(self, k):
+        return self.context.get(k)
+
+    def fork(self, **kwargs):
+        return self.context.fork(**kwargs)
+
     def __setattr__(self, name, value):
         '''
         If:

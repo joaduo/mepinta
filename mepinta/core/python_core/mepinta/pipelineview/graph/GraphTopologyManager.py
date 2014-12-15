@@ -71,7 +71,7 @@ class GraphTopologyManager(FrameworkBase):
 
     def enableCached(self, pline, node):
         # We may want to force non-caching on some node (since it does nothing to the data)
-        if not self.config.non_cached:
+        if not self.config.get('non_cached_evaluation'):
             dst_src_non_cached = node.non_cached_capable
             if len(dst_src_non_cached) == 0:
                 return

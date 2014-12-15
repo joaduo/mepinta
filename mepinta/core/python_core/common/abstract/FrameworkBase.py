@@ -29,7 +29,7 @@ class FrameworkBase(PostInitStrategyBase, SelfConfigBase):
     Data classes should inherit from object or FrameworkObject
     '''
 
-    def __init__(self, context, *a, **ad):
+    def __init__(self, context=None, *a, **ad):
         SelfConfigBase.__init__(self, context=context)
         PostInitStrategyBase.__init__(self, *a, **ad)
 

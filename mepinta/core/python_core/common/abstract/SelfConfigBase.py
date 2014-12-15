@@ -20,7 +20,8 @@ along with Mepinta. If not, see <http://www.gnu.org/licenses/>.
 '''
 
 from common.abstract.ContextClientBase import ContextClientBase
-from common.config.SelfConfigWrapper import SelfConfigWrapper
+#TODO: remove or reuse later. self.config now points to global config
+# from common.config.SelfConfigWrapper import SelfConfigWrapper
 
 
 class SelfConfigBase(ContextClientBase):
@@ -41,8 +42,10 @@ class SelfConfigBase(ContextClientBase):
     def __init__(self, context):
         ContextClientBase.__init__(self, context)
 
-        self.config = SelfConfigWrapper(
-            owner_class=self.__class__, context=self.context)
+#TODO: remove or reuse later. self.config now points to global config
+#         self.config = SelfConfigWrapper(
+#             owner_class=self.__class__, context=self.context)
+        self.config = self.context
         self.log = self.context.log
 
 

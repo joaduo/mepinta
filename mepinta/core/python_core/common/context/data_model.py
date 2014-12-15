@@ -99,7 +99,8 @@ class ChildNode(BaseNode):
         else:
             return self.__parent.getConfig(key)
 
-global_config_namespace = 'global::'
+
+global_namespace = 'global::'
 
 
 class TreeContextStore(object):
@@ -114,6 +115,9 @@ class TreeContextStore(object):
     def getConfigDict(self):
         return self._root_node.getConfigDict()
 
+    def fork(self, **kwargs):
+        return self.newChildConfig(**kwargs)
+
     def newChildConfig(self, **kwargs):
         copy = self.__class__(self._root_node.newChild())
         copy.updateConfig(kwargs)
@@ -122,17 +126,23 @@ class TreeContextStore(object):
     def updateConfig(self, update_dict):
         self._root_node.updateConfig(update_dict)
 
-    def hasConfig(self, name, owner=global_config_namespace):
+    def get(self, k):
+        return self.getConfig(k)
+
+    def hasKey(self, k):
+        return self.hasConfig(k)
+
+    def hasConfig(self, name, owner=global_namespace):
         return self._root_node.hasConfig(self.__getConfigKey(name, owner))
 
-    def getConfig(self, name, owner=global_config_namespace):
+    def getConfig(self, name, owner=global_namespace):
         return self._root_node.getConfig(self.__getConfigKey(name, owner))
 
-    def setConfig(self, name, value, owner=global_config_namespace):
+    def setConfig(self, name, value, owner=global_namespace):
         key = self.__getConfigKey(name, owner)
         self._root_node.setConfig(key, value)
 
-    def __getConfigKey(self, name, owner=global_config_namespace):
+    def __getConfigKey(self, name, owner=global_namespace):
         return (self.__getOwnerStr(owner), name)
 
     def __getOwnerStr(self, owner):

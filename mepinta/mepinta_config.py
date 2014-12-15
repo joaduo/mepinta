@@ -11,15 +11,16 @@ class mepinta_config(object):
         'Debug', 'Release', 'ReleasePointerSafe', 'ReleaseTypeSafe', 'ReleaseArgumentsSafe', ]
     nodebox_gui = False
     deployment_config = default_deployment_config()
+    non_cached_evaluation = False
     _config_dict = {
-        ('non_cached', 'class::mepinta.pipelineview.graph.GraphTopologyManager.GraphTopologyManager'):
-        False,
+#         ('non_cached', 'class::mepinta.pipelineview.graph.GraphTopologyManager.GraphTopologyManager'):
+#         False,
     }
 
 
 def smokeTestModule():
     from common.log.debugPrint import debugPrint
-    settings = mepinta_config('python')
+    settings = mepinta_config()
     for name in dir(settings):
         if not name.startswith('_'):
             debugPrint('%s: %r' % (name, getattr(settings, name)))
