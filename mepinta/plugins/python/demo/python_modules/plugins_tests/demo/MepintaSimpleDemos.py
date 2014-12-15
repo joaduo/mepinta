@@ -58,7 +58,8 @@ class MepintaSimpleDemos(FrameworkBase):
         ''' Mepinta interactive GUI demo. Shows Pipeline and lets the user change properties values. (you need nodebox-gl installed in your python path to run this http://www.cityinabottle.org/nodebox/).'''
         try:
             import nodebox
-        except:
+        except ImportError as e:
+            self.log.e(e)
             self.log.error(
                 '\n You have not nodebox gl installed or is not in the PYTHONPATH. Check the mepinta INSTALL file for further instructions. \n')
             return
