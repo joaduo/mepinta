@@ -22,11 +22,12 @@ from common.context.Context import arg_singleton_and_wrap
 from common.context.base import ContextBase
 from mepinta.pipeline.hi.context_lo.ContextLo import ContextLo
 from mepinta.pipeline.hi.LogOutput import LogOutput
-from mepinta.abstract.MepintaError import MepintaError
-from pipeline_backend.logging.logging import LOG_INFO
+from pipeline_backend.logging.logging import LOG_INFO, logWarning
 from inspect import currentframe
 import os
 import re
+from common.context import getContext
+from common.context.ContextManager import ContextManager
 
 
 class singleton_autocontext(arg_singleton_and_wrap):
@@ -38,8 +39,7 @@ class singleton_autocontext(arg_singleton_and_wrap):
 
     def __call__(self, name=None, *args, **kwargs):
         if not name:
-            path = self._getCallerFilePath()
-            name = self.solveContextName(path)
+            name = self.solveContextName(self._getCallerFilePath())
         return super(singleton_autocontext, self).__call__(name, *args, **kwargs)
 
     def _getCallerFilePath(self):
@@ -61,8 +61,12 @@ class singleton_autocontext(arg_singleton_and_wrap):
             name = m.group('backend')
             return name
         else:
-            raise MepintaError('Could not resolve backend automatically by path %r '
-                               '(specify backend name explicitly)' % path)
+            logWarning('Setting backend_name="python". '
+                       '(Could not resolve backend automatically by path %r )' % path)
+            return 'python'
+
+    def __getattr__(self, name):
+        print name
 
 
 @singleton_autocontext
@@ -76,21 +80,28 @@ class MepintaContext(ContextBase):
       -setting logging output to the based on backend and specific for mepinta
     '''
 
-    def __init__(self, name, log_level=LOG_INFO):
+    def __init__(self, name, log_level=LOG_INFO, register=True):
         ContextBase.__init__(self, name)
-        self._initConfig(log_level)
+        if isinstance(name, basestring):
+            #This is not a fork of the context
+            self._initConfig(log_level)
+        if register and not getContext():
+            self._logger().d('Registering first MepintaContext as root context')
+            ContextManager().register(self)
+
+    def _logger(self):
+        return self.getConfig('log')
 
     def _initConfig(self, log_level):
-        context = self
         deployment_path = self.getConfig('deployment_config').deployment_path
         context_lo = ContextLo(
-            context=context, deployment_path=deployment_path)
-        context.setConfig('context_lo', context_lo)
-        logger = context.getConfig('log')
-        logger.setOutput(LogOutput(context=context))
-        logger.setLevel(log_level)
+            context=self, deployment_path=deployment_path)
+        self.setConfig('context_lo', context_lo)
+        self._logger().setOutput(LogOutput(context=self))
+        self._logger().setLevel(log_level)
 
     def _getDefaultConfig(self, name):
+        #TODO: backend should not be defined by configuration, but by code
         from mepinta_config import mepinta_config
         config = mepinta_config()
         if not hasattr(config, 'backend_name'):
@@ -104,13 +115,17 @@ class MepintaContext(ContextBase):
 
 
 def smokeTestModule():
-    #context = MepintaContext('python')
-    context = MepintaContext('c_and_cpp')
+    import logging
     from common.log.debugPrint import debugPrint
-    pprint = debugPrint
-    pprint(context.getConfig('backend_name'))
-    pprint(context.getConfig('plugin_build_targets'))
-    pprint(context.getConfigDict())
+#     context = MepintaContext('python', log_level=logging.DEBUG)
+#     context = MepintaContext('c_and_cpp')
+    context = MepintaContext('python', log_level=logging.DEBUG)
+    with context.fork() as context:
+        pprint = debugPrint
+        pprint(context.getConfig('backend_name'))
+        pprint(context.getConfig('plugin_build_targets'))
+        pprint(context.getConfigDict())
+        pprint(context.getLocalConfigDict())
 
 if __name__ == "__main__":
     smokeTestModule()

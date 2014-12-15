@@ -20,6 +20,7 @@ along with Mepinta. If not, see <http://www.gnu.org/licenses/>.
 '''
 from common.log.Logger import Logger
 from common.context.data_model import TreeContextStore, BaseNode
+from common.context.ContextManager import ContextManager
 
 
 class ContextBase(TreeContextStore):
@@ -43,16 +44,17 @@ class ContextBase(TreeContextStore):
         :param arg: a string with the name of the context or an instances of
           :class:`common.context.data_model.BaseNode`
         '''
+        self._mngr = ContextManager()
         if isinstance(arg, str):
             name = arg
-            TreeContextStore.__init__(self)
+            super(ContextBase, self).__init__()
             self.setConfig('name', name)
             self.setConfig('log', Logger())
             self._setDefaultConfig(name)
 
         elif isinstance(arg, BaseNode):
-            config_tree_node = arg
-            TreeContextStore.__init__(self, config_tree_node)
+            # Its the root node for this context
+            super(ContextBase, self).__init__(arg)
 
     def _getDefaultConfig(self, name):
         '''
@@ -77,14 +79,34 @@ class ContextBase(TreeContextStore):
         for name, owner in config_dict:
             self.setConfig(name, config_dict[(name, owner)], owner)
 
+    def __enter__(self):
+        '''
+        Check __exit__ doc
+        '''
+        self._mngr.register(self)
+        return self
+
+    def __exit__(self, type_, value, traceback):
+        '''
+        Beware: you cannot use the with statement with class construction if its a singleton
+        E.g.: you can't do (will fail)
+            with Context() as ctx:
+                print ctx
+        You need to work with fork method
+            ctx = Context() #root context, no need to use the with statement
+            with ctx.fork('child context') as child_ctx:
+                print ctx
+        '''
+        self._mngr.unregister(self)
+
 
 def smokeTestModule():
-    context = ContextBase('python')
-    from common.log.debugPrint import debugPrint
-    pprint = debugPrint
-    context.setConfig('backend_name', 'python')
-    pprint(context.getConfig('backend_name'))
-    pprint(context.getConfigDict())
+    with ContextBase('name') as context:
+        from common.log.debugPrint import debugPrint
+        pprint = debugPrint
+        context.setConfig('backend_name', 'python')
+        pprint(context.getConfig('backend_name'))
+        pprint(context.getConfigDict())
 
 
 if __name__ == "__main__":

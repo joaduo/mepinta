@@ -52,7 +52,13 @@ class BaseNode(object):
         return node
 
     def getConfigDict(self):
-        return dict(self._config)
+        return self._config
+
+    def getLocalConfigDict(self):
+        '''
+        This method is not overriden in child class (directly access the local dict)
+        '''
+        return self._config
 
     def _reprDict(self, dictionary, indent=0):
         # TODO: use _StringIO
@@ -88,7 +94,7 @@ class ChildNode(BaseNode):
 
     def __init__(self, parent):
         self.__parent = parent
-        BaseNode.__init__(self)
+        super(ChildNode, self).__init__()
 
     def hasConfig(self, key):
         return key in self._config or self.__parent.hasConfig(key)
@@ -98,6 +104,11 @@ class ChildNode(BaseNode):
             return self._config[key]
         else:
             return self.__parent.getConfig(key)
+
+    def getConfigDict(self):
+        config = self.__parent.getConfigDict().copy()
+        config.update(self._config)
+        return config
 
 
 global_namespace = 'global::'
@@ -114,6 +125,9 @@ class TreeContextStore(object):
 
     def getConfigDict(self):
         return self._root_node.getConfigDict()
+
+    def getLocalConfigDict(self):
+        return self._root_node.getLocalConfigDict()
 
     def fork(self, **kwargs):
         return self.newChildConfig(**kwargs)
