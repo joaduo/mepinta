@@ -21,9 +21,9 @@ along with Mepinta. If not, see <http://www.gnu.org/licenses/>.
 
 
 def fastIntegrationTest(context=None):
-    from getDefaultContext import getDefaultContext
+    from mepinta.context.MepintaContext import MepintaContext
     if not context:
-        context = getDefaultContext()
+        context = MepintaContext()
     if context.backend_name == 'python':
         from plugins_tests.integration.fastIntegrationTest import fastIntegrationTestPython
         fastIntegrationTestPython(context)
