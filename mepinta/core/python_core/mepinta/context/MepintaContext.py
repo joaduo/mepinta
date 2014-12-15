@@ -83,7 +83,7 @@ class MepintaContext(ContextBase):
     def __init__(self, name, log_level=LOG_INFO, register=True):
         ContextBase.__init__(self, name)
         if isinstance(name, basestring):
-            #This is not a fork of the context
+            # Means this is not a fork of a context, so we need to init it
             self._initConfig(log_level)
         if register and not getContext():
             self._logger().d('Registering first MepintaContext as root context')
@@ -120,12 +120,13 @@ def smokeTestModule():
 #     context = MepintaContext('python', log_level=logging.DEBUG)
 #     context = MepintaContext('c_and_cpp')
     context = MepintaContext('python', log_level=logging.DEBUG)
-    with context.fork() as context:
+    with context.fork(name='fork') as context:
         pprint = debugPrint
         pprint(context.getConfig('backend_name'))
         pprint(context.getConfig('plugin_build_targets'))
         pprint(context.getConfigDict())
         pprint(context.getLocalConfigDict())
+    pprint(context.getConfigDict())
 
 if __name__ == "__main__":
     smokeTestModule()

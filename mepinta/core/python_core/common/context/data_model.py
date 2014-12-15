@@ -138,7 +138,8 @@ class TreeContextStore(object):
         return copy
 
     def updateConfig(self, update_dict):
-        self._root_node.updateConfig(update_dict)
+        for name, value in update_dict.iteritems():
+            self.setConfig(name, value)
 
     def get(self, k):
         return self.getConfig(k)
