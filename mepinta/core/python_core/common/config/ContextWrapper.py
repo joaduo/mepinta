@@ -18,6 +18,7 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with Mepinta. If not, see <http://www.gnu.org/licenses/>.
 '''
+from common.context.data_model import global_namespace
 
 
 class ContextWrapper(object):
@@ -52,8 +53,8 @@ class ContextWrapper(object):
         :param name: attribute to be retrieved (in config or intance's attr)
         :raises: AttributeError
         '''
-        if name in ['context', '__deepcopy__']:
-            object.__getattribute__(self, name)
+        if name in ['context', '__deepcopy__','set', 'get', 'fork','__enter__', '__exit__', '__deepcopy__']:
+            return object.__getattribute__(self, name)
         elif name in ['hasConfig', 'getConfig', 'setConfig', 'newChildConfig', 'getConfigDict']:
             return getattr(self.context, name)
         elif self.context.hasConfig(name):
@@ -65,8 +66,11 @@ class ContextWrapper(object):
     def get(self, k):
         return self.context.get(k)
 
+    def set(self, k, v, owner=global_namespace):
+        return self.context.setConfig(k, v, owner)
+
     def fork(self, **kwargs):
-        return self.context.fork(**kwargs)
+        return ContextWrapper(self.context.fork(**kwargs))
 
     def __setattr__(self, name, value):
         '''
@@ -92,3 +96,16 @@ class ContextWrapper(object):
         :param memo:
         '''
         return self
+
+    def __enter__(self):
+        return ContextWrapper(self.context.__enter__())
+    
+    def __exit__(self, type_, value, traceback):
+        return self.context.__exit__(type_, value, traceback)
+
+
+def smokeTestModule():
+    pass
+
+if __name__ == "__main__":
+    smokeTestModule()

@@ -22,7 +22,7 @@ from common.context.base import ContextBase
 from common.config.ContextWrapper import ContextWrapper
 
 
-class arg_singleton_and_wrap(object):
+class context_singleton(object):
 
     '''
       Decorator that provides a single instance for the arguments provided
@@ -59,10 +59,24 @@ class arg_singleton_and_wrap(object):
         return self.__instances
 
 
-@arg_singleton_and_wrap
+@context_singleton
 class Context(ContextBase):
-
     '''
     Concrete class of :class:`common.context.base.ContextBase` to allow
     the singleton pattern via decorator.
     '''
+
+def smokeTestModule():
+    with Context('name') as context:
+        from common.log.debugPrint import debugPrint
+        context.setConfig('backend_name', 'python')
+        debugPrint(context.getConfig('backend_name'))
+        debugPrint(context.getConfigDict())
+        with context.fork() as context2:
+            context2.set('some', 'value')
+            debugPrint(context.context)
+            debugPrint(context2.context)
+
+
+if __name__ == "__main__":
+    smokeTestModule()

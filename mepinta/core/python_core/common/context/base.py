@@ -88,25 +88,23 @@ class ContextBase(TreeContextStore):
 
     def __exit__(self, type_, value, traceback):
         '''
-        Beware: you cannot use the with statement with class construction if its a singleton
-        E.g.: you can't do (will fail)
+        You can use with "with" statement like
             with Context() as ctx:
                 print ctx
-        You need to work with fork method
-            ctx = Context() #root context, no need to use the with statement
-            with ctx.fork('child context') as child_ctx:
-                print ctx
+        Or forking like:
+            ctx = Context()
         '''
         self._mngr.unregister(self)
 
 
 def smokeTestModule():
+    from common.log.debugPrint import debugPrint
     with ContextBase('name') as context:
-        from common.log.debugPrint import debugPrint
-        pprint = debugPrint
         context.setConfig('backend_name', 'python')
-        pprint(context.getConfig('backend_name'))
-        pprint(context.getConfigDict())
+        debugPrint(context.getConfig('backend_name'))
+        debugPrint(context.getConfigDict())
+        with context.fork() as context2:
+            debugPrint(context)
 
 
 if __name__ == "__main__":

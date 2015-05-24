@@ -18,7 +18,7 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with Mepinta. If not, see <http://www.gnu.org/licenses/>.
 '''
-from common.context.Context import arg_singleton_and_wrap
+from common.context.Context import context_singleton
 from common.context.base import ContextBase
 from mepinta.pipeline.hi.context_lo.ContextLo import ContextLo
 from mepinta.pipeline.hi.LogOutput import LogOutput
@@ -30,7 +30,7 @@ from common.context import getContext
 from common.context.ContextManager import ContextManager
 
 
-class singleton_autocontext(arg_singleton_and_wrap):
+class singleton_autocontext(context_singleton):
 
     '''
     We would like to select context based on the package that is calling the
