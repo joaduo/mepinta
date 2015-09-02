@@ -21,6 +21,7 @@ along with Mepinta. If not, see <http://www.gnu.org/licenses/>.
 
 from mepinta.plugins_manifest import ProcessorManifestBase, FunctionProperty
 from mepinta.pipelineview.actiontree.undoable_graph.UndoableGraphManager import UndoableGraphManager
+from mepinta.context.MepintaContext import MepintaContext
 
 
 class manifest(ProcessorManifestBase):
@@ -36,12 +37,11 @@ class manifest(ProcessorManifestBase):
 
 def changeGraphTopology(args):
     from mepinta_python_sdk.props import getPropValue
-    from mepinta.context.getMepintaContext import getMepintaContext
+    #from mepinta.context.getMepintaContext import getMepintaContext
 
     context_name = getPropValue(args, 'inputs', 'context_name')
     out_graph = getPropValue(args, 'outputs', 'graph')
-    context = getMepintaContext(context_name)
-    UndoableGraphManager(context).initGraph(out_graph)
+    UndoableGraphManager(MepintaContext(context_name)).initGraph(out_graph)
 
 if __name__ == "__main__":
     from getDefaultContext import getDefaultContext

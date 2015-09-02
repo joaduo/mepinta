@@ -82,9 +82,10 @@ class MepintaSimpleDemos(FrameworkBase):
 
 
 def testModule():
-    from getDefaultContext import getDefaultContext
-    context = getDefaultContext()
-    MepintaSimpleDemos(context).evaluatePipelineAndPrint()
+    from mepinta.context.MepintaContext import MepintaContext
+    mpdemos = MepintaSimpleDemos(MepintaContext())
+    mpdemos.evaluatePipelineAndPrint()
+
 
 if __name__ == "__main__":
     testModule()

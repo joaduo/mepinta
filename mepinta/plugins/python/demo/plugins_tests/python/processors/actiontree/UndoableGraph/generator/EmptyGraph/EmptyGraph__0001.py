@@ -22,7 +22,7 @@ from mepinta.testing.plugins_testing.processor.base import ProcessorPluginTestBa
 import unittest
 
 
-class EmptyGraphTest(ProcessorPluginTestBase, unittest.TestCase):
+class test(ProcessorPluginTestBase, unittest.TestCase):
 
     def __post_init__(self):
         import plugins.python.processors.actiontree.UndoableGraph.generator.EmptyGraph as empty_graph
