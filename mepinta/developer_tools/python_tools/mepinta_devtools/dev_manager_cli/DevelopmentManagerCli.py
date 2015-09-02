@@ -88,7 +88,10 @@ class DevelopmentManagerCli(FrameworkBase):
         creator = self.backend_creator
         make['backend'] = creator.deployProjects(self._getQtProjectsPath(),
                                                  sdk_path, libs_path, overwrite)
-        plugins_sets = ['k3dv1', 'basic']
+        plugins_sets = [
+#                        'k3dv1',
+                        'basic',
+                        ]
         mepinta_source_path = self.context.deployment_config.mepinta_source_path
         for plugins_set in plugins_sets:
             # Append the set to the python path

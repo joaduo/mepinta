@@ -62,7 +62,10 @@ class PluginsBrowser(FrameworkBase):
 
     def _getManifests(self, plugins_set, backend, plugin_type, filter_func):
         manifests = []
-        pkg = self._getPackage(backend, plugin_type, plugins_set)
+        try:
+            pkg = self._getPackage(backend, plugin_type, plugins_set)
+        except ImportError:
+            return manifests
         mod_dict = self.package_inspector.builDict(
             pkg, filter_func, reload_=True)
         manifests += mod_dict.values()
