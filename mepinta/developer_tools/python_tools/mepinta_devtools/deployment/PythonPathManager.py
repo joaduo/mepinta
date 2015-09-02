@@ -50,15 +50,14 @@ class PythonPathManager(object):
 
     def appendMepintaPaths(self, mepinta_source_path):
         for path in self.__getInitialDict().values():
-            self.__appendPath(mepinta_source_path, path)
+            self.appendPath(mepinta_source_path, path)
 
-    def __appendPath(self, *args):
-        # TODO: is this necessary?
+    def appendPath(self, *args):
         path = joinPath(args)
         if path not in sys.path:
             sys.path.append(path)
 
-    def __removePath(self, *args):
+    def removePath(self, *args):
         path = joinPath(args)
         if path in sys.path:
             sys.path.remove(path)
@@ -73,11 +72,11 @@ class PythonPathManager(object):
 
     def appendPlugins(self, mepinta_source_path, plugins_set, backend):
         rel_path = joinPath('plugins', backend, plugins_set, 'python_modules')
-        self.__appendPath(mepinta_source_path, rel_path)
+        self.appendPath(mepinta_source_path, rel_path)
 
     def removePlugins(self, mepinta_source_path, plugins_set, backend):
         rel_path = joinPath('plugins', backend, plugins_set, 'python_modules')
-        self.__removePath(mepinta_source_path, rel_path)
+        self.removePath(mepinta_source_path, rel_path)
 
 
 def smokeTestModule():
