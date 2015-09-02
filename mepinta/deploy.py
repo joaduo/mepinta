@@ -34,13 +34,14 @@ class DeploymentCommand(object):
     def __fake_post_init__(self, debug):
         from mepinta_devtools.deployment.DeploymentManager import DeploymentManager
         from pipeline_backend.logging.logging import LOG_INFO, LOG_DEBUG
-        from getDefaultContext import getDefaultContext
+        from mepinta.context.MepintaContext import MepintaContext
+        self.context = MepintaContext()
         if debug:
-            self.context = getDefaultContext(LOG_DEBUG)
+            self.context.log.setLevel(LOG_DEBUG)
         else:
-            self.context = getDefaultContext(LOG_INFO)
+            self.context.log.setLevel(LOG_INFO)
         self.log = self.context.log
-        self.deployment_manager = DeploymentManager(self.context,
+        self.deployment_mngr = DeploymentManager(self.context,
                                                     mepinta_source_path=self._getMepintaSrcPath())
 
     def run(self, argv=None):
@@ -53,8 +54,7 @@ class DeploymentCommand(object):
         self.__fake_post_init__(args.debug)
         self.log.debug('Successfully configured python paths.')
         # Do the actual deployment
-        self.deployment_manager.deployTo(
-            parser, args.deployment_path, args.force)
+        self.deployment_mngr.deployTo(parser, args.deployment_path, args.force)
 
     def _getArgsParser(self):
         parser = argparse.ArgumentParser(
@@ -68,20 +68,20 @@ class DeploymentCommand(object):
         parser.add_argument('--debug', action='store_true', help=help_)
         return parser
 
-    def _configurePythonPaths(self, mepinta_source_path):
+    def _configurePythonPaths(self, mepinta_src):
         '''
         Configures sys.path to include all Mepinta's python code necessary for
         the deployment.
-        :param mepinta_source_path: Path where Mepinta code's was downloaded/
+        :param mepinta_src: Path where Mepinta code's was downloaded/
                                   extracted
         '''
-        sys.path.append(mepinta_source_path + '/developer_tools')
+        sys.path.append(mepinta_src + '/developer_tools')
         from mepinta_devtools.deployment.PythonPathManager import PythonPathManager
-        PythonPathManager().appendInitial(mepinta_source_path)
+        PythonPathManager().appendInitial(mepinta_src)
 
     def _getMepintaSrcPath(self):
-        mepinta_source_path = os.path.dirname(os.path.realpath(__file__))
-        return mepinta_source_path
+        mepinta_src = os.path.dirname(os.path.realpath(__file__))
+        return mepinta_src
 
 
 def main(argv):

@@ -229,10 +229,10 @@ class DevelopmentManagerCli(FrameworkBase):
 
 
 def smokeTestModule():
-    #  from common.log.debugPrint import debugPrint
-    from getDefaultContext import getDefaultContext
-    context = getDefaultContext()
-    DevelopmentManagerCli(context).run(overwrite=True)
+    from mepinta.context.MepintaContext import MepintaContext
+    dmc = DevelopmentManagerCli(MepintaContext())
+    dmc.run(overwrite=True)
+
 
 if __name__ == "__main__":
     smokeTestModule()
