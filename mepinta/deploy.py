@@ -75,7 +75,7 @@ class DeploymentCommand(object):
         :param mepinta_source_path: Path where Mepinta code's was downloaded/
                                   extracted
         '''
-        sys.path.append(mepinta_source_path + '/developer_tools/python_tools')
+        sys.path.append(mepinta_source_path + '/developer_tools')
         from mepinta_devtools.deployment.PythonPathManager import PythonPathManager
         PythonPathManager().appendInitial(mepinta_source_path)
 

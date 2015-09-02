@@ -13,8 +13,7 @@ class deployment_config(object):
 def configurePythonPaths(create_context=True):
     import sys
     config = deployment_config()
-    path = os.path.join(config.mepinta_source_path, 'developer_tools',
-                        'python_tools')
+    path = os.path.join(config.mepinta_source_path, 'developer_tools')
     sys.path.append(path)
     sys.path.append(config.mepinta_source_path)
     from mepinta_devtools.deployment.PythonPathManager import PythonPathManager

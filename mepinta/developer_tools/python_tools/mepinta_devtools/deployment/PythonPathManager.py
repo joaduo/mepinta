@@ -36,7 +36,7 @@ class PythonPathManager(object):
 
     def __getInitialDict(self):
         paths = {'mepinta': joinPath('core', 'python_core'),
-                 'mepinta_devtools': joinPath('developer_tools', 'python_tools'),
+                 'mepinta_devtools': joinPath('developer_tools'),
                  'common': joinPath('libs', 'python', 'python_common'),
                  'pipeline_backend':
                  joinPath(
