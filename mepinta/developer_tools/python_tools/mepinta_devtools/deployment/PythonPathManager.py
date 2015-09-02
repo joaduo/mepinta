@@ -71,11 +71,11 @@ class PythonPathManager(object):
                 sys.path.remove(path)
 
     def appendPlugins(self, mepinta_source_path, plugins_set, backend):
-        rel_path = joinPath('plugins', backend, plugins_set, 'python_modules')
+        rel_path = joinPath('plugins', backend, plugins_set)
         self.appendPath(mepinta_source_path, rel_path)
 
     def removePlugins(self, mepinta_source_path, plugins_set, backend):
-        rel_path = joinPath('plugins', backend, plugins_set, 'python_modules')
+        rel_path = joinPath('plugins', backend, plugins_set)
         self.removePath(mepinta_source_path, rel_path)
 
 
