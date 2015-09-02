@@ -91,17 +91,17 @@ class DevelopmentManagerCli(FrameworkBase):
 #                        'k3dv1',
                         'basic',
                         ]
-        mepinta_source_path = self.context.deployment_config.mepinta_source_path
+        mepinta_src = self.context.deployment_config.mepinta_src
         for plugins_set in plugins_sets:
             # Append the set to the python path
             self.python_path.appendPlugins(
-                mepinta_source_path, plugins_set, backend)
+                mepinta_src, plugins_set, backend)
             target = 'plugins_' + plugins_set
             make[target] = self._deployPluginSet(plugins_set, backend, sdk_path,
                                                  overwrite)
             # remove the set to the python path
             self.python_path.removePlugins(
-                mepinta_source_path, plugins_set, backend)
+                mepinta_src, plugins_set, backend)
         return make
 
     def run(self, overwrite=False):

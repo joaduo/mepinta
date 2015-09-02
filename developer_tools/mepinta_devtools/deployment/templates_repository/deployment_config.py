@@ -3,7 +3,7 @@ import os
 
 
 class deployment_config(object):
-    mepinta_source_path = '${mepinta_source_path}'
+    mepinta_src = '${mepinta_src}'
     libk3dsdk_path = '${libk3dsdk_path}'
     libgsigc2_path = '${libgsigc2_path}'
     libboost_unit_test_framework_path = '${libboost_unit_test_framework_path}'
@@ -13,11 +13,11 @@ class deployment_config(object):
 def configurePythonPaths(create_context=True):
     import sys
     config = deployment_config()
-    path = os.path.join(config.mepinta_source_path, 'developer_tools')
+    path = os.path.join(config.mepinta_src, 'developer_tools')
     sys.path.append(path)
-    sys.path.append(config.mepinta_source_path)
+    sys.path.append(config.mepinta_src)
     from mepinta_devtools.deployment.PythonPathManager import PythonPathManager
-    PythonPathManager().appendInitial(config.mepinta_source_path)
+    PythonPathManager().appendInitial(config.mepinta_src)
     if create_context:
         from mepinta.context.MepintaContext import MepintaContext
         context = MepintaContext('python')

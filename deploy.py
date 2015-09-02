@@ -42,7 +42,7 @@ class DeploymentCommand(object):
             self.context.log.setLevel(LOG_INFO)
         self.log = self.context.log
         self.deployment_mngr = DeploymentManager(self.context,
-                                                    mepinta_source_path=self._getMepintaSrcPath())
+                                                    mepinta_src=self._getMepintaSrcPath())
 
     def run(self, argv=None):
         # get the parser and parse the sys.argv arguments

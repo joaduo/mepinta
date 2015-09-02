@@ -32,7 +32,7 @@ class BackendProjectsCreator(FrameworkBase):
         self.__backend = 'c_and_cpp'
 
     def __getBackendsPath(self):
-        mepinta_src = self.context.deployment_config.mepinta_source_path
+        mepinta_src = self.context.deployment_config.mepinta_src
         return joinPath(mepinta_src, 'backend', self.__backend)
 
     def getSourcesPath(self, api):

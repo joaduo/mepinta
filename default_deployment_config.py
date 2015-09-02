@@ -14,7 +14,7 @@ sys.meta_path.append(plugin_import_hook)
 
 
 class default_deployment_config(object):
-    mepinta_source_path = file_dir
+    mepinta_src = file_dir
     deployment_path = os.path.join(file_dir, 'deployment')
     plugins_sets = dict(c_and_cpp=['basic', 'k3dv1'])
     plugin_import_hook = plugin_import_hook

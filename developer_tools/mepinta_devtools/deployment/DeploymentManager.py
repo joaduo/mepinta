@@ -59,13 +59,13 @@ class DeploymentManager(FrameworkBase):
     This way code and installation are split to simplify maintenance.
     '''
 
-    def __post_init__(self, mepinta_source_path):
+    def __post_init__(self, mepinta_src):
         self.file_manager = FileManager(self.context)
         self.deployment_creator = DeploymentCreator(self.context)
-        self.mepinta_source_path = mepinta_source_path
+        self.mepinta_src = mepinta_src
 
     def _getSrcPath(self):
-        return self.mepinta_source_path
+        return self.mepinta_src
 
     def deployTo(self, args_parser, deployment_path, force=False):
         # Check if the path specified is outside mepinta source path
@@ -92,7 +92,7 @@ class DeploymentManager(FrameworkBase):
             args_parser.print_help()
 
     def _getTranslationDict(self):
-        translation_dict = {'mepinta_source_path': self._getSrcPath(),
+        translation_dict = {'mepinta_src': self._getSrcPath(),
                             }
         return translation_dict
 

@@ -44,13 +44,13 @@ class PythonPathManager(object):
                  }
         return paths
 
-    def appendInitial(self, mepinta_source_path):
-        self.appendMepintaPaths(mepinta_source_path)
-        self.appendPlugins(mepinta_source_path, 'dummy', 'python')
+    def appendInitial(self, mepinta_src):
+        self.appendMepintaPaths(mepinta_src)
+        self.appendPlugins(mepinta_src, 'dummy', 'python')
 
-    def appendMepintaPaths(self, mepinta_source_path):
+    def appendMepintaPaths(self, mepinta_src):
         for path in self.__getInitialDict().values():
-            self.appendPath(mepinta_source_path, path)
+            self.appendPath(mepinta_src, path)
 
     def appendPath(self, *args):
         path = joinPath(args)
@@ -62,21 +62,21 @@ class PythonPathManager(object):
         if path in sys.path:
             sys.path.remove(path)
 
-    def cleanPlugins(self, mepinta_source_path):
+    def cleanPlugins(self, mepinta_src):
         # Clean plugins paths
-        prefix = joinPath(mepinta_source_path, 'plugins')
+        prefix = joinPath(mepinta_src, 'plugins')
         prefix = os.path.realpath(prefix)
         for path in sys.path:
             if os.path.realpath(path).startswith(prefix):
                 sys.path.remove(path)
 
-    def appendPlugins(self, mepinta_source_path, plugins_set, backend):
+    def appendPlugins(self, mepinta_src, plugins_set, backend):
         rel_path = joinPath('plugins', backend, plugins_set)
-        self.appendPath(mepinta_source_path, rel_path)
+        self.appendPath(mepinta_src, rel_path)
 
-    def removePlugins(self, mepinta_source_path, plugins_set, backend):
+    def removePlugins(self, mepinta_src, plugins_set, backend):
         rel_path = joinPath('plugins', backend, plugins_set)
-        self.removePath(mepinta_source_path, rel_path)
+        self.removePath(mepinta_src, rel_path)
 
 
 def smokeTestModule():
