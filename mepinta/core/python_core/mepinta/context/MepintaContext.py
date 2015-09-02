@@ -54,7 +54,7 @@ class singleton_autocontext(context_singleton):
 
     def solveContextName(self, path):
         # TODO: solve based on the main script also (if this method fails)
-        regex = r'plugins.(?P<backend>(?:python)|(?:c_and_cpp)).(?:[a-z_0-9]+).python_modules'
+        regex = r'plugins.(?P<backend>(?:python)|(?:c_and_cpp)).(?:[a-z_0-9]+)'
         regex = regex.replace('.', os.path.sep)
         m = re.search(regex, path)
         if m:

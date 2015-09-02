@@ -60,8 +60,7 @@ class PluginLoader(LoaderBase):
             p_sets = set([split[3]])
 
         def getPath(plugin_set):
-            return joinPath(self.plugins_root, backend, plugin_set, 'python_modules',
-                            split[:-1])
+            return joinPath(self.plugins_root, backend, plugin_set, split[:-1])
         path = [getPath(s) for s in p_sets]
         try:
             return imp.find_module(split[-1], path)
@@ -82,7 +81,7 @@ class BrutePluginLoader(LoaderBase):
         # Check if it has the plugins_set name inside?
         # Brute force Search
         def getPath(plugin_set, backend):
-            return joinPath(self.plugins_root, backend, plugin_set, 'python_modules', *split[:-1])
+            return joinPath(self.plugins_root, backend, plugin_set, *split[:-1])
         path = []
         for backend in plugins_dict:
             p_sets = plugins_dict[backend]

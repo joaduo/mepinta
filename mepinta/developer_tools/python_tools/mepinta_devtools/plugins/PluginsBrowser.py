@@ -50,9 +50,9 @@ class PluginsBrowser(FrameworkBase):
         pkg_str = 'plugins.{backend}.{plugin_type}'.format(**locals())
         pkg = import_module(pkg_str)
         # Example path
-        # plugins/{backend}/{plugin_set}/python_modules/plugins/{backend}/{plugin_type}
+        # plugins/{backend}/{plugin_set}/plugins/{backend}/{plugin_type}
         root = self.context.deployment_config.mepinta_source_path
-        pkg_path = joinPath(root, 'plugins', backend, plugins_set, 'python_modules',
+        pkg_path = joinPath(root, 'plugins', backend, plugins_set,
                             'plugins', backend, plugin_type)
         # replace path
         pkg.__path__.pop()
