@@ -44,7 +44,7 @@ class DevelopmentManagerCli(FrameworkBase):
         self.plugins_browser = PluginsBrowser(self.context)
         self.python_path = PythonPathManager()
 
-    def _deployBuildShedskin(self, overwrite):
+    def _deployShedskin(self, overwrite):
         ''' Deploy python projects to build shedskin modules
         (pipeline_lo and load_library)
         '''
@@ -82,7 +82,7 @@ class DevelopmentManagerCli(FrameworkBase):
         '''
         backend = 'c_and_cpp'
         make = {}
-        make['shedskin'] = self._deployBuildShedskin(overwrite)
+        make['shedskin'] = self._deployShedskin(overwrite)
         sdk_path = self._deploySdk(backend, overwrite)
         libs_path = self._createLibsPath(backend, overwrite)
         make['backend'] = self.backend_creator.deployProjects(self._getQtProjectsPath(),
