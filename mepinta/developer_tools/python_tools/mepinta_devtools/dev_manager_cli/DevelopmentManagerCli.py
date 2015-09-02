@@ -44,7 +44,7 @@ class DevelopmentManagerCli(FrameworkBase):
         self.plugins_browser = PluginsBrowser(self.context)
         self.python_path = PythonPathManager()
 
-    def _deployBuildShedskinModules(self, overwrite):
+    def _deployBuildShedskin(self, overwrite):
         ''' Deploy python projects to build shedskin modules
         (pipeline_lo and load_library)
         '''
@@ -73,7 +73,7 @@ class DevelopmentManagerCli(FrameworkBase):
         self.file_manager.makedirs(libs_path)
         return libs_path
 
-    def _deployCandCppProjects(self, overwrite):
+    def _deployCandCpp(self, overwrite):
         '''Deploy projects related with the c_and_cpp backend.
             -shedskin modules
             -backend core libraries (c and cpp)
@@ -82,11 +82,10 @@ class DevelopmentManagerCli(FrameworkBase):
         '''
         backend = 'c_and_cpp'
         make = {}
-        make['shedskin'] = self._deployBuildShedskinModules(overwrite)
+        make['shedskin'] = self._deployBuildShedskin(overwrite)
         sdk_path = self._deploySdk(backend, overwrite)
         libs_path = self._createLibsPath(backend, overwrite)
-        creator = self.backend_creator
-        make['backend'] = creator.deployProjects(self._getQtProjectsPath(),
+        make['backend'] = self.backend_creator.deployProjects(self._getQtProjectsPath(),
                                                  sdk_path, libs_path, overwrite)
         plugins_sets = [
 #                        'k3dv1',
@@ -107,7 +106,7 @@ class DevelopmentManagerCli(FrameworkBase):
 
     def run(self, overwrite=False):
         self._testDeploymentSanity(overwrite)
-        make = self._deployCandCppProjects(overwrite)
+        make = self._deployCandCpp(overwrite)
         self._createMakeFile(make, overwrite)
 
     def _getPluginProjectCreator(self, plugins_set, backend):
