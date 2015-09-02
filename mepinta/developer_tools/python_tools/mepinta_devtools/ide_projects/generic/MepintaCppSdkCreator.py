@@ -29,7 +29,7 @@ from mepinta_devtools.deployment.PythonPathManager import PythonPathManager
 class MepintaCppSdkCreator(FrameworkBase):
 
     def __post_init__(self):
-        self.backend_projects_creator = BackendProjectsCreator(self.context)
+        self.backend_creator = BackendProjectsCreator(self.context)
         self.file_manager = FileManager(self.context)
         self.plugins_browser = PluginsBrowser(self.context)
         self.python_path = PythonPathManager()
@@ -77,11 +77,11 @@ class MepintaCppSdkCreator(FrameworkBase):
         # make mepintasdk/ dir
         mepintasdk_path = joinPath(project_path, 'mepintasdk')
         #self.file_manager.mkdir(sdk_path, overwrite)
-        api_c_path = self.backend_projects_creator.getSourcesPath('c')
+        api_c_path = self.backend_creator.getSourcesPath('c')
         # link c directory
         self.file_manager.symlink(api_c_path, mepintasdk_path, overwrite)
         # link cpp directory
-        api_cpp_path = self.backend_projects_creator.getSourcesPath('cpp')
+        api_cpp_path = self.backend_creator.getSourcesPath('cpp')
         cpp_dst = joinPath(mepintasdk_path, 'cpp')
         self.file_manager.symlink(api_cpp_path, cpp_dst, force=True)
 

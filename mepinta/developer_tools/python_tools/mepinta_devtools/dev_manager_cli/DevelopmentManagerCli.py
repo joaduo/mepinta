@@ -36,9 +36,9 @@ from mepinta_devtools.ide_projects.qtcreator.QtProjectPluginCreator import QtPro
 class DevelopmentManagerCli(FrameworkBase):
 
     def __post_init__(self):
-        self.shedskin_project_creator = ShedskinProjectCreator(self.context)
-        self.backend_projects_creator = BackendProjectsCreator(self.context)
-        self.mepinta_sdk_creator = MepintaCppSdkCreator(self.context)
+        self.shedskin_creator = ShedskinProjectCreator(self.context)
+        self.backend_creator = BackendProjectsCreator(self.context)
+        self.sdk_creator = MepintaCppSdkCreator(self.context)
         self.file_manager = FileManager(self.context)
         self.templates = TemplateManager(self.context, path_ref=__file__)
         self.plugins_browser = PluginsBrowser(self.context)
@@ -49,8 +49,7 @@ class DevelopmentManagerCli(FrameworkBase):
         (pipeline_lo and load_library)
         '''
         project_path = joinPath(self._getBuildPath(), 'shedksin_modules_build')
-        creator = self.shedskin_project_creator
-        return creator.createProject(project_path, overwrite)
+        return self.shedskin_creator.createProject(project_path, overwrite)
 
     def _deploySdk(self, backend, overwrite):
         ''' Create the sdk path with the headers to include.
@@ -59,7 +58,7 @@ class DevelopmentManagerCli(FrameworkBase):
         '''
         sdk_path = joinPath(self._getBuildPath(), 'sdk', backend)
         self.file_manager.makedirs(sdk_path)
-        self.mepinta_sdk_creator.createProject(sdk_path, overwrite)
+        self.sdk_creator.createProject(sdk_path, overwrite)
         return sdk_path
 
     def getLibsPath(self, backend):
@@ -86,7 +85,7 @@ class DevelopmentManagerCli(FrameworkBase):
         make['shedskin'] = self._deployBuildShedskinModules(overwrite)
         sdk_path = self._deploySdk(backend, overwrite)
         libs_path = self._createLibsPath(backend, overwrite)
-        creator = self.backend_projects_creator
+        creator = self.backend_creator
         make['backend'] = creator.deployProjects(self._getQtProjectsPath(),
                                                  sdk_path, libs_path, overwrite)
         plugins_sets = ['k3dv1', 'basic']
@@ -150,7 +149,7 @@ class DevelopmentManagerCli(FrameworkBase):
                     s = creator.createProject(projects_path, plugins_path,
                                               sdk_path, manifest, overwrite)
                     mk_cmds.extend(s)
-        self.mepinta_sdk_creator.createDataTypesInclude(sdk_path, plugins_set,
+        self.sdk_creator.createDataTypesInclude(sdk_path, plugins_set,
                                                         overwrite)
         return mk_cmds
 
