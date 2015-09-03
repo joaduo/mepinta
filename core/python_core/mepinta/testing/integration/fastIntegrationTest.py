@@ -25,7 +25,7 @@ def fastIntegrationTest(context=None):
     if not context:
         context = MepintaContext()
     if context.backend_name == 'python':
-        from plugins_tests.integration.fastIntegrationTest import fastIntegrationTestPython
+        from integration.fastIntegrationTest import fastIntegrationTestPython
         fastIntegrationTestPython(context)
     else:
         raise NotImplementedError()

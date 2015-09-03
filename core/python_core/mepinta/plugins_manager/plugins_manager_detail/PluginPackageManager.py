@@ -141,6 +141,8 @@ class PluginPackageManager(FrameworkBase):
         sorted_names_list = []
         sorted_version_list = []
         for module_name in modules_names:
+            if module_name.endswith('_test'):
+                continue
             version_str = module_name.split(name_version_separator)[-1]
             try:
                 version = str_to_version(version_str)

@@ -18,7 +18,7 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with Mepinta. If not, see <http://www.gnu.org/licenses/>.
 '''
-from plugins_tests.python.processors.demov1.Geometry2D.modifier.base.Geometry2DPluginTest import Geometry2DPluginTest
+from plugins.python.processors.demov1.Geometry2D.modifier.base.Geometry2DPluginTest import Geometry2DPluginTest
 from unittest import TestCase
 
 

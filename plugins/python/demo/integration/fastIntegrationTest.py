@@ -24,7 +24,7 @@ def getTestModules():
     test_modules = []
 #  import plugins_tests.python.processors.actiontree.UndoableGraph.generator.EmptyGraph.EmptyGraph__0001 as testModule
 #  test_modules.append(testModule)
-    import plugins_tests.python.processors.demov1.Geometry2D.modifier.DeformationExpression.DeformationExpression__0001 as test_module
+    import plugins.python.processors.demov1.Geometry2D.modifier.DeformationExpression.DeformationExpression__0001_test as test_module
     test_modules.append(test_module)
     return test_modules
 
