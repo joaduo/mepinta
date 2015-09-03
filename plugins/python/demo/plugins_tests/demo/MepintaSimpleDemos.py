@@ -18,14 +18,13 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with Mepinta. If not, see <http://www.gnu.org/licenses/>.
 '''
-#from mepinta.abstract.MepintaBase import MepintaBase
 from plugins_tests.python.processors.demov1.Geometry2D.modifier.DeformationExpression.DeformationExpression__0001 import DeformationExpression
 from mepinta.testing.plugins_testing.test_pipeline.InotifySimpleTestPipeline import InotifySimpleTestPipeline
 from mepinta.testing.plugins_testing.graphviz.PipelineGraphvizTranslator import PipelineGraphvizTranslator
 from mepinta_devtools.ide_projects.FileManager import FileManager
 from common.shellcmds.CommandRunner import CommandRunner
-import os
 from common.abstract.FrameworkBase import FrameworkBase
+import os
 
 
 class MepintaSimpleDemos(FrameworkBase):
@@ -38,13 +37,12 @@ class MepintaSimpleDemos(FrameworkBase):
     def visualizeGraphXdot(self):
         ''' Mepinta GUI demo. Shows Pipeline in as a dot graph. (you need the xdot command in the path "apt-get install xdot" in ubuntu/debian)'''
         test_pline = self.__getTestPipeline()
-        graphviz_translator = PipelineGraphvizTranslator(self.context)
+        graphviz_translator = PipelineGraphvizTranslator()
         graphviz_str = graphviz_translator.translate(test_pline.getPipeline())
         path = './pipeline.dot'
-        FileManager(self.context).saveTextFile(
-            path, graphviz_str, overwrite=True)
+        FileManager().saveTextFile(path, graphviz_str, overwrite=True)
         try:
-            CommandRunner(self.context).run('xdot %s' % path)
+            CommandRunner().run('xdot %s' % path)
         except OSError as e:
             msg = 'The xdot command may not be in the command path. OSError: %s' % e
             self.log.e(msg)
@@ -66,8 +64,7 @@ class MepintaSimpleDemos(FrameworkBase):
             return
         from mepinta.testing.plugins_testing.gui.SimpleTestPipelineGui import SimpleTestPipelineGui
         self.context.nodebox_gui = True
-        gui = SimpleTestPipelineGui(
-            self.context, test_pline=self.__getTestPipeline())
+        gui = SimpleTestPipelineGui(test_pline=self.__getTestPipeline())
         try:
             gui.run()
         except Exception as e:
@@ -76,14 +73,15 @@ class MepintaSimpleDemos(FrameworkBase):
                 '\n This may mean that you have the wrong nodebox gl library installed (or missing pyglet). Check the mepinta INSTALL file for further instructions. \n')
 
     def __getTestPipeline(self):
-        test_pline = InotifySimpleTestPipeline(self.context)
-        deformation_expression_test = DeformationExpression(self.context)
+        test_pline = InotifySimpleTestPipeline()
+        deformation_expression_test = DeformationExpression()
         deformation_expression_test.definePipeline(test_pline)
         return test_pline
 
 
 def testModule():
     MepintaSimpleDemos().evaluatePipelineAndPrint()
+#    MepintaSimpleDemos().nodeboxInteractivePipeline()
 
 
 if __name__ == "__main__":

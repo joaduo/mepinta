@@ -22,9 +22,6 @@ from common.abstract.FrameworkBase import FrameworkBase
 from mepinta.abstract.MepintaError import MepintaError
 from mepinta.testing.plugins_testing.time.TestTime import TestTime
 from unittest import TestCase
-from pipeline_backend.logging.logging import LOG_ERROR
-
-tests_context = None
 
 
 class ProcessorPluginTestBase(FrameworkBase):
@@ -54,15 +51,6 @@ class ProcessorPluginTestBase(FrameworkBase):
                 TestCase.__init__(self, methodName)
             else:
                 TestCase.__init__(self)
-
-        # Solve context if not provided #TODO: fix global variable use?
-        global tests_context
-        if context == None:
-            # To enable context free initialization supporting unittest.TestCase
-            if tests_context == None:
-                from getDefaultContext import getDefaultContext
-                tests_context = getDefaultContext(log_level=LOG_ERROR)
-            context = tests_context
         FrameworkBase.__init__(self, context)
 
     def __post_init__(self):
