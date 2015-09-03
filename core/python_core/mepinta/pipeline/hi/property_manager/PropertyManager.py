@@ -82,7 +82,8 @@ class PropertyManager(HiAutoBase):
 
 if __name__ == '__main__':
     from mepinta.pipeline.hi.pipeline_data.data_model import Pipeline
-    from common.log.debugPrint import debugPrint
+    from common.log.debugPrint import debugPrint as dP
+    debugPrint = lambda m: dP(str(m))
     pline = Pipeline()
     pline.startTopologyChangeSet()
     debugPrint(pline.getTopology())

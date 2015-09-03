@@ -116,26 +116,26 @@ class TopologyManager(HiAutoBase):
         return self.addProperties(pline, [prop])
 
 if __name__ == '__main__':
-    from mepinta.context.MepintaContext import MepintaContext
     from mepinta.pipeline.hi.pipeline_data.data_model import Pipeline
     from mepinta.pipeline.hi.property_manager.PropertyManager import PropertyManager
-    context = MepintaContext('python')
-    pline = Pipeline(context=context)
-    pline.grow()
+    from common.log.debugPrint import debugPrint as dP
+    debugPrint = lambda m: dP(str(m))
+    pline = Pipeline()
+    pline.startTopologyChangeSet()
     debugPrint(pline.getTopology())
-    propm = PropertyManager(context=context)
+    propm = PropertyManager()
     debugPrint(propm)
     debugPrint(propm.context.context_lo.data_types)
 #  propm._createPropertiesSafe(pline, 'input', ['hello'], [1])
     debugPrint(pline.all_properties)
     prop_ids = propm.createProperties(pline, 'input', ['hello', 'bye'], [0, 0])
     debugPrint(pline.all_properties)
-    topom = TopologyManager(context=context)
+    topom = TopologyManager()
     debugPrint(topom)
     topom.addProperties(pline, prop_ids)
-#  topom.connectProperties(pline, [1], [2])
-#  topo = pline.getTopology()
-#  debugPrint(topo)
-#  topom.add(pline, 3)
-##  topom.connectProperties(pline, [3,3,4,5], [4,5,7,8])
-#  debugPrint(topo)
+    topom.connectProperties(pline, [1], [2])
+    topo = pline.getTopology()
+    debugPrint(topo)
+    topom.add(pline, 3)
+    topom.connectProperties(pline, [3,3,4,5], [4,5,7,8])
+    debugPrint(topo)
