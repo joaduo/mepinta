@@ -18,16 +18,17 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with Mepinta. If not, see <http://www.gnu.org/licenses/>.
 '''
-from mepinta.abstract.MepintaBase import MepintaBase
+#from mepinta.abstract.MepintaBase import MepintaBase
 from plugins_tests.python.processors.demov1.Geometry2D.modifier.DeformationExpression.DeformationExpression__0001 import DeformationExpression
 from mepinta.testing.plugins_testing.test_pipeline.InotifySimpleTestPipeline import InotifySimpleTestPipeline
 from mepinta.testing.plugins_testing.graphviz.PipelineGraphvizTranslator import PipelineGraphvizTranslator
 from mepinta_devtools.ide_projects.FileManager import FileManager
 from common.shellcmds.CommandRunner import CommandRunner
 import os
+from common.abstract.FrameworkBase import FrameworkBase
 
 
-class MepintaSimpleDemos(MepintaBase):
+class MepintaSimpleDemos(FrameworkBase):
 
     '''
     This class gathers simple demos for the demo.py command of a Mepinta deployment.
@@ -82,8 +83,7 @@ class MepintaSimpleDemos(MepintaBase):
 
 
 def testModule():
-    mpdemos = MepintaSimpleDemos()
-    mpdemos.evaluatePipelineAndPrint()
+    MepintaSimpleDemos().evaluatePipelineAndPrint()
 
 
 if __name__ == "__main__":

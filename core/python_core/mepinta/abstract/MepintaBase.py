@@ -19,11 +19,11 @@ You should have received a copy of the GNU General Public License
 along with Mepinta. If not, see <http://www.gnu.org/licenses/>.
 '''
 from common.context.ContextManager import ContextManager
-from common.abstract.FrameworkBase import FrameworkBase
-from mepinta.context.MepintaContext import MepintaContext
+from common.abstract.SelfConfigBase import SelfConfigBase
+from common.abstract.PostInitStrategyBase import PostInitStrategyBase
 
 
-class MepintaBase(FrameworkBase):
+class MepintaBase(PostInitStrategyBase, SelfConfigBase):
 
     '''
     Base class for all logic classes in the framework.
@@ -36,10 +36,13 @@ class MepintaBase(FrameworkBase):
             # Check if there is a root context
             context = ContextManager().getContext()
             if not context:
+                # We need to import here to avoid chicken-egg problem
+                from mepinta.context.MepintaContext import MepintaContext
                 # Create the root context and register it
                 context = MepintaContext()
         # Now having the context solved, we can initialize super class
-        super(MepintaBase, self).__init__(context, *a, **ad)
+        SelfConfigBase.__init__(self, context=context)
+        PostInitStrategyBase.__init__(self, *a, **ad)
 
 
 def smokeTestModule():

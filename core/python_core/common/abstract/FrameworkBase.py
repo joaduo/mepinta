@@ -20,18 +20,23 @@ along with Mepinta. If not, see <http://www.gnu.org/licenses/>.
 '''
 from common.abstract.SelfConfigBase import SelfConfigBase
 from common.abstract.PostInitStrategyBase import PostInitStrategyBase
+import logging
 
 
-class FrameworkBase(PostInitStrategyBase, SelfConfigBase):
+try:
+    from mepinta.abstract.MepintaBase import MepintaBase as FrameworkBase
+except ImportError:
+    logging.info('Using common framework outside mepinta.')
+    class FrameworkBase(PostInitStrategyBase, SelfConfigBase):
 
-    '''
-    Base class for all logic classes in the framework.
-    Data classes should inherit from object or FrameworkObject
-    '''
+        '''
+        Base class for all logic classes in the framework.
+        Data classes should inherit from object or FrameworkObject
+        '''
 
-    def __init__(self, context=None, *a, **ad):
-        SelfConfigBase.__init__(self, context=context)
-        PostInitStrategyBase.__init__(self, *a, **ad)
+        def __init__(self, context=None, *a, **ad):
+            SelfConfigBase.__init__(self, context=context)
+            PostInitStrategyBase.__init__(self, *a, **ad)
 
 
 def smokeTestModule():
@@ -57,6 +62,7 @@ def smokeTestModule():
     ctx = Context('python')
     cc = FrameworkBase(context=ctx)
     cc = ConcreteClass(context=ctx, value=1)
+
 
 if __name__ == '__main__':
     smokeTestModule()
