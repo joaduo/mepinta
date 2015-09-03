@@ -112,8 +112,8 @@ class ProcessorProxy(FrameworkBase):
 
     def spawnIntoNode(self, node):
         '''
-        Deepcopy this proxy and assign cloned containers and other parameters to t
-          he new node
+        Deepcopy this proxy and assign cloned containers and other parameters
+            to the new node
         :param node:
         '''
         # deepcopy breaks pydev debugger

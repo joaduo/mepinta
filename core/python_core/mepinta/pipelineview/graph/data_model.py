@@ -34,7 +34,7 @@ class Node(FrameworkObject):
         # itself)
         self.node_id = 0
         self.name = name
-        # TODO: rename to processor_metadata
+        # TODO: rename to processor_metadata (mdata?)
         self.processor = processor
         # Clone connections of the proxy
         self.processor.proxy.spawnIntoNode(self)
@@ -50,6 +50,9 @@ class Node(FrameworkObject):
 
 
 class Graph(FrameworkObject):
+    '''
+    A graph is an abstract view of a Pipeline (where pline's node are grouped)
+    '''
 
     def __init__(self, pline):
         self.pline = pline

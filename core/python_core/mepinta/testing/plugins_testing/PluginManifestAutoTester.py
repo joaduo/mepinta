@@ -33,15 +33,7 @@ import os
 class PluginManifestAutoTester(ModuleAutoTesterBase):
 
     def __init__(self, context=None):
-        if context == None:
-            from mepinta.context.MepintaContext import MepintaContext
-            context = MepintaContext(self.__guessBackendName())
         ModuleAutoTesterBase.__init__(self, context)
-
-    def __guessBackendName(self):
-        # TODO: fix! get "caller" module
-        # return 'python'
-        return 'c_and_cpp'
 
     def __createNode(self, plugin_manifest):
         graph = Graph(Pipeline(context=self.context))

@@ -23,6 +23,10 @@ from mepinta.pipeline.lo.constants import NULL_UID
 
 
 class UndoableGraph(FrameworkObject):
+    '''
+    UndoableGraph is a graph in which can be "undone" inside an ActionTree
+    We keep track of changes so we can propagate them when we undo-redo things
+    '''
 
     def __init__(self):
         self.__graph = None
@@ -36,14 +40,17 @@ class UndoableGraph(FrameworkObject):
             self.topology_id = self.__graph.pline.startTopologyChangeSet()
 
     def resetTopology(self, u_graph):
-        pline = u_graph.pline
-        if pline.pendingChanges():  # TODO: remove?
-            raise RuntimeError(
-                'There are pending changes you should propagate changes')
-        copied_topo = pline.getTopology()
-        topo = pline.getTopology(self.topology_id)
-        topo.copyFrom(copied_topo)
-        pline.setCurrentTopologyId(self.topology_id)
+        pass
+        # This code apparently resets the topology to
+        # the latest state in u_graph???? (NOT CLEAR AT ALL!) 
+        #pline = u_graph.pline
+        #if pline.pendingChanges():  # TODO: remove?
+        #    raise RuntimeError(
+        #        'There are pending changes you should propagate changes')
+        #copied_topo = pline.getTopology()
+        #topo = pline.getTopology(self.topology_id)
+        #topo.copyFrom(copied_topo)
+        #pline.setCurrentTopologyId(self.topology_id)
 
     def addNode(self, node):
         self.__created_nodes.append(node)

@@ -37,13 +37,11 @@ class manifest(ProcessorManifestBase):
 
 def changeGraphTopology(args):
     from mepinta_python_sdk.props import getPropValue
-    #from mepinta.context.getMepintaContext import getMepintaContext
 
     context_name = getPropValue(args, 'inputs', 'context_name')
     out_graph = getPropValue(args, 'outputs', 'graph')
     UndoableGraphManager(MepintaContext(context_name)).initGraph(out_graph)
 
 if __name__ == "__main__":
-    from getDefaultContext import getDefaultContext
     from mepinta.testing.plugins_testing.PluginManifestAutoTester import PluginManifestAutoTester
-    PluginManifestAutoTester(getDefaultContext()).test(manifest)  # , gui=True)
+    PluginManifestAutoTester().test(manifest)  # , gui=True)
