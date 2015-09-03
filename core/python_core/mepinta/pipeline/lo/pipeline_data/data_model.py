@@ -146,7 +146,8 @@ class Topology(object):
 
     def __init__(self, copied=None):
         self.changed_primary = set()  # id
-        if copied == None:  # In order to avoid copied whe copying
+        if copied == None:
+            # We are not copying => new topology
             self.__initValues()
         else:
             self.copyFrom(copied)
@@ -179,10 +180,14 @@ class Topology(object):
         self.changed_primary.add(dent_id)
 
     def disconnectAll(self, prop_id):
+        # All dependents properties returned by disconnectAll
+        # have changed => add to changed_primary
         self.changed_primary.update(
             set(self.connections.disconnectAll(prop_id)))
 
     def disconnectDpdencies(self, dent_id):
+        # Since there is only dependencies affected
+        # there is no affected property but only dent_id
         self.connections.disconnectDpdencies(dent_id)
         self.changed_primary.add(dent_id)
 
@@ -218,7 +223,7 @@ class Pipeline(object):
         self.property_id_count = NULL_UID
         # id:Property (all the properties, those deleted in a topology too)
         self.all_properties = {}
-        # count to give unique id for each property
+        # active topology in the pipeline
         self.current_topolgy_id = NULL_UID
         # count to give unique id for each topology
         self.topology_id_count = NULL_UID

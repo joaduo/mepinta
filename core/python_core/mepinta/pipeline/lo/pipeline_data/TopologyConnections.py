@@ -44,16 +44,32 @@ class TopologyConnections:
         self.dpdents = DirectedGraph()
 
     def connectDency(self, dent_id, dency_id):
+        '''
+        Unidirectional connection. (dency only: gets the property in its args)
+        :param dent_id: dependent property id
+        :param dency_id: dependency property id
+        '''
         self.navigation.connect(dent_id, dency_id)
         if not self.dpdencies.has(dent_id, dency_id):
             self.dpdencies.add(dent_id, dency_id)
 
     def connectDent(self, dent_id, dency_id):
+        '''
+        Unidirectional connection. (dent only: is notified of changes)
+        :param dent_id: dependent property id
+        :param dency_id: dependency property id
+        '''
         self.navigation.connect(dent_id, dency_id)
         if not self.dpdents.has(dency_id, dent_id):
             self.dpdents.add(dency_id, dent_id)
 
     def connect(self, dent_id, dency_id):
+        '''
+        Bidirectional connection. (dent + dency)
+            (gets the property in its args + is notified of changes)
+        :param dent_id: dependent property id
+        :param dency_id: dependency property id
+        '''
         self.navigation.connect(dent_id, dency_id)
         if not self.dpdencies.has(dent_id, dency_id):
             self.dpdencies.add(dent_id, dency_id)
@@ -61,6 +77,11 @@ class TopologyConnections:
             self.dpdents.add(dency_id, dent_id)
 
     def disconnect(self, dent_id, dency_id):
+        '''
+        Disconnect bidirectional, dent or dency connection
+        :param dent_id: dependent property id
+        :param dency_id: dependency property id
+        '''
         self.navigation.disconnect(dent_id, dency_id)
         if self.dpdencies.has(dent_id, dency_id):
             self.dpdencies.remove(dent_id, dency_id)
@@ -68,11 +89,21 @@ class TopologyConnections:
             self.dpdents.remove(dency_id, dent_id)
 
     def disconnectAll(self, prop_id):
+        '''
+        Disconnect any connection that comes or leaves the property given
+        :param prop_id: property id of the property to be totally disconnected
+        :returns: the set of dependents affected by the disconnection
+        '''
         self.disconnectDpdencies(prop_id)
         # return changed ids
         return self.disconnectDpdents(prop_id)
 
     def disconnectDpdencies(self, dent_id):
+        '''
+        Disconnect all dependencies connected to this (dependent) property
+        :param dent_id: property id of dependent property
+        :returns: None, because there is no dependent affected
+        '''
         self.navigation.disconnectDpdencies(dent_id)
         logDebug('Disconnecting property: %s' % dent_id)
         # for each dependency we delete the dency_id:dent_id relations
@@ -83,6 +114,11 @@ class TopologyConnections:
         self.dpdencies.__delitem__(dent_id)
 
     def disconnectDpdents(self, dency_id):
+        '''
+        Disconnect all dependents connected to this (dependency) property
+        :param dency_id: property id of dependency property
+        :returns: the set of dependents affected by the disconnection
+        '''
         self.navigation.disconnectDpdents(dency_id)
         dents_ids = self.dpdents[dency_id]
         logDebug('Disconnecting property: %s' % dency_id)
