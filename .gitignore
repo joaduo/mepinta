@@ -62,3 +62,6 @@ docs/_build/
 
 # deployment
 deployment/
+
+#nodebox (if extracted here)
+nodebox
