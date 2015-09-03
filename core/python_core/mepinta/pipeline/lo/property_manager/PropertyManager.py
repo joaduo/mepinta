@@ -38,10 +38,11 @@ class PropertyManager(object):
         self.p_value_mngr = PropertyValueManager(context_lo)
 
     def createProperties(self, pline, prop_names, dtype_ids, prop_flags):
+        # Gather all new properties' ids
         prop_ids = []
-        # TODO: remember to add property to topo = pline.get_topology()
-        # somewhere else
         logDebug('Creating properties %s' % (prop_names))
+        # Create a property for each name, assign data type and
+        # flags
         for index, prop_name in enumerate(prop_names):
             prop = Property(prop_flags, prop_name, dtype_ids[index])
             prop_ids.append(pline.addProperty(prop))

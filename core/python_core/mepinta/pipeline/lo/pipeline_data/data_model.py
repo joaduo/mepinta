@@ -111,10 +111,15 @@ class PropertyValuePointer(object):
 class Property(object):
 
     def __init__(self, prop_type, name, dtype_id):
+        #prop_type ~= prop_flags (flags determine the type of property)
         self.type = prop_type  # 0 Input 1 Output 2 Function 3 Property Set
         self.name = name
-        self.dtype_id = dtype_id  # None #Need this for new,delete,copy
+        # data type id for solving new,delete and copy
+        self.dtype_id = dtype_id
+        # Create value pointer, pointing to Null
         self.value_ptr = PropertyValuePointer(value=None)
+        # Value pointers do implement reference counting for
+        # memory management (and when "stealing" data from an outside property)
         self.value_ptr.incrementReferenceCount()
 
     def getValue(self):

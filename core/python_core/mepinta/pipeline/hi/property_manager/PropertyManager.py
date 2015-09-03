@@ -18,11 +18,6 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with Mepinta. If not, see <http://www.gnu.org/licenses/>.
 '''
-'''
-Created on Mar 9, 2012
-
-@author: jduo
-'''
 from mepinta.pipeline.hi.base import HiAutoBase, unwrapLo, unwrap_decorator
 from mepinta.pipeline.lo.constants import INPUT_PROPERTY_FLAG, INTERNAL_PROPERTY_FLAG, \
     OUTPUT_PROPERTY_FLAG
@@ -86,13 +81,12 @@ class PropertyManager(HiAutoBase):
         return prop_ids
 
 if __name__ == '__main__':
-    from mepinta.context.MepintaContext import MepintaContext
     from mepinta.pipeline.hi.pipeline_data.data_model import Pipeline
-    context = MepintaContext('python')
-    pline = Pipeline(context=context)
-    pline.grow()
+    from common.log.debugPrint import debugPrint
+    pline = Pipeline()
+    pline.startTopologyChangeSet()
     debugPrint(pline.getTopology())
-    propm = PropertyManager(context=context)
+    propm = PropertyManager()
     debugPrint(getattr(propm, 'createProperties'))
     debugPrint(propm)
     debugPrint(propm.context.context_lo.data_types)
