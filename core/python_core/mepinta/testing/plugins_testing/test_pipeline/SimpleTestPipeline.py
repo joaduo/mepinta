@@ -150,10 +150,9 @@ class SimpleTestPipeline(FrameworkBase):
 
 
 def testModule():
-    from getDefaultContext import getDefaultContext
-    context = getDefaultContext()
-    itp = SimpleTestPipeline(context)
-    context.log(itp)
+    from common.log.debugPrint import debugPrint
+    itp = SimpleTestPipeline()
+    debugPrint(itp)
 
 if __name__ == "__main__":
     testModule()

@@ -273,13 +273,13 @@ class InotifySimpleTestPipeline(ForkInotifyUtilsBase):
                 start, end, step, sleep = time_parameters
             # We get a dictionary. crappy code below!
             elif isinstance(time_parameters, dict):
-                time_parameters_dict = dict(
-                    start=0., end=100., step=1., sleep=0.)
-                time_parameters_dict.update(time_parameters)
-                start = time_parameters_dict['start']
-                end = time_parameters_dict['end']
-                step = time_parameters_dict['step']
-                sleep = time_parameters_dict['sleep']
+                tmp_times = dict(
+                    start=start, end=end, step=step, sleep=sleep)
+                tmp_times.update(time_parameters)
+                start = tmp_times['start']
+                end = tmp_times['end']
+                step = tmp_times['step']
+                sleep = tmp_times['sleep']
             else:
                 self.log.warning(
                     'Unsupported time parameters %r. Using defaults' % time_parameters)
@@ -296,8 +296,6 @@ class InotifySimpleTestPipeline(ForkInotifyUtilsBase):
         self._eval_on_test = evalOnTest
 
 if __name__ == "__main__":
-    from getDefaultContext import getDefaultContext
-    from pipeline_backend.logging.logging import LOG_DEBUG
-    context = getDefaultContext(LOG_DEBUG)
-    istp = InotifySimpleTestPipeline(context)
-    context.log(istp)
+    from common.log.debugPrint import debugPrint
+    istp = InotifySimpleTestPipeline()
+    debugPrint(istp)
