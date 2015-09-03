@@ -116,24 +116,24 @@ global_namespace = 'global::'
 
 class TreeContextStore(object):
 
-    def __init__(self, config_tree_node=None):
+    def __init__(self, parent_node=None):
         # Set default values for new configstore
-        if not config_tree_node:
-            self._root_node = BaseNode()
+        if not parent_node:
+            self._parent_node = BaseNode()
         else:
-            self._root_node = config_tree_node
+            self._parent_node = parent_node
 
     def getConfigDict(self):
-        return self._root_node.getConfigDict()
+        return self._parent_node.getConfigDict()
 
     def getLocalConfigDict(self):
-        return self._root_node.getLocalConfigDict()
+        return self._parent_node.getLocalConfigDict()
 
     def fork(self, **kwargs):
         return self.newChildConfig(**kwargs)
 
     def newChildConfig(self, **kwargs):
-        copy = self.__class__(self._root_node.newChild())
+        copy = self.__class__(self._parent_node.newChild())
         copy.updateConfig(kwargs)
         return copy
 
@@ -148,14 +148,14 @@ class TreeContextStore(object):
         return self.hasConfig(k)
 
     def hasConfig(self, name, owner=global_namespace):
-        return self._root_node.hasConfig(self.__getConfigKey(name, owner))
+        return self._parent_node.hasConfig(self.__getConfigKey(name, owner))
 
     def getConfig(self, name, owner=global_namespace):
-        return self._root_node.getConfig(self.__getConfigKey(name, owner))
+        return self._parent_node.getConfig(self.__getConfigKey(name, owner))
 
     def setConfig(self, name, value, owner=global_namespace):
         key = self.__getConfigKey(name, owner)
-        self._root_node.setConfig(key, value)
+        self._parent_node.setConfig(key, value)
 
     def __getConfigKey(self, name, owner=global_namespace):
         return (self.__getOwnerStr(owner), name)
@@ -173,10 +173,10 @@ class TreeContextStore(object):
         return owner_str
 
     def __repr__(self):
-        return '%s(%r\n)' % (self.__class__.__name__, self._root_node)
+        return '%s(%r\n)' % (self.__class__.__name__, self._parent_node)
 
     def __str__(self):
-        return str(self._root_node)
+        return str(self._parent_node)
 
 
 def smokeTestModule():

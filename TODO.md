@@ -1,7 +1,7 @@
 ## TODO
 
 1. Simplify design
-1. Remove need to pass context on construction (only in python). Shedskin doesn't support custom with
+1. Remove need to pass context on construction (only in python). Shedskin doesn't support custom "with" statement
   1. Make a transition. First support receiving context=, If context is none, then solve it
   1. Then remove context= little by little
 1. Remove __post_init__?, although its kind of cool. Should keep it for a while.
