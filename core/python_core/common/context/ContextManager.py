@@ -42,7 +42,7 @@ class ContextManager(object):
             # we get the context of the maint thread
             if not isinstance(self._getThread(), threading._MainThread):
                 return self.getContext(self._getMainThread())
-        logging.warn('No context defined in thread, neither in main thread.')
+        logging.debug('No context defined in thread, neither in main thread.')
         # Make return explicit
         return None
 

@@ -18,9 +18,9 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with Mepinta. If not, see <http://www.gnu.org/licenses/>.
 '''
+from common.context.ContextManager import ContextManager
 from common.abstract.FrameworkBase import FrameworkBase
 from mepinta.context.MepintaContext import MepintaContext
-from common.context import getContext
 
 
 class MepintaBase(FrameworkBase):
@@ -31,8 +31,14 @@ class MepintaBase(FrameworkBase):
     '''
 
     def __init__(self, context=None, *a, **ad):
-        if not context and not getContext():
-            context = MepintaContext()
+        # We need to solve the context for this class
+        if not context:
+            # Check if there is a root context
+            context = ContextManager().getContext()
+            if not context:
+                # Create the root context and register it
+                context = MepintaContext()
+        # Now having the context solved, we can initialize super class
         super(MepintaBase, self).__init__(context, *a, **ad)
 
 

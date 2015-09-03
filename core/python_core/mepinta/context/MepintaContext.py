@@ -24,10 +24,9 @@ from mepinta.pipeline.hi.context_lo.ContextLo import ContextLo
 from mepinta.pipeline.hi.LogOutput import LogOutput
 from pipeline_backend.logging.logging import LOG_INFO, logWarning
 from inspect import currentframe
+from common.context.ContextManager import ContextManager
 import os
 import re
-from common.context import getContext
-from common.context.ContextManager import ContextManager
 
 
 class singleton_autocontext(context_singleton):
@@ -85,9 +84,14 @@ class MepintaContext(ContextBase):
         if isinstance(name, basestring):
             # Means this is not a fork of a context, so we need to init it
             self._initConfig(log_level)
-        if register and not getContext():
+        ctx_mngr = ContextManager()
+        if register and not ctx_mngr.getContext():
             self._logger().d('Registering first MepintaContext as root context')
-            ContextManager().register(self)
+            ctx_mngr.register(self)
+        elif register and ctx_mngr.getContext():
+            msg = ('Cannot register %r as root context, there is already a root'
+                   ' context. (you should fork from root context)' %  self)
+            raise TypeError(msg)
 
     def _logger(self):
         return self.getConfig('log')
