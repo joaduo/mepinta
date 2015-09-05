@@ -43,7 +43,7 @@ def fastIntegrationTestPython(context=None, gui=False):
 
 
 def smokeTestModule():
-    fastIntegrationTestPython(gui=False)
+    fastIntegrationTestPython(gui=True)
 
 if __name__ == "__main__":
     smokeTestModule()

@@ -36,7 +36,8 @@ class Node(FrameworkObject):
         self.name = name
         # TODO: rename to processor_metadata (mdata?)
         self.processor = processor
-        # Clone connections of the proxy
+        # Clone attributes from the proxy
+        # (so we can access the inner properties?)
         self.processor.proxy.spawnIntoNode(self)
 
     def getPropertiesIds(self):
@@ -55,17 +56,20 @@ class Graph(FrameworkObject):
     '''
 
     def __init__(self, pline):
+        # Wrapped pipeline from mepinta.pipeline package
         self.pline = pline
+        # Node Id count
         self.__node_count = 0
+        # Mark if topology changed
         self.topologyChanged = False
-        self.allNodes = dict()  # id:Node
+        self.nodes = dict()  # id:Node
 
     def addNode(self, node):
         # Repr Check
-        assert node not in self.allNodes.values(), 'node already in this graph'
+        assert node not in self.nodes.values(), 'node already in this graph'
         # Add the new node
         node_id = self.__newNodeId()
-        self.allNodes[node_id] = node
+        self.nodes[node_id] = node
         node.node_id = node_id
 
     def __newNodeId(self):

@@ -36,6 +36,7 @@ class MetadataWrapperBase(FrameworkBase):
         self._manifest = None
 
     def _hasAttr(self, name):
+        # TODO: review, whay not using hasattr? (because getattr is overriden?)
         return name in dir(self)
 
     def __getattr__(self, name):

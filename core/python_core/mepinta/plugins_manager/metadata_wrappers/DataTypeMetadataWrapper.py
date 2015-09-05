@@ -34,6 +34,8 @@ class DataTypeMetadataWrapper(MetadataWrapperBase):
         if hasattr(self.module, 'manifest'):
             return MetadataWrapperBase.getManifest(self)
         else:
+            #TODO: why do we return an object here?
+            #Do some data types have not .manifest?
             return object()
 
     def getManifestType(self):

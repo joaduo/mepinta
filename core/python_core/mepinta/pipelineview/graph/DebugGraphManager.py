@@ -28,7 +28,7 @@ class DebugGraphManager(FrameworkBase):
         self.graph_mngr = GraphManager(self.context)
 
     def __checkRepr(self, graph, node):
-        assert node in graph.allNodes.keys()
+        assert node in graph.nodes.keys()
         # every prop has its id in the pipeline and in the topology
         # assert node.
 

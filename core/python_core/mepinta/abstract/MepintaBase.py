@@ -40,6 +40,9 @@ class MepintaBase(PostInitStrategyBase, SelfConfigBase):
                 from mepinta.context.MepintaContext import MepintaContext
                 # Create the root context and register it
                 context = MepintaContext()
+        elif isinstance(context, basestring):
+            # User passed the string identifying the context
+            context = MepintaContext(context)
         # Now having the context solved, we can initialize super class
         SelfConfigBase.__init__(self, context=context)
         PostInitStrategyBase.__init__(self, *a, **ad)

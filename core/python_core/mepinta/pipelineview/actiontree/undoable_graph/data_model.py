@@ -29,10 +29,16 @@ class UndoableGraph(FrameworkObject):
     '''
 
     def __init__(self):
+        #Wrapped graph
         self.__graph = None
         self.topologyChanged = False
+        # List of Nodes (pipelineview)
+        # On each action in ActionTree we save the list of nodes created
+        # So we later can find them (by order of creation)
         self.__created_nodes = list()  # (node)
+        # old_properties what for? (TODO: remove, we will schedule for deletion)
         self.old_properties = dict()  # prop_id:value
+        # Action's topology id (State of the graph at Action's stage)
         self.topology_id = NULL_UID  # graph.growTopologies()
 
     def startTopologyChangeSet(self):
@@ -40,17 +46,23 @@ class UndoableGraph(FrameworkObject):
             self.topology_id = self.__graph.pline.startTopologyChangeSet()
 
     def resetTopology(self, u_graph):
-        pass
-        # This code apparently resets the topology to
-        # the latest state in u_graph???? (NOT CLEAR AT ALL!) 
-        #pline = u_graph.pline
-        #if pline.pendingChanges():  # TODO: remove?
-        #    raise RuntimeError(
-        #        'There are pending changes you should propagate changes')
-        #copied_topo = pline.getTopology()
-        #topo = pline.getTopology(self.topology_id)
-        #topo.copyFrom(copied_topo)
-        #pline.setCurrentTopologyId(self.topology_id)
+        '''
+        In a modifier processor (for example) we need to reset the
+        output_undoable_graph with the value of the input_undoable_graph
+        this method lets you do exactly that.
+        '''
+        pline = u_graph.pline
+        if pline.pendingChanges():  # TODO: remove?
+            raise RuntimeError(
+                'There are pending changes you should propagate changes')
+        # Copy the current topology into the topology pointed by this
+        # undoable_graph
+        # We directly operato over the input pipeline, since this
+        # data is intended to operate non-cached
+        copied_topo = pline.getTopology()
+        topo = pline.getTopology(self.topology_id)
+        topo.copyFrom(copied_topo)
+        pline.setCurrentTopologyId(self.topology_id)
 
     def addNode(self, node):
         self.__created_nodes.append(node)
@@ -58,15 +70,15 @@ class UndoableGraph(FrameworkObject):
 
     def deleteNode(self, node):
         if node in self.__created_nodes and \
-           node in self.__graph.allNodes:
+           node in self.__graph.nodes:
             self.__created_nodes.remove(node)
-            self.__graph.allNodes.removeNode(node)
+            self.__graph.nodes.removeNode(node)
         raise KeyError(
             'Node %r seems not to be consistent in the __graph' % node)
 
     @property
-    def allNodes(self):
-        return self.__graph.allNodes
+    def nodes(self):
+        return self.__graph.nodes
 
     @property
     def pline(self):

@@ -58,6 +58,8 @@ def demuxSignal(args):
 
 
 def changeGraphValues(args):
+    # We need to import here to avoid importing warnings when inspecting
+    # the plugin's manifest
     from mepinta.pipelineview.actiontree.undoable_graph.UndoableGraphManager import UndoableGraphManager
     from mepinta.context.MepintaContext import MepintaContext
     from mepinta_python_sdk.props import getPropValue
@@ -75,6 +77,8 @@ def changeGraphValues(args):
 
 
 def changeGraphTopology(args):
+    # We need to import here to avoid importing warnings when inspecting
+    # the plugin's manifest
     from mepinta.pipelineview.actiontree.undoable_graph.UndoableGraphManager import UndoableGraphManager
     from mepinta.context.MepintaContext import MepintaContext
     from mepinta_python_sdk.props import getPropValue
@@ -89,9 +93,9 @@ def changeGraphTopology(args):
 def testModule():
     from getDefaultContext import getDefaultContext
     from mepinta.testing.plugins_testing.PluginManifestAutoTester import PluginManifestAutoTester
-    # PluginManifestAutoTester(getDefaultContext()).test(manifest)#, gui=True)
-    PluginManifestAutoTester(getDefaultContext()).visualizeXdot(
-        manifest)  # , gui=True)
+    PluginManifestAutoTester(getDefaultContext()).test(manifest)#, gui=True)
+#    PluginManifestAutoTester(getDefaultContext()).visualizeXdot(
+#        manifest)  # , gui=True)
     #PluginManifestAutoTester(getDefaultContext()).test(manifest, gui=False)
 
 if __name__ == "__main__":

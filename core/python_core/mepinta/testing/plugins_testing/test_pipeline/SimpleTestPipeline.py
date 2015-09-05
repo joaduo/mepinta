@@ -125,15 +125,16 @@ class SimpleTestPipeline(FrameworkBase):
                     ui_props.append(prop)
         return ui_nodes_props
 
-    def prepareForAnimation(self):
-        '''
-        When animating we need to use the changed set specifically from the animation
-        changes, so prior secondary changes should be ignored. (thats why we 'grow'
-        the pipeline to get a new topology)
-        '''
-        if self._pline_changed:
-            self._graph.pline.grow()
-            self._pline_changed = False
+    #TODO: remove? (unused)
+    #def prepareForAnimation(self):
+    #    '''
+    #    When animating we need to use the changed set specifically from the animation
+    #    changes, so prior secondary changes should be ignored. (thats why we 'grow'
+    #    the pipeline to get a new topology)
+    #    '''
+    #    if self._pline_changed:
+    #        self._graph.pline.grow()
+    #        self._pline_changed = False
 
     def evaluateProp(self, prop):
         return self.pline_evaluator.evaluateProp(self._graph.pline, prop)

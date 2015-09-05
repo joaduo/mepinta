@@ -80,7 +80,7 @@ class UndoableGraphManager(FrameworkBase):
             self.value_manager.setValue(u_graph.pline, prop_id, old_value)
 
     def getNodeById(self, u_graph, node_id):
-        return u_graph.allNodes[node_id]
+        return u_graph.nodes[node_id]
 
 
 def testModule():
