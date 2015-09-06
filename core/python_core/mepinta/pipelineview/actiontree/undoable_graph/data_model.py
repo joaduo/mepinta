@@ -52,9 +52,9 @@ class UndoableGraph(FrameworkObject):
         this method lets you do exactly that.
         '''
         pline = u_graph.pline
-        if pline.pendingChanges():  # TODO: remove?
-            raise RuntimeError(
-                'There are pending changes you should propagate changes')
+        #if pline.pendingChanges():  # TODO: remove? (No need to propagate primary_changes, they are kept!)
+        #    raise RuntimeError(
+        #        'There are pending changes you should propagate changes')
         # Copy the current topology into the topology pointed by this
         # undoable_graph
         # We directly operato over the input pipeline, since this
