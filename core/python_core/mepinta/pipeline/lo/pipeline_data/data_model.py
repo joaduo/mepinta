@@ -235,9 +235,10 @@ class Pipeline(object):
         self.topologies = {}  # id:topology (all topologies dictionary
         # outputs that need to be marked when changed (for filtered propagation)
         self.marked_outputs = set()
-        self.changed_track = set()  # properties marked as changed
         # general changed_primary before propagation (the  sum of all changed_primary in the topologies)
         self.changed_primary = set()
+        # properties marked as changed (after propagation)
+        self.changed_track = set()
         # TODO: check if a dict is better below
         # Its uses DirectedGraph for simplicity reasons, although it could be a
         # dictionary
@@ -282,8 +283,6 @@ class Pipeline(object):
             return self.topologies[self.current_topolgy_id]
         else:
             return self.topologies[topo_id]
-    # def set_current_topology(self, topo_id): #TODO. provide a list of visited topologies #TODO: remove
-    #    self.current_topolgy_id = topo_id
 
     def setCurrentTopologyId(self, topo_id):
         self.current_topolgy_id = topo_id
