@@ -30,12 +30,12 @@ class UndoableGraph(FrameworkObject):
 
     def __init__(self):
         #Wrapped graph
-        self.__graph = None
-        self.topologyChanged = False
+        self._graph = None
+        self.topology_changed = False
         # List of Nodes (pipelineview)
         # On each action in ActionTree we save the list of nodes created
         # So we later can find them (by order of creation)
-        self.__created_nodes = list()  # (node)
+        self._created_nodes = list()  # (node)
         # old_properties what for? (TODO: remove, we will schedule for deletion)
         self.old_properties = dict()  # prop_id:value
         # Action's topology id (State of the graph at Action's stage)
@@ -43,7 +43,7 @@ class UndoableGraph(FrameworkObject):
 
     def startTopologyChangeSet(self):
         if self.topology_id == NULL_UID:
-            self.topology_id = self.__graph.pline.startTopologyChangeSet()
+            self.topology_id = self._graph.pline.startTopologyChangeSet()
 
     def resetTopology(self, u_graph):
         '''
@@ -65,38 +65,38 @@ class UndoableGraph(FrameworkObject):
         pline.setCurrentTopologyId(self.topology_id)
 
     def addNode(self, node):
-        self.__created_nodes.append(node)
-        self.__graph.addNode(node)
+        self._created_nodes.append(node)
+        self._graph.addNode(node)
 
     def deleteNode(self, node):
-        if node in self.__created_nodes and \
-           node in self.__graph.nodes:
-            self.__created_nodes.remove(node)
-            self.__graph.nodes.removeNode(node)
+        if node in self._created_nodes and \
+           node in self._graph.nodes:
+            self._created_nodes.remove(node)
+            self._graph.nodes.removeNode(node)
         raise KeyError(
-            'Node %r seems not to be consistent in the __graph' % node)
+            'Node %r seems not to be consistent in the _graph' % node)
 
     @property
     def nodes(self):
-        return self.__graph.nodes
+        return self._graph.nodes
 
     @property
     def pline(self):
-        return self.__graph.pline
+        return self._graph.pline
 
     @property
     def graph(self):
-        return self.__graph
+        return self._graph
 
     @property
     def createdNodes(self):
-        return self.__created_nodes
+        return self._created_nodes
 
     def setGraph(self, graph):
-        if self.__graph == None:
-            self.__graph = graph
+        if self._graph == None:
+            self._graph = graph
             self.startTopologyChangeSet()
-        elif self.__graph != graph:
+        elif self._graph != graph:
             # TODO: remove?
             raise RuntimeError('Graph should always be the same')
 

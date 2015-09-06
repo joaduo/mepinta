@@ -37,7 +37,7 @@ class UndoableGraphManager(FrameworkBase):
 
     def initGraph(self, u_graph):
         u_graph.setGraph(Graph(Pipeline(self.context)))
-        u_graph.topologyChanged = True
+        u_graph.topology_changed = True
 
     def connect(self, u_graph, dent_prop, dency_prop):
         return self.graph_manager.connect(u_graph, dent_prop, dency_prop)
@@ -62,7 +62,7 @@ class UndoableGraphManager(FrameworkBase):
 
     def resetTopology(self, u_graph):
         '''
-        When receiving a topologyChanged signal, we need to reset the topology.
+        When receiving a topology_changed signal, we need to reset the topology.
         :param u_graph:
         '''
         pass
@@ -84,14 +84,16 @@ class UndoableGraphManager(FrameworkBase):
 
 
 def testModule():
-    from getDefaultContext import getDefaultContext
-    context = getDefaultContext()
-    ugm = UndoableGraphManager(context)
+    ugm = UndoableGraphManager()
     from mepinta.pipelineview.actiontree.undoable_graph.data_model import UndoableGraph
     u_graph = UndoableGraph()
     ugm.initGraph(u_graph)
     import plugins.python.processors.demov1.Geometry2D.generator.Circle as processor
     ugm.createNode(u_graph, processor)
+    print u_graph.graph.pline.getTopology()
+    print u_graph.createdNodes[0]
+    n = u_graph.createdNodes[0]
+    print n.inputs
 
 
 if __name__ == "__main__":

@@ -59,9 +59,9 @@ class Graph(FrameworkObject):
         # Wrapped pipeline from mepinta.pipeline package
         self.pline = pline
         # Node Id count
-        self.__node_count = 0
+        self._node_count = 0
         # Mark if topology changed
-        self.topologyChanged = False
+        self.topology_changed = False
         self.nodes = dict()  # id:Node
 
     def addNode(self, node):
@@ -73,5 +73,5 @@ class Graph(FrameworkObject):
         node.node_id = node_id
 
     def __newNodeId(self):
-        self.__node_count += 1
-        return self.__node_count
+        self._node_count += 1
+        return self._node_count

@@ -48,7 +48,7 @@ def demuxSignal(args):
     # output
     out_graph = getPropValue(args, 'outputs', 'graph')
     # DemuxSignal
-    if in_graph.topologyChanged:
+    if in_graph.topology_changed:
         # We have a new topology, then start from this new topology
         out_graph.resetTopology(in_graph)
         # Modify the topology on the new given topology

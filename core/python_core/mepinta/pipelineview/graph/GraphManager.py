@@ -27,7 +27,7 @@ from mepinta.plugins_manager.PluginsManager import PluginsManager
 
 def topologyChanged(method):
     def newMethod(*args, **kwargs):
-        if len(args) > 2 and hasattr(args[1], 'topologyChanged'):
+        if len(args) > 2 and hasattr(args[1], 'topology_changed'):
             graph = args[1]
         elif 'graph' in kwargs:
             graph = kwargs['graph']
@@ -35,7 +35,7 @@ def topologyChanged(method):
             raise TypeError('You should provide an graph to the method %r. args:(%r,%r)' % (
                 method, args, kwargs))
         return_value = method(*args, **kwargs)
-        graph.topologyChanged = True
+        graph.topology_changed = True
         return return_value
     return newMethod
 
