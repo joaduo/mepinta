@@ -20,7 +20,6 @@ along with Mepinta. If not, see <http://www.gnu.org/licenses/>.
 '''
 from mepinta.pipeline.hi.pipeline_evaluator.PipelineEvaluatorFunctum import PipelineEvaluatorFunctum
 from mepinta.pipelineview.actiontree.undoable_graph.data_model import UndoableGraph
-from mepinta.context.MepintaContext import MepintaContext
 
 
 from mepinta.plugins_manifest import DataTypeManifestBase
@@ -43,15 +42,15 @@ def delete(u_graph):
     pass
 
 
+#TODO review copyTo, something is wrong here?
 def copyTo(to_graph, from_graph):
-    # create the obvious context
-    context = MepintaContext('python')
-    # Make sure to propagate changes (avoid inconsistencies)
-    PipelineEvaluatorFunctum(context).propagateChanges(from_graph.pline)
+#    # Make sure to propagate changes (avoid inconsistencies) (no need?)
+#    PipelineEvaluatorFunctum().propagateChanges(from_graph.pline)
     # pass the common data between undoable graphs
     to_graph.setGraph(from_graph.graph)
-    # We start a topology change set, so we haven't done anything yet
-    to_graph.topology_changed = False
+#    # We start a topology change set, so we haven't done anything yet
+#    # TODO: review this statement
+#    to_graph.topology_changed = False
     # return the copy
     return to_graph
 

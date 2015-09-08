@@ -24,7 +24,7 @@ from plugins.python.processors.actiontree.UndoableGraph.modifier.base.GraphTopol
 class manifest(GraphTopologyModifierBase):
 
     def define(self, inputs, internals, functions, outputs, changeGraphValues, changeGraphTopology):
-        inputs.processor_name = 'actiontree.Processor'
+        inputs.processor_name = 'str'
         inputs.node_name = 'str'
         # Topology changes dependencies
         changeGraphTopology.dpdencies += inputs.processor_name
@@ -60,7 +60,6 @@ def demuxSignal(args):
 def changeGraphValues(args):
     # We need to import here to avoid importing warnings when inspecting
     # the plugin's manifest
-    from mepinta.pipelineview.actiontree.undoable_graph.UndoableGraphManager import UndoableGraphManager
     from mepinta.context.MepintaContext import MepintaContext
     from mepinta_python_sdk.props import getPropValue
     context_name = getPropValue(args, 'inputs', 'context_name')

@@ -49,6 +49,7 @@ class Action(object):
         return node_id
 
     def buildTree(self, string=False):
+        # Build tree (dictionaries) with the ActionTree hierarchy
         if self.children:
             branch = {}
             for c in self.children:
@@ -125,13 +126,16 @@ class ActionTree(FrameworkObject):
         return None
 
     def buildTree(self, string=False):
-        tree = self.root_action.buildTree(string)
-        if string:
-            tree = json.dumps(tree, indent=True)
-            latest = self.steps_log[-1] if self.steps_log else None
-            tree = (('current: %s\nlatest step: %s\n' % 
-                     (self.current_action, latest)) + tree)
+        return self.root_action.buildTree(string)
+    
+    def __str__(self):
+        tree = self.buildTree(string=True)
+        tree = json.dumps(tree, indent=True)
+        latest = self.steps_log[-1] if self.steps_log else None
+        tree = (('current: %s\nlatest step: %s\n' % 
+                 (self.current_action, latest)) + tree)
         return tree
+
 
 
 def testModule():

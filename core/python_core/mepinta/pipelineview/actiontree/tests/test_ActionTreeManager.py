@@ -14,7 +14,7 @@ class Test(unittest.TestCase):
 
     def print_verify(self, answers, tree):
         print  '='*8
-        print tree.buildTree(string=True)
+        print tree
         count = max(answers.keys()) if answers else 1 
         answers[count + 1] = tree.buildTree(string=True)
 
@@ -32,6 +32,7 @@ class Test(unittest.TestCase):
         mngr.addAction(tree, 'act2')
         self.print_verify(answers, tree)
         mngr.addAction(tree, 'act3')
+        act3 = tree.current_action
         self.print_verify(answers, tree)
         mngr.undoAction(tree)
         self.print_verify(answers, tree)
@@ -41,7 +42,16 @@ class Test(unittest.TestCase):
         self.print_verify(answers, tree)
         mngr.addAction(tree, 'act4')
         self.print_verify(answers, tree)
-        
+        print mngr.setCurrentAction(tree, act3)
+        mngr.addAction(tree, 'act5')
+        self.print_verify(answers, tree)
+        print mngr.setCurrentAction(tree, act3)
+        mngr.addAction(tree, 'act6')
+        self.print_verify(answers, tree)
+        print mngr.setCurrentAction(tree, act3)
+        mngr.addAction(tree, 'act7')
+        self.print_verify(answers, tree)
+        print mngr.setCurrentAction(tree, act3)
 
 
 if __name__ == "__main__":

@@ -26,6 +26,8 @@ class UndoableGraph(FrameworkObject):
     '''
     UndoableGraph is a graph in which can be "undone" inside an ActionTree
     We keep track of changes so we can propagate them when we undo-redo things
+    
+    TODO: __init__(graph)
     '''
 
     def __init__(self):
@@ -39,7 +41,10 @@ class UndoableGraph(FrameworkObject):
         # old_properties what for? (TODO: remove, we will schedule for deletion)
         self.old_properties = dict()  # prop_id:value
         # Action's topology id (State of the graph at Action's stage)
-        self.topology_id = NULL_UID  # graph.growTopologies()
+        self.topology_id = NULL_UID  # graph.startTopologyChangeSet()
+
+    def getTopology(self):
+        return self.pline.getTopology(self.topology_id)
 
     def startTopologyChangeSet(self):
         if self.topology_id == NULL_UID:
