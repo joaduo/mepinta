@@ -18,7 +18,6 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with Mepinta. If not, see <http://www.gnu.org/licenses/>.
 '''
-
 from mepinta.plugins_manifest import ProcessorManifestBase, FunctionProperty, \
     directed
 
@@ -35,12 +34,10 @@ class GraphTopologyModifierBase(ProcessorManifestBase):
         functions.demuxSignal = FunctionProperty()
         internals.changeGraphTopology = 'functum'
         internals.changeGraphValues = 'functum'
-
         # Set dependencies
         # Set signal demux dependencies
         functions.demuxSignal.dpdencies += [inputs.graph,
-                                            directed(
-                                                '>', internals.changeGraphTopology),
+                                            directed('>', internals.changeGraphTopology),
                                             directed('>', internals.changeGraphValues), ]
         # Set modifier related topology ids
         internals.changeGraphTopology.dpdencies += [inputs.graph,
@@ -49,12 +46,11 @@ class GraphTopologyModifierBase(ProcessorManifestBase):
                                                   inputs.graph,
                                                   inputs.context_name, ]
         outputs.graph.dpdencies += [functions.demuxSignal,
-                                    directed(
-                                        '<', internals.changeGraphTopology),
+                                    directed('<', internals.changeGraphTopology),
                                     directed('<', internals.changeGraphValues), ]
-
+        # Mark the non_cached output
         self.nonCached(outputs.graph)
-
+        # return the new parameters of define function
         return internals.changeGraphValues, internals.changeGraphTopology
 
     def define(self, inputs, internals, functions, outputs, changeGraphValues, changeGraphTopology):

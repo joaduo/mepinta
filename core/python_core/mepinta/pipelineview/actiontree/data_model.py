@@ -18,46 +18,127 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with Mepinta. If not, see <http://www.gnu.org/licenses/>.
 '''
-from common.abstract.FrameworkBase import FrameworkBase
 from mepinta.pipelineview.graph.data_model import Graph
 from mepinta.pipeline.hi.pipeline_data.data_model import Pipeline
+from common.abstract.FrameworkObject import FrameworkObject
+from mepinta.pipeline.lo.constants import NULL_UID
+from functools import wraps
+import json
 
 
-class ActionRootNode(object):
+class Action(object):
+
+    def __init__(self, parent, node_id):
+        # The parent action
+        self.parent = parent
+        # Store node_id associated to this action
+        self.node_id = node_id
+        # All the children of these nodes
+        self.children = set()
+
+    def newChild(self, node_id):
+        '''
+        This method adds a Child actions to this action.
+        This could mean:
+          -growing a branch
+          -forking into a new branch (if this action already has a child)
+        :param node_id:
+        '''
+        node_id = Action(self, node_id)
+        self.children.add(node_id)
+        return node_id
+
+    def buildTree(self, string=False):
+        if self.children:
+            branch = {}
+            for c in self.children:
+                k = str(c) if string else c
+                branch[k] = c.buildTree(string)
+            return branch
+
+    def __str__(self):
+        return '%s(%s)'  % (self.__class__.__name__, self.node_id)
+
+    def __repr__(self):
+        return str(self)
+
+
+def log_method(method):
+    '''
+    Decorates methods
+    :param method:
+    '''
+    @wraps(method)
+    def wraper(self, *args, **kwargs):
+        self.steps_log.append(method.__name__)
+        return method(self, *args, **kwargs)
+    return wraper
+
+
+class ActionTree(FrameworkObject):
 
     def __init__(self):
-        self.parent = None
-        self.children = []
+        self.actions = {}
+        # Root Action has no parent -> None
+        self.root_action = Action(parent=None, node_id=NULL_UID)
+        # The current action the user is positioned in
+        self.current_action = self.root_action
+        # Mepinta's Graph wrapped by this tree (used to evaluate values
+        # in this tree
+        self.actions_graph = Graph(Pipeline())
+        # The latest path of actions done (for undo/redo purposes) 
+        self.actions_path = [self.current_action]
+        # actions logging
+        self.steps_log = []
 
-    def newChild(self, graph_node):
-        node = ActionNode(self, graph_node)
-        self.children.append(node)
-        return node
+    @log_method
+    def addAction(self, node_id):
+        path = self.actions_path
+        # Remove any non-redoable action
+        del path[path.index(self.current_action) + 1:]
+        # Create Action with graph's node id
+        self.current_action = self.current_action.newChild(node_id)
+        # Save id:action table
+        self.actions[node_id] = self.current_action
+        # Keep track for undo/redo
+        path.append(self.current_action)
+        return self.current_action
 
+    @log_method
+    def undoAction(self):
+        # Make sure we have something to undo to
+        if self.current_action != self.root_action:
+            self.current_action = self.current_action.parent
+            return self.current_action
+        return None
 
-class ActionNode(ActionRootNode):
+    @log_method
+    def redoAction(self):
+        path = self.actions_path
+        old_cur = self.current_action
+        # Make sure we have something to redo to
+        if path[-1] != old_cur:
+            self.current_action = path[path.index(old_cur) + 1]
+            assert self.current_action in old_cur.children
+            return self.current_action
+        # TODO: raise exception (Redo exception?)??
+        return None
 
-    def __init__(self, parent, graph_node):
-        self.parent = parent
-        self.graph_node = graph_node
-        self.children = []
-
-
-class ActionTree(FrameworkBase):
-
-    def __post_init__(self):
-        self.root_node = ActionRootNode()
-        self.current_node = self.root_node
-        self.meta_graph = Graph(Pipeline(self.context))
-
-    def appendActionNode(self, graph_node):
-        self.current_node = self.current_node.newChild(graph_node)
+    def buildTree(self, string=False):
+        tree = self.root_action.buildTree(string)
+        if string:
+            tree = json.dumps(tree, indent=True)
+            latest = self.steps_log[-1] if self.steps_log else None
+            tree = (('current: %s\nlatest step: %s\n' % 
+                     (self.current_action, latest)) + tree)
+        return tree
 
 
 def testModule():
-    from getDefaultContext import getDefaultContext
-    context = getDefaultContext()
-    context.log(ActionTree(context))
+    from mepinta.context.MepintaContext import MepintaContext
+    ctx = MepintaContext()
+    ctx.log(ActionTree())
+
 
 if __name__ == "__main__":
     testModule()

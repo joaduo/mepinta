@@ -1,5 +1,15 @@
 ## TODO
 
+1. Make undoablegraph work
+	means working with action tree
+	undo-redo things
+	plan Schedule For Deletion support? (but not implementing it)
+		create action
+		alter it
+		move around action tree
+		delete branch
+		copy branch 
+
 1. Implement copy on write for non-cached data (so responsibility is on data's side)
 1. Simplify design
 1. Remove need to pass context on construction (only in python). Shedskin doesn't support custom "with" statement
@@ -7,7 +17,6 @@
   1. Then remove context= little by little
 1. Remove __post_init__?, although its kind of cool. Should keep it for a while.
     1. Although makes things too implicit?
-1. 
 1. Remove configuration per class. E.g.: ('non_cached', 'class::mepinta.pipelineview.graph.GraphTopologyManager.GraphTopologyManager'):False
   1. I can leave everything in place, but remove access to it
     so i simply should use self.context.non_cached_evaluation
