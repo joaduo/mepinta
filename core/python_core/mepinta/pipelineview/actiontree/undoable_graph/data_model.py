@@ -112,12 +112,10 @@ class UndoableGraph(FrameworkObject):
         return self._data_bag
 
     def setGraph(self, graph):
-        if self._graph == None:
+        # We are starting in a graph from scratch
+        if self._graph != graph:
             self._graph = graph
             self.startTopologyChangeSet()
-        elif self._graph != graph:
-            # TODO: remove?
-            raise RuntimeError('Graph should always be the same')
     
     def __wrapped__(self):
         return self._graph
