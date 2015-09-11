@@ -40,7 +40,11 @@ class Node(FrameworkObject):
         self.processor.proxy.spawnIntoNode(self)
 
     def getPropertiesIds(self):
-        pass  # for container in self.containers.getProperties()
+        prop_ids = []
+        for container in self.containers.values():
+            for prop in container.getProperties().values():
+                prop_ids.append(prop.property_id)
+        return prop_ids
 
     def __str__(self):
         return 'Node(%r,%r)' % (self.name, self.processor)

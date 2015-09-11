@@ -70,7 +70,6 @@ class GraphManager(FrameworkBase):
     def createNode(self, graph, processor):
         # create the node proxy
         node = self.node_mngr.new(processor)
-#    import ipdb; ipdb.set_trace()
         # Add the node to the graph
         graph.addNode(node)
         # sychronize node and inner pipeline
@@ -86,14 +85,22 @@ class GraphManager(FrameworkBase):
     def _syncNode(self, pline, node):
         # Create the properties on the pline
         prop_ids = self.prop_mngr.createProperties(pline, node)
+        # add properties to topology and connect them
+        self._addNode2Topology(pline, node, prop_ids)
+        # Return the node
+        return node
+
+    def addNode2Topology(self, graph, node):
+        prop_ids = node.getPropertiesIds()
+        self._addNode2Topology(graph.pline, node, prop_ids)
+
+    def _addNode2Topology(self, pline, node, prop_ids):
         # Connect dpdencies
         self.topo_mngr.addProperties(pline, prop_ids)
         # Make intranode connections
         self.topo_mngr.connectInternally(pline, node)
         # Enable Caching
         self.topo_mngr.enableCached(pline, node)
-        # Return the node
-        return node
 
     @topologyChanged
     def connect(self, graph, dent_prop, dency_prop):
