@@ -37,7 +37,6 @@ class UndoableGraphManager(FrameworkBase):
 
     def initGraph(self, u_graph):
         u_graph.setGraph(Graph(Pipeline(self.context)))
-        u_graph.topology_changed = True
 
     def connect(self, u_graph, dent_prop, dency_prop):
         return self.graph_manager.connect(u_graph, dent_prop, dency_prop)

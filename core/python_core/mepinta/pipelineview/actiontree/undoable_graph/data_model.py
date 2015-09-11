@@ -31,9 +31,9 @@ class UndoableGraph(FrameworkObject):
     '''
 
     def __init__(self):
-        #Wrapped graph
+        # Wrapped graph (we start with None since we need to wait to copyTo
+        # to get the underlying graph)
         self._graph = None
-        self.topology_changed = False
         # List of Nodes (pipelineview)
         # On each action in ActionTree we save the list of nodes created
         # So we later can find them (by order of creation)
@@ -42,6 +42,18 @@ class UndoableGraph(FrameworkObject):
         self.old_properties = dict()  # prop_id:value
         # Action's topology id (State of the graph at Action's stage)
         self.topology_id = NULL_UID  # graph.startTopologyChangeSet()
+        # last topology changed signal number
+        self.last_topology_changed = -1
+
+    @property
+    def topology_changed(self):
+        return self._graph.topology_changed
+
+    def hasTopologyChanged(self):
+        return self.graph.topology_changed != self.last_topology_changed
+
+    def acceptTopologyChanged(self):
+        self.last_topology_changed = self.graph.topology_changed
 
     def getTopology(self):
         return self.pline.getTopology(self.topology_id)
@@ -50,13 +62,13 @@ class UndoableGraph(FrameworkObject):
         if self.topology_id == NULL_UID:
             self.topology_id = self._graph.pline.startTopologyChangeSet()
 
-    def resetTopology(self, u_graph):
+    def resetTopology(self, input_graph):
         '''
         In a modifier processor (for example) we need to reset the
         output_undoable_graph with the value of the input_undoable_graph
         this method lets you do exactly that.
         '''
-        pline = u_graph.pline
+        pline = input_graph.pline
         #if pline.pendingChanges():  # TODO: remove? (No need to propagate primary_changes, they are kept!)
         #    raise RuntimeError(
         #        'There are pending changes you should propagate changes')
@@ -104,6 +116,9 @@ class UndoableGraph(FrameworkObject):
         elif self._graph != graph:
             # TODO: remove?
             raise RuntimeError('Graph should always be the same')
+    
+    def __wrapped__(self):
+        return self._graph
 
 
 def testModule():

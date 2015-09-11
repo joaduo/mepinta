@@ -18,6 +18,7 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with Mepinta. If not, see <http://www.gnu.org/licenses/>.
 '''
+from common.context.ContextManager import ContextManager
 
 
 class context_singleton(object):
@@ -41,6 +42,8 @@ class context_singleton(object):
         Return instance.
         :param context: context (you must always provide one)
         '''
+        # Solve context is someone initialized it
+        context = context or ContextManager().getContext()
         if context == None:
             msg = ("You should always provide a context for class: %r" %
                    self.class_.__class__.__name__)

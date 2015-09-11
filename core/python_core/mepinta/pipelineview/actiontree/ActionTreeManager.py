@@ -23,6 +23,7 @@ from mepinta.pipelineview.graph.GraphManager import GraphManager
 from mepinta.pipeline.hi.property_manager.PropertyManager import PropertyManager
 from mepinta.pipeline.hi.pipeline_evaluator.PipelineEvaluatorFunctum import PipelineEvaluatorFunctum
 from mepinta.pipeline.hi.value_manager.ValueManager import ValueManager
+from mepinta.plugins_manager.PluginsManager import PluginsManager
 
 
 class ActionTreeManager(FrameworkBase):
@@ -32,19 +33,26 @@ class ActionTreeManager(FrameworkBase):
         self.prop_mngr = PropertyManager()
         self.pline_eval = PipelineEvaluatorFunctum()
         self.val_mngr = ValueManager()
+        self.plugins_manager = PluginsManager()
+        self.graph_mngr = GraphManager()
+        self._processors_metadata = dict() # processor: processor_metadata
 
     def getTransitionPath(self, from_action, to_action):
         frm_path, to_path = self._getPathsToCommonNode(from_action, to_action)
+        # We want to path from -> to, so we need to reverse to_path and
+        # add it (both were pointing to a common node in upper levels)
         return frm_path + list(reversed(to_path))
 
     def _getPathsToCommonNode(self, from_action, to_action):
+        # smaller alias
         frm = from_action
         to = to_action
-        frm_visited = set()
-        to_visited = set()
+        # Paths to common node (actions in order)
         frm_path = []
         to_path = []
-
+        # Sets containing actions in the path to common node
+        frm_visited = set()
+        to_visited = set()
         # go down to the parents until we reach a common node 
         # or the root of the tree
         while (frm and to and 
@@ -58,7 +66,6 @@ class ActionTreeManager(FrameworkBase):
                 to_visited.add(to)
                 to_path.append(to)
                 to = to.parent
-        
         if to in frm_visited:
             # Delete unneeded remaining path (going down)
             del frm_path[frm_path.index(to) + 1:]
@@ -67,11 +74,25 @@ class ActionTreeManager(FrameworkBase):
             del to_path[to_path.index(frm) + 1:]
         return frm_path, to_path
 
-    id_ = 0
     def addAction(self, tree, processor):
-        # TODO: create Graph's node
-        self.id_ += 1
-        return tree.addAction(self.id_)
+        if processor not in self._processors_metadata:
+            self._processors_metadata[processor] = self.plugins_manager.loadProcessor(
+                processor, reload_=True)
+        # get processor metadata
+        processor = self._processors_metadata[processor]
+        # create a Graph's node in the wrapped actions_graph
+        node = self.graph_mngr.createNode(tree.actions_graph, processor)
+        # We want to connect with parent node
+        self._connectWithParent(tree, node)
+        # Add action and return current action object
+        return tree.addAction(node.node_id)
+
+    def _connectWithParent(self, tree, action_node):
+        # Get current actions_graph's node
+        parent = tree.getGraphNode()
+        # If there is a parent node, then try to autoconnect
+        if parent != None:
+            self.graph_mngr.autoConnect(tree.actions_graph, action_node, parent)
 
     def undoAction(self, tree):
         return tree.undoAction()
@@ -81,25 +102,21 @@ class ActionTreeManager(FrameworkBase):
 
     def setCurrentAction(self, tree, action):
         path = self.getTransitionPath(tree.current_action, action)
+        # Gather all changed props in the underlying undoable actions_graph
+        changed_props = set()
+        for action in path:
+            node = tree.actions_graph.nodes[action.node_id]
+            u_graph = self.val_mngr.getValue(tree.actions_graph.pline, node.outputs.graph)
+            changed_props.update(u_graph.getTopology().changed_primary)
+        # Update the changed_props state of the pipeline
+        u_graph.graph.pline.changed_primary.update(changed_props)
         return path
-        # Code below not yet working, we need to add a processor
-        # (thus creates a node)
-        # Also I need to review how we are copying values in the pipeline
-        # since the copying functions are not very well implemented
-#        changed = set()
-#        for action in path:
-#            node = tree.actions_graph.nodes[action.node_id]
-#            u_graph = self.val_mngr.getValue(tree.actions_graph.pline, node.outputs.graph)
-#            changed.update(u_graph.getTopology().changed_primary)
-#        # Update the changed state of the pipeline
-#        u_graph.graph.pline.changed_primary.update(changed)
 
     def setActionPropValue(self, tree, action):
         pass
 
     def evalTree(self, tree):
-        graph = tree.actions_graph.graph
-        node = graph.nodes[tree.current_action.node_id]
-        self.pline_eval.evaluateProp(graph.pline, node.outputs.graph)
+        node = tree.getGraphNode()
+        self.pline_eval.evaluateProp(tree.actions_graph.pline, node.outputs.actions_graph)
         #self.prop_mngr.
         #self.graph_mngr.

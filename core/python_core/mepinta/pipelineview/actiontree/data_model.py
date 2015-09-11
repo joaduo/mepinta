@@ -92,12 +92,17 @@ class ActionTree(FrameworkObject):
         # actions logging
         self.steps_log = []
 
+    def getGraphNode(self, node_id=None):
+        node_id = node_id if node_id else self.current_action.node_id 
+        # We could return None if we are in the root Action
+        return self.actions_graph.nodes.get(node_id)
+
     @log_method
     def addAction(self, node_id):
         path = self.actions_path
         # Remove any non-redoable action
         del path[path.index(self.current_action) + 1:]
-        # Create Action with graph's node id
+        # Create Action with actions_graph's node id
         self.current_action = self.current_action.newChild(node_id)
         # Save id:action table
         self.actions[node_id] = self.current_action

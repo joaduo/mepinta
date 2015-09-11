@@ -60,13 +60,17 @@ class Graph(FrameworkObject):
         self.pline = pline
         # Node Id count
         self._node_count = 0
-        # Mark if topology changed
-        self.topology_changed = False
-        self.nodes = dict()  # id:Node
+        # Increase if topology changed signal
+        self.topology_changed = 0
+        # {id:Node} dict
+        self.nodes = dict()
+
+    def markTopologyChanged(self):
+        self.topology_changed += 1
 
     def addNode(self, node):
         # Repr Check
-        assert node not in self.nodes.values(), 'node already in this graph'
+        assert not node.node_id , 'node already has node_id'
         # Add the new node
         node_id = self.__newNodeId()
         self.nodes[node_id] = node

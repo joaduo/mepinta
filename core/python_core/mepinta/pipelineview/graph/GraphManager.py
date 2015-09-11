@@ -25,6 +25,15 @@ from mepinta.pipelineview.graph.GraphTopologyManager import GraphTopologyManager
 from mepinta.plugins_manager.PluginsManager import PluginsManager
 
 
+def unwrap(wrapper):  # TODO: take this out of here?
+    if hasattr(wrapper, '__wrapped__'):
+        return wrapper.__wrapped__()
+    elif isinstance(wrapper, list):
+        return [unwrap(item) for item in wrapper]
+    else:
+        return wrapper
+
+
 def topologyChanged(method):
     def newMethod(*args, **kwargs):
         if len(args) > 2 and hasattr(args[1], 'topology_changed'):
@@ -35,6 +44,7 @@ def topologyChanged(method):
             raise TypeError('You should provide an graph to the method %r. args:(%r,%r)' % (
                 method, args, kwargs))
         return_value = method(*args, **kwargs)
+        graph = unwrap(graph)
         graph.topology_changed = True
         return return_value
     return newMethod

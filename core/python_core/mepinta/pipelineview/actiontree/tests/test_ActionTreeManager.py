@@ -17,8 +17,16 @@ class Test(unittest.TestCase):
         print tree
         count = max(answers.keys()) if answers else 1 
         answers[count + 1] = tree.buildTree(string=True)
+        
+    def test_adding_actions(self):
+        import plugins.python.processors.actiontree.UndoableGraph.generator.EmptyGraph as EmptyGraph
+        answers = {}
+        tree = ActionTree()
+        mngr = ActionTreeManager()
+        mngr.addAction(tree, EmptyGraph)
+        print tree.actions_graph.pline.getTopology()
 
-    def test_tree(self):
+    def _test_tree(self):
         answers = {}
         tree = ActionTree()
         mngr = ActionTreeManager()

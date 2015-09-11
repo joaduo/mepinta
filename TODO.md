@@ -1,5 +1,12 @@
 ## TODO
 
+1. Fix Ugraph sharing the same pline (copying is not working)
+	also clarify if non_cached will be used (i don't think so)
+	Ugraph should always be "copied into"
+		topology_changed should always be True when copied?
+		frm_copied.topology_changed = False
+		to_copied.topology_changed = True/False depending on frm value
+		(when will it be false?)
 1. Make undoablegraph work
 	means working with action tree
 	undo-redo things

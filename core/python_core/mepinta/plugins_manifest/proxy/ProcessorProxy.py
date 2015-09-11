@@ -122,12 +122,12 @@ class ProcessorProxy(FrameworkBase):
         attr_names = [
             'containers',
             'inputs',
-                  'internals',
-                  'outputs',
-                  'functions',
-                  'non_cached_capable',
-                  'marked_outputs',
-                  'getRequiredDataTypes',
+            'internals',
+            'outputs',
+            'functions',
+            'non_cached_capable',
+            'marked_outputs',
+            'getRequiredDataTypes',
         ]
         for name in attr_names:
             attr = getattr(proxy, name)
