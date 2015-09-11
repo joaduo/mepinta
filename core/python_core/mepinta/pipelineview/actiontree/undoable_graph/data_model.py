@@ -43,7 +43,8 @@ class UndoableGraph(FrameworkObject):
         # Action's topology id (State of the graph at Action's stage)
         self.topology_id = NULL_UID  # graph.startTopologyChangeSet()
         # last topology changed signal number
-        self.last_topology_changed = -1
+        # first signal is 0, will differ from none
+        self.last_topology_changed = None
 
     @property
     def changed_signal_id(self):

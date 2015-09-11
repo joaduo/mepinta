@@ -69,7 +69,7 @@ def changeGraphValues(args):
     graph = getPropValue(args, 'outputs', 'graph')
     context = MepintaContext(context_name)
     # Get the created node
-    if graph.data_bag.has_key('created_node') == 1:
+    if graph.data_bag.has_key('created_node'):
         node = graph.data_bag['created_node']
         # Set the name
         node.name = node_name
