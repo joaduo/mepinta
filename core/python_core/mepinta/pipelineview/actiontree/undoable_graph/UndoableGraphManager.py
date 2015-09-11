@@ -68,10 +68,7 @@ class UndoableGraphManager(FrameworkBase):
     def setValue(self, u_graph, prop, value):
         # Keep track of old value, so we can undo 
         old_value = self.value_manager.getValue(u_graph.pline, prop)
-        prop_id = unwrapLo(prop)
-        # We won't set prop value 2 times
-        old_value = u_graph.values_history.get(prop_id, (old_value, None))[0]
-        u_graph.values_history[prop_id] = old_value, value
+        u_graph.values_history[unwrapLo(prop)] = old_value, value
         self.value_manager.setValue(u_graph.pline, prop, value)
 
     def undoValuesChanges(self, u_graph):
