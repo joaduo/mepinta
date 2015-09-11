@@ -69,10 +69,10 @@ def changeGraphValues(args):
     graph = getPropValue(args, 'outputs', 'graph')
     context = MepintaContext(context_name)
     # Get the created node
-    if graph.data_bag.has_key('created_node'):
-        node = graph.data_bag['created_node']
-        # Set the name
-        node.name = node_name
+    if graph.data_bag.has_key('created_node_id'):
+        # Set node name
+        node_id = graph.data_bag['created_node_id']
+        graph.nodes[node_id].name = node_name
     else:
         context.log.e('Expected node not found')
 
@@ -87,10 +87,15 @@ def changeGraphTopology(args):
     processor_name = getPropValue(args, 'inputs', 'processor_name')
     graph = getPropValue(args, 'outputs', 'graph')
     # Make sure we didn't create the node yet
-    if not graph.data_bag.has_key('created_node'):
+    node_id = graph.data_bag.get('created_node_id')
+    # Check if node was ever created or we are facing a new graph
+    if not node_id or node_id not in graph.nodes:
+        # Create the new node
         graph_manager = UndoableGraphManager(MepintaContext(context_name))
         node = graph_manager.createNode(graph, processor_name)
-        graph.data_bag['created_node'] = node
+        graph.data_bag['created_node_id'] = node.node_id
+    node = graph.nodes[node_id]
+    node.inputs.
 
 
 def testModule():
