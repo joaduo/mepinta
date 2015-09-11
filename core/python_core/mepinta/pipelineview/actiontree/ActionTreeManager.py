@@ -24,6 +24,7 @@ from mepinta.pipeline.hi.property_manager.PropertyManager import PropertyManager
 from mepinta.pipeline.hi.pipeline_evaluator.PipelineEvaluatorFunctum import PipelineEvaluatorFunctum
 from mepinta.pipeline.hi.value_manager.ValueManager import ValueManager
 from mepinta.plugins_manager.PluginsManager import PluginsManager
+from mepinta.pipelineview.actiontree.undoable_graph.UndoableGraphManager import UndoableGraphManager
 
 
 class ActionTreeManager(FrameworkBase):
@@ -41,7 +42,7 @@ class ActionTreeManager(FrameworkBase):
         frm_path, to_path = self._getPathsToCommonNode(from_action, to_action)
         # We want to path from -> to, so we need to reverse to_path and
         # add it (both were pointing to a common node in upper levels)
-        return frm_path, list(reversed(to_path))
+        return frm_path + list(reversed(to_path))
 
     def _getPathsToCommonNode(self, from_action, to_action):
         # smaller alias
@@ -101,13 +102,26 @@ class ActionTreeManager(FrameworkBase):
         return tree.redoAction()
 
     def setCurrentAction(self, tree, action):
-        path, to_path = self.getTransitionPath(tree.current_action, action)
+        path = self.getTransitionPath(tree.current_action, action)
         # Gather all changed props in the underlying undoable actions_graph
         changed_props = set()
-        for action in path:
+        mngr = UndoableGraphManager()
+        root_direction = True # first Going to root direction
+        for action, nextact in zip(path, path[1:] + [None]):
             node = tree.actions_graph.nodes[action.node_id]
             u_graph = self.val_mngr.getValue(tree.actions_graph.pline, node.outputs.graph)
             changed_props.update(u_graph.getTopology().changed_primary)
+            if nextact:
+                if action.parent == nextact:
+                    # Undo values changes in action
+                    mngr.undoValuesChanges(u_graph)
+                elif nextact.parent == action:
+                    if root_direction:
+                        # We begin getting away from root
+                        root_direction = False
+                    else:
+                        # Redo values changed in action
+                        mngr.redoValuesChanges(u_graph)
         # Update the changed_props state of the pipeline
         u_graph.graph.pline.changed_primary.update(changed_props)
         return path
