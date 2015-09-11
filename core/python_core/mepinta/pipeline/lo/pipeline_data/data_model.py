@@ -268,6 +268,7 @@ class Pipeline(object):
         return self.current_topolgy_id
 
     def pendingChanges(self):
+        # TODO: return bool(self.getTopology().changed_primary) #check with shedskin
         return 0 != len(self.getTopology().changed_primary)
 
     def popTopology(self, topo_id):
