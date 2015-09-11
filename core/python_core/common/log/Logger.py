@@ -91,50 +91,57 @@ class Logger(object):
     def setOutput(self, value):
         self.__output = value
 
-    def critical(self, msg):
-        self.output.critical(str(msg))
+    def str(self, msg, *args):
+        if isinstance(msg, basestring) and args:
+            msg = msg % args
+        else:
+            msg = str(msg)
+        return msg
 
-    def error(self, msg):
-        self.output.error(str(msg))
+    def critical(self, msg, *args):
+        self.output.critical(self.str(msg, *args))
 
-    def warning(self, msg):
-        self.output.warning(str(msg))
+    def error(self, msg, *args):
+        self.output.error(self.str(msg, *args))
 
-    def info(self, msg):
+    def warning(self, msg, *args):
+        self.output.warning(self.str(msg, *args))
+
+    def info(self, msg, *args):
         # self.trace()
-        self.output.info(str(msg))
+        self.output.info(self.str(msg, *args))
 
-    def debug(self, msg):
+    def debug(self, msg, *args):
         # self.trace()
-        self.output.debug(str(msg))
+        self.output.debug(self.str(msg, *args))
 
-    def verbose(self, msg):
-        self.output.verbose(str(msg))
+    def verbose(self, msg, *args):
+        self.output.verbose(self.str(msg, *args))
 
     # Shortcuts
-    def c(self, msg):
-        self.critical(msg)
+    def c(self, msg, *args):
+        self.critical(msg, *args)
 
-    def e(self, msg):
-        self.error(msg)
+    def e(self, msg, *args):
+        self.error(msg, *args)
 
-    def w(self, msg):
-        self.warning(msg)
+    def w(self, msg, *args):
+        self.warning(msg, *args)
 
-    def i(self, msg):
-        self.info(msg)
+    def i(self, msg, *args):
+        self.info(msg, *args)
 
-    def d(self, msg):
-        self.debug(msg)
+    def d(self, msg, *args):
+        self.debug(msg, *args)
 
-    def v(self, msg):
-        self.verbose(msg)
+    def v(self, msg, *args):
+        self.verbose(msg, *args)
 
     def setLevel(self, level):
         self.output.setLevel(level)
 
-    def __call__(self, msg):
-        self.info(msg)
+    def __call__(self, msg, *args):
+        self.info(msg, *args)
 
     def trace(self, output=''):
         if output == 'stderr':
