@@ -8,6 +8,8 @@ import unittest
 from mepinta.pipelineview.actiontree.data_model import ActionTree
 from mepinta.pipelineview.actiontree.ActionTreeManager import ActionTreeManager
 from pprint import pprint, pformat
+from mepinta.context.MepintaContext import MepintaContext
+from pipeline_backend.logging.logging import LOG_DEBUG
 
 
 class Test(unittest.TestCase):
@@ -26,7 +28,7 @@ class Test(unittest.TestCase):
         mngr.addAction(tree, EmptyGraph)
         print tree.actions_graph.pline.getTopology()
 
-    def _test_tree(self):
+    def test_tree(self):
         answers = {}
         tree = ActionTree()
         mngr = ActionTreeManager()
@@ -35,11 +37,11 @@ class Test(unittest.TestCase):
         self.print_verify(answers, tree)
         mngr.redoAction(tree)
         self.print_verify(answers, tree)
-        mngr.addAction(tree, 'act1')
+        mngr.addAction(tree, 'actiontree.UndoableGraph.generator.EmptyGraph')
         self.print_verify(answers, tree)
-        mngr.addAction(tree, 'act2')
+        mngr.addAction(tree, 'actiontree.UndoableGraph.generator.EmptyGraph')
         self.print_verify(answers, tree)
-        mngr.addAction(tree, 'act3')
+        mngr.addAction(tree, 'actiontree.UndoableGraph.generator.EmptyGraph')
         act3 = tree.current_action
         self.print_verify(answers, tree)
         mngr.undoAction(tree)
@@ -48,20 +50,23 @@ class Test(unittest.TestCase):
         self.print_verify(answers, tree)
         mngr.undoAction(tree)
         self.print_verify(answers, tree)
-        mngr.addAction(tree, 'act4')
+        mngr.addAction(tree, 'actiontree.UndoableGraph.generator.EmptyGraph')
+        act4 = tree.current_action
         self.print_verify(answers, tree)
         print mngr.setCurrentAction(tree, act3)
-        mngr.addAction(tree, 'act5')
+        mngr.addAction(tree, 'actiontree.UndoableGraph.generator.EmptyGraph')
         self.print_verify(answers, tree)
-        print mngr.setCurrentAction(tree, act3)
-        mngr.addAction(tree, 'act6')
+#        print mngr.setCurrentAction(tree, act3)
+        mngr.addAction(tree, 'actiontree.UndoableGraph.generator.EmptyGraph')
         self.print_verify(answers, tree)
-        print mngr.setCurrentAction(tree, act3)
-        mngr.addAction(tree, 'act7')
+#        print mngr.setCurrentAction(tree, act3)
+        mngr.addAction(tree, 'actiontree.UndoableGraph.generator.EmptyGraph')
         self.print_verify(answers, tree)
-        print mngr.setCurrentAction(tree, act3)
+        print mngr.setCurrentAction(tree, act4)
+        mngr.eval(tree)
 
 
 if __name__ == "__main__":
+    MepintaContext('python', log_level=LOG_DEBUG)
     #import sys;sys.argv = ['', 'Test.testName']
     unittest.main()

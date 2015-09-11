@@ -99,6 +99,7 @@ class ActionTree(FrameworkObject):
 
     @log_method
     def addAction(self, node_id):
+        # nice alias
         path = self.actions_path
         # Remove any non-redoable action
         del path[path.index(self.current_action) + 1:]

@@ -68,16 +68,31 @@ class UndoableGraphManager(FrameworkBase):
     def setValue(self, u_graph, prop, value):
         # Keep track of old value, so we can undo 
         old_value = self.value_manager.getValue(u_graph.pline, prop)
-        u_graph.values_history[unwrapLo(prop)] = old_value, value
+        u_graph.prop_val_history[unwrapLo(prop)] = old_value, value
         self.value_manager.setValue(u_graph.pline, prop, value)
 
+    def setNodeName(self, u_graph, node, name):
+        old_name = node.name
+        u_graph.node_val_history[node.node_id] = ('name', old_name, name)
+        node.name = name
+
     def undoValuesChanges(self, u_graph):
-        for prop_id, (old_value, _) in u_graph.values_history.iteritems():
+        # Pline values
+        for prop_id, (old_value, _) in u_graph.prop_val_history.iteritems():
             self.value_manager.setValue(u_graph.pline, prop_id, old_value)
+        # Node's attr
+        for node_id, (name, old_value, _) in u_graph.node_val_history.iteritems():
+            node = u_graph.nodes[node_id]
+            setattr(node, name, old_value)
 
     def redoValuesChanges(self, u_graph):
-        for prop_id, (_, new_value) in u_graph.values_history.iteritems():
-            self.value_manager.setValue(u_graph.pline, prop_id, new_value)
+        # Pline values
+        for prop_id, (_, value) in u_graph.prop_val_history.iteritems():
+            self.value_manager.setValue(u_graph.pline, prop_id, value)
+        # Node's attr
+        for node_id, (name, _, value) in u_graph.node_val_history.iteritems():
+            node = u_graph.nodes[node_id]
+            setattr(node, name, value)
 
     def getNodeById(self, u_graph, node_id):
         return u_graph.nodes[node_id]

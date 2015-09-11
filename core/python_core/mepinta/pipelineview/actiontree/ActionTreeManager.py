@@ -22,9 +22,9 @@ from common.abstract.FrameworkBase import FrameworkBase
 from mepinta.pipelineview.graph.GraphManager import GraphManager
 from mepinta.pipeline.hi.property_manager.PropertyManager import PropertyManager
 from mepinta.pipeline.hi.pipeline_evaluator.PipelineEvaluatorFunctum import PipelineEvaluatorFunctum
-from mepinta.pipeline.hi.value_manager.ValueManager import ValueManager
 from mepinta.plugins_manager.PluginsManager import PluginsManager
 from mepinta.pipelineview.actiontree.undoable_graph.UndoableGraphManager import UndoableGraphManager
+from mepinta.pipeline.hi.value_manager.UntypedValueManager import UntypedValueManager
 
 
 class ActionTreeManager(FrameworkBase):
@@ -33,18 +33,12 @@ class ActionTreeManager(FrameworkBase):
         self.graph_mngr = GraphManager()
         self.prop_mngr = PropertyManager()
         self.pline_eval = PipelineEvaluatorFunctum()
-        self.val_mngr = ValueManager()
+        self.val_mngr = UntypedValueManager()
         self.plugins_manager = PluginsManager()
         self.graph_mngr = GraphManager()
         self._processors_metadata = dict() # processor: processor_metadata
 
     def getTransitionPath(self, from_action, to_action):
-        frm_path, to_path = self._getPathsToCommonNode(from_action, to_action)
-        # We want to path from -> to, so we need to reverse to_path and
-        # add it (both were pointing to a common node in upper levels)
-        return frm_path + list(reversed(to_path))
-
-    def _getPathsToCommonNode(self, from_action, to_action):
         # smaller alias
         frm = from_action
         to = to_action
@@ -56,8 +50,9 @@ class ActionTreeManager(FrameworkBase):
         to_visited = set()
         # go down to the parents until we reach a common node 
         # or the root of the tree
-        while (frm and to and 
-               frm not in to_visited and to not in frm_visited):
+        while (frm and to and
+               frm not in to_visited and
+               to not in frm_visited):
             # Go up one step
             frm_visited.add(frm)
             frm_path.append(frm)
@@ -68,14 +63,18 @@ class ActionTreeManager(FrameworkBase):
                 to_path.append(to)
                 to = to.parent
         if to in frm_visited:
+            joint = to
             # Delete unneeded remaining path (going down)
-            del frm_path[frm_path.index(to) + 1:]
+            del frm_path[frm_path.index(to):]
         if frm in to_visited:
+            joint = frm
             # Delete unneeded remaining path (going down)
-            del to_path[to_path.index(frm) + 1:]
-        return frm_path, to_path
+            del to_path[to_path.index(frm):]
+        # We want to path from -> to, so we need to reverse to_path and
+        # add it (both were pointing to a common node in upper levels)
+        return frm_path, joint, list(reversed(to_path))
 
-    def addAction(self, tree, processor):
+    def addAction(self, tree, processor, eval_=True):
         if processor not in self._processors_metadata:
             self._processors_metadata[processor] = self.plugins_manager.loadProcessor(
                 processor, reload_=True)
@@ -85,8 +84,17 @@ class ActionTreeManager(FrameworkBase):
         node = self.graph_mngr.createNode(tree.actions_graph, processor)
         # We want to connect with parent node
         self._connectWithParent(tree, node)
+        # Sync values
+        if eval_:
+            self._eval(tree, node)
         # Add action and return current action object
         return tree.addAction(node.node_id)
+
+    def eval(self, tree):
+        self._eval(tree, tree.getGraphNode())
+
+    def _eval(self, tree, node):
+        self.pline_eval.evaluateProp(tree.actions_graph.pline, node.outputs.graph)
 
     def _connectWithParent(self, tree, action_node):
         # Get current actions_graph's node
@@ -102,35 +110,37 @@ class ActionTreeManager(FrameworkBase):
         return tree.redoAction()
 
     def setCurrentAction(self, tree, action):
-        path = self.getTransitionPath(tree.current_action, action)
+        if tree.current_action == action:
+            return None, None, None
+        frm, joint, to = self.getTransitionPath(tree.current_action, action)
         # Gather all changed props in the underlying undoable actions_graph
         changed_props = set()
         mngr = UndoableGraphManager()
-        root_direction = True # first Going to root direction
-        for action, nextact in zip(path, path[1:] + [None]):
+        def common(action):
             node = tree.actions_graph.nodes[action.node_id]
             u_graph = self.val_mngr.getValue(tree.actions_graph.pline, node.outputs.graph)
             changed_props.update(u_graph.getTopology().changed_primary)
-            if nextact:
-                if action.parent == nextact:
-                    # Undo values changes in action
-                    mngr.undoValuesChanges(u_graph)
-                elif nextact.parent == action:
-                    if root_direction:
-                        # We begin getting away from root
-                        root_direction = False
-                    else:
-                        # Redo values changed in action
-                        mngr.redoValuesChanges(u_graph)
+            return u_graph
+        for action in frm:
+            mngr.undoValuesChanges(common(action))
+        # No need to undo/redo
+        action = joint
+        u_graph = common(action)
+        for action in to:
+            # We need to catch the last u_graph
+            u_graph = common(action)
+            mngr.redoValuesChanges(u_graph)
         # Update the changed_props state of the pipeline
+        u_graph.setCurrentTopologyId()
         u_graph.graph.pline.changed_primary.update(changed_props)
-        return path
+        tree.current_action = action
+        path = tree.actions_path
+        self.context.log.d('Undoing %s', path[path.index(joint)+1:])
+        del path[path.index(joint)+1:]
+        self.context.log.d('Redoing %s', to)
+        path += to
+        return frm, joint, to
 
     def setActionPropValue(self, tree, action):
         pass
 
-    def evalTree(self, tree):
-        node = tree.getGraphNode()
-        self.pline_eval.evaluateProp(tree.actions_graph.pline, node.outputs.actions_graph)
-        #self.prop_mngr.
-        #self.graph_mngr.

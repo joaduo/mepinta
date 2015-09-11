@@ -38,8 +38,10 @@ class UndoableGraph(FrameworkObject):
         # On each action in ActionTree we save the list of nodes created (and any other data)
         # So we later can find them (by order of creation)
         self._data_bag = {}
-        # values_history what for? (TODO: remove, we will schedule for deletion)
-        self.values_history = dict()  # prop_id:value
+        # Keep properties values changes over undo/redo
+        self.prop_val_history = dict()  # prop_id:value
+        # Keep nodes values changes over undo/redo
+        self.node_val_history = dict()  # node_id:value#
         # Action's topology id (State of the graph at Action's stage)
         self.topology_id = NULL_UID  # graph.startNewTopology()
         # last topology changed signal number
@@ -58,6 +60,9 @@ class UndoableGraph(FrameworkObject):
 
     def getTopology(self):
         return self.pline.getTopology(self.topology_id)
+
+    def setCurrentTopologyId(self):
+        self.pline.setCurrentTopologyId(self.topology_id)
 
     def startNewTopology(self):
         if self.topology_id == NULL_UID:
