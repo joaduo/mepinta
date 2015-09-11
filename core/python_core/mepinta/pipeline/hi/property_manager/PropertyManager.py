@@ -85,7 +85,7 @@ if __name__ == '__main__':
     from common.log.debugPrint import debugPrint as dP
     debugPrint = lambda m: dP(str(m))
     pline = Pipeline()
-    pline.startTopologyChangeSet()
+    pline.startNewTopology()
     debugPrint(pline.getTopology())
     propm = PropertyManager()
     debugPrint(getattr(propm, 'createProperties'))

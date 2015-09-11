@@ -88,14 +88,16 @@ def changeGraphTopology(args):
     graph = getPropValue(args, 'outputs', 'graph')
     # Make sure we didn't create the node yet
     node_id = graph.data_bag.get('created_node_id')
+    graph_manager = UndoableGraphManager(MepintaContext(context_name))
     # Check if node was ever created or we are facing a new graph
-    if not node_id or node_id not in graph.nodes:
+    if not node_id:
         # Create the new node
-        graph_manager = UndoableGraphManager(MepintaContext(context_name))
         node = graph_manager.createNode(graph, processor_name)
         graph.data_bag['created_node_id'] = node.node_id
-    node = graph.nodes[node_id]
-    node.inputs.
+    else:
+        # already created over new topology
+        node = graph.nodes[node_id]
+        #graph_manager.
 
 
 def testModule():

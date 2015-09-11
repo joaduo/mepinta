@@ -38,7 +38,7 @@ class PluginManifestAutoTester(ModuleAutoTesterBase):
     def __createNode(self, plugin_manifest):
         graph = Graph(Pipeline(context=self.context))
         # pline.grow()
-        graph.pline.startTopologyChangeSet()
+        graph.pline.startNewTopology()
         plinmngr = PluginsManager(context=self.context)
         plugin_package, minor_version = self._getPackageAndMinorVersion(
             plugin_manifest)

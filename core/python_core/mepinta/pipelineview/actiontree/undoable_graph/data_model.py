@@ -38,10 +38,10 @@ class UndoableGraph(FrameworkObject):
         # On each action in ActionTree we save the list of nodes created (and any other data)
         # So we later can find them (by order of creation)
         self._data_bag = {}
-        # old_properties what for? (TODO: remove, we will schedule for deletion)
-        self.old_properties = dict()  # prop_id:value
+        # values_history what for? (TODO: remove, we will schedule for deletion)
+        self.values_history = dict()  # prop_id:value
         # Action's topology id (State of the graph at Action's stage)
-        self.topology_id = NULL_UID  # graph.startTopologyChangeSet()
+        self.topology_id = NULL_UID  # graph.startNewTopology()
         # last topology changed signal number
         # first signal is 0, will differ from none
         self.last_topology_changed = None
@@ -59,9 +59,9 @@ class UndoableGraph(FrameworkObject):
     def getTopology(self):
         return self.pline.getTopology(self.topology_id)
 
-    def startTopologyChangeSet(self):
+    def startNewTopology(self):
         if self.topology_id == NULL_UID:
-            self.topology_id = self._graph.pline.startTopologyChangeSet()
+            self.topology_id = self._graph.pline.startNewTopology()
 
     def resetTopology(self, input_graph):
         '''
@@ -69,17 +69,13 @@ class UndoableGraph(FrameworkObject):
         output_undoable_graph with the value of the input_undoable_graph
         this method lets you do exactly that.
         '''
+        # We probably received a changed_topology signal
         pline = input_graph.pline
-        #if pline.pendingChanges():  # TODO: remove? (No need to propagate primary_changes, they are kept!)
-        #    raise RuntimeError(
-        #        'There are pending changes you should propagate changes')
-        # Copy the current topology into the topology pointed by this
-        # undoable_graph
-        # We directly operato over the input pipeline, since this
-        # data is intended to operate non-cached
+        # Copy previous topology so we can work over it
         copied_topo = pline.getTopology()
         topo = pline.getTopology(self.topology_id)
         topo.copyFrom(copied_topo)
+        # Set current topology
         pline.setCurrentTopologyId(self.topology_id)
 
     @property
@@ -115,7 +111,9 @@ class UndoableGraph(FrameworkObject):
         # We are starting in a graph from scratch
         if self._graph != graph:
             self._graph = graph
-            self.startTopologyChangeSet()
+            self.startNewTopology()
+            # We need to discard any info about previous graph
+            self.data_bag.clear()
     
     def __wrapped__(self):
         return self._graph

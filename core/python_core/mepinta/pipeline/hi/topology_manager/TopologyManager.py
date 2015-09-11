@@ -29,15 +29,15 @@ def convertPlineToTopo(method):
 
     def methodWrapper(self, *a, **ad):
         if method_name.startswith('_') and method_name.endswith('_safe'):
-            if not ('topo' in ad and hasattr(ad['topo'], 'getTopology')
-                    or len(a) > 0 and hasattr(a[0], 'getTopology')):
+            if not ('pline' in ad and hasattr(ad['pline'], 'getTopology')
+                    or a and hasattr(a[0], 'getTopology')):
                 raise MepintaError(
                     "You should provide a Pipeline instead of a Topology to safe checking functions")
             return method(self, *a, **ad)
         else:
-            if 'topo' in ad and hasattr(ad['topo'], 'getTopology'):
-                ad['topo'] = ad['topo'].getTopology()
-            elif len(a) > 0 and hasattr(a[0], 'getTopology'):
+            if 'pline' in ad and hasattr(ad['pline'], 'getTopology'):
+                ad['pline'] = ad['pline'].getTopology()
+            elif a and hasattr(a[0], 'getTopology'):
                 a = list(a)
                 a[0] = a[0].getTopology()
             return method(self, *a, **ad)
@@ -121,7 +121,7 @@ if __name__ == '__main__':
     from common.log.debugPrint import debugPrint as dP
     debugPrint = lambda m: dP(str(m))
     pline = Pipeline()
-    pline.startTopologyChangeSet()
+    pline.startNewTopology()
     debugPrint(pline.getTopology())
     propm = PropertyManager()
     debugPrint(propm)

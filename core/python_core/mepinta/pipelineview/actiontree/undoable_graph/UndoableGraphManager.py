@@ -56,27 +56,31 @@ class UndoableGraphManager(FrameworkBase):
         node = self.graph_manager.createNode(u_graph, processor)
         return node
 
+    def syncInTopology(self, graph, node):
+        self.graph_manager.syncInTopology(graph, node)
+
     def deleteNode(self, u_graph, node):
         self.graph_manager.deleteNode(u_graph, node)
-
-    def resetTopology(self, u_graph):
-        '''
-        When receiving a topology_changed signal, we need to reset the topology.
-        :param u_graph:
-        '''
-        pass
 
     def getValue(self, u_graph, prop):
         return self.value_manager.getValue(u_graph.pline, prop)
 
     def setValue(self, u_graph, prop, value):
+        # Keep track of old value, so we can undo 
         old_value = self.value_manager.getValue(u_graph.pline, prop)
-        u_graph.old_properties[unwrapLo(prop)] = old_value
+        prop_id = unwrapLo(prop)
+        # We won't set prop value 2 times
+        old_value = u_graph.values_history.get(prop_id, (old_value, None))[0]
+        u_graph.values_history[prop_id] = old_value, value
         self.value_manager.setValue(u_graph.pline, prop, value)
 
     def undoValuesChanges(self, u_graph):
-        for prop_id, old_value in u_graph.old_properties:
+        for prop_id, (old_value, _) in u_graph.values_history.iteritems():
             self.value_manager.setValue(u_graph.pline, prop_id, old_value)
+
+    def redoValuesChanges(self, u_graph):
+        for prop_id, (_, new_value) in u_graph.values_history.iteritems():
+            self.value_manager.setValue(u_graph.pline, prop_id, new_value)
 
     def getNodeById(self, u_graph, node_id):
         return u_graph.nodes[node_id]

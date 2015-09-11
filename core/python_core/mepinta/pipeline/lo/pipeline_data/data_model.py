@@ -150,7 +150,6 @@ class Topology(object):
     # TODO: invariant, check how shedskin deals with them
 
     def __init__(self, copied=None):
-        self.changed_primary = set()  # id
         if copied == None:
             # We are not copying => new topology
             self.__initValues()
@@ -161,12 +160,15 @@ class Topology(object):
         self.properties = set()  # id
         self.connections = TopologyConnections()  # Id:Id tables
         self.cached = set()  # id
+        self.changed_primary = set()  # id
 
     def copyFrom(self, copied_topo):
         # Deepcopies
         self.properties = deepcopy(copied_topo.properties)
         self.connections = deepcopy(copied_topo.connections)
         self.cached = deepcopy(copied_topo.cached)
+        # Reset changed status (we are starting topology changes again)
+        self.changed_primary = set()  # id
 
     def connect(self, dent_id, dency_id):
         self.connections.connect(dent_id, dency_id)
@@ -258,7 +260,7 @@ class Pipeline(object):
         self.property_id_count += 1
         return self.property_id_count
 
-    def startTopologyChangeSet(self):
+    def startNewTopology(self):
         # TODO :review!
         base_topo = self.getTopology()
 #    if 0 != len(base_topo.changed_primary):
@@ -354,7 +356,7 @@ def shedskin_pipeline_data_model():
     topo.removePropId(prop_id=1)
     topo.__str__()
 
-    pline.startTopologyChangeSet()
+    pline.startNewTopology()
     pline.pendingChanges()
     pline.getTopology()
     # pline.set_current_topology() TODO

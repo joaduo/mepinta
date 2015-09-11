@@ -35,16 +35,17 @@ def unwrap(wrapper):
 
 
 def topologyChanged(method):
-    def newMethod(*args, **kwargs):
-        if len(args) > 2 and hasattr(args[1], 'changed_signal_id'):
-            graph = args[1]
+    # TODO check type?
+    def newMethod(self, *args, **kwargs):
+        if args and hasattr(args[0], 'changed_signal_id'):
+            args = list(args)
+            graph = args[0] = unwrap(args[0])
         elif 'graph' in kwargs:
-            graph = kwargs['graph']
+            graph = kwargs['graph'] = unwrap(kwargs['graph'])
         else:
             raise TypeError('You should provide an graph to the method %r. args:(%r,%r)' % (
                 method, args, kwargs))
-        return_value = method(*args, **kwargs)
-        graph = unwrap(graph)
+        return_value = method(self, *args, **kwargs)
         graph.markTopologyChanged()
         return return_value
     return newMethod
@@ -86,15 +87,16 @@ class GraphManager(FrameworkBase):
         # Create the properties on the pline
         prop_ids = self.prop_mngr.createProperties(pline, node)
         # add properties to topology and connect them
-        self._addNode2Topology(pline, node, prop_ids)
+        self._syncInTopology(pline, node, prop_ids)
         # Return the node
         return node
 
-    def addNode2Topology(self, graph, node):
+    def syncInTopology(self, graph, node):
         prop_ids = node.getPropertiesIds()
-        self._addNode2Topology(graph.pline, node, prop_ids)
+        # Sync in new topology an already created node
+        self._syncInTopology(graph.pline, node, prop_ids)
 
-    def _addNode2Topology(self, pline, node, prop_ids):
+    def _syncInTopology(self, pline, node, prop_ids):
         # Connect dpdencies
         self.topo_mngr.addProperties(pline, prop_ids)
         # Make intranode connections

@@ -41,7 +41,7 @@ class ActionTreeManager(FrameworkBase):
         frm_path, to_path = self._getPathsToCommonNode(from_action, to_action)
         # We want to path from -> to, so we need to reverse to_path and
         # add it (both were pointing to a common node in upper levels)
-        return frm_path + list(reversed(to_path))
+        return frm_path, list(reversed(to_path))
 
     def _getPathsToCommonNode(self, from_action, to_action):
         # smaller alias
@@ -101,7 +101,7 @@ class ActionTreeManager(FrameworkBase):
         return tree.redoAction()
 
     def setCurrentAction(self, tree, action):
-        path = self.getTransitionPath(tree.current_action, action)
+        path, to_path = self.getTransitionPath(tree.current_action, action)
         # Gather all changed props in the underlying undoable actions_graph
         changed_props = set()
         for action in path:
