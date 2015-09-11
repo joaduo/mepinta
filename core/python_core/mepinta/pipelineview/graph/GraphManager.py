@@ -25,7 +25,7 @@ from mepinta.pipelineview.graph.GraphTopologyManager import GraphTopologyManager
 from mepinta.plugins_manager.PluginsManager import PluginsManager
 
 
-def unwrap(wrapper):  # TODO: take this out of here?
+def unwrap(wrapper):
     if hasattr(wrapper, '__wrapped__'):
         return wrapper.__wrapped__()
     elif isinstance(wrapper, list):
@@ -36,7 +36,7 @@ def unwrap(wrapper):  # TODO: take this out of here?
 
 def topologyChanged(method):
     def newMethod(*args, **kwargs):
-        if len(args) > 2 and hasattr(args[1], 'topology_changed'):
+        if len(args) > 2 and hasattr(args[1], 'changed_signal_id'):
             graph = args[1]
         elif 'graph' in kwargs:
             graph = kwargs['graph']
@@ -45,7 +45,7 @@ def topologyChanged(method):
                 method, args, kwargs))
         return_value = method(*args, **kwargs)
         graph = unwrap(graph)
-        graph.topology_changed = True
+        graph.markTopologyChanged()
         return return_value
     return newMethod
 

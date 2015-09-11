@@ -35,9 +35,9 @@ class UndoableGraph(FrameworkObject):
         # to get the underlying graph)
         self._graph = None
         # List of Nodes (pipelineview)
-        # On each action in ActionTree we save the list of nodes created
+        # On each action in ActionTree we save the list of nodes created (and any other data)
         # So we later can find them (by order of creation)
-        self._created_nodes = list()  # (node)
+        self._data_bag = {}
         # old_properties what for? (TODO: remove, we will schedule for deletion)
         self.old_properties = dict()  # prop_id:value
         # Action's topology id (State of the graph at Action's stage)
@@ -46,14 +46,14 @@ class UndoableGraph(FrameworkObject):
         self.last_topology_changed = -1
 
     @property
-    def topology_changed(self):
-        return self._graph.topology_changed
+    def changed_signal_id(self):
+        return self._graph.changed_signal_id
 
     def hasTopologyChanged(self):
-        return self.graph.topology_changed != self.last_topology_changed
+        return self.graph.changed_signal_id != self.last_topology_changed
 
     def acceptTopologyChanged(self):
-        self.last_topology_changed = self.graph.topology_changed
+        self.last_topology_changed = self.graph.changed_signal_id
 
     def getTopology(self):
         return self.pline.getTopology(self.topology_id)
@@ -81,17 +81,18 @@ class UndoableGraph(FrameworkObject):
         topo.copyFrom(copied_topo)
         pline.setCurrentTopologyId(self.topology_id)
 
-    def addNode(self, node):
-        self._created_nodes.append(node)
-        self._graph.addNode(node)
+    @property
+    def addNode(self):
+        return self._graph.addNode
 
-    def deleteNode(self, node):
-        if node in self._created_nodes and \
-           node in self._graph.nodes:
-            self._created_nodes.remove(node)
-            self._graph.nodes.removeNode(node)
-        raise KeyError(
-            'Node %r seems not to be consistent in the _graph' % node)
+    #TODO: delete?
+    #def deleteNode(self, node):
+    #    if node in self._data_bag and \
+    #       node in self._graph.nodes:
+    #        self._data_bag.remove(node)
+    #        self._graph.nodes.removeNode(node)
+    #    raise KeyError(
+    #        'Node %r seems not to be consistent in the _graph' % node)
 
     @property
     def nodes(self):
@@ -106,8 +107,8 @@ class UndoableGraph(FrameworkObject):
         return self._graph
 
     @property
-    def createdNodes(self):
-        return self._created_nodes
+    def data_bag(self):
+        return self._data_bag
 
     def setGraph(self, graph):
         if self._graph == None:

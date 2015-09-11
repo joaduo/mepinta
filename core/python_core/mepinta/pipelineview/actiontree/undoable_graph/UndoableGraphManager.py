@@ -90,8 +90,8 @@ def testModule():
     import plugins.python.processors.demov1.Geometry2D.generator.Circle as processor
     ugm.createNode(u_graph, processor)
     print u_graph.graph.pline.getTopology()
-    print u_graph.createdNodes[0]
-    n = u_graph.createdNodes[0]
+    print u_graph.data_bag[0]
+    n = u_graph.data_bag[0]
     print n.inputs
 
 

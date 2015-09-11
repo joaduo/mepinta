@@ -68,13 +68,13 @@ def changeGraphValues(args):
     node_name = getPropValue(args, 'inputs', 'node_name')
     graph = getPropValue(args, 'outputs', 'graph')
     context = MepintaContext(context_name)
-
-    if len(graph.createdNodes) == 1:
-        node = graph.createdNodes[0]
+    # Get the created node
+    if graph.data_bag.has_key('created_node') == 1:
+        node = graph.data_bag['created_node']
+        # Set the name
         node.name = node_name
     else:
-        context.log.e(
-            'There shouldn\'t be more than one node created by this plugin. Nodes: %r.' % graph.createdNodes)
+        context.log.e('Expected node not found')
 
 
 def changeGraphTopology(args):
@@ -86,9 +86,11 @@ def changeGraphTopology(args):
     context_name = getPropValue(args, 'inputs', 'context_name')
     processor_name = getPropValue(args, 'inputs', 'processor_name')
     graph = getPropValue(args, 'outputs', 'graph')
-    graph_manager = UndoableGraphManager(MepintaContext(context_name))
-
-    graph_manager.createNode(graph, processor_name)
+    # Make sure we didn't create the node yet
+    if not graph.data_bag.has_key('created_node'):
+        graph_manager = UndoableGraphManager(MepintaContext(context_name))
+        node = graph_manager.createNode(graph, processor_name)
+        graph.data_bag['created_node'] = node
 
 
 def testModule():

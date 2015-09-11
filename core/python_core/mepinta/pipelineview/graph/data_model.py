@@ -18,7 +18,6 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with Mepinta. If not, see <http://www.gnu.org/licenses/>.
 '''
-from copy import deepcopy
 from common.abstract.FrameworkObject import FrameworkObject
 
 
@@ -61,12 +60,16 @@ class Graph(FrameworkObject):
         # Node Id count
         self._node_count = 0
         # Increase if topology changed signal
-        self.topology_changed = 0
+        self._changed_signal_id = 0
         # {id:Node} dict
         self.nodes = dict()
 
+    @property
+    def changed_signal_id(self):
+        return self._changed_signal_id
+
     def markTopologyChanged(self):
-        self.topology_changed += 1
+        self._changed_signal_id += 1
 
     def addNode(self, node):
         # Repr Check
