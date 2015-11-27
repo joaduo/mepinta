@@ -50,7 +50,7 @@ class UndoableGraph(FrameworkObject):
 
     @property
     def changed_signal_id(self):
-        return self._graph.changed_signal_id
+        return self.graph.changed_signal_id
 
     def hasTopologyChanged(self):
         return self.graph.changed_signal_id != self.last_topology_changed
